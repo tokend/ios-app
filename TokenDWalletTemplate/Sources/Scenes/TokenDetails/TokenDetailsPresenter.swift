@@ -1,0 +1,121 @@
+import Foundation
+import UIKit
+
+protocol TokenDetailsPresentationLogic {
+    func presentTokenDidUpdate(response: TokenDetailsScene.Event.TokenDidUpdate.Response)
+    func presentDidSelectAction(response: TokenDetailsScene.Event.DidSelectAction.Response)
+}
+
+extension TokenDetailsScene {
+    typealias PresentationLogic = TokenDetailsPresentationLogic
+    
+    struct Presenter {
+        
+        private let presenterDispatch: PresenterDispatch
+        private let amountFormatter: AmountFormatterProtocol
+        
+        init(
+            presenterDispatch: PresenterDispatch,
+            amountFormatter: AmountFormatterProtocol
+            ) {
+            
+            self.presenterDispatch = presenterDispatch
+            self.amountFormatter = amountFormatter
+        }
+    }
+}
+
+extension TokenDetailsScene.Presenter: TokenDetailsScene.PresentationLogic {
+    func presentTokenDidUpdate(response: TokenDetailsScene.Event.TokenDidUpdate.Response) {
+        
+        guard let token = response.token
+            else {
+                self.presenterDispatch.display { (displayLogic) in
+                    let viewModel = TokenDetailsScene.Event.TokenDidUpdate.ViewModel.empty
+                    displayLogic.displayTokenDidUpdate(viewModel: viewModel)
+                }
+                return
+        }
+        
+        var sections: [TokenDetailsScene.Model.TableSection] = []
+        
+        let actionButtonTitle: String = {
+            switch token.balanceState {
+            case .creating,
+                 .notCreated:
+                return "Create balance"
+            case .created:
+                return "View history"
+            }
+        }()
+        let actionButtonLoading: Bool = {
+            if case .creating = token.balanceState {
+                return true
+            }
+            return false
+        }()
+        let mainCardModel = ExploreTokensTableViewCell.Model(
+            identifier: token.identifier,
+            iconUrl: token.iconUrl,
+            title: token.code,
+            description: token.name,
+            actionButtonTitle: actionButtonTitle,
+            actionButtonLoading: actionButtonLoading
+        )
+        let mainCardSection = TokenDetailsScene.Model.TableSection(
+            title: nil,
+            cells: [mainCardModel],
+            description: nil
+        )
+        sections.append(mainCardSection)
+        
+        let summaryAvailableModel = TokenDetailsTokenSummaryCell.Model(
+            title: "Available",
+            value: self.amountFormatter.assetAmountToString(token.availableForIssuance)
+        )
+        let summaryIssuedModel = TokenDetailsTokenSummaryCell.Model(
+            title: "Issued",
+            value: self.amountFormatter.assetAmountToString(token.issued)
+        )
+        let summaryMaximumModel = TokenDetailsTokenSummaryCell.Model(
+            title: "Maximum",
+            value: self.amountFormatter.assetAmountToString(token.maximumIssuanceAmount)
+        )
+        let summaryCells: [CellViewAnyModel] = [
+            summaryAvailableModel,
+            summaryIssuedModel,
+            summaryMaximumModel
+        ]
+        let summarySection = TokenDetailsScene.Model.TableSection(
+            title: "Token summary",
+            cells: summaryCells,
+            description: nil
+        )
+        sections.append(summarySection)
+        
+        if let termsOfUse = token.termsOfUse {
+            let termsOfUseModel = TokenDetailsTokenDocumentCell.Model(
+                icon: #imageLiteral(resourceName: "Document icon"),
+                name: termsOfUse.name,
+                link: termsOfUse.link
+            )
+            let termsOfUseSection = TokenDetailsScene.Model.TableSection(
+                title: "Terms of use",
+                cells: [termsOfUseModel],
+                description: nil
+            )
+            sections.append(termsOfUseSection)
+        }
+        
+        let viewModel = TokenDetailsScene.Event.TokenDidUpdate.ViewModel.sections(sections)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayTokenDidUpdate(viewModel: viewModel)
+        }
+    }
+    
+    func presentDidSelectAction(response: TokenDetailsScene.Event.DidSelectAction.Response) {
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayDidSelectAction(viewModel: response)
+        }
+    }
+}

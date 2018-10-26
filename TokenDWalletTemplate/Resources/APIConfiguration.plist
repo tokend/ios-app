@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>api_endpoint</key>
+	<string>https://api.testnet.tokend.org</string>
+	<key>storage_endpoint</key>
+	<string>https://storage.testnet.tokend.org/api</string>
+	<key>amount_precision</key>
+	<integer>6</integer>
+	<key>terms_address</key>
+	<string>demo.tokend.io/terms</string>
+</dict>
+</plist>

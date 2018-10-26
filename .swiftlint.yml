@@ -1,0 +1,49 @@
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+- Carthage
+- Pods
+
+disabled_rules: # rule identifiers to exclude from running
+- multiple_closures_with_trailing_closure
+- operator_whitespace
+- trailing_whitespace
+- function_parameter_count
+- cyclomatic_complexity
+- discouraged_direct_init
+- nesting
+- large_tuple
+- block_based_kvo
+- todo
+- fallthrough
+
+line_length: 120
+type_body_length:
+    warning: 400
+    error: 600
+file_length:
+    warning: 800
+    error: 1000
+function_body_length:
+    warning: 100 # Should be 20
+    error: 200 # Should 40
+identifier_name:
+    min_length: 2
+    excluded:
+        - x
+        - y
+        - n
+        - r
+        - p
+        - _default
+        - _domain
+        - _selected
+type_name:
+    max_length: 50
+    excluded:
+        - iPhone
+        - iPhoneSize
+
+nesting:
+    level: 2
+
+
+
