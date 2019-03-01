@@ -71,7 +71,7 @@ class HorizontalPicker: UIView {
         
         guard let scrollView = object as? UIScrollView,
             self.scrollView == scrollView,
-            keyPath == "bounds"
+            keyPath == Localized(.bounds)
             else {
                 super.observeValue(
                     forKeyPath: keyPath,
@@ -127,7 +127,7 @@ class HorizontalPicker: UIView {
         self.scrollView.keyboardDismissMode = .none
         self.scrollView.addObserver(
             self,
-            forKeyPath: "bounds",
+            forKeyPath: Localized(.bounds),
             options: [.new, .old],
             context: nil
         )

@@ -424,6 +424,10 @@ extension RegisterScene.Interactor: RegisterScene.BusinessLogic {
         case .agreeOnTerms(_, let link):
             let response = Event.SubAction.Response(action: .showTermsPage(link: link))
             self.presenter.presentSubAction(response: response)
+            
+        case .authenticator:
+            let response = Event.SubAction.Response(action: .routeToSignInAuthenticator)
+            self.presenter.presentSubAction(response: response)
         }
     }
     
@@ -434,7 +438,7 @@ extension RegisterScene.Interactor: RegisterScene.BusinessLogic {
             case .agreeOnTerms(_, let link):
                 self.sceneModel.subActions[index] = .agreeOnTerms(checked: request.checked, link: link)
                 
-            case .recovery, .signIn, .signOut, .signUp:
+            case .recovery, .signIn, .signOut, .signUp, .authenticator:
                 break
             }
         }

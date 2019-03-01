@@ -2,12 +2,10 @@ import UIKit
 
 protocol DashboardPaymentsPlugInDisplayLogic: class {
     typealias Event = DashboardPaymentsPlugIn.Event
-
-    func displayBalanceDidChange(viewModel: Event.BalanceDidChange.ViewModel)
+    
     func displayBalancesDidChange(viewModel: Event.BalancesDidChange.ViewModel)
-    func displayRateDidChange(viewModel: Event.RateDidChange.ViewModel)
-    func displaySelectedBalanceDidChange(viewModel: Event.SelectedBalanceDidChange.ViewModel)
     func displayDidSelectViewMore(viewModel: Event.DidSelectViewMore.ViewModel)
+    func displaySelectedBalanceDidChange(viewModel: Event.SelectedBalanceDidChange.ViewModel)
     func displayViewMoreAvailabilityChanged(viewModel: Event.ViewMoreAvailabilityChanged.ViewModel)
 }
 
@@ -84,7 +82,12 @@ extension DashboardPaymentsPlugIn {
         }
         
         private func addNewTransactionsList(_ new: TransactionsListScene.ViewController) {
-            self.addChildViewController(new, to: self.transactionsListContainerView)
+            self.addChildViewController(
+                new,
+                to: self.transactionsListContainerView,
+                layoutFulledge: true
+            )
+            
             new.scrollEnabled = false
             new.onContentSizeDidChange = { [weak new] (newSize) in
                 new?.view.snp.remakeConstraints({ [weak self] (make) in
@@ -136,7 +139,7 @@ extension DashboardPaymentsPlugIn {
             self.viewMoreButton.titleLabel?.font = Theme.Fonts.actionButtonFont
             self.viewMoreButton.setTitleColor(Theme.Colors.disabledActionTitleButtonColor, for: .disabled)
             self.viewMoreButton.setTitleColor(Theme.Colors.actionTitleButtonColor, for: .normal)
-            self.viewMoreButton.setTitle("View more", for: .normal)
+            self.viewMoreButton.setTitle(Localized(.view_more), for: .normal)
             self.viewMoreButton.addTarget(
                 self,
                 action: #selector(self.viewMoreButtonAction),
@@ -187,14 +190,18 @@ extension DashboardPaymentsPlugIn {
         private func setRate(_ rate: String?) {
             self.rateLabel.text = rate
         }
+        
+        private func setSelectedBalanceIfNeeded(index: Int?) {
+            guard let index = index else {
+                return
+            }
+            
+            self.balancePicker.setSelectedItemAtIndex(index, animated: true)
+        }
     }
 }
 
 extension DashboardPaymentsPlugIn.ViewController: DashboardPaymentsPlugIn.DisplayLogic {
-    func displayBalanceDidChange(viewModel: Event.BalanceDidChange.ViewModel) {
-        self.balanceLabel.text = viewModel.balance
-        self.setRate(viewModel.rate)
-    }
     
     func displayBalancesDidChange(viewModel: Event.BalancesDidChange.ViewModel) {
         let items = viewModel.balances.map { (balance) -> HorizontalPicker.Item in
@@ -202,25 +209,26 @@ extension DashboardPaymentsPlugIn.ViewController: DashboardPaymentsPlugIn.Displa
                 title: balance.name,
                 enabled: balance.id != nil,
                 onSelect: { [weak self] in
-                    self?.transactionsList?.asset = balance.asset
+                    self?.transactionsList?.balanceId = balance.id
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         guard let id = balance.id else {
                             return
                         }
-                        let request = Event.DidSelectBalance.Request(id: id)
-                        businessLogic.onDidSelectBalance(request: request)
+                        let request = Event.SelectedBalanceDidChange.Request(id: id)
+                        businessLogic.onSelectedBalanceDidChange(request: request)
                     })
             })
         }
         self.balancePicker.items = items
-    }
-    
-    func displayRateDidChange(viewModel: Event.RateDidChange.ViewModel) {
-        self.setRate(viewModel.rate)
+        self.setSelectedBalanceIfNeeded(index: viewModel.selectedBalanceIndex)
     }
     
     func displaySelectedBalanceDidChange(viewModel: Event.SelectedBalanceDidChange.ViewModel) {
-        self.balancePicker.setSelectedItemAtIndex(viewModel.index, animated: false)
+        self.balanceLabel.text = viewModel.balance
+        self.rateLabel.text = viewModel.rate
+        
+        self.transactionsList?.asset = viewModel.asset
+        self.transactionsList?.balanceId = viewModel.id
     }
     
     func displayDidSelectViewMore(viewModel: Event.DidSelectViewMore.ViewModel) {
@@ -239,5 +247,10 @@ extension DashboardPaymentsPlugIn.ViewController: DashboardScene.PlugIn {
     
     func reloadData() {
         self.transactionsList?.reloadTransactions()
+        
+        let request = Event.DidInitiateRefresh.Request()
+        self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+            businessLogic.onDidInitiateRefresh(request: request)
+        })
     }
 }

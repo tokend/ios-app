@@ -1,11 +1,12 @@
 import UIKit
 
 enum TransactionsListTableViewCell {
+    
     struct Model: CellViewModel {
         
         let identifier: UInt64
         
-        let asset: String
+        let balanceId: String
         let icon: UIImage
         let title: String
         let amount: String
@@ -114,6 +115,7 @@ enum TransactionsListTableViewCell {
         
         private func setupIconView() {
             self.iconView.contentMode = .scaleAspectFit
+            self.iconView.tintColor = Theme.Colors.mainColor
         }
         
         private func setupLabelsContainer() {

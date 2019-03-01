@@ -71,7 +71,7 @@ extension CreateOffer {
         }
         
         private func setupTitleLabel() {
-            self.titleLabel.text = "Amount"
+            self.titleLabel.text = Localized(.amount)
             self.titleLabel.font = Theme.Fonts.textFieldTitleFont
             self.titleLabel.textAlignment = .left
             self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
@@ -96,7 +96,7 @@ extension CreateOffer {
         }
         
         private func setupAssetLabel() {
-            self.assetLabel.text = "Asset"
+            self.assetLabel.text = Localized(.asset)
             self.assetLabel.font = Theme.Fonts.textFieldTitleFont
             self.assetLabel.textAlignment = .right
             self.assetLabel.textColor = Theme.Colors.textOnContentBackgroundColor

@@ -12,6 +12,7 @@ extension RegisterScene {
         private let flowControllerStack: FlowControllerStack
         private let userDataManager: UserDataManagerProtocol
         private let keychainManager: KeychainManagerProtocol
+        private let signUpRequestBuilder: RegisterSceneSignUpBuilderProtocol
         
         private let onSubmitEmail: (_ email: String) -> Void
         
@@ -22,6 +23,7 @@ extension RegisterScene {
             flowControllerStack: FlowControllerStack,
             userDataManager: UserDataManagerProtocol,
             keychainManager: KeychainManagerProtocol,
+            signUpRequestBuilder: RegisterSceneSignUpBuilderProtocol,
             onSubmitEmail: @escaping (_ email: String) -> Void
             ) {
             
@@ -29,6 +31,7 @@ extension RegisterScene {
             self.flowControllerStack = flowControllerStack
             self.userDataManager = userDataManager
             self.keychainManager = keychainManager
+            self.signUpRequestBuilder = signUpRequestBuilder
             self.onSubmitEmail = onSubmitEmail
         }
         
@@ -71,10 +74,10 @@ extension RegisterScene {
                 apiEndpoint: serverInfo.api,
                 termsAddress: serverInfo.terms,
                 webClient: serverInfo.web,
-                amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision
+                downloadUrl: serverInfo.download
             )
             
-            self.appController.updateFlowControllerStack(newConfiguration)
+            self.appController.updateFlowControllerStack(newConfiguration, self.keychainManager)
             
             return .success
         }
@@ -87,6 +90,65 @@ extension RegisterScene {
             
             self.onSubmitEmail(email)
             
+            self.flowControllerStack.api.generalApi.requestNetworkInfo { [weak self] (result) in
+                switch result {
+                    
+                case .failed:
+                    completion(.failed(.failedToSaveNetwork))
+                    
+                case .succeeded(let network):
+                    self?.signIn(
+                        email: email,
+                        password: password,
+                        network: network,
+                        completion: completion
+                    )
+                }
+            }
+        }
+        
+        // MARK: - SignUpWorker
+        
+        func performSignUpRequest(
+            email: String,
+            password: String,
+            completion: @escaping (RegisterSceneSignUpResult) -> Void
+            ) {
+            
+            self.onSubmitEmail(email)
+            
+            self.flowControllerStack.api.generalApi.requestNetworkInfo { [weak self] (result) in
+                switch result {
+                    
+                case .failed:
+                    completion(.failed(.failedToSaveNetwork))
+                    
+                case .succeeded(let network):
+                    self?.buildSignUpRequest(
+                        email: email,
+                        password: password,
+                        network: network,
+                        completion: completion
+                    )
+                }
+            }
+        }
+        
+        // MARK: - SignOutWorker
+        
+        func performSignOut(completion: @escaping () -> Void) {
+            
+        }
+        
+        // MARK: - Private
+        
+        private func signIn(
+            email: String,
+            password: String,
+            network: NetworkInfoModel,
+            completion: @escaping (RegisterSceneSignInResult) -> Void
+            ) {
+            
             self.flowControllerStack.keyServerApi.loginWith(
                 email: email,
                 password: password,
@@ -94,15 +156,28 @@ extension RegisterScene {
                     switch result {
                         
                     case .success(let walletDataModel, let keyPair):
-                        guard
-                            let strongSelf = self,
-                            let walletData = WalletDataSerializable.fromWalletData(walletDataModel)
-                            else {
+                        guard let strongSelf = self else {
+                            completion(.failed(.failedToSaveAccount))
+                            return
+                        }
+                        
+                        let network = WalletDataSerializable.AccountNetworkModel(
+                            masterAccountId: network.masterAccountId,
+                            name: network.masterExchangeName,
+                            passphrase: network.networkParams.passphrase,
+                            rootUrl: strongSelf.flowControllerStack.apiConfigurationModel.apiEndpoint,
+                            storageUrl: strongSelf.flowControllerStack.apiConfigurationModel.storageEndpoint
+                        )
+                        guard let walletData = WalletDataSerializable.fromWalletData(
+                            walletDataModel,
+                            signedViaAuthenticator: false,
+                            network: network
+                            ) else {
                                 completion(.failed(.failedToSaveAccount))
                                 return
                         }
                         
-                        strongSelf.onSuccessfulSignInRequest(
+                        self?.onSuccessfulSignInRequest(
                             walletData: walletData,
                             keyPair: keyPair,
                             completion: completion
@@ -151,27 +226,88 @@ extension RegisterScene {
             })
         }
         
-        // MARK: - SignUpWorker
-        
-        func performSignUpRequest(
+        private func buildSignUpRequest(
             email: String,
             password: String,
+            network: NetworkInfoModel,
             completion: @escaping (RegisterSceneSignUpResult) -> Void
             ) {
             
-            self.onSubmitEmail(email)
+            let accountNetwork = WalletDataSerializable.AccountNetworkModel(
+                masterAccountId: network.masterAccountId,
+                name: network.masterExchangeName,
+                passphrase: network.networkParams.passphrase,
+                rootUrl: self.flowControllerStack.apiConfigurationModel.apiEndpoint,
+                storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
+            )
             
-            self.flowControllerStack.keyServerApi.createWallet(
-                email: email,
+            self.signUpRequestBuilder.buildSignUpRequest(
+                for: email,
                 password: password,
-                referrerAccountId: nil,
                 completion: { [weak self] (result) in
                     switch result {
                         
-                    case .success(_, let walletDataModel, _, let recoveryKey):
+                    case .failure(let error):
+                        completion(.failed(.otherError(error)))
+                        
+                    case .success(let email, let recoveryKey, let walletInfo, let walletKDF):
+                        self?.signUp(
+                            email: email,
+                            recoveryKey: recoveryKey,
+                            walletInfo: walletInfo,
+                            walletKDF: walletKDF,
+                            accountNetwork: accountNetwork,
+                            completion: completion
+                        )
+                    }
+            })
+        }
+        
+        private func signUp(
+            email: String,
+            recoveryKey: ECDSA.KeyData,
+            walletInfo: WalletInfoModel,
+            walletKDF: WalletKDFParams,
+            accountNetwork: WalletDataSerializable.AccountNetworkModel,
+            completion: @escaping (RegisterSceneSignUpResult) -> Void
+            ) {
+            
+            self.flowControllerStack.keyServerApi.createWallet(
+                walletInfo: walletInfo,
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failure(let error):
+                        let signError: RegisterSceneSignUpResult.SignError
+                        
+                        switch error {
+                            
+                        case .emailAlreadyTaken:
+                            signError = .emailAlreadyTaken
+                            
+                        default:
+                            signError = .otherError(error)
+                        }
+                        
+                        completion(.failed(signError))
+                        
+                    case .success(let response):
+                        let walletDataModel = WalletDataModel(
+                            email: email,
+                            accountId: walletInfo.data.attributes.accountId,
+                            walletId: response.id,
+                            type: response.type,
+                            keychainData: walletInfo.data.attributes.keychainData,
+                            walletKDF: walletKDF,
+                            verified: response.attributes.verified
+                        )
                         guard
                             let strongSelf = self,
-                            let walletData = WalletDataSerializable.fromWalletData(walletDataModel)
+                            let walletData = WalletDataSerializable.fromWalletData(
+                                walletDataModel,
+                                signedViaAuthenticator: false,
+                                network: accountNetwork
+                            )
                             else {
                                 completion(.failed(.failedToSaveAccount))
                                 return
@@ -192,31 +328,9 @@ extension RegisterScene {
                             recoverySeed: recoverySeed
                             )
                         )
-                        
-                    case .failure(let error):
-                        let signError: RegisterSceneSignUpResult.SignError
-                        
-                        switch error {
-                            
-                        case .emailAlreadyTaken:
-                            signError = .emailAlreadyTaken
-                            
-                        default:
-                            signError = .otherError(error)
-                        }
-                        
-                        completion(.failed(signError))
                     }
             })
         }
-        
-        // MARK: - SignOutWorker
-        
-        func performSignOut(completion: @escaping () -> Void) {
-            
-        }
-        
-        // MARK: - Private
         
         private func onSuccessfulSignInRequest(
             walletData: WalletDataSerializable,
@@ -224,54 +338,6 @@ extension RegisterScene {
             completion: @escaping (RegisterSceneSignInResult) -> Void
             ) {
             
-            let keyDataProvider = UnsafeRequestSignKeyDataProvider(keyPair: keyPair)
-            let requestSigner = RequestSigner(keyDataProvider: keyDataProvider)
-            
-            let usersApi = TokenDSDK.UsersApi(
-                apiConfiguration: self.flowControllerStack.keyServerApi.apiConfiguration,
-                requestSigner: requestSigner
-            )
-            
-            let accountId = walletData.accountId
-            
-            usersApi.getUser(accountId: accountId, completion: { [weak self] result in
-                switch result {
-                    
-                case .failure(let errors):
-                    if errors.contains(status: ApiError.Status.notFound) {
-                        usersApi.createUser(accountId: accountId, completion: { [weak self] createResult in
-                            switch createResult {
-                                
-                            case .failure(let error):
-                                completion(.failed(.otherError(error)))
-                                
-                            case .success:
-                                self?.onSuccessfulUserCheck(
-                                    walletData: walletData,
-                                    keyPair: keyPair,
-                                    completion: completion
-                                )
-                            }
-                        })
-                    } else {
-                        completion(.failed(.otherError(errors)))
-                    }
-                    
-                case .success:
-                    self?.onSuccessfulUserCheck(
-                        walletData: walletData,
-                        keyPair: keyPair,
-                        completion: completion
-                    )
-                }
-            })
-        }
-        
-        private func onSuccessfulUserCheck(
-            walletData: WalletDataSerializable,
-            keyPair: ECDSA.KeyData,
-            completion: @escaping (RegisterSceneSignInResult) -> Void
-            ) {
             guard
                 self.keychainManager.saveKeyData(keyPair, account: walletData.email),
                 self.userDataManager.saveWalletData(walletData, account: walletData.email)

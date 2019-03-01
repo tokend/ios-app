@@ -77,7 +77,9 @@ extension ReceiveAddress {
             guard self.sceneModel.address != newAddress else {
                 return
             }
+            
             self.sceneModel.address = newAddress
+            self.presentValueChanged()
             self.regenerateQR()
         }
         
@@ -98,7 +100,6 @@ extension ReceiveAddress {
 extension ReceiveAddress.Interactor: ReceiveAddress.BusinessLogic {
     func onViewDidLoad(request: ReceiveAddress.Event.ViewDidLoad.Request) {
         self.observeAddressChange()
-        self.presentValueChanged()
     }
     
     func onViewDidLoadSync(request: ReceiveAddress.Event.ViewDidLoadSync.Request) {

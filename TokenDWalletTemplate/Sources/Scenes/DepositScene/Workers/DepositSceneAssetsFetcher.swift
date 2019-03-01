@@ -44,7 +44,9 @@ extension DepositScene {
             self.observeAssetsRepoErrorStatus()
             self.observeAccount()
             self.observeBalances()
+            self.observeBalancesErrors()
             self.observeBindingStatuses()
+            self.observeBindingErrors()
         }
         
         // MARK: - Private
@@ -94,12 +96,30 @@ extension DepositScene {
                 .disposed(by: self.disposeBag)
         }
         
+        private func observeBalancesErrors() {
+            self.balancesRepo
+                .observeErrorStatus()
+                .subscribe(onNext: { (error) in
+                    self.depositableAssetErrorStatus.accept(error)
+                })
+            .disposed(by: self.disposeBag)
+        }
+        
         private func observeBindingStatuses() {
             self.externalSystemBalancesManager
                 .observeBindingStatuses()
                 .subscribe { [weak self] (_) in
                     self?.updateDepositableAssets()
                 }
+                .disposed(by: self.disposeBag)
+        }
+        
+        private func observeBindingErrors() {
+            self.externalSystemBalancesManager
+                .observeBindingStatusesErrors()
+                .subscribe(onNext: { (error) in
+                    self.depositableAssetErrorStatus.accept(error)
+                })
                 .disposed(by: self.disposeBag)
         }
         

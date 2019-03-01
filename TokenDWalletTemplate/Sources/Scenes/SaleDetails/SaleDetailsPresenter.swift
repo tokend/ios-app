@@ -57,11 +57,16 @@ extension SaleDetails {
                 )
                 
                 let days = components.day ?? 0
-                let startsInString =  "\(days) days"
+                let startsInString = Localized(
+                    .days_days,
+                    replace: [
+                        .days_days_replace_days: days
+                    ]
+                )
                 
                 isUpcomming = true
                 
-                daysRemaining = ["Starts in ", startsInString].joined()
+                daysRemaining = [Localized(.starts_in), startsInString].joined()
             } else {
                 isUpcomming = false
                 
@@ -73,10 +78,15 @@ extension SaleDetails {
                 
                 if let days = components.day,
                     days >= 0 {
-                    let daysRemainingString =  "\(days) days"
-                    daysRemaining = [daysRemainingString, " left"].joined()
+                    let daysRemainingString = Localized(
+                        .days_days,
+                        replace: [
+                            .days_days_replace_days: days
+                        ]
+                    )
+                    daysRemaining = [daysRemainingString, Localized(.left_lowercased)].joined()
                 } else {
-                    daysRemaining = "ended"
+                    daysRemaining = Localized(.ended)
                 }
             }
             
@@ -87,16 +97,31 @@ extension SaleDetails {
             sale: Model.DescriptionCellModel
             ) -> DescriptionCell.ViewModel {
             
-            let saleName = "\(sale.name) (\(sale.asset))"
+            let name = sale.name
+            let asset = sale.asset
+            let saleName = "\(name) (\(asset))"
             let investedAmountFormatted = self.investedAmountFormatter.formatAmount(
                 sale.investmentAmount,
                 currency: sale.investmentAsset
             )
-            let investedAmount = "\(investedAmountFormatted) invested"
+            let investedAmount = Localized(
+                .invested,
+                replace: [
+                    .invested_replace_amount: investedAmountFormatted
+                ]
+            )
+
             let investedPercentage = sale.investmentPercentage
             let investedPercentageRounded = Int(roundf(investedPercentage * 100))
             let investedPercentageText = "\(investedPercentageRounded)%"
-            let investorsText = "\(sale.investorsCount) investors"
+            let investorsCount = sale.investorsCount
+            let investorsText = Localized(
+                .investors,
+                replace: [
+                    .investors_replace_count: investorsCount
+                ]
+            )
+
             let timeText = self.getTimeText(sale: sale)
             
             return DescriptionCell.ViewModel(
@@ -121,7 +146,7 @@ extension SaleDetails {
                 cellModel.investedAmount,
                 currency: cellModel.asset
             )
-            var deployed = "deployed"
+            var deployed = Localized(.deployed)
             if let deployedDate = cellModel.investedDate {
                 let formattedDate = self.dateFormatter.dateToString(deployedDate)
                 deployed.append(" \(formattedDate)")
@@ -142,7 +167,13 @@ extension SaleDetails {
             )
             var formattedGrowthSinceDate = ""
             if let selectedPeriod = cellModel.growthSincePeriod {
-                formattedGrowthSinceDate = "since last \(self.titleForPeriod(selectedPeriod).lowercased())"
+                let period = self.titleForPeriod(selectedPeriod).lowercased()
+                formattedGrowthSinceDate = Localized(
+                    .since_last_period,
+                    replace: [
+                        .since_last_period_replace_period: period
+                    ]
+                )
             }
             
             let chartViewModel = self.getChartViewModel(cellModel.chartModel, asset: cellModel.asset)
@@ -198,7 +229,12 @@ extension SaleDetails {
                     cellModel.availableAmount,
                     currency: selectedAsset.asset
                 )
-                availableAmount = "Available: \(formatted)"
+                availableAmount = Localized(
+                    .available_date,
+                    replace: [
+                        .available_date_replace_formatted: formatted
+                    ]
+                )
             } else {
                 availableAmount = ""
             }
@@ -234,7 +270,7 @@ extension SaleDetails {
         private func getFormattedGrowthAmount(_ amount: Decimal, asset: String) -> String {
             let formattedAmount: String
             if amount == 0.0 {
-                formattedAmount = "No growth"
+                formattedAmount = Localized(.no_growth)
             } else {
                 let formatted = self.amountFormatter.formatAmount(
                     amount,
@@ -256,15 +292,15 @@ extension SaleDetails {
             
             switch period {
             case .hour:
-                return "Hour"
+                return Localized(.hour)
             case .day:
-                return "Day"
+                return Localized(.day)
             case .week:
-                return "Week"
+                return Localized(.week)
             case .month:
-                return "Month"
+                return Localized(.month)
             case .year:
-                return "Year"
+                return Localized(.year)
             }
         }
         
@@ -379,7 +415,13 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         )
         var formattedGrowthSinceDate = ""
         if let selectedPeriod = response.growthSincePeriod {
-            formattedGrowthSinceDate = "since last \(self.titleForPeriod(selectedPeriod).lowercased())"
+            let period = self.titleForPeriod(selectedPeriod).lowercased()
+            formattedGrowthSinceDate = Localized(
+                .since_last_period,
+                replace: [
+                    .since_last_period_replace_period: period
+                ]
+            )
         }
         
         let chartViewModel = self.getChartViewModel(response.chartModel, asset: response.asset)
@@ -409,7 +451,7 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
             response.investedAmount,
             currency: response.asset
         )
-        var deployed = "deployed"
+        var deployed = Localized(.deployed)
         if let deployedDate = response.investedDate {
             let formattedDate = self.dateFormatter.dateToString(deployedDate)
             deployed.append(" \(formattedDate)")

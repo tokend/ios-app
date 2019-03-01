@@ -15,6 +15,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
     // MARK: - Private
     
     private func showTokensListScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+        let tokenColoringProvider = TokenColoringProvider.shared
         
         let originalAccountId = self.userDataProvider.walletData.accountId
         let viewController = ExploreTokensScene.ViewController()
@@ -41,6 +42,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         
         ExploreTokensScene.Configurator.configure(
             viewController: viewController,
+            tokenColoringProvider: tokenColoringProvider,
             tokensFetcher: tokensFetcher,
             balanceCreator: balanceCreator,
             applicationEventsController: ApplicationEventsController.shared,
@@ -48,12 +50,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        
-        viewController.navigationItem.title = "Explore Tokens"
+        viewController.navigationItem.title = Localized(.explore_tokens)
         
         self.navigationController.setViewControllers([viewController], animated: false)
         
@@ -84,6 +81,8 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         )
         let amountFormatter: TokenDetailsScene.AmountFormatterProtocol = TokenDetailsScene.AmountFormatter()
         
+        let tokenColoringProvider = TokenColoringProvider.shared
+        
         let routing = TokenDetailsScene.Routing(
             onDidSelectHistoryForBalance: { [weak self] (balanceId) in
                 self?.showTokenTransactionsHistoryFor(selectedBalanceId: balanceId)
@@ -98,16 +97,12 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             balanceCreator: balanceCreator,
             tokenDetailsFetcher: tokenDetailsFetcher,
             amountFormatter: amountFormatter,
+            tokenColoringProvider: tokenColoringProvider,
             originalAccountId: originalAccountId,
             routing: routing
         )
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        
-        viewController.navigationItem.title = "Token details"
+        viewController.navigationItem.title = Localized(.token_details)
         self.navigationController.pushViewController(viewController, animated: true)
     }
     
@@ -121,7 +116,10 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             rateProvider: transactionsListRateProvider,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
-        let transactionsRouting = TransactionsListScene.Routing { (_, _) in }
+        let transactionsRouting = TransactionsListScene.Routing(
+            onDidSelectItemWithIdentifier: { (_, _) in },
+            showSendPayment: { _ in }
+        )
         
         let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
@@ -137,12 +135,6 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             balancesFetcher: balancesFetcher,
             selectedBalanceId: selectedBalanceId
         )
-        
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        self.navigationController.navigationBar.shadowImage = UIImage()
         
         self.navigationController.pushViewController(container, animated: true)
     }

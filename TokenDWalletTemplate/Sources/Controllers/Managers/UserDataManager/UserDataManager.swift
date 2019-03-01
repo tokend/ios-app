@@ -8,6 +8,7 @@ protocol UserDataManagerProtocol {
     func saveWalletData(_ walletData: WalletDataSerializable, account: String) -> Bool
     func getWalletData(account: String) -> WalletDataSerializable?
     func removeWalletData(account: String) -> Bool
+    func isSignedViaAuthenticator() -> Bool
     
     func clearAllData()
 }
@@ -74,5 +75,15 @@ extension UserDataManager: UserDataManagerProtocol {
         }
         
         _ = self.removeWalletData(account: mainAccount)
+    }
+    
+    func isSignedViaAuthenticator() -> Bool {
+        guard let mainAccount = self.getMainAccount(),
+            let serializedData = self.keychainManager.getOpaqueData(account: mainAccount, keyPostfix: .walletData),
+            let walletData = WalletDataSerializable.fromSerializedData(serializedData: serializedData) else {
+                return false
+        }
+        
+        return walletData.signedViaAuthenticator
     }
 }

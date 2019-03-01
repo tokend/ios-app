@@ -1,9 +1,13 @@
 import UIKit
 
 protocol SettingsDisplayLogic: class {
+    
+    typealias Event = Settings.Event
+    
     func displaySectionsUpdated(viewModel: Settings.Event.SectionsUpdated.ViewModel)
     func displayDidSelectCell(viewModel: Settings.Event.DidSelectCell.ViewModel)
     func displayDidSelectSwitch(viewModel: Settings.Event.DidSelectSwitch.ViewModel)
+    func displayShowTerms(viewModel: Event.ShowTerms.ViewModel)
 }
 
 extension Settings {
@@ -103,6 +107,9 @@ extension Settings {
 }
 
 extension Settings.ViewController: Settings.DisplayLogic {
+    
+    typealias Event = Settings.Event
+    
     func displaySectionsUpdated(viewModel: Settings.Event.SectionsUpdated.ViewModel) {
         self.sections = viewModel.sectionViewModels
         self.reloadTableView()
@@ -125,6 +132,10 @@ extension Settings.ViewController: Settings.DisplayLogic {
         case .failed(let error):
             self.routing?.showErrorMessage(error)
         }
+    }
+    
+    func displayShowTerms(viewModel: Event.ShowTerms.ViewModel) {
+        self.routing?.onShowTerms(viewModel.url)
     }
 }
 

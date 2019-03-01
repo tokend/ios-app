@@ -5,6 +5,7 @@ enum SendPayment {
     // MARK: - Typealiases
     
     typealias QRCodeReaderCompletion = (_ result: Model.QRCodeReaderResult) -> Void
+    typealias SelectContactEmailCompletion = (_ email: String) -> Void
     
     // MARK: -
     
@@ -15,6 +16,7 @@ enum SendPayment {
 // MARK: - Models
 
 extension SendPayment.Model {
+    
     class SceneModel {
         var selectedBalance: BalanceDetails?
         var recipientAddress: String?
@@ -76,6 +78,7 @@ extension SendPayment.Model {
         let recipientAccountId: String
         let senderFee: FeeModel
         let recipientFee: FeeModel
+        let reference: String
     }
     
     struct SendWithdrawModel {
@@ -102,16 +105,19 @@ extension SendPayment.Model {
 // MARK: - Events
 
 extension SendPayment.Event {
+    
+    typealias Model = SendPayment.Model
+    
     struct ViewDidLoad {
         struct Request {}
         
         struct Response {
-            let sceneModel: SendPayment.Model.SceneModel
+            let sceneModel: Model.SceneModel
             let amountValid: Bool
         }
         
         struct ViewModel {
-            let sceneModel: SendPayment.Model.SceneViewModel
+            let sceneModel: Model.SceneViewModel
         }
     }
     
@@ -121,14 +127,14 @@ extension SendPayment.Event {
             case loading
             case loaded
             case failed(Error)
-            case succeeded(sceneModel: SendPayment.Model.SceneModel, amountValid: Bool)
+            case succeeded(sceneModel: Model.SceneModel, amountValid: Bool)
         }
         
         enum ViewModel {
             case loading
             case loaded
             case failed(errorMessage: String)
-            case succeeded(SendPayment.Model.SceneViewModel)
+            case succeeded(Model.SceneViewModel)
         }
     }
     
@@ -136,11 +142,11 @@ extension SendPayment.Event {
         struct Request {}
         
         struct Response {
-            let balances: [SendPayment.Model.BalanceDetails]
+            let balances: [Model.BalanceDetails]
         }
         
         struct ViewModel {
-            let balances: [SendPayment.Model.BalanceDetailsViewModel]
+            let balances: [Model.BalanceDetailsViewModel]
         }
     }
     
@@ -150,12 +156,12 @@ extension SendPayment.Event {
         }
         
         struct Response {
-            let sceneModel: SendPayment.Model.SceneModel
+            let sceneModel: Model.SceneModel
             let amountValid: Bool
         }
         
         struct ViewModel {
-            let sceneModel: SendPayment.Model.SceneViewModel
+            let sceneModel: Model.SceneViewModel
         }
     }
     
@@ -165,21 +171,36 @@ extension SendPayment.Event {
         }
     }
     
+    struct SelectedContact {
+        struct Request {
+            let email: String
+        }
+        
+        struct Response {
+            let sceneModel: Model.SceneModel
+            let amountValid: Bool
+        }
+        
+        struct ViewModel {
+            let sceneModel: Model.SceneViewModel
+        }
+    }
+    
     struct ScanRecipientQRAddress {
         struct Request {
-            let qrResult: SendPayment.Model.QRCodeReaderResult
+            let qrResult: Model.QRCodeReaderResult
         }
         
         enum Response {
             case canceled
             case failed(FailedReason)
-            case succeeded(sceneModel: SendPayment.Model.SceneModel, amountValid: Bool)
+            case succeeded(sceneModel: Model.SceneModel, amountValid: Bool)
         }
         
         enum ViewModel {
             case canceled
             case failed(errorMessage: String)
-            case succeeded(SendPayment.Model.SceneViewModel)
+            case succeeded(Model.SceneViewModel)
         }
     }
     
@@ -205,15 +226,15 @@ extension SendPayment.Event {
         enum Response {
             case loading
             case loaded
-            case failed(SendPayment.Event.PaymentAction.SendError)
-            case succeeded(SendPayment.Model.SendWithdrawModel)
+            case failed(PaymentAction.SendError)
+            case succeeded(Model.SendWithdrawModel)
         }
         
         enum ViewModel {
             case loading
             case loaded
             case failed(errorMessage: String)
-            case succeeded(SendPayment.Model.SendWithdrawModel)
+            case succeeded(Model.SendWithdrawModel)
         }
     }
     
@@ -222,19 +243,20 @@ extension SendPayment.Event {
             case loading
             case loaded
             case failed(SendError)
-            case succeeded(SendPayment.Model.SendPaymentModel)
+            case succeeded(Model.SendPaymentModel)
         }
         
         enum ViewModel {
             case loading
             case loaded
             case failed(errorMessage: String)
-            case succeeded(SendPayment.Model.SendPaymentModel)
+            case succeeded(Model.SendPaymentModel)
         }
     }
 }
 
 extension SendPayment.Event.PaymentAction {
+    
     enum SendError: Error, LocalizedError {
         case emptyAmount
         case emptyRecipientAddress
@@ -249,25 +271,46 @@ extension SendPayment.Event.PaymentAction {
         var errorDescription: String? {
             switch self {
             case .emptyAmount:
-                return "Empty amount"
+                return Localized(.empty_amount)
             case .emptyRecipientAddress:
-                return "Empty recipient address"
+                return Localized(.empty_recipient_address)
             case .failedToLoadFees(let error):
-                return "Failed to load fees: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .failed_to_load_fees,
+                    replace: [
+                        .failed_to_load_fees_replace_message: message
+                    ]
+                )
+
             case .failedToResolveRecipientAddress(let error):
-                return "Failed to resolve recipient address: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .failed_to_resolve_recipient_address,
+                    replace: [
+                        .failed_to_resolve_recipient_address_replace_message: message
+                    ]
+                )
+
             case .insufficientFunds:
-                return "Insufficient funds"
+                return Localized(.insufficient_funds)
             case .noBalance:
-                return "No balance"
+                return Localized(.no_balance)
             case .other(let error):
-                return "Request error: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .request_error,
+                    replace: [
+                        .request_error_replace_message: message
+                    ]
+                )
             }
         }
     }
 }
 
 extension SendPayment.Event.ScanRecipientQRAddress {
+    
     enum FailedReason: Error, LocalizedError {
         case invalidAccountId
         case other(Error)
@@ -278,11 +321,17 @@ extension SendPayment.Event.ScanRecipientQRAddress {
         var errorDescription: String? {
             switch self {
             case .invalidAccountId:
-                return "Invalid account id"
+                return Localized(.invalid_account_id)
             case .other(let error):
-                return "Request error: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .request_error,
+                    replace: [
+                        .request_error_replace_message: message
+                    ]
+                )
             case .permissionDenied:
-                return "Permission denied"
+                return Localized(.permission_denied)
             }
         }
     }
@@ -291,23 +340,28 @@ extension SendPayment.Event.ScanRecipientQRAddress {
 // MARK: -
 
 extension SendPayment.Model.ViewConfig {
+    
     static func sendPayment() -> SendPayment.Model.ViewConfig {
         return SendPayment.Model.ViewConfig(
-            recipientAddressFieldTitle: "Account ID or email:",
-            recipientAddressFieldPlaceholder: "Enter Account ID or email"
+            recipientAddressFieldTitle: Localized(.account_id_or_email_colon),
+            recipientAddressFieldPlaceholder: Localized(.enter_account_id_or_email)
         )
     }
     
     static func sendWithdraw() -> SendPayment.Model.ViewConfig {
         return SendPayment.Model.ViewConfig(
-            recipientAddressFieldTitle: "Destination address:",
-            recipientAddressFieldPlaceholder: "Enter destination address"
+            recipientAddressFieldTitle: Localized(.destination_address),
+            recipientAddressFieldPlaceholder: Localized(.enter_destination_address)
         )
     }
 }
 
 extension SendPayment.Model.BalanceDetails: Equatable {
-    static func ==(left: SendPayment.Model.BalanceDetails, right: SendPayment.Model.BalanceDetails) -> Bool {
+    static func ==(
+        left: SendPayment.Model.BalanceDetails,
+        right: SendPayment.Model.BalanceDetails
+        ) -> Bool {
+        
         return left.balanceId == right.balanceId
     }
 }

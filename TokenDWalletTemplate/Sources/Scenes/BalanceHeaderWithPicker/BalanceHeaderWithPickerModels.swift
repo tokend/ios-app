@@ -25,6 +25,12 @@ extension BalanceHeaderWithPicker.Model {
         let balanceId: BalanceHeaderWithPicker.Identifier?
     }
     
+    struct BalanceViewModel {
+        let id: BalanceHeaderWithPicker.Identifier?
+        let name: String
+        let asset: String
+    }
+    
     struct Amount {
         let value: Decimal
         let asset: String
@@ -36,63 +42,42 @@ extension BalanceHeaderWithPicker.Model {
 extension BalanceHeaderWithPicker.Event {
     typealias Model = BalanceHeaderWithPicker.Model
     
-    enum BalanceDidChange {
-        struct Response {
-            let balance: Model.Amount
-            let rate: Model.Amount?
-        }
-        
-        struct ViewModel {
-            let balance: String
-            let rate: String?
-        }
-    }
-    
-    enum SelectedBalanceDidChange {
-        struct Model {
-            let index: Int
-        }
-        
-        typealias Response = Model
-        typealias ViewModel = Model
-    }
-    
-    enum RateDidChange {
-        struct Response {
-            let rate: Model.Amount?
-        }
-        
-        struct ViewModel {
-            let rate: String?
-        }
+    enum DidInjectModules {
+        struct Request { }
     }
     
     enum BalancesDidChange {
         struct Response {
             let balances: [Model.Balance]
+            let selectedBalanceId: BalanceHeaderWithPicker.Identifier?
+            var selectedBalanceIndex: Int?
         }
         
         struct ViewModel {
-            let balances: [Balance]
+            let balances: [Model.BalanceViewModel]
+            let selectedBalanceId: BalanceHeaderWithPicker.Identifier?
+            var selectedBalanceIndex: Int?
         }
     }
     
-    enum DidSelectBalance {
+    enum SelectedBalanceDidChange {
         struct Request {
             let id: BalanceHeaderWithPicker.Identifier
         }
-    }
-    
-    enum DidInjectModules {
-        struct Request { }
-    }
-}
-
-extension BalanceHeaderWithPicker.Event.BalancesDidChange.ViewModel {
-    struct Balance {
-        let id: BalanceHeaderWithPicker.Identifier?
-        let name: String
-        let asset: String
+        
+        struct Response {
+            let balance: Model.Amount
+            let rate: Model.Amount?
+            let id: BalanceHeaderWithPicker.Identifier?
+            let asset: String
+        }
+        
+        struct ViewModel {
+            let balance: String
+            let rate: String?
+            let id: BalanceHeaderWithPicker.Identifier?
+            let asset: String
+        }
     }
 }
 

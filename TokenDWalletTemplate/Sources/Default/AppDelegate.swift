@@ -18,7 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             apiConfiguration = try APIConfigurationFetcher.fetchApiConfigurationFromPlist("APIConfiguration")
         } catch let error {
-            fatalError("Failed to fetch apiConfiguration: \(error.localizedDescription)")
+            let message = error.localizedDescription
+            fatalError("Failed to fetch apiConfiguration: \(message)")
         }
         
         self.appController = AppController(
@@ -45,6 +46,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             userActivity: userActivity,
             restorationHandler: restorationHandler
         )
+    }
+    
+    func application(
+        _ app: UIApplication,
+        open url: URL,
+        options: [UIApplicationOpenURLOptionsKey: Any] = [:]
+        ) -> Bool {
+        
+        return self.appController.handleOpenURL(url: url, options: options)
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {

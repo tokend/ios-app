@@ -52,27 +52,32 @@ extension UpdatePassword {
             case .emptyField(let fieldType):
                 let fieldName: String = {
                     switch fieldType {
-                    case .email: return "email"
-                    case .seed: return "recovery seeed"
-                    case .oldPassword: return "old password"
-                    case .newPassword: return "new password"
-                    case .confirmPassword: return "confirm password"
+                    case .email: return Localized(.email_lowercased)
+                    case .seed: return Localized(.recovery_seed_lowercased)
+                    case .oldPassword: return Localized(.old_password_lowercased)
+                    case .newPassword: return Localized(.new_password_lowercased)
+                    case .confirmPassword: return Localized(.confirm_password_lowercased)
                     }
                 }()
                 error = SubmitError(
-                    message: "Enter \(fieldName)",
+                    message: Localized(
+                        .enter_f,
+                        replace: [
+                            .enter_f_replace_field_name: fieldName
+                        ]
+                    ),
                     error: submitActionError
                 )
                 
             case .incorrectSeed:
                 error = SubmitError(
-                    message: "Incorrect or corrupted recovery seed",
+                    message: Localized(.incorrect_or_corrupted_recovery_seed),
                     error: submitActionError
                 )
                 
             case .passwordsDontMatch:
                 error = SubmitError(
-                    message: "Passwords don't match",
+                    message: Localized(.passwords_dont_match),
                     error: submitActionError
                 )
                 
@@ -84,7 +89,7 @@ extension UpdatePassword {
                 
             case .networkInfoFetchFailed:
                 error = SubmitError(
-                    message: "Failed to fetch network info",
+                    message: Localized(.failed_to_fetch_network_info),
                     error: submitActionError
                 )
             }
@@ -130,20 +135,26 @@ extension UpdatePassword.Presenter: UpdatePassword.PresentationLogic {
 extension UpdatePassword.Model.FieldType {
     var viewModelTitle: String {
         switch self {
-        case .email: return "Email"
-        case .seed: return "Recovery seed"
-        case .oldPassword: return "Old Password"
-        case .newPassword: return "New Password"
-        case .confirmPassword: return "Confirm"
+        case .email: return Localized(.email)
+        case .seed: return Localized(.recovery_seed)
+        case .oldPassword: return Localized(.old_password)
+        case .newPassword: return Localized(.new_password)
+        case .confirmPassword: return Localized(.confirm_password)
         }
     }
     
     var viewModelPlaceholder: String {
         switch self {
         case .confirmPassword:
-            return "Confirm New Password"
+            return Localized(.confirm_new_password)
         default:
-            return "Enter \(self.viewModelTitle)"
+            let title = self.viewModelTitle
+            return Localized(
+                .enter_t,
+                replace: [
+                    .enter_t_replace_title: title
+                ]
+            )
         }
     }
     

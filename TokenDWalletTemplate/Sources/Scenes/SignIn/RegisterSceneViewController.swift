@@ -68,7 +68,7 @@ extension RegisterScene {
                 })
             }
             self.signInView.onFieldShouldReturn = { [weak self] fieldPurpose in
-                let request = Event.FieldShouldReturn.Request.init(
+                let request = Event.FieldShouldReturn.Request(
                     fieldPurpose: fieldPurpose
                 )
                 self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
@@ -159,6 +159,7 @@ extension RegisterScene {
                 self.focusFields([.password])
                 
             case .failedToSaveAccount,
+                 .failedToSaveNetwork,
                  .otherError,
                  .tfaFailed,
                  .termsNotAgreed:
@@ -214,6 +215,9 @@ extension RegisterScene.ViewController: RegisterScene.DisplayLogic {
             
         case .routeToRecovery:
             self.routing?.onRecovery()
+            
+        case .routeToSignInAuthenticator:
+            self.routing?.onAuthenticatorSignIn()
             
         case .routeToSignOut:
             self.routing?.onSignedOut()

@@ -5,7 +5,8 @@ extension ExploreTokensScene {
     enum Configurator {
         static func configure(
             viewController: ViewController,
-            tokensFetcher: ExploreTokensScene.TokensFetcherProtocol,
+            tokenColoringProvider: TokenColoringProvider,
+            tokensFetcher: TokensFetcherProtocol,
             balanceCreator: BalanceCreatorProtocol,
             applicationEventsController: ApplicationEventsControllerProtocol,
             originalAccountId: String,
@@ -13,7 +14,10 @@ extension ExploreTokensScene {
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
-            let presenter = Presenter(presenterDispatch: presenterDispatch)
+            let presenter = Presenter(
+                presenterDispatch: presenterDispatch,
+                tokenColoringProvider: tokenColoringProvider
+            )
             let interactor = Interactor(
                 presenter: presenter,
                 tokensFetcher: tokensFetcher,

@@ -55,7 +55,7 @@ extension SendPayment {
         }
         
         private func setupTitleLabel() {
-            self.titleLabel.text = "Balance:"
+            self.titleLabel.text = Localized(.balance_colon)
             SharedViewsBuilder.configureInputForm(titleLabel: self.titleLabel)
         }
         

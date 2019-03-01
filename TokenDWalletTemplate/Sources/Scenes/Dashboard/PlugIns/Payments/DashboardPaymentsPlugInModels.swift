@@ -25,6 +25,12 @@ extension DashboardPaymentsPlugIn.Model {
         let balanceId: DashboardPaymentsPlugIn.BalanceId?
     }
     
+    struct BalanceViewModel {
+        let id: DashboardPaymentsPlugIn.BalanceId?
+        let name: String
+        let asset: String
+    }
+    
     enum LoadingStatus {
         case loading
         case loaded
@@ -47,50 +53,41 @@ extension DashboardPaymentsPlugIn.Event {
         struct Request {}
     }
     
-    enum BalanceDidChange {
-        struct Response {
-            let balance: Model.Amount
-            let rate: Model.Amount?
-        }
-        
-        struct ViewModel {
-            let balance: String
-            let rate: String?
-        }
-    }
-    
-    enum RateDidChange {
-        struct Response {
-            let rate: Model.Amount?
-        }
-        
-        struct ViewModel {
-            let rate: String?
-        }
+    enum DidInitiateRefresh {
+        struct Request {}
     }
     
     enum BalancesDidChange {
         struct Response {
             let balances: [Model.Balance]
+            let selectedBalanceId: DashboardPaymentsPlugIn.BalanceId?
+            var selectedBalanceIndex: Int?
         }
         
         struct ViewModel {
-            let balances: [Balance]
+            let balances: [Model.BalanceViewModel]
+            let selectedBalanceId: DashboardPaymentsPlugIn.BalanceId?
+            var selectedBalanceIndex: Int?
         }
     }
     
     enum SelectedBalanceDidChange {
-        struct Model {
-            let index: Int
+        struct Request {
+            let id: DashboardPaymentsPlugIn.BalanceId?
         }
         
-        typealias Response = Model
-        typealias ViewModel = Model
-    }
-    
-    enum DidSelectBalance {
-        struct Request {
-            let id: DashboardPaymentsPlugIn.BalanceId
+        struct Response {
+            let balance: Model.Amount
+            let rate: Model.Amount?
+            let id: DashboardPaymentsPlugIn.BalanceId?
+            let asset: String
+        }
+        
+        struct ViewModel {
+            let balance: String
+            let rate: String?
+            let id: DashboardPaymentsPlugIn.BalanceId?
+            let asset: String
         }
     }
     
@@ -111,14 +108,6 @@ extension DashboardPaymentsPlugIn.Event {
         struct ViewModel {
             let enabled: Bool
         }
-    }
-}
-
-extension DashboardPaymentsPlugIn.Event.BalancesDidChange.ViewModel {
-    struct Balance {
-        let id: DashboardPaymentsPlugIn.BalanceId?
-        let name: String
-        let asset: String
     }
 }
 

@@ -118,7 +118,7 @@ extension SaleDetails {
                 self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
                 self.titleLabel.textAlignment = .left
                 self.titleLabel.numberOfLines = 1
-                self.titleLabel.text = "Investing"
+                self.titleLabel.text = Localized(.investing)
             }
             
             private func setupInvestContenView() {
@@ -133,7 +133,7 @@ extension SaleDetails {
             }
             
             private func setupAmountTextField() {
-                self.amountField.placeholder = "Amount"
+                self.amountField.placeholder = Localized(.amount)
                 self.amountField.textColor = Theme.Colors.textOnContentBackgroundColor
                 self.amountField.invalidTextColor = Theme.Colors.negativeAmountColor
                 self.amountField.onShouldReturn = { fieldView in
@@ -156,7 +156,7 @@ extension SaleDetails {
             }
             
             private func setupInvestButton() {
-                SharedViewsBuilder.configureActionButton(self.investButton, title: "INVEST")
+                SharedViewsBuilder.configureActionButton(self.investButton, title: Localized(.invest))
                 self.investButton.contentEdgeInsets = UIEdgeInsets(
                     top: 0.0, left: self.sideInset, bottom: 0.0, right: self.sideInset
                 )

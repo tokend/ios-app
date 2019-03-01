@@ -2,14 +2,17 @@ import UIKit
 
 class SharedAmountFormatter {
     
+    // TODO: Refactor
+    public static var precision: Int = 6
+    
     // MARK: - Private properties
     
     private lazy var assetNumberFormatter: NumberFormatter = {
-        return self.createNumberFormatter(maximumFractionDigits: 6)
+        return self.createNumberFormatter()
     }()
     
     private lazy var fiatNumberFormatter: NumberFormatter = {
-        return self.createNumberFormatter(maximumFractionDigits: 2)
+        return self.createNumberFormatter()
     }()
     
     private let fiatCurrencies: [String] = ["USD", "EUR"]
@@ -21,10 +24,12 @@ class SharedAmountFormatter {
     }
     
     func assetAmountToString(_ amount: Decimal) -> String {
+        self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
         return self.assetNumberFormatter.string(from: amount) ?? "\(amount)"
     }
     
     func percentToString(value: Decimal) -> String {
+        self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
         return self.assetNumberFormatter.string(from: value) ?? "\(value)"
     }
     
@@ -41,9 +46,11 @@ class SharedAmountFormatter {
         } else {
             numberFormatter = self.assetNumberFormatter
         }
+        numberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
         
         if abs(decimal) < 1000 {
-            return numberFormatter.string(from: decimal) ?? "\(decimal)"
+            let formatted = numberFormatter.string(from: decimal)
+            return formatted ?? "\(decimal)"
         }
         
         let num = NSDecimalNumber(decimal: decimal).doubleValue
@@ -55,17 +62,18 @@ class SharedAmountFormatter {
         let roundedNumber: Double = round(multiplier * num / pow(1000.0, Double(exp))) / multiplier
         let decimalRoundedNumber: Decimal = Decimal(roundedNumber)
         
-        return (numberFormatter.string(from: decimalRoundedNumber) ?? "\(decimalRoundedNumber)") + "\(units[exp-1])"
+        let formatted = numberFormatter.string(from: decimalRoundedNumber)
+        return (formatted ?? "\(decimalRoundedNumber)") + "\(units[exp-1])"
     }
     
-    private func createNumberFormatter(maximumFractionDigits: Int) -> NumberFormatter {
+    private func createNumberFormatter() -> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = true
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ","
         formatter.numberStyle = .decimal
         formatter.maximumIntegerDigits = 30
-        formatter.maximumFractionDigits = maximumFractionDigits
+        formatter.maximumFractionDigits = SharedAmountFormatter.precision
         formatter.roundingMode = .halfDown
         formatter.minimumIntegerDigits = 1
         

@@ -23,6 +23,7 @@ enum SharedSceneBuilder {
     public static func createTransactionsListScene(
         transactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol,
         emptyTitle: String,
+        viewConfig: TransactionsListScene.Model.ViewConfig,
         routing: TransactionsListScene.Routing
         ) -> TransactionsListScene.ViewController {
         
@@ -37,6 +38,7 @@ enum SharedSceneBuilder {
             amountFormatter: transactionsListAmountFormatter,
             dateFormatter: transactionsListDateFormatter,
             emptyTitle: emptyTitle,
+            viewConfig: viewConfig,
             routing: routing
         )
         
@@ -53,13 +55,17 @@ enum SharedSceneBuilder {
         
         let container = FlexibleHeaderContainerViewController()
         
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: false)
+        
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
-            emptyTitle: "No payments",
+            emptyTitle: Localized(.no_payments),
+            viewConfig: viewConfig,
             routing: transactionsRouting
         )
         
-        let balancesRouting = BalanceHeaderWithPicker.Routing { (asset) in
+        let balancesRouting = BalanceHeaderWithPicker.Routing { (balanceId, asset) in
+            viewController.balanceId = balanceId
             viewController.asset = asset
         }
         
@@ -69,8 +75,6 @@ enum SharedSceneBuilder {
             selectedBalanceId: selectedBalanceId
         )
         let headerAmountFormatter = BalanceHeaderWithPicker.AmountFormatter()
-        
-        viewController.setMinimumTopContentInset(headerView.minimumHeight)
         
         BalanceHeaderWithPicker.Configurator.configure(
             view: headerView,

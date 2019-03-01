@@ -26,16 +26,19 @@ extension DepositScene {
         private let presenterDispatch: PresenterDispatch
         private let qrCodeGenerator: QRCodeGeneratorProtocol
         private let dateFormatter: DateFormatterProtocol
+        private let errorFormatter: ErrorFormatterProtocol
         
         init(
             presenterDispatch: PresenterDispatch,
             qrCodeGenerator: QRCodeGeneratorProtocol,
-            dateFormatter: DateFormatterProtocol
+            dateFormatter: DateFormatterProtocol,
+            errorFormatter: DepositSceneErrorFormatterProtocol
             ) {
             
             self.presenterDispatch = presenterDispatch
             self.qrCodeGenerator = qrCodeGenerator
             self.dateFormatter = dateFormatter
+            self.errorFormatter = errorFormatter
         }
         
         private func assetsDidChangeViewModel(
@@ -51,7 +54,7 @@ extension DepositScene {
             }
             let viewModel: Event.AssetsDidChange.ViewModel = {
                 if assets.isEmpty {
-                    return .empty("No assets can be deposited")
+                    return .empty(Localized(.no_assets_can_be_deposited))
                 } else {
                     return .assets(assets)
                 }
@@ -125,14 +128,34 @@ extension DepositScene.Presenter: DepositScene.PresentationLogic {
         if let asset = response.asset {
             let address: String? = asset.address
             let hint: String = {
+                let hintAsset = asset.asset
                 if address != nil {
-                    var result = "To make a deposit send \(asset.asset) to this address"
+                    var result = Localized(
+                        .to_make_a_deposit_send_to_this_address,
+                        replace: [
+                            .to_make_a_deposit_send_to_this_address_replace_asset: hintAsset
+                        ]
+                    )
+
                     if let expirationDate = asset.expirationDate {
-                        result += "\n\nExpires at: \(self.dateFormatter.formatExpiratioDate(expirationDate))"
+                        let date = self.dateFormatter.formatExpiratioDate(expirationDate)
+                        result += Localized(
+                            .expires_at,
+                            replace: [
+                                .expires_at_replace_date: date
+                            ]
+                        )
+
                     }
                     return result
                 } else {
-                    return "No personal \(asset.asset) address"
+                    return Localized(
+                        .no_personal_address,
+                        replace: [
+                            .no_personal_address_replace_assets_asset: hintAsset
+                        ]
+                    )
+
                 }
             }()
             let asset = Event.AssetDidChange.ViewModel.Data(
@@ -148,7 +171,7 @@ extension DepositScene.Presenter: DepositScene.PresentationLogic {
                 viewModel = .withoutAddress(asset)
             }
         } else {
-            viewModel = .empty(hint: "This feature will be available once you have any asset that can be deposited")
+            viewModel = .empty(hint: Localized(.this_feature_will_be))
         }
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayAssetDidChange(viewModel: viewModel)
@@ -164,7 +187,8 @@ extension DepositScene.Presenter: DepositScene.PresentationLogic {
     
     func presentError(response: Event.Error.Response) {
         self.presenterDispatch.display { (displayLogic) in
-            let viewModel = Event.Error.ViewModel(message: response.error.localizedDescription)
+            let message = self.errorFormatter.getLocalizedDescription(error: response.error)
+            let viewModel = Event.Error.ViewModel(message: message)
             displayLogic.displayError(viewModel: viewModel)
         }
     }

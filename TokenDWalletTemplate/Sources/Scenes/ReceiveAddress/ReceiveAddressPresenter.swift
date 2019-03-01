@@ -75,6 +75,11 @@ extension ReceiveAddress.Presenter: ReceiveAddress.PresentationLogic {
         self.availableValueActionsChanged(
             availableActions: response.availableValueActions
         )
+        
+        let viewModel = ReceiveAddress.Event.ValueChanged.ViewModel(value: response.address)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayValueChanged(viewModel: viewModel)
+        }
     }
     
     func presentQRCodeRegenerated(response: ReceiveAddress.Event.QRCodeRegenerated.Response) {

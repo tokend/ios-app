@@ -2,11 +2,9 @@ import Foundation
 
 protocol BalanceHeaderWithPickerPresentationLogic {
     typealias Event = BalanceHeaderWithPicker.Event
-    
-    func presentBalanceDidChange(response: Event.BalanceDidChange.Response)
+
     func presentBalancesDidChange(response: Event.BalancesDidChange.Response)
-    func presentRateDidChange(response: Event.RateDidChange.Response)
-    func presentSelectedBalanceDidChange(respose: Event.SelectedBalanceDidChange.Response)
+    func presentSelectedBalanceDidChange(response: Event.SelectedBalanceDidChange.Response)
 }
 
 extension BalanceHeaderWithPicker {
@@ -41,43 +39,37 @@ extension BalanceHeaderWithPicker {
 }
 
 extension BalanceHeaderWithPicker.Presenter: BalanceHeaderWithPicker.PresentationLogic {
-    func presentBalanceDidChange(response: Event.BalanceDidChange.Response) {
-        let viewModel = Event.BalanceDidChange.ViewModel(
-            balance: self.amountFormatter.formatBalance(response.balance),
-            rate: self.getRateStringFromRate(response.rate)
-        )
-        self.presenterDispatch.display { displayLogic in
-            displayLogic.displayBalanceDidChange(viewModel: viewModel)
-        }
-    }
-    
     func presentBalancesDidChange(response: Event.BalancesDidChange.Response) {
-        let balances = response.balances.map { (balance) -> Event.BalancesDidChange.ViewModel.Balance in
-            return Event.BalancesDidChange.ViewModel.Balance(
+        let balances = response.balances.map { (balance) -> Model.BalanceViewModel in
+            return Model.BalanceViewModel(
                 id: balance.balanceId,
                 name: balance.balance.asset,
                 asset: balance.balance.asset
             )
         }
         let viewModel = Event.BalancesDidChange.ViewModel(
-            balances: balances
+            balances: balances,
+            selectedBalanceId: response.selectedBalanceId,
+            selectedBalanceIndex: response.selectedBalanceIndex
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayBalancesDidChange(viewModel: viewModel)
         }
     }
     
-    func presentRateDidChange(response: Event.RateDidChange.Response) {
-        let rate: String? = self.getRateStringFromRate(response.rate)
-        let viewModel = Event.RateDidChange.ViewModel(rate: rate)
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayRateDidChange(viewModel: viewModel)
+    func presentSelectedBalanceDidChange(response: Event.SelectedBalanceDidChange.Response) {
+        var rateRaw: String?
+        if let rate = response.rate {
+            rateRaw = self.amountFormatter.formatRate(rate)
         }
-    }
-    
-    func presentSelectedBalanceDidChange(respose: Event.SelectedBalanceDidChange.Response) {
+        let viewModel = Event.SelectedBalanceDidChange.ViewModel(
+            balance: self.amountFormatter.formatBalance(response.balance),
+            rate: rateRaw,
+            id: response.id,
+            asset: response.asset
+        )
         self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displaySelectedBalanceDidChange(viewModel: respose)
+            displayLogic.displaySelectedBalanceDidChange(viewModel: viewModel)
         }
     }
 }

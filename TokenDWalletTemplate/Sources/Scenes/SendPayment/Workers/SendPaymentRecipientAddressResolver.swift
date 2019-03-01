@@ -10,9 +10,15 @@ enum RecipientAddressResolverResult {
         var errorDescription: String? {
             switch self {
             case .invalidAccountIdOrEmail:
-                return "Invalid account id or email"
+                return Localized(.invalid_account_id_or_email)
             case .other(let errors):
-                return "Request error: \(errors.localizedDescription)"
+                let message = errors.localizedDescription
+                return Localized(
+                    .request_error,
+                    replace: [
+                        .request_error_replace_message: message
+                    ]
+                )
             }
         }
     }
@@ -59,7 +65,8 @@ extension SendPayment {
                 )
                 completion(.succeeded(recipientAddress: recipientAddress))
             } catch {
-                self.requestDataByEmail(recipientAddress, completion: completion)
+                let email = recipientAddress.lowercased()
+                self.requestDataByEmail(email, completion: completion)
             }
         }
         
@@ -79,17 +86,17 @@ extension SendPayment {
                 switch result {
                     
                 case .failed(let error):
-                    switch error {
-                        
-                    case .wrongEmail:
-                        completion(.failed(.invalidAccountIdOrEmail))
-                        
-                    case .other(let errors):
-                        completion(.failed(.other(errors)))
-                    }
+                    completion(.failed(.other(error)))
                     
                 case .succeeded(let response):
-                    completion(.succeeded(recipientAddress: response.accountId))
+                    guard let identity = response.first(where: { (identity) -> Bool in
+                        return identity.attributes.email == email
+                    }) else {
+                        completion(.failed(.invalidAccountIdOrEmail))
+                        return
+                    }
+                    
+                    completion(.succeeded(recipientAddress: identity.attributes.address))
                 }
             })
         }

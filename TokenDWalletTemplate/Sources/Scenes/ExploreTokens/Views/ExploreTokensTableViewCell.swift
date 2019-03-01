@@ -8,6 +8,7 @@ enum ExploreTokensTableViewCell {
         let identifier: String
         
         let iconUrl: URL?
+        let codeColor: UIColor
         let title: String
         let description: String?
         
@@ -16,6 +17,7 @@ enum ExploreTokensTableViewCell {
         
         func setup(cell: View) {
             cell.iconUrl = self.iconUrl
+            cell.codeColor = self.codeColor
             cell.titleString = self.title
             cell.descriptionString = self.description
             
@@ -74,6 +76,14 @@ enum ExploreTokensTableViewCell {
                     self.hideIconViewLoading()
                     self.updateAbbreviation()
                 }
+            }
+        }
+        public var codeColor: UIColor? {
+            get {
+                return self.abbreviationBackgroundView.backgroundColor
+            }
+            set {
+                self.abbreviationBackgroundView.backgroundColor = newValue
             }
         }
         public var titleString: String = "" {

@@ -4,6 +4,7 @@ enum RegisterSceneSignError {
     case emailAlreadyTaken
     case emailShouldBeVerified(walletId: String)
     case failedToSaveAccount
+    case failedToSaveNetwork
     case otherError(Error)
     case tfaFailed
     case wrongEmail

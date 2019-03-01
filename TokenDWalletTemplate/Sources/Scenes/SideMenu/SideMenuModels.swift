@@ -5,7 +5,7 @@ enum SideMenu {
     // MARK: - Typealiases
     
     // MARK: -
-    
+   
     enum Model {}
     enum Event {}
 }
@@ -41,7 +41,7 @@ extension SideMenu.Model {
         // MARK: -
         
         init(
-            iconImage: UIImage?,
+            iconImage: UIImage,
             title: String,
             onSelected: OnSelected?
             ) {

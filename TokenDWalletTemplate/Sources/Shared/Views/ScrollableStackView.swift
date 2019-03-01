@@ -46,6 +46,8 @@ class ScrollableStackView: UIView {
         self.setupScrollView()
         self.setupContentView()
         self.setupLayout()
+        
+        self.addKeyboardObserver()
     }
     
     // MARK: - Public
@@ -128,6 +130,40 @@ class ScrollableStackView: UIView {
             }
             previousView = view
         }
+    }
+    
+    private func addKeyboardObserver() {
+        let keyboardObserver = KeyboardObserver(self) { [weak self] (attributes) in
+            self?.setBottomInsetWithKeyboardAttributes(attributes)
+        }
+        KeyboardController.shared.add(observer: keyboardObserver)
+    }
+    
+    private func setBottomInsetWithKeyboardAttributes(
+        _ attributes: KeyboardAttributes?
+        ) {
+        
+        let keyboardHeight: CGFloat = attributes?.heightInContainerView(self, view: self.scrollView) ?? 0
+        var bottomInset: CGFloat = keyboardHeight
+        if attributes?.showingIn(view: self) != true {
+            if #available(iOS 11, *) {
+                bottomInset += self.safeAreaInsets.bottom
+            } else {
+                bottomInset += self.alignmentRectInsets.bottom
+            }
+        }
+        
+        self.scrollView.contentInset.bottom = bottomInset
+        self.scrollView.scrollIndicatorInsets.bottom = bottomInset
+        
+        if let textview = UIResponder.currentFirst() as? UIView {
+            self.scrollToView(textview)
+        }
+    }
+    
+    private func scrollToView(_ view: UIView) {
+        let rect = self.scrollView.convert(view.bounds, from: view)
+        self.scrollView.scrollRectToVisible(rect, animated: true)
     }
     
     // MARK: No transition

@@ -107,7 +107,7 @@ extension RegisterScene {
             self.titleLabel.textAlignment = .center
             self.titleLabel.font = Theme.Fonts.largeTitleFont
             self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.titleLabel.text = "SignIn"
+            self.titleLabel.text = Localized(.signin)
         }
         
         private func setupActionButton() {

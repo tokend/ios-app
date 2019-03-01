@@ -1,5 +1,6 @@
 import UIKit
 import RxSwift
+import RxCocoa
 
 protocol SalesDisplayLogic: class {
     func displaySectionsUpdated(viewModel: Sales.Event.SectionsUpdated.ViewModel)
@@ -7,16 +8,42 @@ protocol SalesDisplayLogic: class {
     func displayEmptyResult(viewModel: Sales.Event.EmptyResult.ViewModel)
 }
 
+protocol SalesSceneProtocol {
+    typealias ContentSize = CGSize
+    typealias ContentSizeDidChange = (ContentSize) -> Void
+
+    var onContentSizeDidChange: ContentSizeDidChange? { get set }
+    var contentSize: ContentSize { get }
+}
+
 extension Sales {
     typealias DisplayLogic = SalesDisplayLogic
     
-    class ViewController: UIViewController {
+    class ViewController: UIViewController, SalesSceneProtocol {
         
         // MARK: - Private properties
         
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         private let emptyView: UILabel = SharedViewsBuilder.createEmptyLabel()
         private var sections: [Model.SectionViewModel] = []
+        private var oldPanTranslation: CGFloat = 0
+        private var oldContentOffset: CGFloat = 0
+        private var minimumContentInset: CGFloat = 0
+        
+        private let loadMoreIndicator = PublishRelay<Void>()
+        private let queue: DispatchQueue = DispatchQueue(
+            label: NSStringFromClass(ViewController.self).queueLabel,
+            qos: .userInteractive
+        )
+        
+        var contentSize: ContentSize {
+            return self.tableView.contentSize
+        }
+        var onContentSizeDidChange: ContentSizeDidChange? = nil {
+            didSet {
+                self.onContentSizeDidChange?(self.contentSize)
+            }
+        }
         
         private let refreshControl = UIRefreshControl()
         private let disposeBag = DisposeBag()
@@ -42,10 +69,36 @@ extension Sales {
             self.setupNavigationBar()
             self.setupLayout()
             
+            self.observeTableViewSizeChanges()
+            self.observeLoadMoreIndicator()
+            
             let request = Sales.Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
             }
+        }
+        
+        override func observeValue(
+            forKeyPath keyPath: String?,
+            of object: Any?,
+            change: [NSKeyValueChangeKey: Any]?,
+            context: UnsafeMutableRawPointer?
+            ) {
+            
+            guard let table = object as? UITableView,
+                table == self.tableView,
+                keyPath == "contentSize"
+                else {
+                    super.observeValue(
+                        forKeyPath: keyPath,
+                        of: object,
+                        change: change,
+                        context: context
+                    )
+                    return
+            }
+            
+            self.onContentSizeDidChange?(self.contentSize)
         }
         
         // MARK: - Private
@@ -73,7 +126,7 @@ extension Sales {
             var items: [UIBarButtonItem] = []
             
             let pendingBarButtonItem = UIBarButtonItem(
-                image: #imageLiteral(resourceName: "Pending icon"),
+                image: Assets.pendingIcon.image,
                 style: .plain,
                 target: self,
                 action: nil
@@ -116,6 +169,31 @@ extension Sales {
             self.emptyView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
+        }
+        
+        private func observeTableViewSizeChanges() {
+            self.tableView.addObserver(
+                self,
+                forKeyPath: "contentSize",
+                options: [.new, .old],
+                context: nil
+            )
+        }
+        
+        private func observeLoadMoreIndicator() {
+            let scheduler = SerialDispatchQueueScheduler(
+                queue: self.queue,
+                internalSerialQueueName: self.queue.label
+            )
+            self.loadMoreIndicator
+                .debounce(0.1, scheduler: scheduler)
+                .subscribe { [weak self] (_) in
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        let request = Sales.Event.DidInitiateLoadMore.Request()
+                        businessLogic.onDidInitiateLoadMore(request: request)
+                    })
+                }
+                .disposed(by: self.disposeBag)
         }
     }
 }
@@ -175,5 +253,31 @@ extension Sales.ViewController: UITableViewDelegate {
         }
         
         self.routing?.onDidSelectSale(saleModel.saleIdentifier)
+    }
+}
+
+extension Sales.ViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.oldPanTranslation = 0
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let translation = scrollView.panGestureRecognizer.translation(in: self.view).y
+        let delta = translation - self.oldPanTranslation
+        self.oldPanTranslation = translation
+        let currentOffset = scrollView.contentOffset.y
+        let absoluteBottom: CGFloat = scrollView.contentSize.height - scrollView.frame.size.height
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+        let deltaOffset = maximumOffset - currentOffset
+        
+        if delta < 0,
+            currentOffset >= absoluteBottom,
+            deltaOffset <= 0 {
+            
+            self.loadMoreIndicator.accept(())
+        }
+
+        self.oldContentOffset = currentOffset
     }
 }

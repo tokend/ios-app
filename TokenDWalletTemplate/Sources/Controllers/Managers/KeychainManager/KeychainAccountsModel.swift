@@ -35,7 +35,14 @@ class KeychainAccountsModel: Codable {
             return accountsModel.accounts
             
         default:
-            print("\(#function) - Unsupported version")
+            let function = #function
+            print(Localized(
+                .unsupported_version,
+                replace: [
+                    .unsupported_version_replace_function: function
+                ]
+            )
+)
             return nil
         }
     }

@@ -31,21 +31,18 @@ protocol SettingsSectionsProviderProtocol {
         stopLoading: @escaping () -> Void,
         completion: @escaping (_ result: SettingsSectionsProviderHandleActionCellResult) -> Void
     )
+    
+    func isTermsCell(cellIdentifier: Settings.CellIdentifier) -> Bool
 }
 
 extension Settings {
     
     typealias SectionsProvider = SettingsSectionsProviderProtocol
     
+    // swiftlint:disable type_body_length
     class SettingsSectionsProvider: SettingsSectionsProviderProtocol {
         
         // MARK: - Public properties
-        
-        static let accountIdCellIdentifier: CellIdentifier = "accountId"
-        static let tfaCellIdentifier: CellIdentifier = "tfa"
-        static let biometricsCellIdentifier: CellIdentifier = "biometrics"
-        static let verificationCellIdentifier: CellIdentifier = "verification"
-        static let changePasswordCellIdentifier: CellIdentifier = "changePassword"
         
         let settingsManger: SettingsManagerProtocol
         let userDataProvider: UserDataProviderProtocol
@@ -85,7 +82,7 @@ extension Settings {
         }
         
         func handleBoolCell(
-            cellIdentifier: Settings.CellIdentifier,
+            cellIdentifier: CellIdentifier,
             state: Bool,
             startLoading: @escaping () -> Void,
             stopLoading: @escaping () -> Void,
@@ -94,11 +91,11 @@ extension Settings {
             
             switch cellIdentifier {
                 
-            case SettingsSectionsProvider.biometricsCellIdentifier:
+            case .biometrics:
                 self.handleBiometricsEnabled(state, completion: completion)
                 return
                 
-            case SettingsSectionsProvider.tfaCellIdentifier:
+            case .tfa:
                 self.handleTFAEnabled(
                     state,
                     startLoading: startLoading,
@@ -113,7 +110,7 @@ extension Settings {
         }
         
         func handleActionCell(
-            cellIdentifier: Settings.CellIdentifier,
+            cellIdentifier: CellIdentifier,
             startLoading: @escaping () -> Void,
             stopLoading: @escaping () -> Void,
             completion: @escaping (_ result: SettingsSectionsProviderHandleActionCellResult) -> Void
@@ -121,7 +118,7 @@ extension Settings {
             
             switch cellIdentifier {
                 
-            case SettingsSectionsProvider.tfaCellIdentifier:
+            case .tfa:
                 self.handleTFAReload(
                     startLoading: startLoading,
                     stopLoading: stopLoading,
@@ -133,6 +130,10 @@ extension Settings {
             }
         }
         
+        func isTermsCell(cellIdentifier: Settings.CellIdentifier) -> Bool {
+            return cellIdentifier == .termsOfService
+        }
+        
         // MARK: - Private
         
         private func updateSections() {
@@ -141,35 +142,46 @@ extension Settings {
         
         private func createSections() -> [Model.SectionModel] {
             let accountIdCell = Model.CellModel(
-                title: "Account ID",
-                icon: "Verification icon",
+                title: Localized(.account_id),
+                icon: Assets.verificationIcon.image,
                 cellType: .disclosureCell,
-                identifier: SettingsSectionsProvider.accountIdCellIdentifier
+                identifier: .accountId
             )
-            let sectionAcount = Model.SectionModel(
-                title: "ACCOUNT",
-                cells: [accountIdCell],
+            
+            let seedCell = Model.CellModel(
+                title: Localized(.export_seed),
+                icon: Assets.seed.image,
+                cellType: .disclosureCell,
+                identifier: .seed
+            )
+            
+            let acountSection = Model.SectionModel(
+                title: Localized(.account),
+                cells: [accountIdCell, seedCell],
                 description: ""
             )
             
             let tfaCell = self.checkTFAEnabledState()
             
-            let cellChangePass = Model.CellModel(
-                title: "Change password",
-                icon: "Password icon",
+            let changePassCell = Model.CellModel(
+                title: Localized(.change_password),
+                icon: Assets.passwordIcon.image,
                 cellType: .disclosureCell,
-                identifier: SettingsSectionsProvider.changePasswordCellIdentifier
+                identifier: .changePassword
             )
             
-            var securityCells: [Model.CellModel] = [tfaCell, cellChangePass]
+            var securityCells: [Model.CellModel] = [
+                tfaCell,
+                changePassCell
+            ]
             
             let webClientAddress = self.apiConfigurationModel.webClient
             if webClientAddress != nil {
                 let verificationCell = Model.CellModel(
-                    title: "Verification",
-                    icon: "Verification icon",
+                    title: Localized(.verification),
+                    icon: Assets.verificationIcon.image,
                     cellType: .disclosureCell,
-                    identifier: SettingsSectionsProvider.verificationCellIdentifier
+                    identifier: .verification
                 )
                 securityCells.insert(verificationCell, at: 1)
             }
@@ -179,23 +191,49 @@ extension Settings {
                     title: biometricsSettingInfo.title,
                     icon: biometricsSettingInfo.icon,
                     cellType: .boolCell(biometricsSettingInfo.enabled),
-                    identifier: SettingsSectionsProvider.biometricsCellIdentifier
+                    identifier: .biometrics
                 )
                 securityCells.insert(biometricsAuthCell, at: 0)
             }
             
-            let sectionSecurity = Settings.Model.SectionModel(
-                title: "SECURITY",
+            let securitySection = Model.SectionModel(
+                title: Localized(.security),
                 cells: securityCells,
                 description: ""
             )
             
-            return [sectionAcount, sectionSecurity]
+            let termsCell = Model.CellModel(
+                title: Localized(.terms_of_service),
+                icon: Assets.documentIcon.image,
+                cellType: .disclosureCell,
+                identifier: .termsOfService
+            )
+            let licensesCell = Model.CellModel(
+                title: Localized(.acknowledgements),
+                icon: Assets.copyright.image,
+                cellType: .disclosureCell,
+                identifier: .licenses
+            )
+            
+            let termsSection = Model.SectionModel(
+                title: "",
+                cells: [
+                    termsCell,
+                    licensesCell
+                ],
+                description: ""
+            )
+            
+            return [
+                acountSection,
+                securitySection,
+                termsSection
+            ]
         }
         
         private struct BiometricsSettingInfo {
             let title: String
-            let icon: String
+            let icon: UIImage
             let enabled: Bool
         }
         
@@ -226,14 +264,14 @@ extension Settings {
             }
             
             let title: String
-            let icon: String
+            let icon: UIImage
             
             if isTouchID {
-                title = "Sign In with TouchID"
-                icon = "Touch ID icon"
+                title = Localized(.sign_in_with_touchid)
+                icon = Assets.touchIdIcon.image
             } else {
-                title = "Sign In with FaceID"
-                icon = "Face ID icon"
+                title = Localized(.sign_in_with_faceid)
+                icon = Assets.faceIdIcon.image
             }
             
             return BiometricsSettingInfo(
@@ -268,11 +306,11 @@ extension Settings {
                 cellType = .boolCell(isEnabled)
             }
             
-            let tfaCell = Settings.Model.CellModel(
-                title: "Two-factor authentication",
-                icon: "Security icon",
+            let tfaCell = Model.CellModel(
+                title: Localized(.twofactor_authentication),
+                icon: Assets.securityIcon.image,
                 cellType: cellType,
-                identifier: SettingsSectionsProvider.tfaCellIdentifier
+                identifier: .tfa
             )
             
             return tfaCell
@@ -329,7 +367,7 @@ extension Settings {
                     return error.localizedDescription
                     
                 case .unsuitableStatus:
-                    return "Unsuitable status"
+                    return Localized(.unsuitable_status)
                 }
             }
         }
@@ -342,8 +380,8 @@ extension Settings {
             startLoading()
             
             self.updateTFAState { [weak self] in
-                
                 guard let strongSelf = self else { return }
+                
                 switch strongSelf.tfaEnabledState {
                     
                 case .undetermined,
@@ -362,9 +400,12 @@ extension Settings {
                         stopLoading: stopLoading,
                         completion: { (result) in
                             stopLoading()
+                            
                             switch result {
+                                
                             case .succeded:
                                 completion(.succeeded)
+                                
                             case .failed(let error):
                                 completion(.failed(error))
                             }
@@ -544,16 +585,21 @@ extension Settings {
             completion: @escaping (_ result: SettingsSectionsProviderHandleBoolCellResult) -> Void
             ) {
             
-            // swiftlint:disable line_length
+            let secret = response.attributes.secret
             let alert = UIAlertController(
-                title: "Set up 2FA",
-                message: "To enable Two-factor authentication open Google Authenticator or similar app with the button below or copy and manually enter this key:\n\n\(response.attributes.secret)",
+                title: Localized(.set_up_2fa),
+                message: Localized(
+                    .to_enable_twofactor_authentication,
+                    replace: [
+                        .to_enable_twofactor_authentication_replace_secret: secret
+                    ]
+                ),
                 preferredStyle: .alert
             )
             // swiftlint:enable line_length
             
             alert.addAction(UIAlertAction(
-                title: "Copy",
+                title: Localized(.copy),
                 style: .default,
                 handler: { [weak self] _ in
                     UIPasteboard.general.string = response.attributes.secret
@@ -570,7 +616,7 @@ extension Settings {
             if let url = URL(string: response.attributes.seed),
                 UIApplication.shared.canOpenURL(url) {
                 alert.addAction(UIAlertAction(
-                    title: "Open App",
+                    title: Localized(.open_app),
                     style: .default,
                     handler: { [weak self] _ in
                         UIPasteboard.general.string = response.attributes.secret
@@ -587,7 +633,7 @@ extension Settings {
             }
             
             alert.addAction(UIAlertAction(
-                title: "Cancel",
+                title: Localized(.cancel),
                 style: .cancel,
                 handler: { [weak self] _ in
                     self?.onTFAEnableSucceeded(
@@ -625,4 +671,5 @@ extension Settings {
             self.updateSections()
         }
     }
+    // swiftlint:enable type_body_length
 }

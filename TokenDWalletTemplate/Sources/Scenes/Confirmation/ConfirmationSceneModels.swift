@@ -4,9 +4,29 @@ enum ConfirmationScene {
     
     // MARK: - Typealiases
     
-    typealias CellIdentifier = String
-    
     // MARK: -
+    
+    enum CellIdentifier: String {
+        case toPay
+        case toPayAmount
+        case toPayFee
+        case toReceive
+        case toReceiveAmount
+        case toReceiveFee
+        case recipient
+        case amount
+        case fee
+        case recipientFee
+        case payRecipientFee
+        case description
+        case token
+        case investment
+        case fixedFee
+        case percentFee
+        case destination
+        case price
+        case test
+    }
     
     enum Model {}
     enum Event {}
@@ -84,6 +104,7 @@ extension ConfirmationScene.Model {
         let recipientAccountId: String
         let senderFee: FeeModel
         let recipientFee: FeeModel
+        let reference: String
     }
     
     struct SaleInvestModel {
@@ -188,8 +209,8 @@ extension ConfirmationScene.Model.CellModel {
 extension ConfirmationScene.Event.ConfirmAction {
     enum ConfirmError: Error, LocalizedError {
         case failedToCreateBalance(asset: String)
-        case failedToDecodeAccountId(String)
-        case failedToDecodeBalanceId(String)
+        case failedToDecodeAccountId(AccountId)
+        case failedToDecodeBalanceId(BalanceId)
         case failedToEncodeDestinationAddress
         case networkInfoError(Error)
         case notEnoughData
@@ -200,24 +221,77 @@ extension ConfirmationScene.Event.ConfirmAction {
         var errorDescription: String? {
             switch self {
             case .failedToCreateBalance(let asset):
-                return "Failed to create balance for asset \(asset)"
+                return Localized(
+                    .failed_to_create_balance_for,
+                    replace: [
+                        .failed_to_create_balance_for_replace_asset: asset
+                    ]
+                )
             case .failedToDecodeAccountId(let accountId):
-                return "Failed to decode account id \(accountId)"
+                let id = accountId.rawValue
+                return Localized(
+                    .failed_to_decode_account_id,
+                    replace: [
+                        .failed_to_decode_account_id_replace_id: id
+                    ]
+                )
             case .failedToDecodeBalanceId(let balanceId):
-                return "Failed to decode balance id \(balanceId)"
+                let id = balanceId.rawValue
+                return Localized(
+                    .failed_to_decode_balance_id,
+                    replace: [
+                        .failed_to_decode_balance_id_replace_id: id
+                    ]
+                )
             case .failedToEncodeDestinationAddress:
-                return "Failed to encode destination address"
+                return Localized(.failed_to_encode_destination_address)
             case .networkInfoError(let error):
-                return "Network info error: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .network_info_error,
+                    replace: [
+                        .network_info_error_replace_message: message
+                    ]
+                )
             case .notEnoughData:
-                return "Not enough data"
+                return Localized(.not_enough_data)
             case .notEnoughMoneyOnBalance(let asset):
-                return "Not enough money on balance \(asset)"
+                return Localized(
+                    .not_enough_money_on_balance,
+                    replace: [
+                        .not_enough_money_on_balance_replace_asset: asset
+                    ]
+                )
             case .other(let error):
-                return "Request error: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .request_error,
+                    replace: [
+                        .request_error_replace_message: message
+                    ]
+                )
             case .sendTransactionError(let error):
-                return "Send transaction error: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .send_transaction_error,
+                    replace: [
+                        .send_transaction_error_replace_message: message
+                    ]
+                )
             }
         }
+    }
+    
+    enum BalanceId: String {
+        case baseBalance
+        case quoteBalance
+        case baseBalanceId
+        case quoteBalanceId
+        case senderBalanceId
+        case recipientBalanceId
+    }
+    
+    enum AccountId: String {
+        case recipientAccountId
     }
 }

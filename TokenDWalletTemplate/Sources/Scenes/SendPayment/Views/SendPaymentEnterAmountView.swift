@@ -61,14 +61,14 @@ extension SendPayment {
         }
         
         private func setupTitleLabel() {
-            self.titleLabel.text = "Amount:"
+            self.titleLabel.text = Localized(.amount_colon)
             self.titleLabel.font = Theme.Fonts.textFieldTitleFont
             self.titleLabel.textAlignment = .left
             self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
         }
         
         private func setupAmountField() {
-            self.amountField.placeholder = "Enter amount"
+            self.amountField.placeholder = Localized(.enter_amount)
             self.amountField.onShouldReturn = { fieldView in
                 _ = fieldView.resignFirstResponder()
                 return false
@@ -87,6 +87,7 @@ extension SendPayment {
         }
         
         private func setupAssetButton() {
+            self.assetButton.tintColor = Theme.Colors.mainColor
             self.assetButton
                 .rx
                 .controlEvent(.touchUpInside)

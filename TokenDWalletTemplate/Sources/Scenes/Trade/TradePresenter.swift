@@ -105,15 +105,15 @@ extension Trade {
             
             switch period {
             case .hour:
-                return "Hour"
+                return Localized(.hour)
             case .day:
-                return "Day"
+                return Localized(.day)
             case .week:
-                return "Week"
+                return Localized(.week)
             case .month:
-                return "Month"
+                return Localized(.month)
             case .year:
-                return "Year"
+                return Localized(.year)
             }
         }
         
@@ -178,7 +178,13 @@ extension Trade.Presenter: Trade.PresentationLogic {
             var perString =  self.amountFormatter.formatToken(per)
             
             if let timestamp = response.timestamp {
-                perString += " at \(self.dateFormatter.dateToString(timestamp))"
+                let date = self.dateFormatter.dateToString(timestamp)
+                perString += Localized(
+                    .at_date,
+                    replace: [
+                        .at_date_replace_date: date
+                    ]
+                )
             }
             
             viewModel = Trade.Event.PairPriceDidChange.ViewModel(
@@ -304,7 +310,7 @@ extension Trade.Presenter: Trade.PresentationLogic {
         var periods = self.periodsToViewModels(response.periods)
         if periods.isEmpty {
             periods = [Trade.Model.PeriodViewModel(
-                title: "No available periods",
+                title: Localized(.no_available_periods),
                 isEnabled: false,
                 period: nil
                 )]
@@ -329,8 +335,11 @@ extension Trade.Presenter: Trade.PresentationLogic {
 
 extension Trade.Model.Pair {
     fileprivate var viewModel: Trade.Model.PairViewModel {
+        let base = self.base
+        let quote = self.quote
+        
         return Trade.Model.PairViewModel(
-            title: "\(self.base)/\(self.quote)",
+            title: "\(base)/\(quote)",
             id: self.id
         )
     }

@@ -35,7 +35,7 @@ extension UserDataProvider: UserDataProviderProtocol {
     
     var walletData: WalletDataSerializable {
         guard let walletData = self.userDataManager.getWalletData(account: self.account) else {
-            fatalError("UserDataProvider should always provide walletData")
+            fatalError(Localized(.userdataprovider_should_always_provide_walletdata))
         }
         
         return walletData

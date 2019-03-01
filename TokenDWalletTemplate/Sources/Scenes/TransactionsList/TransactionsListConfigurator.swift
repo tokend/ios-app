@@ -9,6 +9,7 @@ extension TransactionsListScene {
             amountFormatter: AmountFormatterProtocol,
             dateFormatter: DateFormatterProtocol,
             emptyTitle: String,
+            viewConfig: Model.ViewConfig,
             routing: Routing?
             ) {
             
@@ -24,7 +25,11 @@ extension TransactionsListScene {
                 transactionsFetcher: transactionsFetcher
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
-            viewController.inject(interactorDispatch: interactorDispatch, routing: routing)
+            viewController.inject(
+                interactorDispatch: interactorDispatch,
+                viewConfig: viewConfig,
+                routing: routing
+            )
         }
     }
 }

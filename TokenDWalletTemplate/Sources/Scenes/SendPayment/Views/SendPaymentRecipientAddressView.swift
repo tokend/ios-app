@@ -24,12 +24,14 @@ extension SendPayment {
         
         var onAddressEdit: ((_ address: String?) -> Void)?
         var onQRAction: (() -> Void)?
+        var onSelectAccount: (() -> Void)?
         
         // MARK: - Private properties
         
         private let titleLabel: UILabel = UILabel()
         private let scanQRButton: UIButton = UIButton(type: .custom)
         private let addressField: UITextField = UITextField()
+        private let selectAccountView: UIView = UIView()
         
         private let disposeBag = DisposeBag()
         
@@ -52,6 +54,7 @@ extension SendPayment {
             self.setupTitleLabel()
             self.setupScanQRButton()
             self.setupAddressField()
+            self.setupSelectAccountView()
             self.setupLayout()
         }
         
@@ -62,7 +65,7 @@ extension SendPayment {
         }
         
         private func setupTitleLabel() {
-            self.titleLabel.text = "Account ID or email:"
+            self.titleLabel.text = Localized(.account_id_or_email_colon)
             self.titleLabel.font = Theme.Fonts.textFieldTitleFont
             self.titleLabel.textAlignment = .left
             self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
@@ -70,6 +73,7 @@ extension SendPayment {
         
         private func setupScanQRButton() {
             self.scanQRButton.setImage(#imageLiteral(resourceName: "Scan QR icon"), for: .normal)
+            self.scanQRButton.tintColor = Theme.Colors.mainColor
             self.scanQRButton
                 .rx
                 .controlEvent(.touchUpInside)
@@ -81,9 +85,13 @@ extension SendPayment {
         }
         
         private func setupAddressField() {
-            self.addressField.placeholder = "Enter Account ID or email"
+            self.addressField.placeholder = Localized(.enter_account_id_or_email)
             self.addressField.textColor = Theme.Colors.textOnContentBackgroundColor
             self.addressField.font = Theme.Fonts.textFieldTextFont
+            self.addressField.autocapitalizationType = .none
+            self.addressField.autocorrectionType = .no
+            self.addressField.keyboardType = .emailAddress
+            self.addressField.spellCheckingType = .no
             self.addressField.delegate = self
             
             self.addressField
@@ -94,6 +102,31 @@ extension SendPayment {
                     self?.onAddressEdit?(text)
                 })
                 .disposed(by: self.disposeBag)
+        }
+        
+        private func setupSelectAccountView() {
+            self.selectAccountView.backgroundColor = Theme.Colors.contentBackgroundColor
+            
+            let selectButton = UIButton(type: .custom)
+            selectButton.setTitleColor(Theme.Colors.mainColor, for: .normal)
+            selectButton.backgroundColor = UIColor.clear
+            
+            selectButton.setTitle(Localized(.select_contact), for: .normal)
+            self.selectAccountView.addSubview(selectButton)
+            selectButton.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+            }
+            
+            selectButton
+                .rx
+                .controlEvent(.touchUpInside)
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.onSelectAccount?()
+                })
+                .disposed(by: self.disposeBag)
+            
+            self.addressField.inputAccessoryView = self.selectAccountView
         }
         
         private func setupLayout() {
@@ -123,6 +156,13 @@ extension SendPayment {
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(14.0)
                 make.bottom.equalToSuperview().inset(14.0)
             }
+            
+            self.selectAccountView.frame = CGRect(
+                x: 0.0, y: 0.0,
+                width: min(UIScreen.main.bounds.width, UIScreen.main.bounds.height),
+                height: 44.0
+            )
+            self.selectAccountView.autoresizingMask = [.flexibleWidth]
         }
     }
 }

@@ -92,7 +92,7 @@ extension RegisterScene.View {
             let title = NSMutableAttributedString()
             
             let firstPart = NSAttributedString(
-                string: "I agree on the ",
+                string: Localized(.i_agree_on_the),
                 attributes: [
                     NSAttributedStringKey.foregroundColor: Theme.Colors.textOnContainerBackgroundColor,
                     NSAttributedStringKey.font: Theme.Fonts.plainTextFont
@@ -101,7 +101,7 @@ extension RegisterScene.View {
             title.append(firstPart)
             
             let secondPart = NSAttributedString(
-                string: "Terms of Service",
+                string: Localized(.terms_of_service),
                 attributes: [
                     NSAttributedStringKey.foregroundColor: Theme.Colors.actionButtonColor,
                     NSAttributedStringKey.font: Theme.Fonts.plainTextFont,

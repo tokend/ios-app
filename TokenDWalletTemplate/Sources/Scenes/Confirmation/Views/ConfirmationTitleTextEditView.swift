@@ -45,7 +45,7 @@ extension ConfirmationScene.View {
         }
         
         var onEdit: ((_ identifier: ConfirmationScene.CellIdentifier, _ value: String?) -> Void)?
-        
+
         // MARK: - Private properties
         
         private let titleLabel: UILabel = UILabel()
@@ -134,6 +134,7 @@ extension ConfirmationScene.View {
         private func setupTextView() {
             SharedViewsBuilder.configureInputForm(textView: self.textView)
             self.textView.backgroundColor = UIColor.clear
+            self.textView.delegate = self
             
             self.textView
                 .rx
@@ -184,5 +185,15 @@ extension ConfirmationScene.View {
                 make.leading.trailing.top.equalTo(self.textView)
             }
         }
+    }
+}
+
+extension ConfirmationScene.View.TitleTextEditView: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
     }
 }

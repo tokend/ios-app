@@ -7,26 +7,56 @@ class OrderBookCard: UIView {
     public var baseCurrency: String? = nil {
         didSet {
             if let base = self.baseCurrency {
-                self.buyTitleLabel.text = "Buy \(base)"
-                self.sellTitleLabel.text = "Sell \(base)"
-                self.amountBuyTitleLabel.text = "Amount\n\(base)"
-                self.amountSellTitleLabel.text = "Amount\n\(base)"
+                self.buyTitleLabel.text = Localized(
+                    .buy_base,
+                    replace: [
+                        .buy_base_replace_base: base
+                    ]
+                )
+                self.sellTitleLabel.text = Localized(
+                    .sell_base,
+                    replace: [
+                        .sell_base_replace_base: base
+                    ]
+                )
+                self.amountBuyTitleLabel.text = Localized(
+                    .amount_newline,
+                    replace: [
+                        .amount_newline_replace_base: base
+                    ]
+                )
+                self.amountSellTitleLabel.text = Localized(
+                    .amount_newline,
+                    replace: [
+                        .amount_newline_replace_base: base
+                    ]
+                )
             } else {
-                self.buyTitleLabel.text = "Buy"
-                self.sellTitleLabel.text = "Sell"
-                self.amountBuyTitleLabel.text = "Amount"
-                self.amountSellTitleLabel.text = "Amount"
+                self.buyTitleLabel.text = Localized(.buy)
+                self.sellTitleLabel.text = Localized(.sell)
+                self.amountBuyTitleLabel.text = Localized(.amount)
+                self.amountSellTitleLabel.text = Localized(.amount)
             }
         }
     }
     public var quoteCurrency: String? = nil {
         didSet {
             if let quote = self.quoteCurrency {
-                self.priceBuyTitleLabel.text = "Price\n\(quote)"
-                self.priceSellTitleLabel.text = "Price\n\(quote)"
+                self.priceBuyTitleLabel.text = Localized(
+                    .price_newline,
+                    replace: [
+                        .price_newline_replace_quote: quote
+                    ]
+                )
+                self.priceSellTitleLabel.text = Localized(
+                    .price_newline,
+                    replace: [
+                        .price_newline_replace_quote: quote
+                    ]
+                )
             } else {
-                self.priceBuyTitleLabel.text = "Price"
-                self.priceSellTitleLabel.text = "Price"
+                self.priceBuyTitleLabel.text = Localized(.price)
+                self.priceSellTitleLabel.text = Localized(.price)
             }
         }
     }
@@ -120,7 +150,7 @@ class OrderBookCard: UIView {
         self.buyTitleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
         self.buyTitleLabel.font = Theme.Fonts.largeTitleFont
         self.buyTitleLabel.numberOfLines = 0
-        self.buyTitleLabel.text = "Buy"
+        self.buyTitleLabel.text = Localized(.buy)
     }
     
     private func setupAmountBuyTitleLabel() {
@@ -128,7 +158,7 @@ class OrderBookCard: UIView {
         self.amountBuyTitleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
         self.amountBuyTitleLabel.font = Theme.Fonts.smallTextFont
         self.amountBuyTitleLabel.numberOfLines = 0
-        self.amountBuyTitleLabel.text = "Amount"
+        self.amountBuyTitleLabel.text = Localized(.amount)
     }
     
     private func setupPriceBuyTitleLabel() {
@@ -136,7 +166,7 @@ class OrderBookCard: UIView {
         self.priceBuyTitleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
         self.priceBuyTitleLabel.font = Theme.Fonts.smallTextFont
         self.priceBuyTitleLabel.numberOfLines = 0
-        self.priceBuyTitleLabel.text = "Price"
+        self.priceBuyTitleLabel.text = Localized(.price)
     }
     
     private func setupSellTitleLabel() {
@@ -144,7 +174,7 @@ class OrderBookCard: UIView {
         self.sellTitleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
         self.sellTitleLabel.font = Theme.Fonts.largeTitleFont
         self.sellTitleLabel.numberOfLines = 0
-        self.sellTitleLabel.text = "Sell"
+        self.sellTitleLabel.text = Localized(.sell)
     }
     
     private func setupAmountSellTitleLabel() {
@@ -152,7 +182,7 @@ class OrderBookCard: UIView {
         self.amountSellTitleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
         self.amountSellTitleLabel.font = Theme.Fonts.smallTextFont
         self.amountSellTitleLabel.numberOfLines = 0
-        self.amountSellTitleLabel.text = "Amount"
+        self.amountSellTitleLabel.text = Localized(.amount)
     }
     
     private func setupPriceSellTitleLabel() {
@@ -160,7 +190,7 @@ class OrderBookCard: UIView {
         self.priceSellTitleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
         self.priceSellTitleLabel.font = Theme.Fonts.smallTextFont
         self.priceSellTitleLabel.numberOfLines = 0
-        self.priceSellTitleLabel.text = "Price"
+        self.priceSellTitleLabel.text = Localized(.price)
     }
     
     private func setupLayout() {

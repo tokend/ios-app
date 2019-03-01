@@ -1,31 +1,31 @@
 import UIKit
 
-// MARK: -
+// MARK: - FlexibleHeaderContainerHeaderViewProtocol
 
 protocol FlexibleHeaderContainerHeaderViewProtocol {
+    
     typealias OnTitleTextDidChangeCallback = (String) -> Void
     typealias OnTitleAlphaDidChangeCallback = (CGFloat) -> Void
-    typealias OnContentHeightDidChangeCallback = () -> Void
-    typealias OnMinimumHeightDidChangeCallback = () -> Void
+    
+    var view: UIView { get } // should be the same between calls
     
     var titleTextDidChange: OnTitleTextDidChangeCallback? { get set }
     var titleAlphaDidChange: OnTitleAlphaDidChangeCallback? { get set }
-    var contentHeightDidChange: OnContentHeightDidChangeCallback? { get set }
-    var minimumHeightDidChange: OnMinimumHeightDidChangeCallback? { get set }
     
-    var view: UIView { get }
-    var maximumHeight: CGFloat { get }
-    var minimumHeight: CGFloat { get }
-    var stretchFactor: CGFloat { get }
+    var minimumHeight: CGFloat { get } // should not be changed
+    var maximumHeight: CGFloat { get } // should not be changed
     
-    func flexibleHeaderDidChangePercent(_ percent: CGFloat)
+    var collapsePercentage: CGFloat { get set } // should not be changed from inside
 }
 
+// MARK: - FlexibleHeaderContainerContentViewControllerProtocol
+
 protocol FlexibleHeaderContainerContentViewControllerProtocol {
+    
     typealias OnScrollViewDidScroll = (_ scrollView: UIScrollView, _ toTop: Bool) -> Void
     typealias OnScrollViewDidEndScrolling = (_ scrollView: UIScrollView) -> Void
     
-    var viewController: UIViewController { get }
+    var viewController: UIViewController { get } // should be the same between calls
     
     var scrollViewDidScroll: OnScrollViewDidScroll? { get set }
     var scrollViewDidEndScrolling: OnScrollViewDidEndScrolling? { get set }
@@ -34,7 +34,7 @@ protocol FlexibleHeaderContainerContentViewControllerProtocol {
     func setMinimumTopContentInset(_ inset: CGFloat)
 }
 
-// MARK: -
+// MARK: - FlexibleHeaderContainerViewController
 
 class FlexibleHeaderContainerViewController: UIViewController {
     
@@ -50,58 +50,26 @@ class FlexibleHeaderContainerViewController: UIViewController {
     
     public var headerView: HeaderViewProtocol? {
         didSet {
-            oldValue?.view.removeFromSuperview()
-            self.headerView?.titleAlphaDidChange = { [weak self] (alpha) in
-                let titleAlpha = min(1, max(0, alpha))
-                let fromColor = titleAlpha == 0 ? UIColor.clear : Theme.Colors.mainColor
-                self?.titleLabel.textColor = UIColor.interpolate(
-                    from: fromColor,
-                    to: Theme.Colors.textOnMainColor,
-                    with: titleAlpha
-                )
+            if oldValue?.view != self.headerView?.view {
+                oldValue?.view.removeFromSuperview()
             }
-            self.headerView?.titleTextDidChange = { [weak self] (text) in
-                self?.titleLabel.text = text
-                self?.titleLabel.sizeToFit()
-            }
-            self.headerView?.contentHeightDidChange = { [weak self] in
-                self?.updateScrollViewInsets()
-            }
-            self.headerView?.minimumHeightDidChange = { [weak self] in
-                self?.contentViewController?.setMinimumTopContentInset(self?.headerView?.minimumHeight ?? 0)
-            }
-            self.layoutHeaderView()
-            self.updateScrollViewInsets()
+            
+            self.setupHeaderView()
         }
     }
     
     public var contentViewController: ContentViewControllerProtocol? {
         didSet {
-            if let old = oldValue {
-                self.removeChildViewController(old.viewController)
+            if oldValue?.viewController != self.contentViewController?.viewController,
+                let old = oldValue?.viewController {
+                self.removeChildViewController(old)
             }
-            self.contentViewController?.scrollViewDidScroll = { [weak self] (scrollView, toTop) in
-                self?.scrolledToTop = toTop
-                
-                let maximumHeight: CGFloat = self?.headerView?.maximumHeight ?? 0.0
-                let minimumHeight: CGFloat = self?.headerView?.minimumHeight ?? 0.0
-                let collapsibleHeight: CGFloat = maximumHeight - minimumHeight
-                let offsetDiff = collapsibleHeight - scrollView.contentOffset.y - scrollView.contentInset.top
-                let stretchFactor = max(min(offsetDiff / collapsibleHeight, 1.0), 0.0)
-                let percentage = max(min(1.0, stretchFactor), 0.0)
-                self?.updateHeaderConstraints(collapsibleHeight * percentage + minimumHeight)
-                self?.headerView?.flexibleHeaderDidChangePercent(percentage)
-            }
-            self.contentViewController?.scrollViewDidEndScrolling = { [weak self] (scrollView) in
-                guard let headerView = self?.headerView else { return }
-                self?.snapHeader(scrollView: scrollView, headerView: headerView)
-            }
-            self.updateScrollViewInsets()
-            self.layoutContentViewController()
+            
+            self.setupContentViewController()
         }
     }
     
-    // MARK: -
+    // MARK: - Overridden
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -117,74 +85,136 @@ class FlexibleHeaderContainerViewController: UIViewController {
     
     private func commonInit() {
         self.setupTitleLabel()
-        
-        self.setupLayout()
-    }
-    
-    private func layoutHeaderView() {
-        guard let headerView = self.headerView else {
-            return
-        }
-        self.view.addSubview(headerView.view)
-        self.view.sendSubview(toBack: headerView.view)
-        
-        if let view = self.contentViewController?.viewController.view {
-            self.view.sendSubview(toBack: view)
-        }
-        
-        self.updateHeaderConstraints(headerView.maximumHeight)
-    }
-    
-    private func updateHeaderConstraints(_ height: CGFloat) {
-        self.headerView?.view.snp.remakeConstraints { (make) in
-            make.top.left.right.equalToSuperview()
-            make.height.equalTo(height)
-        }
-    }
-    
-    private func updateScrollViewInsets() {
-        let inset = self.headerView?.maximumHeight ?? 0
-        self.contentViewController?.setTopContentInset(inset)
-    }
-    
-    private func layoutContentViewController() {
-        guard let controller = self.contentViewController?.viewController else {
-            return
-        }
-        self.addChildViewController(controller, to: self.view)
-        self.view.sendSubview(toBack: controller.view)
     }
     
     private func setupTitleLabel() {
         self.titleLabel.font = Theme.Fonts.navigationBarBoldFont
         self.titleLabel.textAlignment = .center
         self.titleLabel.textColor = Theme.Colors.textOnMainColor
-    }
-    
-    private func setupLayout() {
         self.navigationItem.titleView = self.titleLabel
     }
     
-    private func snapHeader(scrollView: UIScrollView, headerView: FlexibleHeaderContainerHeaderViewProtocol) {
-        let percentage = max(min(1, headerView.stretchFactor), 0)
-        let maximumHeight = headerView.maximumHeight
-        let minimumHeight = headerView.minimumHeight
-        var newYOffset: CGFloat?
-        let oldYOffset = scrollView.contentOffset.y
-        if oldYOffset < 0 {
-            if self.scrolledToTop &&
-                percentage != 0 {
-                newYOffset = -maximumHeight
-            } else if !self.scrolledToTop &&
-                percentage != 1 {
-                newYOffset = -minimumHeight
+    private func setupHeaderView() {
+        guard var headerView = self.headerView else { return }
+        
+        headerView.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view.addSubview(headerView.view)
+        self.layoutHeaderView()
+        self.updateSubviews()
+        
+        headerView.titleAlphaDidChange = { [weak self] (alpha) in
+            let titleAlpha = min(1, max(0, alpha))
+            let fromColor = titleAlpha == 0 ? UIColor.clear : Theme.Colors.mainColor
+            self?.titleLabel.textColor = UIColor.interpolate(
+                from: fromColor,
+                to: Theme.Colors.textOnMainColor,
+                with: titleAlpha
+            )
+        }
+        headerView.titleTextDidChange = { [weak self] (text) in
+            self?.titleLabel.text = text
+            self?.titleLabel.sizeToFit()
+        }
+    }
+    
+    private func setupContentViewController() {
+        guard var contentViewController = self.contentViewController else { return }
+        
+        self.addChildViewController(
+            contentViewController.viewController,
+            to: self.view,
+            layoutFulledge: true
+        )
+        self.updateSubviews()
+        
+        contentViewController.scrollViewDidScroll = { [weak self] (scrollView, toTop) in
+            self?.scrolledToTop = toTop
+            self?.onScrollViewDidScroll(scrollView: scrollView)
+        }
+        contentViewController.scrollViewDidEndScrolling = { [weak self] (scrollView) in
+            self?.snapHeader(scrollView: scrollView)
+        }
+    }
+    
+    private func layoutHeaderView() {
+        guard let headerView = self.headerView else { return }
+        
+        let minHeight = headerView.minimumHeight
+        let maxHeight = headerView.maximumHeight
+        let diff = maxHeight - minHeight
+        let percentage = headerView.collapsePercentage
+        
+        let headerHeight = minHeight + diff * percentage
+        
+        let headerFrame = CGRect(
+            x: 0.0, y: 0.0,
+            width: self.view.bounds.width, height: headerHeight
+        )
+        headerView.view.frame = headerFrame
+    }
+    
+    private func updateSubviews() {
+        if let headerView = self.headerView?.view {
+            self.view.bringSubview(toFront: headerView)
+        }
+        if let contentView = self.contentViewController?.viewController.view {
+            self.view.sendSubview(toBack: contentView)
+        }
+        
+        if let headerMaxHeight = self.headerView?.maximumHeight {
+            self.contentViewController?.setTopContentInset(headerMaxHeight)
+        }
+        if let headerMinHeight = self.headerView?.minimumHeight {
+            self.contentViewController?.setMinimumTopContentInset(headerMinHeight)
+        }
+    }
+    
+    private func onScrollViewDidScroll(scrollView: UIScrollView) {
+        guard var headerView = self.headerView else { return }
+        
+        let minHeight = headerView.minimumHeight
+        let maxHeight = headerView.maximumHeight
+        let heightDiff = maxHeight - minHeight
+        
+        let headerMaxHeight = self.headerView?.maximumHeight ?? 0.0
+        let offsetDiff = heightDiff - scrollView.contentOffset.y - headerMaxHeight
+        let percentage = max(min(offsetDiff / (heightDiff > 0.0 ? heightDiff : 1.0), 1.0), 0.0)
+        
+        headerView.collapsePercentage = percentage
+        self.layoutHeaderView()
+    }
+    
+    private func snapHeader(scrollView: UIScrollView) {
+        let minHeight: CGFloat
+        let maxHeight: CGFloat
+        let collapsePercentage: CGFloat
+        
+        if let headerView = self.headerView {
+            minHeight = headerView.minimumHeight
+            maxHeight = headerView.maximumHeight
+            collapsePercentage = headerView.collapsePercentage
+        } else {
+            minHeight = 0.0
+            maxHeight = 0.0
+            collapsePercentage = 0.0
+        }
+        
+        let percentage: CGFloat = max(min(collapsePercentage, 1.0), 0.0)
+        
+        let currentOffset = scrollView.contentOffset.y
+        var newOffset: CGFloat?
+        
+        if currentOffset < 0.0 {
+            if self.scrolledToTop && percentage != 0.0 {
+                newOffset = -maxHeight
+            } else if !self.scrolledToTop && percentage != 1.0 {
+                newOffset = -minHeight
             }
         }
         
-        if let newYOffset = newYOffset,
-            newYOffset != oldYOffset {
-            let newOffset = CGPoint(x: scrollView.contentOffset.x, y: newYOffset)
-            scrollView.setContentOffset(newOffset, animated: true)
+        if let newOffset = newOffset, newOffset != currentOffset {
+            let contentOffset = CGPoint(x: scrollView.contentOffset.x, y: newOffset)
+            scrollView.setContentOffset(contentOffset, animated: true)
         }
     }
 }

@@ -9,6 +9,7 @@ extension TokenDetailsScene {
             balanceCreator: BalanceCreatorProtocol,
             tokenDetailsFetcher: TokenDetailsFetcherProtocol,
             amountFormatter: AmountFormatterProtocol,
+            tokenColoringProvider: TokenColoringProvider,
             originalAccountId: String,
             routing: Routing?
             ) {
@@ -16,7 +17,8 @@ extension TokenDetailsScene {
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
             let presenter = Presenter(
                 presenterDispatch: presenterDispatch,
-                amountFormatter: amountFormatter
+                amountFormatter: amountFormatter,
+                tokenColoringProvider: tokenColoringProvider
             )
             let interactor = Interactor(
                 presenter: presenter,

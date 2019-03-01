@@ -93,7 +93,8 @@ extension UIView {
                 viewHierarchy.append(" ")
             }
             
-            viewHierarchy.append("-\(view.debugDescription)")
+            let description = view.debugDescription
+            viewHierarchy.append("-\(description)")
         }
         return viewHierarchy
     }

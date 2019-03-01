@@ -62,7 +62,9 @@ extension RecoverySeed.Interactor: RecoverySeed.BusinessLogic {
     func onCopyAction(request: RecoverySeed.Event.CopyAction.Request) {
         UIPasteboard.general.string = self.sceneModel.seed
         
-        let response = RecoverySeed.Event.CopyAction.Response(message: "Recovery seed is copied to pasteboard")
+        let response = RecoverySeed.Event.CopyAction.Response(
+            message: Localized(.recovery_seed_is_copied_to_pasteboard)
+        )
         self.presenter.presentCopyAction(response: response)
     }
     

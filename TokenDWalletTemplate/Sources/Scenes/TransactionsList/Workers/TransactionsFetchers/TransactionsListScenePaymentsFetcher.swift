@@ -8,46 +8,39 @@ extension TransactionsListScene {
         
         // MARK: - Private properties
         
-        private let transactionsBehaviorRelay: BehaviorRelay<Transactions> = BehaviorRelay(value: [])
-        private let loadingStatusBehaviorRelay: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
-        private let loadingMoreStatusBehaviorRelay: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
-        private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
+        private var transactionsHistoryRepo: TransactionsHistoryRepo?
+        private let errorsStatus: PublishRelay<Swift.Error> = PublishRelay()
         
-        private var trRepoTransactionsDisposable: Disposable?
-        private var trRepoLoadingStatusDisposable: Disposable?
-        private var trRepoLoadingMoreStatusDisposable: Disposable?
-        private var balancesRepoLoadingStatusDisposable: Disposable?
+        private var trHistoryRepoTransactionsDisposable: Disposable?
+        private var trHistoryRepoLoadingStatusDisposable: Disposable?
+        private var trHistoryRepoLoadingMoreStatusDisposable: Disposable?
+        private var trHistoryRepoErrorsStatusDisposable: Disposable?
+        
         private let disposeBag: DisposeBag = DisposeBag()
         
         private let reposController: ReposController
         private let rateProvider: RateProviderProtocol
         private let rateAsset: String = "USD"
         
-        private var asset: String?
+        private var balanceId: String?
         private let originalAccountId: String
-        private var balancesIds: [String] {
-            return self.reposController.balancesRepo.balancesDetailsValue.compactMap({ (balance) -> String? in
-                switch balance {
-                case .created(let details):
-                    return details.balanceId
-                case .creating:
-                    return nil
-                }
-            })
-        }
         
         // MARK: - Public properties
         
-        var transactions: TransactionsListSceneTransactionsFetcherProtocol.Transactions {
-            return self.transactionsBehaviorRelay.value
+        var transactions: BehaviorRelay<Transactions> = BehaviorRelay(value: [])
+        var loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+        var loadingMoreStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+        
+        var transactionsValue: TransactionsListSceneTransactionsFetcherProtocol.Transactions {
+            return self.transactions.value
         }
         
-        var loadingStatus: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
-            return self.loadingStatusBehaviorRelay.value
+        var loadingStatusValue: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
+            return self.loadingStatus.value
         }
         
-        var loadingMoreStatus: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
-            return self.loadingMoreStatusBehaviorRelay.value
+        var loadingMoreStatusValue: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
+            return self.loadingMoreStatus.value
         }
         
         // MARK: -
@@ -63,128 +56,56 @@ extension TransactionsListScene {
             self.originalAccountId = originalAccountId
             
             self.observeRateChanges()
-            self.observeBalancesDetails()
-            self.observeBalancesRepoLoadingStatus()
-            self.observeBalancesRepoErrorStatus()
         }
         
         // MARK: - Public
         
-        func setAsset(_ asset: String) {
-            guard self.asset != asset else {
+        func setBalanceId(_ balanceId: String) {
+            guard self.balanceId != balanceId else {
                 return
             }
-            self.asset = asset
             
-            self.observeRepoLoadingStatus()
-            self.observeRepoLoadingMoreStatus()
-            self.observeRepoErrorStatus()
-            self.observeRepoTransactions()
-            self.observeBalancesRepoLoadingStatus()
+            self.balanceId = balanceId
+            self.transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
+            
+            self.observeHistoryChanges()
+            self.observeHistoryLoadingStatus()
+            self.observeHistoryLoadingMoreStatus()
+            self.observeHistoryErrorsStatus()
+            
+            self.reloadTransactions()
         }
         
         func observeTransactions() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.Transactions> {
-            return self.transactionsBehaviorRelay.asObservable()
+            return self.transactions.asObservable()
         }
         
         func observeLoadingStatus() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus> {
-            return self.loadingStatusBehaviorRelay.asObservable()
+            return self.loadingStatus.asObservable()
         }
         
         func observeLoadingMoreStatus() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus> {
-            return self.loadingMoreStatusBehaviorRelay.asObservable()
+            return self.loadingMoreStatus.asObservable()
         }
         
         func observeErrorStatus() -> Observable<Error> {
-            return self.errorStatus.asObservable()
+            return self.errorsStatus.asObservable()
         }
         
         func loadMoreTransactions() {
-            self.transactionsRepo()?.loadMoreTransactions()
+            self.transactionsHistoryRepo?.loadMoreHistory()
         }
         
         func reloadTransactions() {
-            self.transactionsRepo()?.reloadTransactions()
-            self.reloadBalancesDetails()
+            guard let transactionsHistoryRepo = self.transactionsHistoryRepo else {
+                self.loadingStatus.accept(.loaded)
+                return
+            }
+            
+            transactionsHistoryRepo.reloadTransactions()
         }
         
         // MARK: - Private
-        
-        private func reloadBalancesDetails() {
-            self.reposController.balancesRepo.reloadBalancesDetails()
-        }
-        
-        private func observeRepoLoadingStatus() {
-            self.trRepoLoadingStatusDisposable?.dispose()
-            let disposable = self.transactionsRepo()?
-                .observeLoadingStatus()
-                .subscribe(onNext: { [weak self] (status) in
-                    self?.loadingStatusBehaviorRelay.accept(status.status)
-                })
-            self.trRepoLoadingStatusDisposable = disposable
-            disposable?.disposed(by: self.disposeBag)
-        }
-        
-        private func observeRepoLoadingMoreStatus() {
-            self.trRepoLoadingMoreStatusDisposable?.dispose()
-            let disposable = self.transactionsRepo()?
-                .observeLoadingMoreStatus()
-                .subscribe(onNext: { [weak self] (status) in
-                    self?.loadingMoreStatusBehaviorRelay.accept(status.status)
-                })
-            self.trRepoLoadingMoreStatusDisposable = disposable
-            disposable?.disposed(by: self.disposeBag)
-        }
-        
-        private func observeRepoTransactions() {
-            self.trRepoTransactionsDisposable?.dispose()
-            let disposable = self.transactionsRepo()?
-                .observeOperations()
-                .subscribe(onNext: { [weak self] (_) in
-                    self?.transactionsDidChange()
-                })
-            self.trRepoTransactionsDisposable = disposable
-            disposable?.disposed(by: self.disposeBag)
-        }
-        
-        private func observeRepoErrorStatus() {
-            self.transactionsRepo()?
-                .observeErrorStatus()
-                .subscribe(onNext: { [weak self] (error) in
-                    self?.errorStatus.accept(error)
-                })
-                .disposed(by: self.disposeBag)
-        }
-        
-        private func observeBalancesDetails() {
-            self.reposController
-                .balancesRepo
-                .observeBalancesDetails()
-                .subscribe(onNext: { [weak self] (_) in
-                    self?.transactionsDidChange()
-                })
-                .disposed(by: self.disposeBag)
-        }
-        
-        private func observeBalancesRepoLoadingStatus() {
-            self.balancesRepoLoadingStatusDisposable?.dispose()
-            let disposable = self.reposController.balancesRepo
-                .observeLoadingStatus()
-                .subscribe(onNext: { [weak self] (status) in
-                    self?.loadingStatusBehaviorRelay.accept(status.status)
-                })
-            self.balancesRepoLoadingStatusDisposable = disposable
-            disposable.disposed(by: self.disposeBag)
-        }
-        
-        private func observeBalancesRepoErrorStatus() {
-            self.reposController.balancesRepo
-                .observeErrorStatus()
-                .subscribe(onNext: { [weak self] (error) in
-                    self?.errorStatus.accept(error)
-                })
-                .disposed(by: self.disposeBag)
-        }
         
         private func observeRateChanges() {
             self.rateProvider
@@ -195,293 +116,247 @@ extension TransactionsListScene {
                 .disposed(by: self.disposeBag)
         }
         
-        // MARK: Helpers
-        
-        private func transactionsDidChange() {
-            let transactions = self.transactionsRepo()?.operationsValue ?? []
-            let parsedTransactions = self.parseTransactions(transactions)
-            self.transactionsBehaviorRelay.accept(parsedTransactions)
+        private func observeHistoryChanges() {
+            self.trHistoryRepoTransactionsDisposable?.dispose()
+            
+            self.trHistoryRepoTransactionsDisposable = self.transactionsHistoryRepo?
+                .observeHistory()
+                .subscribe(onNext: { [weak self] (_) in
+                    self?.transactionsDidChange()
+                })
         }
         
-        private func parseTransactions(_ transactions: [TransactionsRepo.Operation]) -> Transactions {
-            let transactions = transactions.compactMap { (operation) -> Transaction? in
-                return self.parseTransactionsFromOperation(operation)
+        private func observeHistoryLoadingStatus() {
+            self.trHistoryRepoLoadingStatusDisposable?.dispose()
+            self.trHistoryRepoLoadingStatusDisposable =
+                self.transactionsHistoryRepo?
+                    .observeLoadingStatus()
+                    .subscribe(onNext: { [weak self] (status) in
+                        self?.loadingStatus.accept(status.status)
+                    })
+        }
+        
+        private func observeHistoryLoadingMoreStatus() {
+            self.trHistoryRepoLoadingMoreStatusDisposable?.dispose()
+            self.trHistoryRepoLoadingMoreStatusDisposable =
+                self.transactionsHistoryRepo?
+                    .observeLoadingStatus()
+                    .subscribe(onNext: { [weak self] (status) in
+                        self?.loadingMoreStatus.accept(status.status)
+                    })
+        }
+        
+        private func observeHistoryErrorsStatus() {
+            self.trHistoryRepoErrorsStatusDisposable?.dispose()
+            self.trHistoryRepoErrorsStatusDisposable =
+                self.transactionsHistoryRepo?
+                    .observeErrors()
+                    .subscribe(onNext: { [weak self] (error) in
+                        self?.errorsStatus.accept(error)
+                    })
+        }
+        
+        private func transactionsDidChange() {
+            let effects = self.transactionsHistoryRepo?.history ?? []
+            let transactions = self.parseEffects(effects)
+            
+            self.transactions.accept(transactions)
+        }
+        
+        // MARK: Helpers
+        
+        private func parseEffects(_ effects: [ParticipantEffectResource]) -> Transactions {
+            let transactions = effects.compactMap { (effect) -> Transaction? in
+                return self.parseTransactionsFromEffect(effect)
             }
             return transactions
         }
         
-        private func parseTransactionsFromOperation(_ operation: TransactionsRepo.Operation) -> Transaction? {
-            // swiftlint:disable statement_position
-            if let payment = operation.base as? PaymentOperationResponse {
-                return self.parsePayment(payment, accountId: self.originalAccountId, operation: operation)
+        private func parseTransactionsFromEffect(_ participantEffect: ParticipantEffectResource) -> Transaction? {
+            guard let effect = participantEffect.effect,
+                let operation = participantEffect.operation else {
+                    return nil
             }
+            
+            switch effect.effectType {
                 
-            else if let paymentv2 = operation.base as? PaymentV2OperationResponse {
-                return self.parsePaymentV2(paymentv2, accountId: self.originalAccountId, operation: operation)
-            }
+            case .effectBalanceChange(let balanceChangeEffect):
+                return self.parseBalanceChnageEffect(
+                    participantEffect: participantEffect,
+                    balanceChangeEffect: balanceChangeEffect,
+                    operation: operation
+                )
                 
-            else if let withdraw = operation.base as? CreateWithdrawalRequest {
-                return self.parseWithdraw(withdraw, asset: self.asset ?? "", operation: operation)
-            }
+            case .effectMatched(let matchedEffect):
+                return self.parseMatchedEffect(
+                    participantEffect: participantEffect,
+                    matchedEffect: matchedEffect,
+                    operation: operation
+                )
                 
-            else if let checkSaleState = operation as? TransactionsRepo.CheckSaleStateOperation {
-                return self.parseCheckSaleState(checkSaleState, operation: operation)
-            }
-                
-            else if let manageOffer = operation as? TransactionsRepo.ManageOfferOperation {
-                return self.parseManageOffer(manageOffer, operation: operation)
-            }
-                
-            else if let createIssuance = operation.base as? CreateIssuanceRequestResponse {
-                return self.parseCreateIssuance(createIssuance, operation: operation)
-            }
-                
-            else {
+            case .self:
                 return nil
             }
-            // swiftlint:enable statement_position
         }
         
-        private func parsePayment(
-            _ payment: PaymentOperationResponse,
-            accountId: String,
-            operation: TransactionsRepo.Operation
-            ) -> Transaction {
+        private func parseBalanceChnageEffect(
+            participantEffect: ParticipantEffectResource,
+            balanceChangeEffect: EffectBalanceChangeResource,
+            operation: OperationResource
+            ) -> Transaction? {
             
-            let wasSent: Bool = payment.fromAccountId == accountId
-            let amountValue: Decimal = payment.amount
-            let assetValue: String = payment.asset
-            let amount = Amount(
-                value: wasSent ? -amountValue : amountValue,
-                asset: assetValue
-            )
-            let amountType: Transaction.AmountType = wasSent ? .negative : .positive
-            let counterparty: String? = wasSent ? payment.toAccountId : payment.fromAccountId
-            let rate: Amount? = {
-                guard let rate = self.rateProvider.rateForAmount(
-                    amountValue,
-                    ofAsset: assetValue,
-                    destinationAsset: self.rateAsset
-                    ) else {
-                        return nil
-                }
-                return Amount(
-                    value: rate,
-                    asset: self.rateAsset
-                )
-            }()
-            let transactionType = self.getTransactionType(operation, isIncome: !wasSent)
-            let operation = Transaction(
-                identifier: payment.id,
-                type: transactionType,
-                amount: amount,
-                amountType: amountType,
-                counterparty: counterparty,
-                rate: rate,
-                date: payment.ledgerCloseTime
-            )
-            return operation
-        }
-        
-        private func parsePaymentV2(
-            _ payment: PaymentV2OperationResponse,
-            accountId: String,
-            operation: TransactionsRepo.Operation
-            ) -> Transaction {
+            guard let balance = participantEffect.balance,
+                let balanceId = balance.id,
+                let assetResource = participantEffect.asset,
+                let asset = assetResource.id,
+                let id = participantEffect.id,
+                let identifier = UInt64(id),
+                let details = operation.details else {
+                    return nil
+            }
             
-            let wasSent: Bool = payment.fromAccountId == accountId
-            let amountValue = payment.amount
-            let assetValue = payment.asset
-            let amount = Amount(
-                value: wasSent ? -amountValue : amountValue,
-                asset: assetValue
+            let amount = TransactionsListScene.Model.Amount(
+                value: balanceChangeEffect.amount,
+                asset: asset
             )
-            let amountType: Transaction.AmountType = wasSent ? .negative : .positive
-            let counterparty: String? = wasSent ? payment.toAccountId : payment.fromAccountId
-            let rate: Amount? = {
-                guard let rate = self.rateProvider.rateForAmount(
-                    amountValue,
-                    ofAsset: assetValue,
-                    destinationAsset: self.rateAsset
-                    ) else {
-                        return nil
-                }
-                return Amount(
-                    value: rate,
-                    asset: self.rateAsset
-                )
-            }()
             
-            let transactionType = self.getTransactionType(operation, isIncome: !wasSent)
-            let operation = Transaction(
-                identifier: payment.id,
-                type: transactionType,
-                amount: amount,
-                amountType: amountType,
-                counterparty: counterparty,
-                rate: rate,
-                date: payment.ledgerCloseTime
-            )
-            return operation
-        }
-        
-        private func parseWithdraw(
-            _ withdraw: CreateWithdrawalRequest,
-            asset: String,
-            operation: TransactionsRepo.Operation
-            ) -> Transaction {
+            let amountEffect = self.getAmountEffect(balanceChangeEffect)
             
-            let amountValue = withdraw.amount
-            let amount = Amount(
-                value: -amountValue,
-                asset: withdraw.destAsset
+            let rateAmount = self.rateProvider.rateForAmount(
+                balanceChangeEffect.amount,
+                ofAsset: asset,
+                destinationAsset: self.rateAsset
             )
-            let rate: Amount? = {
-                guard let rate = self.rateProvider.rateForAmount(
-                    amountValue,
-                    ofAsset: asset,
-                    destinationAsset: self.rateAsset
-                    ) else {
-                        return nil
-                }
-                return Amount(
-                    value: rate,
-                    asset: self.rateAsset
-                )
-            }()
-            let transactionType = self.getTransactionType(operation, isIncome: false)
-            let operation = Transaction(
-                identifier: withdraw.id,
-                type: transactionType,
-                amount: amount,
-                amountType: withdraw.stateValue == .success ? .negative : .neutral,
-                counterparty: withdraw.externalDetails?.address,
-                rate: rate,
-                date: withdraw.ledgerCloseTime
-            )
-            return operation
-        }
-        
-        private func parseCreateIssuance(
-            _ issuance: CreateIssuanceRequestResponse,
-            operation: TransactionsRepo.Operation
-            ) -> Transaction {
             
-            let amountValue = issuance.amount
-            let assetValue = issuance.asset
-            let amount = Amount(
-                value: amountValue,
-                asset: assetValue
+            let rate = TransactionsListScene.Model.Amount(
+                value: rateAmount ?? 0,
+                asset: self.rateAsset
             )
-            let rate: Amount? = {
-                guard let rate = self.rateProvider.rateForAmount(
-                    amountValue,
-                    ofAsset: assetValue,
-                    destinationAsset: self.rateAsset
-                    ) else {
-                        return nil
-                }
-                return Amount(
-                    value: rate,
-                    asset: self.rateAsset
-                )
-            }()
             
-            let transactionType = self.getTransactionType(operation, isIncome: true)
-            let operation = Transaction(
-                identifier: issuance.id,
-                type: transactionType,
-                amount: amount,
-                amountType: .positive,
-                counterparty: nil,
-                rate: rate,
-                date: issuance.ledgerCloseTime
-            )
-            return operation
-        }
-        
-        private func parseCheckSaleState(
-            _ checkSaleState: TransactionsRepo.CheckSaleStateOperation,
-            operation: TransactionsRepo.Operation
-            ) -> Transaction {
+            let counterparty = self.getCounterparty(details: details)
             
-            let amount = Amount(
-                value: checkSaleState.amount,
-                asset: checkSaleState.asset
-            )
-            let amountType: Transaction.AmountType = checkSaleState.match.isBuy ? .positive : .negative
-            let rate = Amount(
-                value: checkSaleState.match.price,
-                asset: checkSaleState.match.quoteAsset
-            )
-            let transactionType = self.getTransactionType(operation, isIncome: checkSaleState.match.isBuy)
             let transaction = Transaction(
-                identifier: checkSaleState.id,
-                type: transactionType,
+                identifier: identifier,
+                balanceId: balanceId,
                 amount: amount,
-                amountType: amountType,
-                counterparty: nil,
+                amountEffect: amountEffect,
+                counterparty: counterparty,
                 rate: rate,
-                date: checkSaleState.ledgerCloseTime
+                date: operation.appliedAt
             )
-            
             return transaction
         }
         
-        private func parseManageOffer(
-            _ manageOffer: TransactionsRepo.ManageOfferOperation,
-            operation: TransactionsRepo.Operation
-            ) -> Transaction {
+        private func parseMatchedEffect(
+            participantEffect: ParticipantEffectResource,
+            matchedEffect: EffectMatchedResource,
+            operation: OperationResource
+            ) -> Transaction? {
             
-            return self.parseCheckSaleState(manageOffer, operation: operation)
+            guard let balance = participantEffect.balance,
+                let balanceId = balance.id,
+                let assetResource = participantEffect.asset,
+                let asset = assetResource.id,
+                let charged = matchedEffect.charged,
+                let funded = matchedEffect.funded,
+                let id = participantEffect.id,
+                let identifier = UInt64(id) else {
+                    return nil
+            }
+            
+            let fundedInBalanceAsset = funded.assetCode == asset
+            
+            let amountValue = fundedInBalanceAsset ? funded.amount : charged.amount
+            let amountAsset = fundedInBalanceAsset ? funded.assetCode : charged.assetCode
+            
+            let amount = TransactionsListScene.Model.Amount(
+                value: amountValue,
+                asset: amountAsset
+            )
+            
+            let rateValue = self.rateProvider.rateForAmount(
+                amountValue,
+                ofAsset: amountAsset,
+                destinationAsset: self.rateAsset
+            )
+            
+            let rate = TransactionsListScene.Model.Amount(
+                value: rateValue ?? 0,
+                asset: self.rateAsset
+            )
+            
+            let transaction = Transaction(
+                identifier: identifier,
+                balanceId: balanceId,
+                amount: amount,
+                amountEffect: .matched,
+                counterparty: nil,
+                rate: rate,
+                date: operation.appliedAt
+            )
+            return transaction
         }
         
-        private func getTransactionType(
-            _ operation: TransactionsRepo.Operation,
-            isIncome: Bool
-            ) -> Transaction.TransactionType {
+        private func getAmountEffect(_ effect: EffectBalanceChangeResource) -> Transaction.AmountEffect {
             
-            switch operation.typeValue {
+            switch effect.effectBalanceChangeType {
                 
-            case .checkSaleState:
-                return .checkSaleState(income: isIncome)
+            case .effectCharged:
+                return .charged
                 
-            case .createIssuanceRequest:
-                return .createIssuance
+            case .effectChargedFromLocked:
+                return .charged_from_locked
                 
-            case .createWithdrawalRequest:
-                return .createWithdrawal
+            case .effectFunded:
+                return .funded
                 
-            case .manageOffer:
-                return .manageOffer(sold: isIncome)
+            case .effectIssued:
+                return .issued
                 
-            case .payment, .paymentv2, .unknown:
-                return .payment(sent: !isIncome)
+            case .effectLocked:
+                return .locked
+                
+            case .effectUnlocked:
+                return .unlocked
+                
+            case .effectWithdrawn:
+                return .withdrawn
+                
+            case .`self`:
+                return .no_effect
             }
         }
         
-        private func transactionsRepo() -> TransactionsRepo? {
-            guard let asset = self.asset else {
+        private func getCounterparty(details: OperationDetailsResource) -> String? {
+            switch details.operationDetailsRelatedToBalance {
+                
+            case .opCreateWithdrawRequestDetails(let resource):
+                return resource.creatorDetails["address"] as? String
+                
+            case .opPaymentDetails(let resource):
+                guard let accountFrom = resource.accountFrom,
+                    let accountFromId = accountFrom.id,
+                    let accountTo = resource.accountTo,
+                    let accountToId = accountTo.id else {
+                        return nil
+                }
+                
+                let wasSent: Bool = accountFromId == self.originalAccountId
+                return wasSent ? accountToId : accountFromId
+                
+            case .`self`,
+                 .opCreateAMLAlertRequestDetails,
+                 .opCreateAtomicSwapBidRequestDetails,
+                 .opCreateIssuanceRequestDetails,
+                 .opPayoutDetails:
+                
                 return nil
             }
-            
-            return self.reposController.transactionsRepoForAsset(asset)
         }
     }
 }
 
-private extension TransactionsRepo.LoadingStatus {
-    var status: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
-        switch self {
-        case .loading:
-            return .loading
-        case .loaded:
-            return .loaded
-        }
-    }
-}
-
-private extension BalancesRepo.LoadingStatus {
+private extension TransactionsHistoryRepo.LoadingStatus {
     var status: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
         switch self {
         case .loading:

@@ -104,7 +104,8 @@ extension ReceiveAddress {
                     strongSelf.switchLabel(
                         strongSelf.statusLabel,
                         withLabel: strongSelf.valueLabel,
-                        completion: completion)
+                        completion: completion
+                    )
                 }
             }
         }

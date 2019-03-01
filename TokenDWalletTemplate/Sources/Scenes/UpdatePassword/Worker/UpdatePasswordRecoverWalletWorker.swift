@@ -35,19 +35,67 @@ extension UpdatePassword {
             return self.fieldValueForType(fields: fields, fieldType: .confirmPassword)
         }
         
-        private func submitRecovery(
+        private func buildRecoveryRequest(
             email: String,
             seed: String,
             newPassword: String,
             networkInfo: NetworkInfoModel,
             stopLoading: @escaping () -> Void,
-            completion: @escaping (_ result: UpdatePasswordSubmitWorkerProtocol.Result) -> Void) {
+            completion: @escaping (_ result: UpdatePasswordSubmitWorkerProtocol.Result) -> Void
+            ) {
             
-            _ = self.keyserverApi.recoverWallet(
-                email: email,
+            let onSignRequest = JSONAPI.RequestSignerBlockCaller.getUnsafeSignRequestBlock()
+            
+            _ = self.updateRequestBuilder.buildRecoveryWalletRequest(
+                for: email,
                 recoverySeedBase32Check: seed,
                 newPassword: newPassword,
+                onSignRequest: onSignRequest,
                 networkInfo: networkInfo,
+                completion: { [weak self] (result) in
+                    stopLoading()
+
+                    switch result {
+                        
+                    case .failure(let error):
+                        completion(.failed(.submitError(error)))
+                        
+                    case .success(let components):
+                        
+                        self?.recoverWallet(
+                            email: components.email,
+                            walletId: components.walletId,
+                            signingPassword: components.signingPassword,
+                            walletKDF: components.walletKDF,
+                            walletInfo: components.walletInfo,
+                            requestSigner: components.requestSigner,
+                            sendDate: Date(),
+                            stopLoading: stopLoading,
+                            completion: completion
+                        )
+                    }
+            })
+        }
+        
+        private func recoverWallet(
+            email: String,
+            walletId: String,
+            signingPassword: String,
+            walletKDF: WalletKDFParams,
+            walletInfo: WalletInfoModel,
+            requestSigner: JSONAPI.RequestSignerProtocol,
+            sendDate: Date,
+            stopLoading: @escaping () -> Void,
+            completion: @escaping (_ result: UpdatePasswordSubmitWorkerProtocol.Result) -> Void
+            ) {
+            
+            _ = self.keyserverApi.performUpdatePasswordRequest(
+                email: email,
+                walletId: walletId,
+                signingPassword: signingPassword,
+                walletKDF: walletKDF,
+                walletInfo: walletInfo,
+                requestSigner: requestSigner,
                 completion: { (result) in
                     stopLoading()
                     
@@ -106,7 +154,7 @@ extension UpdatePassword.RecoverWalletWorker: UpdatePassword.SubmitPasswordHandl
                 completion(.failed(.networkInfoFetchFailed(error)))
                 
             case .succeeded(let info):
-                self?.submitRecovery(
+                self?.buildRecoveryRequest(
                     email: email,
                     seed: seed,
                     newPassword: newPassword,

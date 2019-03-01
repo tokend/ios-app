@@ -91,7 +91,7 @@ class TradeChartCard: UIView {
         self.mainTitleLabel.textColor =  Theme.Colors.textOnContentBackgroundColor
         self.mainTitleLabel.font = Theme.Fonts.flexibleHeaderTitleFont
         self.mainTitleLabel.numberOfLines = 1
-        self.mainTitleLabel.text = "Main title"
+        self.mainTitleLabel.text = Localized(.main_title)
     }
     
     private func setupSideTitleLabel() {
@@ -99,7 +99,7 @@ class TradeChartCard: UIView {
         self.sideTitleLabel.textColor =  Theme.Colors.textOnContentBackgroundColor
         self.sideTitleLabel.font = Theme.Fonts.smallTextFont
         self.sideTitleLabel.numberOfLines = 1
-        self.sideTitleLabel.text = "Side title"
+        self.sideTitleLabel.text = Localized(.side_title)
     }
     
     private func setupChart() {

@@ -6,8 +6,9 @@ protocol DashboardPaymentsPlugInBusinessLogic {
     typealias Event = DashboardPaymentsPlugIn.Event
 
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
-    func onDidSelectBalance(request: Event.DidSelectBalance.Request)
+    func onSelectedBalanceDidChange(request: Event.SelectedBalanceDidChange.Request)
     func onDidSelectViewMore(request: Event.DidSelectViewMore.Request)
+    func onDidInitiateRefresh(request: Event.DidInitiateRefresh.Request)
 }
 
 extension DashboardPaymentsPlugIn {
@@ -65,8 +66,6 @@ extension DashboardPaymentsPlugIn {
                 .subscribe(onNext: { [weak self] (balances) in
                     self?.sceneModel.balances = balances
                     self?.onBalancesDidChange()
-                    self?.updateSelectedBalance()
-                    self?.onDidSelectBalance()
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -75,35 +74,70 @@ extension DashboardPaymentsPlugIn {
             self.rateProvider
                 .rate
                 .subscribe(onNext: { [weak self] (_) in
-                    self?.onRateDidChange()
+                    self?.updateSelectedBalance()
                 })
                 .disposed(by: self.disposeBag)
         }
         
         private func onBalancesDidChange() {
+            self.setSelectedBalanceIdIfNeeded()
+            self.updateSelectedBalance()
+            
+            let index = self.sceneModel.balances.firstIndex { (balance) -> Bool in
+                return balance.balanceId == self.sceneModel.selectedBalanceId
+            }
+            
+            var balances: [Model.Balance]
+            
+            if self.sceneModel.balances.isEmpty {
+                let amount = Model.Amount(
+                    value: 0,
+                    asset: Localized(.no_balances)
+                )
+                let balance = Model.Balance(
+                    balance: amount,
+                    balanceId: nil
+                )
+                balances = [balance]
+            } else {
+                balances = self.sceneModel.balances
+            }
+            
             let response = Event.BalancesDidChange.Response(
-                balances: self.sceneModel.balances
+                balances: balances,
+                selectedBalanceId: self.sceneModel.selectedBalanceId,
+                selectedBalanceIndex: index
             )
             self.presenter.presentBalancesDidChange(response: response)
         }
         
-        private func onRateDidChange() {
-            let rate: Model.Amount? = self.selectedBalanceRate
-            let response = Event.RateDidChange.Response(rate: rate)
-            self.presenter.presentRateDidChange(response: response)
-        }
-        
-        private func onDidSelectBalance() {
+        private func updateSelectedBalance() {
             guard let selectedBalance = self.selectedBalance() else {
                 return
             }
             
-            let rate: Model.Amount? = self.selectedBalanceRate
-            let response = Event.BalanceDidChange.Response(
-                balance: selectedBalance.balance,
-                rate: rate
+            let rateAmount = self.rateProvider.rateForAmount(
+                selectedBalance.balance.value,
+                ofAsset: selectedBalance.balance.asset,
+                destinationAsset: self.rateAsset
             )
-            self.presenter.presentBalanceDidChange(response: response)
+            
+            var rate: Event.Model.Amount?
+            
+            if let amount = rateAmount {
+                rate = Event.Model.Amount(
+                    value: amount,
+                    asset: rateAsset
+                )
+            }
+            
+            let response = Event.SelectedBalanceDidChange.Response(
+                balance: selectedBalance.balance,
+                rate: rate,
+                id: selectedBalance.balanceId,
+                asset: selectedBalance.balance.asset
+            )
+            self.presenter.presentSelectedBalanceDidChange(response: response)
         }
         
         private func selectedBalanceId() -> String? {
@@ -140,32 +174,22 @@ extension DashboardPaymentsPlugIn {
             return nil
         }
         
-        private func updateSelectedBalance() {
-            let viewMoreAvailabilityChangedResponse = Event.ViewMoreAvailabilityChanged.Response(
-                available: self.selectedBalance() != nil
-            )
-            self.presenter.presentViewMoreAvailabilityChanged(response: viewMoreAvailabilityChangedResponse)
-            
-            guard let selectedBalance = self.selectedBalance(),
-                let index = self.sceneModel.balances.index(of: selectedBalance)
-                else {
-                    return
-            }
-            
-            let response = Event.SelectedBalanceDidChange.Response(index: index)
-            self.presenter.presentSelectedBalanceDidChange(respose: response)
-            
-            if let id = selectedBalance.balanceId {
-                self.selectBalanceIfNeeded(id)
+        private func setSelectedBalanceIdIfNeeded() {
+            if let selectedBalanceId = self.sceneModel.selectedBalanceId,
+                self.sceneModel.balances.contains(where: { (balance) -> Bool in
+                    return balance.balanceId == selectedBalanceId
+                }) {
+                return
+            } else {
+                self.setFirstBalanceSelected()
             }
         }
         
-        private func selectBalanceIfNeeded(_ id: BalanceId) {
-            guard self.sceneModel.selectedBalanceId != id else {
+        private func setFirstBalanceSelected() {
+            guard let balance = self.sceneModel.balances.first else {
                 return
             }
-            self.sceneModel.selectedBalanceId = id
-            self.onDidSelectBalance()
+            self.sceneModel.selectedBalanceId = balance.balanceId
         }
     }
 }
@@ -177,8 +201,9 @@ extension DashboardPaymentsPlugIn.Interactor: DashboardPaymentsPlugIn.BusinessLo
         self.observeRate()
     }
     
-    func onDidSelectBalance(request: Event.DidSelectBalance.Request) {
-        self.selectBalanceIfNeeded(request.id)
+    func onSelectedBalanceDidChange(request: Event.SelectedBalanceDidChange.Request) {
+        self.sceneModel.selectedBalanceId = request.id
+        self.updateSelectedBalance()
     }
     
     func onDidSelectViewMore(request: Event.DidSelectViewMore.Request) {
@@ -189,5 +214,9 @@ extension DashboardPaymentsPlugIn.Interactor: DashboardPaymentsPlugIn.BusinessLo
             balanceId: balanceId
         )
         self.presenter.presentDidSelectViewMore(response: response)
+    }
+    
+    func onDidInitiateRefresh(request: Event.DidInitiateRefresh.Request) {
+        self.balancesFetcher.refreshPaymentsPreviewBalances()
     }
 }

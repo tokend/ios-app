@@ -25,12 +25,6 @@ class SalesFlowController: BaseSignedInFlowController {
     private func showSalesScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let vc = self.setupSalesScreen()
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        self.navigationController.navigationBar.shadowImage = UIImage()
-        
         self.navigationController.setViewControllers([vc], animated: false)
         
         if let showRoot = showRootScreen {
@@ -59,7 +53,7 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onHideLoading: { [weak self] in
                 self?.navigationController.hideProgress()
-            })
+        })
         
         let sectionsProvider = Sales.SalesSectionsProvider(
             salesRepo: self.reposController.salesRepo,
@@ -75,7 +69,7 @@ class SalesFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Explore Funds"
+        vc.navigationItem.title = Localized(.explore_funds)
         
         return vc
     }
@@ -91,28 +85,33 @@ class SalesFlowController: BaseSignedInFlowController {
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         
-        let transactionsListRouting = TransactionsListScene.Routing { [weak self] (identifier, _) in
-            guard let strongSelf = self else { return }
-            guard let navigationController = strongSelf.navigationController as? NavigationController else { return }
-            strongSelf.showInvestmentDetailsScreen(
-                offerId: identifier,
-                navigationController: navigationController
-            )
-        }
+        let transactionsListRouting = TransactionsListScene.Routing(
+            onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
+                guard let navigationController = self?.navigationController else { return }
+                self?.showInvestmentDetailsScreen(
+                    offerId: identifier,
+                    navigationController: navigationController
+                )
+            },
+            showSendPayment: { _ in }
+        )
+        
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
         
         let vc = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
-            emptyTitle: "No investments",
+            emptyTitle: Localized(.no_investments),
+            viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        vc.navigationItem.title = "Investments"
+        vc.navigationItem.title = Localized(.investments)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func showInvestmentDetailsScreen(
         offerId: UInt64,
-        navigationController: NavigationController
+        navigationController: NavigationControllerProtocol
         ) {
         
         let vc = self.setupInvestmentDetailsScreen(
@@ -124,12 +123,12 @@ class SalesFlowController: BaseSignedInFlowController {
     
     private func setupInvestmentDetailsScreen(
         offerId: UInt64,
-        navigationController: NavigationController
+        navigationController: NavigationControllerProtocol
         ) -> TransactionDetails.ViewController {
         
         let routing = TransactionDetails.Routing(
             successAction: {
-                navigationController.popViewController(animated: true)
+                navigationController.popViewController(true)
         },
             showProgress: {
                 navigationController.showProgress()
@@ -144,7 +143,6 @@ class SalesFlowController: BaseSignedInFlowController {
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             transactionSender: self.managersController.transactionSender,
             amountConverter: AmountConverter(),
-            amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
             userDataProvider: self.userDataProvider,
             identifier: offerId
@@ -154,7 +152,7 @@ class SalesFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Investment details"
+        vc.navigationItem.title = Localized(.investment_details)
         
         return vc
     }
@@ -200,13 +198,18 @@ class SalesFlowController: BaseSignedInFlowController {
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)
             },
             onPresentPicker: { [weak self] (title, options, onSelected) in
-                self?.navigationController.showDialog(
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
                     title: title,
                     message: nil,
                     style: .actionSheet,
                     options: options,
                     onSelected: onSelected,
-                    onCanceled: nil
+                    onCanceled: nil,
+                    presentViewController: present
                 )
             },
             onSaleInvestAction: { [weak self] (investModel) in
@@ -228,7 +231,7 @@ class SalesFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Sale details"
+        vc.navigationItem.title = Localized(.sale_details)
         
         return vc
     }
@@ -272,8 +275,7 @@ class SalesFlowController: BaseSignedInFlowController {
             amountFormatter: amountFormatter,
             userDataProvider: self.userDataProvider,
             amountConverter: amountConverter,
-            percentFormatter: percentFormatter,
-            amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision
+            percentFormatter: percentFormatter
         )
         
         let routing = ConfirmationScene.Routing(
@@ -296,7 +298,7 @@ class SalesFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Confirmation"
+        vc.navigationItem.title = Localized(.confirmation)
         
         return vc
     }
@@ -315,7 +317,7 @@ class SalesFlowController: BaseSignedInFlowController {
             blobId: saleInfoModel.blobId,
             asset: saleInfoModel.asset,
             salesApi: self.flowControllerStack.api.salesApi,
-            userApi: self.flowControllerStack.usersApi,
+            blobsApi: self.flowControllerStack.api.blobsApi,
             assetsRepo: self.reposController.assetsRepo,
             imagesUtility: self.reposController.imagesUtility,
             balancesRepo: self.reposController.balancesRepo
@@ -325,12 +327,15 @@ class SalesFlowController: BaseSignedInFlowController {
         let sceneModel = SaleInfo.Model.SceneModel(tabs: [])
         let dateFormatter = SaleInfo.DateFormatter()
         let amountFormatter = SaleInfo.AmountFormatter()
+        let textFormatter = SaleInfo.SaleInfoTextFormatter()
+        
         SaleInfo.Configurator.configure(
             viewController: vc,
             sceneModel: sceneModel,
             dataProvider: dataProvider,
             dateFormatter: dateFormatter,
             amountFormatter: amountFormatter,
+            textFormatter: textFormatter,
             routing: routing
         )
         return vc

@@ -5,7 +5,7 @@ enum TransactionsListScene {
     // MARK: - Typealiases
     
     typealias Identifier = UInt64
-    typealias Asset = String
+    typealias BalanceId = String
 
     // MARK: -
     
@@ -16,6 +16,7 @@ enum TransactionsListScene {
 extension TransactionsListScene.Model {
     struct SceneModel {
         var asset: String
+        var balanceId: String?
         var sections: [SectionModel]
         var sectionTitleIndex: Int?
         var sectionTitleDate: Date?
@@ -29,26 +30,36 @@ extension TransactionsListScene.Model {
     
     struct Transaction {
         let identifier: TransactionsListScene.Identifier
-        let type: TransactionType
+        let balanceId: String
         let amount: Amount
-        let amountType: AmountType
+        let amountEffect: AmountEffect
         let counterparty: String?
         let rate: Amount?
         let date: Date
         
         enum TransactionType {
-            case payment(sent: Bool)
+            case payment(income: Bool)
             case createIssuance
             case createWithdrawal
-            case manageOffer(sold: Bool)
+            case manageOffer(income: Bool)
             case checkSaleState(income: Bool)
-            case pendingOffer(buy: Bool)
+            case pendingOffer(income: Bool)
         }
         
-        enum AmountType {
-            case positive
-            case negative
-            case neutral
+        enum AmountEffect {
+            // swiftlint:disable identifier_name
+            case charged
+            case charged_from_locked
+            case funded
+            case issued
+            case locked
+            case matched
+            case no_effect
+            case unlocked
+            case withdrawn
+            case pending
+            case sale
+            // swiftlint:enable identifier_name
         }
     }
     
@@ -60,6 +71,10 @@ extension TransactionsListScene.Model {
     struct SectionViewModel {
         let title: String?
         let rows: [TransactionsListTableViewCell.Model]
+    }
+    
+    struct ViewConfig {
+        let actionButtonIsHidden: Bool
     }
 }
 
@@ -99,6 +114,12 @@ extension TransactionsListScene.Event {
         }
     }
     
+    enum BalanceDidChange {
+        struct Request {
+            let balanceId: String?
+        }
+    }
+    
     enum ScrollViewDidScroll {
         struct Request {
             let indexPath: IndexPath
@@ -114,6 +135,18 @@ extension TransactionsListScene.Event {
         struct ViewModel {
             let title: String?
             let animation: TableViewStickyHeader.ChangeTextAnimationType
+        }
+    }
+    
+    enum SendAction {
+        struct Request {}
+        
+        struct Response {
+            let balanceId: String?
+        }
+        
+        struct ViewModel {
+            let balanceId: String?
         }
     }
 }

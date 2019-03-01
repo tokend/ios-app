@@ -2,13 +2,16 @@ import UIKit
 
 class DecimalFormatter: ValueFormatter<Decimal> {
     
+    // TODO: Refactor
+    public static var precision: Int = 6
+    
     let numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = false
         formatter.decimalSeparator = "."
         formatter.numberStyle = .decimal
         formatter.maximumIntegerDigits = 30
-        formatter.maximumFractionDigits = 6
+        formatter.maximumFractionDigits = DecimalFormatter.precision
         formatter.roundingMode = .halfUp
         formatter.minimumIntegerDigits = 1
         return formatter
@@ -21,6 +24,7 @@ class DecimalFormatter: ValueFormatter<Decimal> {
             if valueDecimal == 0 && self.emptyZeroValue {
                 return ""
             }
+            self.numberFormatter.maximumFractionDigits = DecimalFormatter.precision
             return self.numberFormatter.string(from: valueDecimal)
         } else {
             return nil

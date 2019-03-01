@@ -10,6 +10,7 @@ extension RegisterScene {
         let onPresentQRCodeReader: (_ completion: @escaping QRCodeReaderCompletion) -> Void
         let onSuccessfulRegister: (_ account: String, _ walletData: Model.WalletData, _ recoverySeed: String) -> Void
         let onRecovery: () -> Void
+        let onAuthenticatorSignIn: () -> Void
         let showDialogAlert: (
         _ title: String,
         _ message: String,

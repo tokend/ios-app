@@ -6,10 +6,18 @@ enum SaleDetails {
     // MARK: - Typealiases
     
     typealias SaleIdentifier = String
-    typealias CellIdentifier = String
     
     // MARK: -
     
+    enum CellIdentifier: String {
+        case empty
+        case details
+        case description
+        case investing
+        case charts
+        case chart
+    }
+
     enum Model {}
     enum Event {}
 }
@@ -152,7 +160,6 @@ extension SaleDetails.Model {
     
     struct AssetModel {
         let logoUrl: URL?
-        let verificationRequired: Bool
     }
     
     struct BalanceDetails {
@@ -415,21 +422,32 @@ extension SaleDetails.Event.InvestAction.Response {
         var errorDescription: String? {
             switch self {
             case .inputIsEmpty:
-                return "Empty amount"
+                return Localized(.empty_amount)
             case .quoteBalanceIsNotFound:
-                return "Quote balance is not found"
+                return Localized(.quote_balance_is_not_found)
             case .quoteAssetIsNotFound:
-                return "Quote asset is not found"
+                return Localized(.quote_asset_is_not_found)
             case .saleIsNotFound:
-                return "Sale is not found"
+                return Localized(.sale_is_not_found)
             case .baseBalanceIsNotFound(let asset):
-                return "\(asset) balance is not created"
+                return Localized(
+                    .balance_is_not_created,
+                    replace: [
+                        .balance_is_not_created_replace_asset: asset
+                    ]
+                )
             case .formatError:
-                return "Error while formatting orderBookId"
+                return Localized(.error_while_formatting_orderbookid)
             case .feeError(let error):
-                return "Fee error: \(error.localizedDescription)"
+                let message = error.localizedDescription
+                return Localized(
+                    .fee_error,
+                    replace: [
+                        .fee_error_replace_message: message
+                    ]
+                )
             case .insufficientFunds:
-                return "Insufficient funds"
+                return Localized(.insufficient_funds)
             }
         }
     }

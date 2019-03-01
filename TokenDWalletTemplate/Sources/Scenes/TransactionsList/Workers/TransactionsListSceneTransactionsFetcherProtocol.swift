@@ -12,11 +12,11 @@ protocol TransactionsListSceneTransactionsFetcherProtocol {
     typealias Transactions = [Transaction]
     typealias LoadingStatus = TransactionsListSceneTransactionsLoadingStatus
     
-    var transactions: Transactions { get }
-    var loadingStatus: LoadingStatus { get }
-    var loadingMoreStatus: LoadingStatus { get }
+    var transactionsValue: Transactions { get }
+    var loadingStatusValue: LoadingStatus { get }
+    var loadingMoreStatusValue: LoadingStatus { get }
     
-    func setAsset(_ asset: String)
+    func setBalanceId(_ balanceId: String)
     
     func observeTransactions() -> Observable<Transactions>
     func reloadTransactions()

@@ -24,6 +24,7 @@ class FeeLoader {
         asset: String,
         feeType: FeeResponse.FeeType,
         amount: Decimal,
+        subtype: Int32 = 0,
         completion: @escaping (LoadFeeResult) -> Void
         ) {
         
@@ -32,6 +33,7 @@ class FeeLoader {
             asset: asset,
             feeType: feeType,
             amount: amount,
+            subtype: subtype,
             completion: { (result) in
                 switch result {
                     

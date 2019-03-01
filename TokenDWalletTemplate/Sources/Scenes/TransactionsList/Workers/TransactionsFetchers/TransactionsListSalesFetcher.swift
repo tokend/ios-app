@@ -11,9 +11,9 @@ extension TransactionsListScene {
         
         // MARK: - Private properties
         
-        private let transactionsBehaviorRelay: BehaviorRelay<Transactions> = BehaviorRelay(value: [])
-        private let loadingStatusBehaviorRelay: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
-        private let loadingMoreStatusBehaviorRelay: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+        private let transactions: BehaviorRelay<Transactions> = BehaviorRelay(value: [])
+        private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+        private let loadingMoreStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
         private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
         
         private var pendingOffersRepoPendingOffersDisposable: Disposable?
@@ -25,7 +25,7 @@ extension TransactionsListScene {
         private let rateProvider: RateProviderProtocol
         private let rateAsset: String = "USD"
         
-        private var asset: String?
+        private var balanceId: String?
         private let originalAccountId: String
         private var balancesIds: [String] {
             return self.balancesRepo.balancesDetailsValue.compactMap({ (balance) -> String? in
@@ -40,16 +40,16 @@ extension TransactionsListScene {
         
         // MARK: - Public properties
         
-        var transactions: TransactionsListSceneTransactionsFetcherProtocol.Transactions {
-            return self.transactionsBehaviorRelay.value
+        var transactionsValue: TransactionsListSceneTransactionsFetcherProtocol.Transactions {
+            return self.transactions.value
         }
         
-        var loadingStatus: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
-            return self.loadingStatusBehaviorRelay.value
+        var loadingStatusValue: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
+            return self.loadingStatus.value
         }
         
-        var loadingMoreStatus: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
-            return self.loadingMoreStatusBehaviorRelay.value
+        var loadingMoreStatusValue: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
+            return self.loadingMoreStatus.value
         }
         
         // MARK: -
@@ -69,18 +69,18 @@ extension TransactionsListScene {
             self.observeBalancesDetails()
             self.observeRateChanges()
             self.observeRepoErrorStatus()
-            self.setAsset("")
+            self.setBalanceId("")
             
             self.pendingOffersRepo.reloadOffers()
         }
         
         // MARK: - Public
         
-        func setAsset(_ asset: String) {
-            guard self.asset != asset else {
+        func setBalanceId(_ balanceId: String) {
+            guard self.balanceId != balanceId else {
                 return
             }
-            self.asset = asset
+            self.balanceId = balanceId
             
             self.observeRepoLoadingStatus()
             self.observeRepoLoadingMoreStatus()
@@ -88,15 +88,15 @@ extension TransactionsListScene {
         }
         
         func observeTransactions() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.Transactions> {
-            return self.transactionsBehaviorRelay.asObservable()
+            return self.transactions.asObservable()
         }
         
         func observeLoadingStatus() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus> {
-            return self.loadingStatusBehaviorRelay.asObservable()
+            return self.loadingStatus.asObservable()
         }
         
         func observeLoadingMoreStatus() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus> {
-            return self.loadingMoreStatusBehaviorRelay.asObservable()
+            return self.loadingMoreStatus.asObservable()
         }
         
         func observeErrorStatus() -> Observable<Swift.Error> {
@@ -123,7 +123,7 @@ extension TransactionsListScene {
             let disposable = self.pendingOffersRepo
                 .observeLoadingStatus()
                 .subscribe(onNext: { [weak self] (status) in
-                    self?.loadingStatusBehaviorRelay.accept(status.status)
+                    self?.loadingStatus.accept(status.status)
                 })
             
             self.pendingOffersRepoLoadingStatusDisposable = disposable
@@ -176,7 +176,7 @@ extension TransactionsListScene {
         private func transactionsDidChange() {
             let transactions = self.pendingOffersRepo.offersValue
             let parsedTransactions = self.parseOffers(transactions)
-            self.transactionsBehaviorRelay.accept(parsedTransactions)
+            self.transactions.accept(parsedTransactions)
         }
         
         private func parseOffers(_ offers: [PendingOffersRepo.Offer]) -> Transactions {
@@ -200,7 +200,6 @@ extension TransactionsListScene {
                 value: amountValue,
                 asset: assetValue
             )
-            let amountType: Transaction.AmountType = offer.isBuy ? .positive : .negative
             let rate: Amount? = {
                 guard let rate = self.rateProvider.rateForAmount(
                     amountValue,
@@ -214,13 +213,19 @@ extension TransactionsListScene {
                     asset: self.rateAsset
                 )
             }()
-            let counterparty: String = "For \(offer.quoteAssetCode)"
+            let quoteassetcode = offer.quoteAssetCode
+            let counterparty: String = Localized(
+                .for_code,
+                replace: [
+                    .for_code_replace_code: quoteassetcode
+                ]
+            )
             
             return Transaction(
                 identifier: offer.offerId,
-                type: .checkSaleState(income: offer.isBuy),
+                balanceId: offer.baseBalanceId,
                 amount: amount,
-                amountType: amountType,
+                amountEffect: .sale,
                 counterparty: counterparty,
                 rate: rate,
                 date: offer.createdAt

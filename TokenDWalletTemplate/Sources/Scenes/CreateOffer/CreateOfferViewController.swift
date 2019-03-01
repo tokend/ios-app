@@ -66,8 +66,8 @@ extension CreateOffer {
         }
         
         private func setupFields() {
-            self.amountEnterAmountView.title = "Amount:"
-            self.amountEnterAmountView.placeholder = "Amount"
+            self.amountEnterAmountView.title = Localized(.amount_colon)
+            self.amountEnterAmountView.placeholder = Localized(.amount)
             self.amountEnterAmountView.onEnterAmount = { [weak self] (amount) in
                 self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                     let field = Model.Field(
@@ -80,8 +80,8 @@ extension CreateOffer {
                     businessLogic.onFieldEditing(request: request)
                 })
             }
-            self.priceEnterAmountView.title = "Price:"
-            self.priceEnterAmountView.placeholder = "Price"
+            self.priceEnterAmountView.title = Localized(.price_colon)
+            self.priceEnterAmountView.placeholder = Localized(.price)
             self.priceEnterAmountView.onEnterAmount = { [weak self] (amount) in
                 self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                     let field = Model.Field(
@@ -99,11 +99,11 @@ extension CreateOffer {
         private func setupButtons() {
             self.setupButton(
                 button: self.buyButton,
-                buttonModel: Model.Button(title: "Buy", type: .buy)
+                buttonModel: Model.Button(title: Localized(.buy), type: .buy)
             )
             self.setupButton(
                 button: self.sellButton,
-                buttonModel: Model.Button(title: "Sell", type: .sell)
+                buttonModel: Model.Button(title: Localized(.sell), type: .sell)
             )
         }
         

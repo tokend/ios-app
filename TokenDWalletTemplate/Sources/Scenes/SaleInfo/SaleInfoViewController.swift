@@ -66,8 +66,7 @@ extension SaleInfo {
         }
         
         private func updateSelectedTabIfNeeded(index: Int?) {
-            if let index = index,
-                self.tabPicker.selectedItemIndex != index {
+            if let index = index {
                 self.tabPicker.setSelectedItemAtIndex(index, animated: false)
             }
         }

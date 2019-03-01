@@ -66,6 +66,7 @@ extension Trade {
                 .observeAssets()
                 .subscribe(onNext: { [weak self] (pairs) in
                     guard let strongSelf = self else { return }
+                    
                     let oldSelectedID = strongSelf.sceneModel.selectedPair?.id
                     strongSelf.sceneModel.pairs = pairs
                     strongSelf.selectPair(oldSelectedID)
@@ -407,7 +408,9 @@ extension Trade.Interactor: Trade.BusinessLogic {
 
 private extension Trade.Model.Asset {
     var id: Trade.PairID {
-        return "\(self.baseAsset)/\(self.quoteAsset)"
+        let baseAsset = self.baseAsset
+        let quoteAsset = self.quoteAsset
+        return "\(baseAsset)/\(quoteAsset)"
     }
 }
 

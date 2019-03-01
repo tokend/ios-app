@@ -1,6 +1,7 @@
-import Foundation
-import TokenDSDK
+import UIKit
+import ContactsUI
 import DLCryptoKit
+import TokenDSDK
 
 protocol FlowControllerProtocol {
     
@@ -26,6 +27,13 @@ protocol FlowControllerProtocol {
         presentingViewController: UIViewController,
         handler: @escaping QRCodeReaderFlowController.QRCodeReaderCompletion
     )
+    
+    // Contact Picker
+    
+    func presentContactEmailPicker(
+        completion: @escaping (_ email: String) -> Void,
+        presentViewController: @escaping PresentViewControllerClosure
+    )
 }
 
 class FlowControllerStack {
@@ -33,9 +41,11 @@ class FlowControllerStack {
     // MARK: - APIs
     
     var api: TokenDSDK.API
+    var apiV3: TokenDSDK.APIv3
     var verifyApi: TokenDSDK.TFAVerifyApi
     var keyServerApi: TokenDSDK.KeyServerApi
-    var usersApi: TokenDSDK.UsersApi
+    
+    var network: NetworkProtocol
     
     var apiConfigurationModel: APIConfigurationModel
     var tfaDataProvider: TFADataProviderProtocol
@@ -47,48 +57,57 @@ class FlowControllerStack {
     init(
         apiConfigurationModel: APIConfigurationModel,
         tfaDataProvider: TFADataProviderProtocol,
-        userAgent: String,
+        network: NetworkProtocol,
+        networkV3: JSONAPI.NetworkProtocol,
         apiCallbacks: ApiCallbacks,
+        apiCallbacksV3: JSONAPI.ApiCallbacks,
         keyDataProvider: RequestSignKeyDataProviderProtocol,
         settingsManager: SettingsManagerProtocol
         ) {
         
         let apiConfiguration = ApiConfiguration(
-            urlString: apiConfigurationModel.apiEndpoint,
-            userAgent: userAgent
+            urlString: apiConfigurationModel.apiEndpoint
         )
+        
+        let requestSigner = RequestSigner(keyDataProvider: keyDataProvider)
+        let requestSignerV3 = JSONAPI.RequestSigner(keyDataProvider: keyDataProvider)
         
         let api = TokenDSDK.API(
             configuration: apiConfiguration,
             callbacks: apiCallbacks,
-            keyDataProvider: keyDataProvider
+            network: network,
+            requestSigner: requestSigner
         )
         
-        let requestSigner = RequestSigner(keyDataProvider: keyDataProvider)
+        let apiV3 = TokenDSDK.APIv3(
+            configuration: apiConfiguration,
+            callbacks: apiCallbacksV3,
+            network: networkV3,
+            requestSigner: requestSignerV3
+        )
         
         let verifyApi = TokenDSDK.TFAVerifyApi(
             apiConfiguration: apiConfiguration,
-            requestSigner: requestSigner
+            requestSigner: requestSigner,
+            network: network
         )
         
         let keyServerApi = KeyServerApi(
             apiConfiguration: apiConfiguration,
             callbacks: apiCallbacks,
             verifyApi: verifyApi,
-            requestSigner: requestSigner
-        )
-        
-        let usersApi = UsersApi(
-            apiConfiguration: apiConfiguration,
-            requestSigner: requestSigner
+            requestSigner: requestSignerV3,
+            network: network,
+            networkV3: networkV3
         )
         
         let networkInfoRepo = NetworkInfoRepo(api: api.generalApi)
         
         self.api = api
+        self.apiV3 = apiV3
         self.verifyApi = verifyApi
         self.keyServerApi = keyServerApi
-        self.usersApi = usersApi
+        self.network = network
         self.apiConfigurationModel = apiConfigurationModel
         self.tfaDataProvider = tfaDataProvider
         self.networkInfoFetcher = networkInfoRepo
@@ -98,48 +117,57 @@ class FlowControllerStack {
     func updateWith(
         apiConfigurationModel: APIConfigurationModel,
         tfaDataProvider: TFADataProviderProtocol,
-        userAgent: String,
+        network: NetworkProtocol,
+        networkV3: JSONAPI.NetworkProtocol,
         apiCallbacks: ApiCallbacks,
+        apiCallbacksV3: JSONAPI.ApiCallbacks,
         keyDataProvider: RequestSignKeyDataProviderProtocol,
         settingsManager: SettingsManagerProtocol
         ) {
         
         let apiConfiguration = ApiConfiguration(
-            urlString: apiConfigurationModel.apiEndpoint,
-            userAgent: userAgent
+            urlString: apiConfigurationModel.apiEndpoint
         )
+        
+        let requestSigner = RequestSigner(keyDataProvider: keyDataProvider)
+        let requestSignerV3 = JSONAPI.RequestSigner(keyDataProvider: keyDataProvider)
         
         let api = TokenDSDK.API(
             configuration: apiConfiguration,
             callbacks: apiCallbacks,
-            keyDataProvider: keyDataProvider
+            network: network,
+            requestSigner: requestSigner
         )
         
-        let requestSigner = RequestSigner(keyDataProvider: keyDataProvider)
+        let apiV3 = TokenDSDK.APIv3(
+            configuration: apiConfiguration,
+            callbacks: apiCallbacksV3,
+            network: networkV3,
+            requestSigner: requestSignerV3
+        )
         
         let verifyApi = TokenDSDK.TFAVerifyApi(
             apiConfiguration: apiConfiguration,
-            requestSigner: requestSigner
+            requestSigner: requestSigner,
+            network: network
         )
         
         let keyServerApi = KeyServerApi(
             apiConfiguration: apiConfiguration,
             callbacks: apiCallbacks,
             verifyApi: verifyApi,
-            requestSigner: requestSigner
-        )
-        
-        let usersApi = UsersApi(
-            apiConfiguration: apiConfiguration,
-            requestSigner: requestSigner
+            requestSigner: requestSignerV3,
+            network: network,
+            networkV3: networkV3
         )
         
         let networkInfoRepo = NetworkInfoRepo(api: api.generalApi)
         
         self.api = api
+        self.apiV3 = apiV3
         self.verifyApi = verifyApi
         self.keyServerApi = keyServerApi
-        self.usersApi = usersApi
+        self.network = network
         self.apiConfigurationModel = apiConfigurationModel
         self.tfaDataProvider = tfaDataProvider
         self.networkInfoFetcher = networkInfoRepo
@@ -147,7 +175,7 @@ class FlowControllerStack {
     }
 }
 
-class BaseFlowController: FlowControllerProtocol {
+class BaseFlowController {
     
     var currentFlowController: FlowControllerProtocol?
     
@@ -160,6 +188,9 @@ class BaseFlowController: FlowControllerProtocol {
     // MARK: - Private properties
     
     private var inputTFAText: String = ""
+    
+    private var contactPicker: CNContactPickerViewController?
+    private var contactPickerHandler: ContactEmailPickerHandler?
     
     // MARK: -
     
@@ -174,7 +205,7 @@ class BaseFlowController: FlowControllerProtocol {
         self.rootNavigation = rootNavigation
     }
     
-    // MARK: - FlowControllerProtocol
+    // MARK: - Public
     
     func applicationDidEnterBackground() {
         self.currentFlowController?.applicationDidEnterBackground()
@@ -200,26 +231,39 @@ class BaseFlowController: FlowControllerProtocol {
         
     }
     
-    func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
-        self.onDefaultTFA(tfaInput: tfaInput, cancel: cancel)
-    }
-    
-    func runQRCodeReaderFlow(
-        presentingViewController: UIViewController,
-        handler: @escaping QRCodeReaderFlowController.QRCodeReaderCompletion
+    func showDialog(
+        title: String?,
+        message: String?,
+        style: UIAlertControllerStyle,
+        options: [String],
+        onSelected: @escaping (_ selectedIndex: Int) -> Void,
+        onCanceled: (() -> Void)?,
+        presentViewController: PresentViewControllerClosure
         ) {
         
-        let flow = QRCodeReaderFlowController(
-            appController: self.appController,
-            flowControllerStack: self.flowControllerStack,
-            rootNavigation: self.rootNavigation,
-            presentingViewController: presentingViewController,
-            handler: { [weak self] result in
-                self?.currentFlowController = nil
-                handler(result)
-        })
-        self.currentFlowController = flow
-        flow.run()
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: style
+        )
+        
+        for (index, option) in options.enumerated() {
+            alert.addAction(UIAlertAction(
+                title: option,
+                style: .default,
+                handler: { _ in
+                    onSelected(index)
+            }))
+        }
+        
+        alert.addAction(UIAlertAction(
+            title: Localized(.cancel),
+            style: .cancel,
+            handler: { _ in
+                onCanceled?()
+        }))
+        
+        presentViewController(alert, true, nil)
     }
     
     // MARK: - Private
@@ -230,23 +274,28 @@ class BaseFlowController: FlowControllerProtocol {
         switch tfaInput {
             
         case .password:
-            alertTitle = "Input Password"
+            alertTitle = Localized(.input_password)
             alertMessage = nil
             
         case .code(let type, _):
             switch type {
                 
             case .email:
-                alertTitle = "Input 2FA Code"
-                alertMessage = "Input code sent to your email"
+                alertTitle = Localized(.input_2fa_code)
+                alertMessage = Localized(.input_code_sent_to_your_email)
                 
             case .other(let source):
-                alertTitle = "Input 2FA Code"
-                alertMessage = "Source: \(source)"
-                
+                alertTitle = Localized(.input_2fa_code)
+                alertMessage = Localized(
+                    .source,
+                    replace: [
+                        .source_replace_source: source
+                    ]
+                )
+  
             case .totp:
-                alertTitle = "Input 2FA Code"
-                alertMessage = "Input code from Google Authenticator or similar app"
+                alertTitle = Localized(.input_2fa_code)
+                alertMessage = Localized(.input_code_from_google_authenticator_or_similar_app)
             }
         }
         
@@ -301,7 +350,7 @@ class BaseFlowController: FlowControllerProtocol {
                     salt: tokenSignData.salt
                 )
             ) else {
-                print("Unable to sign TFA token with password")
+                print(Localized(.unable_to_sign_tfa_token_with_password))
                 cancel()
                 return
         }
@@ -325,17 +374,17 @@ class BaseFlowController: FlowControllerProtocol {
                 keychainData: keychainData,
                 walletKDF: walletKDF
             ) else {
-                print("Unable to get keychainData or create key pair")
+                print(Localized(.unable_to_get_keychaindata_or_create_key_pair))
                 return nil
         }
         
         guard let data = token.data(using: .utf8) else {
-            print("Unable to encode token to data")
+            print(Localized(.unable_to_encode_token_to_data))
             return nil
         }
         
         guard let signedToken = try? ECDSA.signED25519(data: data, keyData: keyPair).base64EncodedString() else {
-            print("Unable to sign token data")
+            print(Localized(.unable_to_sign_token_data))
             return nil
         }
         
@@ -360,14 +409,14 @@ class BaseFlowController: FlowControllerProtocol {
         }
         
         alert.addAction(UIAlertAction(
-            title: "Done",
+            title: Localized(.done),
             style: .default,
             handler: { _ in
                 completion(self.inputTFAText)
         }))
         
         alert.addAction(UIAlertAction(
-            title: "Cancel TFA",
+            title: Localized(.cancel_tfa),
             style: .cancel,
             handler: { _ in
                 cancel()
@@ -378,5 +427,98 @@ class BaseFlowController: FlowControllerProtocol {
     
     @objc private func tfaTextFieldEditingChanged(_ tf: UITextField) {
         self.inputTFAText = tf.text ?? ""
+    }
+    
+    private func showEmailPickerForEmail(
+        emails: [String],
+        completion: @escaping (String) -> Void,
+        onCanceled: (() -> Void)?,
+        presentViewController: PresentViewControllerClosure
+        ) {
+        
+        self.showDialog(
+            title: Localized(.choose_email),
+            message: nil,
+            style: .actionSheet,
+            options: emails,
+            onSelected: { (index) in
+                let email = emails[index]
+                completion(email)
+        },
+            onCanceled: {
+                onCanceled?()
+        },
+            presentViewController: presentViewController
+        )
+    }
+}
+
+extension BaseFlowController: FlowControllerProtocol {
+    
+    // MARK: - FlowControllerProtocol
+    
+    func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
+        self.onDefaultTFA(tfaInput: tfaInput, cancel: cancel)
+    }
+    
+    func runQRCodeReaderFlow(
+        presentingViewController: UIViewController,
+        handler: @escaping QRCodeReaderFlowController.QRCodeReaderCompletion
+        ) {
+        
+        let flow = QRCodeReaderFlowController(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            rootNavigation: self.rootNavigation,
+            presentingViewController: presentingViewController,
+            handler: { [weak self] result in
+                self?.currentFlowController = nil
+                handler(result)
+        })
+        self.currentFlowController = flow
+        flow.run()
+    }
+    
+    func presentContactEmailPicker(
+        completion: @escaping (String) -> Void,
+        presentViewController: @escaping PresentViewControllerClosure
+        ) {
+        
+        let onPickerCompleted = { [weak self] in
+            self?.contactPicker = nil
+            self?.contactPickerHandler = nil
+        }
+        
+        let delegate = ContactEmailPickerHandler(
+            onCanceled: {
+                onPickerCompleted()
+        },
+            onSelected: { [weak self] (emails) in
+                onPickerCompleted()
+                
+                if emails.count == 1, let email = emails.first {
+                    completion(email)
+                    return
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: { [weak self] in
+                    self?.showEmailPickerForEmail(
+                        emails: emails,
+                        completion: completion,
+                        onCanceled: nil,
+                        presentViewController: presentViewController
+                    )
+                })
+        })
+        
+        let contactPicker = CNContactPickerViewController()
+        contactPicker.delegate = delegate
+        
+        contactPicker.predicateForEnablingContact = delegate.getPredicate()
+        
+        self.contactPicker = contactPicker
+        self.contactPickerHandler = delegate
+        
+        presentViewController(contactPicker, true, nil)
     }
 }

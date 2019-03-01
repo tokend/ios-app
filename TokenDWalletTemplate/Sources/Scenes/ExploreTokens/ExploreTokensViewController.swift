@@ -85,7 +85,7 @@ extension ExploreTokensScene {
         }
         
         private func setupSearchController() {
-            self.searchController.searchBar.placeholder = "Search"
+            self.searchController.searchBar.placeholder = Localized(.search)
             self.searchController.searchResultsUpdater = self
             self.searchController.obscuresBackgroundDuringPresentation = false
             self.searchController.dimsBackgroundDuringPresentation = false

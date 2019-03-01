@@ -5,5 +5,5 @@ struct APIConfigurationModel: Decodable {
     let apiEndpoint: String
     let termsAddress: String?
     let webClient: String?
-    let amountPrecision: Int
+    let downloadUrl: String?
 }

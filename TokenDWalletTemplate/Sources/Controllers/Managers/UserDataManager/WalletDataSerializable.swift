@@ -10,8 +10,10 @@ struct WalletDataSerializable: Codable {
     let walletId: String
     let type: String
     let keychainData: Data
+    let network: AccountNetworkModel
     let walletKDF: WalletKDFSerializable
     let verified: Bool
+    let signedViaAuthenticator: Bool
     let serializationVersion: UInt = WalletDataSerializable.serializationVersion
     
     struct WalletKDFSerializable: Codable {
@@ -34,7 +36,36 @@ struct WalletDataSerializable: Codable {
         }
     }
     
-    static func fromWalletData(_ walletData: WalletDataModel) -> WalletDataSerializable? {
+    public struct AccountNetworkModel: Codable {
+        
+        public let masterAccountId: String
+        public let name: String
+        public let passphrase: String
+        public let rootUrl: String
+        public let storageUrl: String
+        
+        init(
+            masterAccountId: String,
+            name: String,
+            passphrase: String,
+            rootUrl: String,
+            storageUrl: String
+            ) {
+            
+            self.masterAccountId = masterAccountId
+            self.name = name
+            self.passphrase = passphrase
+            self.rootUrl = rootUrl
+            self.storageUrl = storageUrl
+        }
+    }
+    
+    static func fromWalletData(
+        _ walletData: WalletDataModel,
+        signedViaAuthenticator: Bool,
+        network: AccountNetworkModel
+        ) -> WalletDataSerializable? {
+        
         guard let keychainData = walletData.keychainData.dataFromBase64 else {
             return nil
         }
@@ -45,8 +76,10 @@ struct WalletDataSerializable: Codable {
             walletId: walletData.walletId,
             type: walletData.type,
             keychainData: keychainData,
+            network: network,
             walletKDF: WalletKDFSerializable.fromWalletKDFParams(walletData.walletKDF),
-            verified: walletData.verified
+            verified: walletData.verified,
+            signedViaAuthenticator: signedViaAuthenticator
         )
     }
     
@@ -80,8 +113,10 @@ struct WalletDataSerializable: Codable {
                     walletId: serializable.walletId,
                     type: serializable.type,
                     keychainData: keychainData,
+                    network: serializable.network,
                     walletKDF: serializable.walletKDF,
-                    verified: serializable.verified
+                    verified: serializable.verified,
+                    signedViaAuthenticator: serializable.signedViaAuthenticator
                 )
                 
                 return walletData
@@ -110,7 +145,9 @@ private struct WalletDataSerializable1: Codable {
     let walletId: String
     let type: String
     let keychainData: String
+    let network: WalletDataSerializable.AccountNetworkModel
     let walletKDF: WalletDataSerializable.WalletKDFSerializable
     let verified: Bool
+    let signedViaAuthenticator: Bool
     let serializationVersion: UInt = WalletDataSerializable1.serializationVersion
 }

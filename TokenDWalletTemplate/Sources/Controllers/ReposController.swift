@@ -31,11 +31,12 @@ class ReposController {
     
     // MARK: - Private properties
     
-    private var transactionsRepos: [String: TransactionsRepo] = [:]
+    private var transactionsHistoryRepos: [String: TransactionsHistoryRepo] = [:]
     private let reposControllerStack: ReposControllerStack
     private let userDataProvider: UserDataProviderProtocol
     private let keychainDataProvider: KeychainDataProviderProtocol
     private let originalAccountId: String
+    private let apiConfigurationModel: APIConfigurationModel
     
     // MARK: -
     
@@ -46,7 +47,8 @@ class ReposController {
         networkInfoRepo: NetworkInfoRepo,
         userDataProvider: UserDataProviderProtocol,
         keychainDataProvider: KeychainDataProviderProtocol,
-        originalAccountId: String
+        originalAccountId: String,
+        apiConfigurationModel: APIConfigurationModel
         ) {
         
         self.reposControllerStack = reposControllerStack
@@ -56,6 +58,25 @@ class ReposController {
         self.userDataProvider = userDataProvider
         self.keychainDataProvider = keychainDataProvider
         self.originalAccountId = originalAccountId
+        self.apiConfigurationModel = apiConfigurationModel
+    }
+    
+    // MARK: -
+    
+    public func getTransactionsHistoryRepo(for balanceId: String) -> TransactionsHistoryRepo {
+        if let transactionsHistoryRepo = self.transactionsHistoryRepos.first(where: { (key, _) -> Bool in
+            return key == balanceId
+        }) {
+            return transactionsHistoryRepo.value
+        } else {
+            let transactionsHistoryRepo = TransactionsHistoryRepo(
+                api: self.reposControllerStack.apiV3.historyApi,
+                balanceId: balanceId
+            )
+            
+            self.transactionsHistoryRepos[balanceId] = transactionsHistoryRepo 
+            return transactionsHistoryRepo
+        }
     }
     
     // MARK: - Private
@@ -88,7 +109,9 @@ class ReposController {
     
     private func createWalletRepo() -> WalletRepo {
         let repo = WalletRepo(
-            api: self.reposControllerStack.keyServerApi,
+            generalApi: self.reposControllerStack.api.generalApi,
+            keyServerApi: self.reposControllerStack.keyServerApi,
+            apiConfigurationModel: self.apiConfigurationModel,
             userDataManager: self.userDataProvider.userDataManager,
             userDataProvider: self.userDataProvider
         )
@@ -101,29 +124,6 @@ class ReposController {
         )
         return repo
     }
-    
-    private func createTransactionsRepoForAsset(
-        _ asset: String
-        ) -> TransactionsRepo {
-        
-        let repo = TransactionsRepo(
-            api: self.reposControllerStack.api.transactionsApi,
-            asset: asset,
-            originalAccountId: self.originalAccountId
-        )
-        return repo
-    }
-    
-    // MARK: - Public
-    
-    public func transactionsRepoForAsset(_ asset: String) -> TransactionsRepo {
-        guard let repo = self.transactionsRepos[asset]
-            else {
-                self.transactionsRepos[asset] = self.createTransactionsRepoForAsset(asset)
-                return self.transactionsRepoForAsset(asset)
-        }
-        return repo
-    }
 }
 
 class ReposControllerStack {
@@ -131,6 +131,7 @@ class ReposControllerStack {
     // MARK: - APIs
     
     let api: TokenDSDK.API
+    let apiV3: TokenDSDK.APIv3
     let keyServerApi: TokenDSDK.KeyServerApi
     
     // MARK: - URLs
@@ -141,11 +142,13 @@ class ReposControllerStack {
     
     init(
         api: TokenDSDK.API,
+        apiV3: TokenDSDK.APIv3,
         keyServerApi: TokenDSDK.KeyServerApi,
         storageUrl: String
         ) {
         
         self.api = api
+        self.apiV3 = apiV3
         self.keyServerApi = keyServerApi
         self.storageUrl = storageUrl
     }

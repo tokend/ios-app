@@ -5,6 +5,7 @@ extension Settings {
     enum Configurator {
         static func configure(
             viewController: ViewController,
+            sceneModel: Model.SceneModel,
             sectionsProvider: SettingsSectionsProviderProtocol,
             routing: Routing?
             ) {
@@ -12,7 +13,11 @@ extension Settings {
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
             let presenter = Presenter(presenterDispatch: presenterDispatch)
             
-            let interactor = Interactor(sectionsProvider: sectionsProvider, presenter: presenter)
+            let interactor = Interactor(
+                sceneModel: sceneModel,
+                sectionsProvider: sectionsProvider,
+                presenter: presenter
+            )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(interactorDispatch: interactorDispatch, routing: routing)
         }

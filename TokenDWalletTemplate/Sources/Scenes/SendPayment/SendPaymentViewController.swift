@@ -2,20 +2,27 @@ import UIKit
 import RxSwift
 
 protocol SendPaymentDisplayLogic: class {
-    func displayViewDidLoad(viewModel: SendPayment.Event.ViewDidLoad.ViewModel)
-    func displayLoadBalances(viewModel: SendPayment.Event.LoadBalances.ViewModel)
-    func displaySelectBalance(viewModel: SendPayment.Event.SelectBalance.ViewModel)
-    func displayBalanceSelected(viewModel: SendPayment.Event.BalanceSelected.ViewModel)
-    func displayScanRecipientQRAddress(viewModel: SendPayment.Event.ScanRecipientQRAddress.ViewModel)
-    func displayEditAmount(viewModel: SendPayment.Event.EditAmount.ViewModel)
-    func displayPaymentAction(viewModel: SendPayment.Event.PaymentAction.ViewModel)
-    func displayWithdrawAction(viewModel: SendPayment.Event.WithdrawAction.ViewModel)
+    
+    typealias Event = SendPayment.Event
+    
+    func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel)
+    func displayLoadBalances(viewModel: Event.LoadBalances.ViewModel)
+    func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel)
+    func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel)
+    func displaySelectedContact(viewModel: Event.SelectedContact.ViewModel)
+    func displayScanRecipientQRAddress(viewModel: Event.ScanRecipientQRAddress.ViewModel)
+    func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
+    func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
+    func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
 }
 
 extension SendPayment {
     typealias DisplayLogic = SendPaymentDisplayLogic
     
     class ViewController: UIViewController {
+        
+        typealias Model = SendPayment.Model
+        typealias Event = SendPayment.Event
         
         // MARK: - Private properties
         
@@ -56,7 +63,7 @@ extension SendPayment {
             self.setupSendPaymentButton()
             self.setupLayout()
             
-            let request = SendPayment.Event.ViewDidLoad.Request()
+            let request = Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
             }
@@ -65,7 +72,7 @@ extension SendPayment {
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
             
-            let request = SendPayment.Event.LoadBalances.Request()
+            let request = Event.LoadBalances.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onLoadBalances(request: request)
             }
@@ -117,6 +124,15 @@ extension SendPayment {
                     let request = Event.ScanRecipientQRAddress.Request(qrResult: result)
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         businessLogic.onScanRecipientQRAddress(request: request)
+                    })
+                })
+            }
+            
+            self.recipientAddressView.onSelectAccount = { [weak self] in
+                self?.routing?.onSelectContactEmail({ [weak self] (email) in
+                    let request = Event.SelectedContact.Request(email: email)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onSelectedContact(request: request)
                     })
                 })
             }
@@ -174,11 +190,11 @@ extension SendPayment {
 // MARK: - DisplayLogic
 
 extension SendPayment.ViewController: SendPayment.DisplayLogic {
-    func displayViewDidLoad(viewModel: SendPayment.Event.ViewDidLoad.ViewModel) {
+    func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel) {
         self.updateWithSceneModel(viewModel.sceneModel)
     }
     
-    func displayLoadBalances(viewModel: SendPayment.Event.LoadBalances.ViewModel) {
+    func displayLoadBalances(viewModel: Event.LoadBalances.ViewModel) {
         switch viewModel {
             
         case .loading:
@@ -195,22 +211,26 @@ extension SendPayment.ViewController: SendPayment.DisplayLogic {
         }
     }
     
-    func displaySelectBalance(viewModel: SendPayment.Event.SelectBalance.ViewModel) {
+    func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel) {
         let options: [String] = viewModel.balances.map({ $0.asset })
-        self.routing?.onPresentPicker("Select Asset", options, { [weak self] (selectedIndex) in
+        self.routing?.onPresentPicker(Localized(.select_asset), options, { [weak self] (selectedIndex) in
             let balance = viewModel.balances[selectedIndex]
-            let request = SendPayment.Event.BalanceSelected.Request(balanceId: balance.balanceId)
+            let request = Event.BalanceSelected.Request(balanceId: balance.balanceId)
             self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                 businessLogic.onBalanceSelected(request: request)
             })
         })
     }
     
-    func displayBalanceSelected(viewModel: SendPayment.Event.BalanceSelected.ViewModel) {
+    func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel) {
         self.updateWithSceneModel(viewModel.sceneModel)
     }
     
-    func displayScanRecipientQRAddress(viewModel: SendPayment.Event.ScanRecipientQRAddress.ViewModel) {
+    func displaySelectedContact(viewModel: Event.SelectedContact.ViewModel) {
+        self.updateWithSceneModel(viewModel.sceneModel)
+    }
+    
+    func displayScanRecipientQRAddress(viewModel: Event.ScanRecipientQRAddress.ViewModel) {
         switch viewModel {
             
         case .canceled:
@@ -224,11 +244,11 @@ extension SendPayment.ViewController: SendPayment.DisplayLogic {
         }
     }
     
-    func displayEditAmount(viewModel: SendPayment.Event.EditAmount.ViewModel) {
+    func displayEditAmount(viewModel: Event.EditAmount.ViewModel) {
         self.updateAmountValid(viewModel.amountValid)
     }
     
-    func displayPaymentAction(viewModel: SendPayment.Event.PaymentAction.ViewModel) {
+    func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel) {
         switch viewModel {
         case .loading:
             self.routing?.onShowProgress()
@@ -244,7 +264,7 @@ extension SendPayment.ViewController: SendPayment.DisplayLogic {
         }
     }
     
-    func displayWithdrawAction(viewModel: SendPayment.Event.WithdrawAction.ViewModel) {
+    func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel) {
         switch viewModel {
         case .loading:
             self.routing?.onShowProgress()

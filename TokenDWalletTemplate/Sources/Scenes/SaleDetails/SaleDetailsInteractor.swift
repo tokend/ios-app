@@ -139,7 +139,7 @@ extension SaleDetails {
                 startDate: sale.startTime,
                 endDate: sale.endTime,
                 youtubeVideoUrl: sale.details.youtubeVideoUrl,
-                cellIdentifier: "description"
+                cellIdentifier: .description
             )
             
             let descCellModel = Model.CellModel(cellType: .description(descModel))
@@ -191,7 +191,7 @@ extension SaleDetails {
                 selectedBalance: self.sceneModel.selectedBalance,
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
-                cellIdentifier: "investing"
+                cellIdentifier: .investing
             )
             
             return investingModel
@@ -225,7 +225,7 @@ extension SaleDetails {
                 growthPositive: growthPositive,
                 growthSincePeriod: growthSincePeriod,
                 chartModel: chartModel,
-                cellIdentifier: "charts"
+                cellIdentifier: .charts
             )
             
             return chartCellModel
@@ -381,7 +381,7 @@ extension SaleDetails {
             self.feeLoader.loadFee(
                 accountId: self.investorAccountId,
                 asset: asset.asset,
-                feeType: .investFee,
+                feeType: .offerFee,
                 amount: investAmount) { (feeResponse) in
                     switch feeResponse {
                         
@@ -440,7 +440,7 @@ extension SaleDetails {
             let chartMaxValue = charts.max { (entry1, entry2) -> Bool in
                 return entry1.value < entry2.value
                 }?.value ?? 0.0
-            let chartModel = Model.ChartModel.init(
+            let chartModel = Model.ChartModel(
                 entries: charts,
                 maxValue: chartMaxValue
             )
@@ -686,7 +686,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             asset: sale.defaultQuoteAsset,
             investedAmount: investedAmount,
             investedDate: investedDate,
-            identifier: "charts"
+            identifier: .charts
         )
         self.presenter.presentSelectChartEntry(response: response)
     }

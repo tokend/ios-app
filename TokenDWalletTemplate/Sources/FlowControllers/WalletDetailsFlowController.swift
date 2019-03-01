@@ -23,9 +23,13 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             rateProvider: transactionsListRateProvider,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
-        let transactionsRouting = TransactionsListScene.Routing { [weak self] (identifier, asset) in
-            self?.showTransactionDetailsScreen(transactionId: identifier, asset: asset)
-        }
+        let transactionsRouting = TransactionsListScene.Routing (
+            onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
+                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+            },
+            showSendPayment: { [weak self] (balanceId) in
+                self?.runSendPaymentFlow(balanceId: balanceId)
+        })
         
         let balancesFetcher = BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo
@@ -41,12 +45,6 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             balancesFetcher: balancesFetcher
         )
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        self.navigationController.navigationBar.shadowImage = UIImage()
-        
         self.navigationController.setViewControllers([container], animated: false)
         
         if let showRoot = showRootScreen {
@@ -58,18 +56,18 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     
     private func showTransactionDetailsScreen(
         transactionId: UInt64,
-        asset: String
+        balanceId: String
         ) {
         let vc = self.setupTransactionDetailsScreen(
             transactionId: transactionId,
-            asset: asset
+            balanceId: balanceId
         )
         self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func setupTransactionDetailsScreen(
         transactionId: UInt64,
-        asset: String
+        balanceId: String
         ) -> TransactionDetails.ViewController {
         
         let routing = TransactionDetails.Routing(
@@ -85,8 +83,10 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             showError: { [weak self] (error) in
                 self?.navigationController.showErrorMessage(error, completion: nil)
         })
+        
+        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
         let sectionsProvider = TransactionDetails.OperationSectionsProvider(
-            transactionsRepo: self.reposController.transactionsRepoForAsset(asset),
+            transactionsHistoryRepo: transactionsHistoryRepo,
             identifier: transactionId,
             accountId: self.userDataProvider.walletData.accountId
         )
@@ -95,8 +95,31 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Transaction details"
+        vc.navigationItem.title = Localized(.transaction_details)
         
         return vc
+    }
+    
+    private func runSendPaymentFlow(balanceId: String?) {
+        let flow = SendPaymentFlowController(
+            navigationController: self.navigationController,
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            selectedBalanceId: balanceId
+        )
+        self.currentFlowController = flow
+        flow.run(
+            showRootScreen: { [weak self] (vc) in
+                self?.navigationController.pushViewController(vc, animated: true)
+        },
+            onShowWalletScreen: { [weak self] in
+                self?.currentFlowController = nil
+                self?.navigationController.popViewController(true)
+        })
     }
 }

@@ -1,6 +1,7 @@
 import UIKit
 import LocalAuthentication
 import RxSwift
+import TokenDSDK
 
 class LocalAuthFlowController: BaseFlowController {
     
@@ -45,11 +46,6 @@ class LocalAuthFlowController: BaseFlowController {
             flowControllerStack: flowControllerStack,
             rootNavigation: rootNavigation
         )
-        
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
     }
     
     // MARK: - Public
@@ -106,7 +102,7 @@ class LocalAuthFlowController: BaseFlowController {
         )
         
         let repeatButton = UIBarButtonItem(
-            title: "Repeat",
+            title: Localized(.repeat_title),
             style: .plain,
             target: nil,
             action: nil
@@ -164,14 +160,20 @@ class LocalAuthFlowController: BaseFlowController {
             onRecovery: { [weak self] in
                 self?.showRecoveryScreen()
             },
+            onAuthenticatorSignIn: {},
             showDialogAlert: { [weak self] (title, message, options, onSelected, onCanceled) in
-                self?.navigationController.showDialog(
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
                     title: title,
                     message: message,
                     style: .alert,
                     options: options,
                     onSelected: onSelected,
-                    onCanceled: onCanceled
+                    onCanceled: onCanceled,
+                    presentViewController: present
                 )
             },
             onSignedOut: { [weak self] in
@@ -187,7 +189,7 @@ class LocalAuthFlowController: BaseFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "TokenD"
+        vc.navigationItem.title = Localized(.tokend)
         
         return vc
     }
@@ -203,11 +205,15 @@ class LocalAuthFlowController: BaseFlowController {
     private func setupRecoveryScreen(onSuccess: @escaping () -> Void) -> UpdatePassword.ViewController {
         let vc = UpdatePassword.ViewController()
         
+        let updateRequestBuilder = UpdatePasswordRequestBuilder(
+            keyServerApi: self.flowControllerStack.keyServerApi
+        )
         let submitPasswordHandler = UpdatePassword.RecoverWalletWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.keychainManager,
             userDataManager: self.userDataManager,
-            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher
+            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
+            updateRequestBuilder: updateRequestBuilder
         )
         
         let fields = submitPasswordHandler.getExpectedFields()
@@ -234,7 +240,7 @@ class LocalAuthFlowController: BaseFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Recovery"
+        vc.navigationItem.title = Localized(.recovery)
         
         return vc
     }

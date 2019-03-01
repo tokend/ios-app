@@ -2,10 +2,8 @@ import UIKit
 
 protocol BalanceHeaderWithPickerDisplayLogic: class {
     typealias Event = BalanceHeaderWithPicker.Event
-
-    func displayBalanceDidChange(viewModel: Event.BalanceDidChange.ViewModel)
+    
     func displayBalancesDidChange(viewModel: Event.BalancesDidChange.ViewModel)
-    func displayRateDidChange(viewModel: Event.RateDidChange.ViewModel)
     func displaySelectedBalanceDidChange(viewModel: Event.SelectedBalanceDidChange.ViewModel)
 }
 
@@ -27,7 +25,7 @@ extension BalanceHeaderWithPicker {
         private let balancePicker: HorizontalPicker = HorizontalPicker()
         
         private var pickerHeight: CGFloat {
-            return self.balancePicker.frame.height
+            return 50.0
         }
         
         private var contentHeight: CGFloat {
@@ -42,10 +40,12 @@ extension BalanceHeaderWithPicker {
         
         var titleTextDidChange: OnTitleTextDidChangeCallback?
         var titleAlphaDidChange: OnTitleAlphaDidChangeCallback?
-        var contentHeightDidChange: OnContentHeightDidChangeCallback?
-        var minimumHeightDidChange: OnMinimumHeightDidChangeCallback?
         
-        private(set) var stretchFactor: CGFloat = 1
+        var collapsePercentage: CGFloat = 1 {
+            didSet {
+                self.handleCollapseChange()
+            }
+        }
         
         // MARK: - Injections
         
@@ -74,27 +74,6 @@ extension BalanceHeaderWithPicker {
             fatalError("init(coder:) has not been implemented")
         }
         
-        override func observeValue(
-            forKeyPath keyPath: String?,
-            of object: Any?,
-            change: [NSKeyValueChangeKey: Any]?,
-            context: UnsafeMutableRawPointer?
-            ) {
-            
-            guard let picker = object as? HorizontalPicker,
-                picker == self.balancePicker,
-                keyPath == "bounds"
-                else {
-                    super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-                    return
-            }
-            
-            if (change?[.newKey] as? CGRect)?.height != (change?[.oldKey] as? CGRect)?.height {
-                self.contentHeightDidChange?()
-                self.minimumHeightDidChange?()
-            }
-        }
-        
         // MARK: - Private
         
         private func commonInit() {
@@ -104,22 +83,12 @@ extension BalanceHeaderWithPicker {
             self.setupBackgroundView()
             self.setupLabelsStackView()
             self.setupBalancePicker()
-            self.observeBalancePickerContentHeight()
             
             self.setupLayout()
         }
         
         private func setupView() {
             self.backgroundColor = UIColor.clear
-        }
-        
-        private func observeBalancePickerContentHeight() {
-            self.balancePicker.addObserver(
-                self,
-                forKeyPath: "bounds",
-                options: [.new, .old],
-                context: nil
-            )
         }
         
         private func setupBalanceLabel() {
@@ -179,15 +148,43 @@ extension BalanceHeaderWithPicker {
         private func setRate(_ rate: String?) {
             self.rateLabel.text = rate
         }
+        
+        private func handleCollapseChange() {
+            let percent = self.collapsePercentage
+            
+            let balanceLabelDisappearPercent: CGFloat = 0.37
+            let balanceLabelAppearPercent: CGFloat = 0.67
+            let currentDisappearDiff = percent - balanceLabelDisappearPercent
+            let appearDisappearDiff = balanceLabelAppearPercent - balanceLabelDisappearPercent
+            self.balanceLabel.alpha = max((currentDisappearDiff) / (appearDisappearDiff), 0)
+            
+            let rateLabelDisappearPercent: CGFloat = 0.65
+            let rateLabelPercentPercent: CGFloat = 0.95
+            let currentDisappearRateDiff = percent - rateLabelDisappearPercent
+            let appearDisappearRateDiff = rateLabelPercentPercent - rateLabelDisappearPercent
+            self.rateLabel.alpha = max((currentDisappearRateDiff) / (appearDisappearRateDiff), 0)
+            
+            let navigationTitleFontSize = Theme.Fonts.navigationBarBoldFont.pointSize
+            let balanceFontSize = self.balanceLabel.font.pointSize
+            let fontsDelta = balanceFontSize - navigationTitleFontSize
+            let scalePercent = (navigationTitleFontSize + fontsDelta * percent) / balanceFontSize
+            self.labelsStackView.transform = CGAffineTransform.identity.scaledBy(x: scalePercent, y: scalePercent)
+            self.titleAlphaDidChange?((balanceLabelDisappearPercent - percent) / balanceLabelDisappearPercent)
+        }
+        
+        private func setSelectedBalanceIfNeeded(index: Int?) {
+            guard let index = index else {
+                return
+            }
+            
+            self.balancePicker.setSelectedItemAtIndex(index, animated: true)
+        }
     }
 }
 
+// MARK: - BalanceHeaderWithPickerDisplayLogic
+
 extension BalanceHeaderWithPicker.View: BalanceHeaderWithPicker.DisplayLogic {
-    func displayBalanceDidChange(viewModel: Event.BalanceDidChange.ViewModel) {
-        self.balanceLabel.text = viewModel.balance
-        self.titleTextDidChange?(viewModel.balance)
-        self.setRate(viewModel.rate)
-    }
     
     func displayBalancesDidChange(viewModel: Event.BalancesDidChange.ViewModel) {
         let items = viewModel.balances.map { (balance) -> HorizontalPicker.Item in
@@ -195,29 +192,31 @@ extension BalanceHeaderWithPicker.View: BalanceHeaderWithPicker.DisplayLogic {
                 title: balance.name,
                 enabled: balance.id != nil,
                 onSelect: { [weak self] in
-                    self?.routing?.onDidSelectAsset(balance.asset)
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         guard let id = balance.id else {
                             return
                         }
-                        let request = Event.DidSelectBalance.Request(id: id)
-                        businessLogic.onDidSelectBalance(request)
+                        let request = Event.SelectedBalanceDidChange.Request(id: id)
+                        businessLogic.onSelectedBalanceDidChange(request)
                     })
             })
         }
         self.balancePicker.items = items
-    }
-    
-    func displayRateDidChange(viewModel: Event.RateDidChange.ViewModel) {
-        self.setRate(viewModel.rate)
+        self.setSelectedBalanceIfNeeded(index: viewModel.selectedBalanceIndex)
     }
     
     func displaySelectedBalanceDidChange(viewModel: Event.SelectedBalanceDidChange.ViewModel) {
-        self.balancePicker.setSelectedItemAtIndex(viewModel.index, animated: false)
+        self.balanceLabel.text = viewModel.balance
+        self.rateLabel.text = viewModel.rate
+        
+        self.routing?.onDidSelectBalance(viewModel.id, viewModel.asset)
     }
 }
 
+// MARK: - FlexibleHeaderContainerHeaderViewProtocol
+
 extension BalanceHeaderWithPicker.View: FlexibleHeaderContainerHeaderViewProtocol {
+    
     var view: UIView {
         return self
     }
@@ -228,27 +227,5 @@ extension BalanceHeaderWithPicker.View: FlexibleHeaderContainerHeaderViewProtoco
     
     var maximumHeight: CGFloat {
         return self.minimumHeight + self.contentHeight
-    }
-    
-    func flexibleHeaderDidChangePercent(_ percent: CGFloat) {
-        self.stretchFactor = percent
-        let balanceLabelDisappearPercent: CGFloat = 0.37
-        let balanceLabelAppearPercent: CGFloat = 0.67
-        let currentDisappearDiff = percent - balanceLabelDisappearPercent
-        let appearDisappearDiff = balanceLabelAppearPercent - balanceLabelDisappearPercent
-        self.balanceLabel.alpha = max((currentDisappearDiff) / (appearDisappearDiff), 0)
-        
-        let rateLabelDisappearPercent: CGFloat = 0.65
-        let rateLabelPercentPercent: CGFloat = 0.95
-        let currentDisappearRateDiff = percent - rateLabelDisappearPercent
-        let appearDisappearRateDiff = rateLabelPercentPercent - rateLabelDisappearPercent
-        self.rateLabel.alpha = max((currentDisappearRateDiff) / (appearDisappearRateDiff), 0)
-        
-        let navigationTitleFontSize = Theme.Fonts.navigationBarBoldFont.pointSize
-        let balanceFontSize = self.balanceLabel.font.pointSize
-        let fontsDelta = balanceFontSize - navigationTitleFontSize
-        let scalePercent = (navigationTitleFontSize + fontsDelta * percent) / balanceFontSize
-        self.labelsStackView.transform = CGAffineTransform.identity.scaledBy(x: scalePercent, y: scalePercent)
-        self.titleAlphaDidChange?((balanceLabelDisappearPercent - percent) / balanceLabelDisappearPercent)
     }
 }

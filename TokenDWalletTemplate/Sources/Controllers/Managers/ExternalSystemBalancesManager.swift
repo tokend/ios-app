@@ -18,6 +18,7 @@ class ExternalSystemBalancesManager {
     
     private var bindingStatuses: [ExternalSystemAccountType: BehaviorRelay<BindingStatus>] = [:]
     private let bindingStatusesBehaviorRelay: BehaviorRelay<Void> = BehaviorRelay(value: ())
+    private let bindingStatusesErrors: PublishRelay<Swift.Error> = PublishRelay()
     private let accountRepo: AccountRepo
     private let networkInfoFetcher: NetworkInfoFetcher
     private let userDataProvider: UserDataProviderProtocol
@@ -77,6 +78,7 @@ class ExternalSystemBalancesManager {
                     })
                     completion(.succeeded)
                 case .failed(let error):
+                    self?.bindingStatusesErrors.accept(error)
                     self?.bindingStatusBehaviorRelayForAccount(externalSystemType).accept(oldBindingStatus)
                     self?.bindingStatusesBehaviorRelay.accept(())
                     completion(.failed(error))
@@ -125,6 +127,10 @@ class ExternalSystemBalancesManager {
         return self.bindingStatusesBehaviorRelay.asObservable()
     }
     
+    func observeBindingStatusesErrors() -> Observable<Swift.Error> {
+        return self.bindingStatusesErrors.asObservable()
+    }
+    
     enum BindBalanceWithAccountResult {
         case succeeded
         case failed(Swift.Error)
@@ -148,6 +154,7 @@ class ExternalSystemBalancesManager {
             switch result {
                 
             case .failed(let error):
+                self?.bindingStatusesErrors.accept(error)
                 bindingStatusBehaviorRelay.accept(oldBindingStatus)
                 self?.bindingStatusesBehaviorRelay.accept(())
                 completion(.failed(error))

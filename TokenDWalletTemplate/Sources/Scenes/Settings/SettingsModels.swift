@@ -1,12 +1,21 @@
-import Foundation
+import UIKit
 
 enum Settings {
     
     // MARK: - Typealiases
     
-    typealias CellIdentifier = String
-    
     // MARK: -
+    
+    enum CellIdentifier: String {
+        case accountId
+        case seed
+        case tfa
+        case biometrics
+        case verification
+        case changePassword
+        case termsOfService
+        case licenses
+    }
     
     enum Model {}
     enum Event {}
@@ -18,10 +27,11 @@ extension Settings.Model {
     
     struct SceneModel {
         var sections: [SectionModel]
+        let termsUrl: URL?
         
-        static func empty() -> SceneModel {
-            let model = SceneModel(sections: [])
-            return model
+        init(termsUrl: URL?) {
+            self.sections = []
+            self.termsUrl = termsUrl
         }
     }
     
@@ -33,7 +43,7 @@ extension Settings.Model {
     
     struct CellModel {
         let title: String
-        let icon: String
+        let icon: UIImage
         let cellType: CellType
         let identifier: Settings.CellIdentifier
     }
@@ -46,6 +56,7 @@ extension Settings.Model {
 }
 
 extension Settings.Model.CellModel {
+    
     enum CellType {
         case disclosureCell
         case boolCell(Bool)
@@ -57,6 +68,7 @@ extension Settings.Model.CellModel {
 // MARK: - Events
 
 extension Settings.Event {
+    
     enum ViewDidLoad {
         struct Request {}
     }
@@ -105,5 +117,13 @@ extension Settings.Event {
         struct Request {
             let cellIdentifier: Settings.CellIdentifier
         }
+    }
+    
+    enum ShowTerms {
+        struct Response {
+            let url: URL
+        }
+        
+        typealias ViewModel = Response
     }
 }

@@ -1,20 +1,27 @@
 import Foundation
 
 protocol SendPaymentPresentationLogic {
-    func presentViewDidLoad(response: SendPayment.Event.ViewDidLoad.Response)
-    func presentLoadBalances(response: SendPayment.Event.LoadBalances.Response)
-    func presentSelectBalance(response: SendPayment.Event.SelectBalance.Response)
-    func presentBalanceSelected(response: SendPayment.Event.BalanceSelected.Response)
-    func presentScanRecipientQRAddress(response: SendPayment.Event.ScanRecipientQRAddress.Response)
-    func presentEditAmount(response: SendPayment.Event.EditAmount.Response)
-    func presentPaymentAction(response: SendPayment.Event.PaymentAction.Response)
-    func presentWithdrawAction(response: SendPayment.Event.WithdrawAction.Response)
+    
+    typealias Event = SendPayment.Event
+    
+    func presentViewDidLoad(response: Event.ViewDidLoad.Response)
+    func presentLoadBalances(response: Event.LoadBalances.Response)
+    func presentSelectBalance(response: Event.SelectBalance.Response)
+    func presentBalanceSelected(response: Event.BalanceSelected.Response)
+    func presentSelectedContact(response: Event.SelectedContact.Response)
+    func presentScanRecipientQRAddress(response: Event.ScanRecipientQRAddress.Response)
+    func presentEditAmount(response: Event.EditAmount.Response)
+    func presentPaymentAction(response: Event.PaymentAction.Response)
+    func presentWithdrawAction(response: Event.WithdrawAction.Response)
 }
 
 extension SendPayment {
     typealias PresentationLogic = SendPaymentPresentationLogic
     
     struct Presenter {
+        
+        typealias Model = SendPayment.Model
+        typealias Event = SendPayment.Event
         
         private let presenterDispatch: PresenterDispatch
         private let amountFormatter: AmountFormatterProtocol
@@ -58,16 +65,16 @@ extension SendPayment {
 }
 
 extension SendPayment.Presenter: SendPayment.PresentationLogic {
-    func presentViewDidLoad(response: SendPayment.Event.ViewDidLoad.Response) {
+    func presentViewDidLoad(response: Event.ViewDidLoad.Response) {
         let sceneViewModel = self.getSceneViewModel(response.sceneModel, amountValid: response.amountValid)
-        let viewModel = SendPayment.Event.ViewDidLoad.ViewModel(sceneModel: sceneViewModel)
+        let viewModel = Event.ViewDidLoad.ViewModel(sceneModel: sceneViewModel)
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayViewDidLoad(viewModel: viewModel)
         }
     }
     
-    func presentLoadBalances(response: SendPayment.Event.LoadBalances.Response) {
-        let viewModel: SendPayment.Event.LoadBalances.ViewModel
+    func presentLoadBalances(response: Event.LoadBalances.Response) {
+        let viewModel: Event.LoadBalances.ViewModel
         switch response {
         case .loading:
             viewModel = .loading
@@ -88,27 +95,38 @@ extension SendPayment.Presenter: SendPayment.PresentationLogic {
         }
     }
     
-    func presentSelectBalance(response: SendPayment.Event.SelectBalance.Response) {
-        let balanceViewModels: [SendPayment.Model.BalanceDetailsViewModel] =
+    func presentSelectBalance(response: Event.SelectBalance.Response) {
+        let balanceViewModels: [Model.BalanceDetailsViewModel] =
             response.balances.compactMap({ balanceDetails in
                 return self.getBalanceDetailsViewModel(balanceDetails)
             })
-        let viewModel = SendPayment.Event.SelectBalance.ViewModel(balances: balanceViewModels)
+        let viewModel = Event.SelectBalance.ViewModel(balances: balanceViewModels)
         self.presenterDispatch.display { displayLogic in
             displayLogic.displaySelectBalance(viewModel: viewModel)
         }
     }
     
-    func presentBalanceSelected(response: SendPayment.Event.BalanceSelected.Response) {
+    func presentBalanceSelected(response: Event.BalanceSelected.Response) {
         let sceneViewModel = self.getSceneViewModel(response.sceneModel, amountValid: response.amountValid)
-        let viewModel = SendPayment.Event.BalanceSelected.ViewModel(sceneModel: sceneViewModel)
+        let viewModel = Event.BalanceSelected.ViewModel(sceneModel: sceneViewModel)
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayBalanceSelected(viewModel: viewModel)
         }
     }
     
-    func presentScanRecipientQRAddress(response: SendPayment.Event.ScanRecipientQRAddress.Response) {
-        let viewModel: SendPayment.Event.ScanRecipientQRAddress.ViewModel
+    func presentSelectedContact(response: Event.SelectedContact.Response) {
+        let sceneViewModel = self.getSceneViewModel(
+            response.sceneModel,
+            amountValid: response.amountValid
+        )
+        let viewModel = Event.SelectedContact.ViewModel(sceneModel: sceneViewModel)
+        self.presenterDispatch.display { displayLogic in
+            displayLogic.displaySelectedContact(viewModel: viewModel)
+        }
+    }
+    
+    func presentScanRecipientQRAddress(response: Event.ScanRecipientQRAddress.Response) {
+        let viewModel: Event.ScanRecipientQRAddress.ViewModel
         switch response {
         case .canceled:
             viewModel = .canceled
@@ -126,15 +144,15 @@ extension SendPayment.Presenter: SendPayment.PresentationLogic {
         }
     }
     
-    func presentEditAmount(response: SendPayment.Event.EditAmount.Response) {
-        let viewModel = SendPayment.Event.EditAmount.ViewModel(amountValid: response.amountValid)
+    func presentEditAmount(response: Event.EditAmount.Response) {
+        let viewModel = Event.EditAmount.ViewModel(amountValid: response.amountValid)
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayEditAmount(viewModel: viewModel)
         }
     }
     
-    func presentPaymentAction(response: SendPayment.Event.PaymentAction.Response) {
-        let viewModel: SendPayment.Event.PaymentAction.ViewModel
+    func presentPaymentAction(response: Event.PaymentAction.Response) {
+        let viewModel: Event.PaymentAction.ViewModel
         switch response {
         case .loading:
             viewModel = .loading
@@ -154,8 +172,8 @@ extension SendPayment.Presenter: SendPayment.PresentationLogic {
         }
     }
     
-    func presentWithdrawAction(response: SendPayment.Event.WithdrawAction.Response) {
-        let viewModel: SendPayment.Event.WithdrawAction.ViewModel
+    func presentWithdrawAction(response: Event.WithdrawAction.Response) {
+        let viewModel: Event.WithdrawAction.ViewModel
         switch response {
         case .loading:
             viewModel = .loading

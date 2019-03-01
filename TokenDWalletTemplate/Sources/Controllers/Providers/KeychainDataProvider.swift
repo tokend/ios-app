@@ -29,7 +29,7 @@ class KeychainDataProvider {
 extension KeychainDataProvider: KeychainDataProviderProtocol {
     func getKeyData() -> ECDSA.KeyData {
         guard let keyData = self.keychainManager.getKeyData(account: self.account) else {
-            fatalError("KeychainDataProvider should always provide key")
+            fatalError(Localized(.keychaindataprovider_should_always_provide_key))
         }
         
         return keyData

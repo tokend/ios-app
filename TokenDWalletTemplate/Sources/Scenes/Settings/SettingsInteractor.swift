@@ -3,10 +3,13 @@ import RxSwift
 import RxCocoa
 
 protocol SettingsBusinessLogic {
-    func onViewDidLoad(request: Settings.Event.ViewDidLoad.Request)
-    func onDidSelectCell(request: Settings.Event.DidSelectCell.Request)
-    func onDidSelectSwitch(request: Settings.Event.DidSelectSwitch.Request)
-    func onDidSelectAction(request: Settings.Event.DidSelectAction.Request)
+    
+    typealias Event = Settings.Event
+    
+    func onViewDidLoad(request: Event.ViewDidLoad.Request)
+    func onDidSelectCell(request: Event.DidSelectCell.Request)
+    func onDidSelectSwitch(request: Event.DidSelectSwitch.Request)
+    func onDidSelectAction(request: Event.DidSelectAction.Request)
 }
 
 extension Settings {
@@ -14,16 +17,20 @@ extension Settings {
     
     class Interactor {
         
-        private var sceneModel = Model.SceneModel.empty()
+        private var sceneModel: Model.SceneModel
         
         private var sectionsProvider: SectionsProvider
         private let presenter: PresentationLogic
         
         private let disposeBag = DisposeBag()
         
-        init(sectionsProvider: SectionsProvider,
-             presenter: PresentationLogic
+        init(
+            sceneModel: Model.SceneModel,
+            sectionsProvider: SectionsProvider,
+            presenter: PresentationLogic
             ) {
+            
+            self.sceneModel = sceneModel
             self.sectionsProvider = sectionsProvider
             self.presenter = presenter
         }
@@ -31,25 +38,36 @@ extension Settings {
 }
 
 extension Settings.Interactor: Settings.BusinessLogic {
-    func onViewDidLoad(request: Settings.Event.ViewDidLoad.Request) {
+    
+    typealias Event = Settings.Event
+    
+    func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         self.sectionsProvider.observeSections()
             .subscribe(onNext: { [weak self] sections in
                 self?.sceneModel.sections = sections
                 
-                let response = Settings.Event.SectionsUpdated.Response(sectionModels: sections)
+                let response = Event.SectionsUpdated.Response(sectionModels: sections)
                 self?.presenter.presentSectionsUpdated(response: response)
             })
             .disposed(by: self.disposeBag)
     }
     
-    func onDidSelectCell(request: Settings.Event.DidSelectCell.Request) {
-        let response = Settings.Event.DidSelectCell.Response(
+    func onDidSelectCell(request: Event.DidSelectCell.Request) {
+        if self.sectionsProvider.isTermsCell(cellIdentifier: request.cellIdentifier) {
+            if let termsUrl = self.sceneModel.termsUrl {
+                let response = Event.ShowTerms.Response(url: termsUrl)
+                self.presenter.presentShowTerms(response: response)
+            }
+            return
+        }
+        
+        let response = Event.DidSelectCell.Response(
             cellIdentifier: request.cellIdentifier
         )
         self.presenter.presentDidSelectCell(response: response)
     }
     
-    func onDidSelectSwitch(request: Settings.Event.DidSelectSwitch.Request) {
+    func onDidSelectSwitch(request: Event.DidSelectSwitch.Request) {
         self.sectionsProvider.handleBoolCell(
             cellIdentifier: request.cellIdentifier,
             state: request.state,
@@ -71,7 +89,7 @@ extension Settings.Interactor: Settings.BusinessLogic {
         })
     }
     
-    func onDidSelectAction(request: Settings.Event.DidSelectAction.Request) {
+    func onDidSelectAction(request: Event.DidSelectAction.Request) {
         self.sectionsProvider.handleActionCell(
             cellIdentifier: request.cellIdentifier,
             startLoading: { [weak self] in

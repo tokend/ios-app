@@ -135,7 +135,7 @@ extension ReceiveAddress {
             var items: [UIBarButtonItem] = []
             
             let shareItem = UIBarButtonItem(
-                image: #imageLiteral(resourceName: "Share icon"),
+                image: Assets.shareIcon.image,
                 style: .plain,
                 target: self,
                 action: #selector(self.shareReceiveAddressRequest)

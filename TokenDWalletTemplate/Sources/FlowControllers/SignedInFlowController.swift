@@ -1,6 +1,8 @@
 import UIKit
 import SideMenuController
+import TokenDWallet
 
+// swiftlint:disable type_body_length
 class SignedInFlowController: BaseSignedInFlowController {
     
     // MARK: - Public properties
@@ -46,10 +48,8 @@ class SignedInFlowController: BaseSignedInFlowController {
         self.onSignOut = onSignOut
         self.onLocalAuthRecoverySucceeded = onLocalAuthRecoverySucceeded
         
-        SideMenuController.preferences.drawing.menuButtonImage = UIImage(named: "Menu icon")
-        SideMenuController.preferences.drawing.sidePanelPosition = .underCenterPanelLeft
-        SideMenuController.preferences.drawing.sidePanelWidth = 300
-        SideMenuController.preferences.drawing.menuButtonSize = 35
+        SideMenuController.preferences.drawing.menuButtonImage = Assets.menuIcon.image
+        SideMenuController.preferences.drawing.menuButtonWidth = 35
         SideMenuController.preferences.drawing.centerPanelShadow = true
         SideMenuController.preferences.animating.statusBarBehaviour = .horizontalPan
         SideMenuController.preferences.animating.transitionAnimator = nil
@@ -136,66 +136,74 @@ class SignedInFlowController: BaseSignedInFlowController {
         let sections: [[SideMenu.Model.MenuItem]] = [
             [
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Dashboard icon"),
-                    title: "Dashboard",
+                    iconImage: Assets.dashboardIcon.image,
+                    title: Localized(.dashboard),
                     onSelected: { [weak self] in
                         self?.runDashboardFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Wallet icon"),
-                    title: "Wallet",
+                    iconImage: Assets.walletIcon.image,
+                    title: Localized(.wallet),
                     onSelected: { [weak self] in
                         self?.runWalletFlow()
                 })
             ],
             [
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Deposit icon"),
-                    title: "Deposit",
+                    iconImage: Assets.depositIcon.image,
+                    title: Localized(.deposit),
                     onSelected: { [weak self] in
                         self?.runDepositFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Withdraw icon"),
-                    title: "Withdraw",
+                    iconImage: Assets.withdrawIcon.image,
+                    title: Localized(.withdraw),
                     onSelected: { [weak self] in
                         self?.runWithdrawFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Send icon"),
-                    title: "Send",
+                    iconImage: Assets.sendIcon.image,
+                    title: Localized(.send),
                     onSelected: { [weak self] in
                         self?.runSendPaymentFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Explore funds icon.pdf"),
-                    title: "Explore Funds",
+                    iconImage: Assets.exploreFundsIcon.image,
+                    title: Localized(.explore_funds),
                     onSelected: { [weak self] in
                         self?.runExploreFundsFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Explore tokens icon"),
-                    title: "Explore Tokens",
+                    iconImage: Assets.exploreTokensIcon.image,
+                    title: Localized(.explore_tokens),
                     onSelected: { [weak self] in
                         self?.runExploreTokensFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Trade icon"),
-                    title: "Trades",
+                    iconImage: Assets.tradeIcon.image,
+                    title: Localized(.trades),
                     onSelected: { [weak self] in
                         self?.runTradeFlow()
                 })
             ],
             [
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Settings icon"),
-                    title: "Settings",
+                    iconImage: Assets.fee.image,
+                    title: Localized(.fees),
+                    onSelected: { [weak self] in
+                        self?.showFees()
+                })
+            ],
+            [
+                SideMenu.Model.MenuItem(
+                    iconImage: Assets.settingsIcon.image,
+                    title: Localized(.settings),
                     onSelected: { [weak self] in
                         self?.runSettingsFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: #imageLiteral(resourceName: "Sign out icon"),
-                    title: "Sign out",
+                    iconImage: Assets.signOutIcon.image,
+                    title: Localized(.sign_out),
                     onSelected: { [weak self] in
                         self?.onSignOut()
                 })
@@ -215,7 +223,7 @@ class SignedInFlowController: BaseSignedInFlowController {
     }
     
     private func getSideMenuHeaderTitle() -> String {
-        return AppInfoUtils.getValue(.bundleDisplayName, "TokenD")
+        return AppInfoUtils.getValue(.bundleDisplayName, Localized(.tokend))
     }
     
     // MARK: - Side Menu Navigation
@@ -316,19 +324,23 @@ class SignedInFlowController: BaseSignedInFlowController {
     }
     
     private func runSendPaymentFlow() {
+        let navigationController = NavigationController()
         let flow = SendPaymentFlowController(
+            navigationController: navigationController,
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
             reposController: self.reposController,
             managersController: self.managersController,
             userDataProvider: self.userDataProvider,
             keychainDataProvider: self.keychainDataProvider,
-            rootNavigation: self.rootNavigation
+            rootNavigation: self.rootNavigation,
+            selectedBalanceId: nil
         )
         self.currentFlowController = flow
         flow.run(
             showRootScreen: { [weak self] (vc) in
-                self?.sideNavigationController.embed(centerViewController: vc)
+                navigationController.setViewControllers([vc], animated: false)
+                self?.sideNavigationController.embed(centerViewController: navigationController)
             },
             onShowWalletScreen: { [weak self] in
                 self?.runWalletFlow()
@@ -392,13 +404,13 @@ class SignedInFlowController: BaseSignedInFlowController {
     }
     
     private func showDepositScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let navigationController: NavigationControllerProtocol = NavigationController()
+        let navigationController = NavigationController()
         
         let viewController = DepositScene.ViewController()
         
-        let qrCodeGenerator: DepositScene.QRCodeGeneratorProtocol = QRCodeGenerator()
-        let dateFormatter: DepositScene.DateFormatterProtocol = DepositScene.DateFormatter()
-        let assetsFetcher: DepositScene.AssetsFetcherProtocol = DepositScene.AssetsFetcher(
+        let qrCodeGenerator = QRCodeGenerator()
+        let dateFormatter = DepositScene.DateFormatter()
+        let assetsFetcher = DepositScene.AssetsFetcher(
             assetsRepo: self.reposController.assetsRepo,
             balancesRepo: self.reposController.balancesRepo,
             accountRepo: self.reposController.accountRepo,
@@ -409,9 +421,11 @@ class SignedInFlowController: BaseSignedInFlowController {
             accountRepo: self.reposController.accountRepo,
             externalSystemBalancesManager: self.managersController.externalSystemBalancesManager
         )
-        let addressManager: DepositScene.AddressManagerProtocol = DepositScene.AddressManager(
+        let addressManager = DepositScene.AddressManager(
             balanceBinder: balanceBinder
         )
+        
+        let errorFormatter = DepositScene.ErrorFormatter()
         
         let routing = DepositScene.Routing(
             onShare: { (items) in
@@ -434,15 +448,11 @@ class SignedInFlowController: BaseSignedInFlowController {
             dateFormatter: dateFormatter,
             assetsFetcher: assetsFetcher,
             addressManager: addressManager,
+            errorFormatter: errorFormatter,
             routing: routing
         )
         
-        navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        
-        viewController.navigationItem.title = "Deposit"
+        viewController.navigationItem.title = Localized(.deposit)
         
         navigationController.setViewControllers([viewController], animated: false)
         
@@ -453,24 +463,70 @@ class SignedInFlowController: BaseSignedInFlowController {
         }
     }
     
+    private func showFees() {
+        let navigationController = NavigationController()
+        let vc = self.setupFees(navigationController: navigationController)
+        navigationController.setViewControllers([vc], animated: false)
+        
+        vc.navigationItem.title = Localized(.fees)
+        self.sideNavigationController.embed(centerViewController: navigationController.getViewController())
+    }
+    
+    private func setupFees(navigationController: NavigationController) -> UIViewController {
+        
+        let vc = Fees.ViewController()
+        let feesOverviewProvider = Fees.FeesProvider(
+            generalApi: self.flowControllerStack.api.generalApi,
+            accountId: self.userDataProvider.walletData.accountId
+        )
+        
+        let sceneModel = Fees.Model.SceneModel(
+            fees: [],
+            selectedAsset: nil
+        )
+        
+        let feeDataFormatter = Fees.FeeDataFormatter()
+        
+        let routing = Fees.Routing(
+            showProgress: {
+                navigationController.showProgress()
+        },
+            hideProgress: {
+                navigationController.hideProgress()
+        },
+            showMessage: { (message) in
+                navigationController.showErrorMessage(message, completion: nil)
+        })
+        
+        Fees.Configurator.configure(
+            viewController: vc,
+            feesOverviewProvider: feesOverviewProvider,
+            sceneModel: sceneModel,
+            feeDataFormatter: feeDataFormatter,
+            routing: routing
+        )
+        
+        return vc
+    }
+    
     // MARK: - Sign Out
     
     private func initiateSignOut() {
         let alert = UIAlertController(
-            title: "Sign Out",
-            message: "Are you sure you want to Sign Out and Erase All Data from device?",
+            title: Localized(.sign_out),
+            message: Localized(.are_you_sure_you_want_to_sign_out),
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "Sign Out and Erase",
+            title: Localized(.sign_out_and_erase),
             style: .default,
             handler: { [weak self] _ in
                 self?.performSignOut()
         }))
         
         alert.addAction(UIAlertAction(
-            title: "Cancel",
+            title: Localized(.cancel),
             style: .cancel,
             handler: nil
         ))
@@ -558,3 +614,4 @@ class SignedInFlowController: BaseSignedInFlowController {
         self.startUserActivityTimer()
     }
 }
+// swiftlint:enable type_body_length

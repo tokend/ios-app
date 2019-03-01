@@ -1,10 +1,19 @@
 import UIKit
+import RxSwift
+
+// MARK: - TransactionsListSceneDisplayLogic
 
 protocol TransactionsListSceneDisplayLogic: class {
-    func displayTransactionsDidUpdate(viewModel: TransactionsListScene.Event.TransactionsDidUpdate.ViewModel)
-    func displayLoadingStatusDidChange(viewModel: TransactionsListScene.Event.LoadingStatusDidChange.ViewModel)
-    func displayHeaderTitleDidChange(viewModel: TransactionsListScene.Event.HeaderTitleDidChange.ViewModel)
+    
+    typealias Event = TransactionsListScene.Event
+    
+    func displayTransactionsDidUpdate(viewModel: Event.TransactionsDidUpdate.ViewModel)
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
+    func displayHeaderTitleDidChange(viewModel: Event.HeaderTitleDidChange.ViewModel)
+    func displaySendAction(viewModel: Event.SendAction.ViewModel)
 }
+
+// MARK: - TransactionsListSceneProtocol
 
 protocol TransactionsListSceneProtocol {
     typealias ContentSize = CGSize
@@ -15,30 +24,53 @@ protocol TransactionsListSceneProtocol {
     var contentSize: ContentSize { get }
 }
 
+// MARK: - TransactionsListScene.ViewController
+
 extension TransactionsListScene {
     typealias DisplayLogic = TransactionsListSceneDisplayLogic
     
     class ViewController: UIViewController, TransactionsListSceneProtocol {
+        
+        typealias Event = TransactionsListScene.Event
         
         // MARK: - Private properties
         
         private let emptyLabel: UILabel = SharedViewsBuilder.createEmptyLabel()
         private let tableView: UITableView = UITableView(frame: .zero, style: .plain)
         private let stickyHeader: TableViewStickyHeader = TableViewStickyHeader()
+        private let actionButton: UIButton = UIButton()
         private let refreshControl: UIRefreshControl = UIRefreshControl()
         private var sections: [Model.SectionViewModel] = []
-        private var oldPanTranslation: CGFloat = 0
-        private var oldContentOffset: CGFloat = 0
-        private var minimumContentInset: CGFloat = 0
+        private var oldPanTranslation: CGFloat = 0.0
+        private var oldContentOffset: CGFloat = 0.0
+        private var minimumContentInset: CGFloat = 0.0
+        private var topContentInset: CGFloat = 0.0 {
+            didSet {
+                self.tableView.contentInset.top = self.topContentInset
+                self.tableView.scrollIndicatorInsets.top = self.topContentInset
+            }
+        }
+        private let iconSize: CGFloat = 60.0
+        private let disposeBag = DisposeBag()
         
         // MARK: -
+        
+        // TODO: - Remove asset and balance id properties
         
         var asset: String = "" {
             didSet {
                 self.interactorDispatch?.sendRequest(requestBlock: { [weak self] (businessLogic) in
                     guard let asset = self?.asset else { return }
-                    let request = TransactionsListScene.Event.AssetDidChange.Request(asset: asset)
+                    let request = Event.AssetDidChange.Request(asset: asset)
                     businessLogic.onAssetDidChange(request: request)
+                })
+            }
+        }
+        var balanceId: String? {
+            didSet {
+                self.interactorDispatch?.sendRequest(requestBlock: { [weak self] (businessLogic) in
+                    let request = Event.BalanceDidChange.Request(balanceId: self?.balanceId)
+                    businessLogic.onBalanceDidChange(request: request)
                 })
             }
         }
@@ -64,9 +96,16 @@ extension TransactionsListScene {
         
         private var interactorDispatch: InteractorDispatch?
         private var routing: Routing?
+        private var viewConfig: Model.ViewConfig?
         
-        func inject(interactorDispatch: InteractorDispatch?, routing: Routing?) {
+        func inject(
+            interactorDispatch: InteractorDispatch?,
+            viewConfig: Model.ViewConfig?,
+            routing: Routing?
+            ) {
+            
             self.interactorDispatch = interactorDispatch
+            self.viewConfig = viewConfig
             self.routing = routing
         }
         
@@ -78,13 +117,14 @@ extension TransactionsListScene {
             self.setupView()
             self.setupEmptyLabel()
             self.setupTableView()
+            self.setupActionButton()
             self.setupRefreshControl()
             
             self.setupLayout()
             
             self.observeTableViewSizeChanges()
             
-            let request = TransactionsListScene.Event.ViewDidLoad.Request()
+            let request = Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                 businessLogic.onViewDidLoad(request: request)
             })
@@ -115,7 +155,7 @@ extension TransactionsListScene {
         
         func reloadTransactions() {
             self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                let request = TransactionsListScene.Event.DidInitiateRefresh.Request()
+                let request = Event.DidInitiateRefresh.Request()
                 businessLogic.onDidInitiateRefresh(request: request)
             })
         }
@@ -140,6 +180,29 @@ extension TransactionsListScene {
             self.tableView.refreshControl = self.refreshControl
         }
         
+        private func setupActionButton() {
+            self.actionButton.backgroundColor = Theme.Colors.mainColor
+            self.actionButton.tintColor = Theme.Colors.textOnMainColor
+            self.actionButton.layer.cornerRadius = self.iconSize / 2
+            self.actionButton.setImage(#imageLiteral(resourceName: "Send"), for: .normal)
+            
+            if let isHidden = self.viewConfig?.actionButtonIsHidden {
+                self.actionButton.isHidden = isHidden
+            }
+            
+            self.actionButton
+                .rx
+                .controlEvent(.touchUpInside)
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    let request = Event.SendAction.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (bussinesLogic) in
+                        bussinesLogic.onSendAction(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
+        }
+        
         private func setupRefreshControl() {
             self.refreshControl.addTarget(self, action: #selector(self.refreshAction), for: .valueChanged)
         }
@@ -148,6 +211,7 @@ extension TransactionsListScene {
             self.view.addSubview(self.emptyLabel)
             self.view.addSubview(self.tableView)
             self.view.addSubview(self.stickyHeader)
+            self.view.addSubview(self.actionButton)
             
             self.emptyLabel.snp.makeConstraints { (make) in
                 make.center.equalToSuperview()
@@ -163,6 +227,11 @@ extension TransactionsListScene {
                 make.top.equalToSuperview().inset(6)
                 make.left.right.equalToSuperview().inset(8)
                 make.height.equalTo(32)
+            }
+            
+            self.actionButton.snp.makeConstraints { (make) in
+                make.bottom.trailing.equalToSuperview().inset(20)
+                make.height.width.equalTo(self.iconSize)
             }
         }
         
@@ -194,6 +263,15 @@ extension TransactionsListScene {
             return self.sections[index]
         }
         
+        private func updateSectionTitle() {
+            if let currentTopIndexPath: IndexPath = self.tableView.indexPathsForVisibleRows?.first {
+                self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    let request = Event.ScrollViewDidScroll.Request(indexPath: currentTopIndexPath)
+                    businessLogic.onScrollViewDidScroll(request: request)
+                })
+            }
+        }
+        
         // MARK: Refresh
         
         @objc private func refreshAction() {
@@ -204,8 +282,11 @@ extension TransactionsListScene {
         }
         
         private func showRefresh(animated: Bool) {
-            self.revealRefreshControlIfNeeded(animated: animated)
+            guard !self.refreshControl.isRefreshing else {
+                return
+            }
             self.beginRefreshing()
+            self.revealRefreshControlIfNeeded(animated: animated)
         }
         
         private func beginRefreshing() {
@@ -216,8 +297,8 @@ extension TransactionsListScene {
             guard self.refreshControl.isRefreshing else {
                 return
             }
-            self.endRefreshing()
             self.hideRefreshControlIfNeeded(animated: animated)
+            self.endRefreshing()
         }
         
         private func endRefreshing() {
@@ -225,23 +306,17 @@ extension TransactionsListScene {
         }
         
         private func revealRefreshControlIfNeeded(animated: Bool) {
-            if self.tableView.contentOffset.y <= -self.tableView.contentInset.top / 2 {
-                self.revealRefreshControl(animated: animated)
+            let targetOffset = self.getZeroTableOffset(withRefreshControl: true)
+            if self.tableView.contentOffset.y > targetOffset {
+                self.setOffset(withRefreshControl: true, animated: animated)
             }
-        }
-        
-        private func revealRefreshControl(animated: Bool) {
-            self.setOffset(withRefreshControl: true, animated: animated)
         }
         
         private func hideRefreshControlIfNeeded(animated: Bool) {
-            if self.tableView.contentOffset.y <= -self.tableView.contentInset.top {
-                self.hideRefreshControl(animated: animated)
+            let targetOffset = self.getZeroTableOffset(withRefreshControl: false)
+            if self.tableView.contentOffset.y < targetOffset {
+                self.setOffset(withRefreshControl: false, animated: animated)
             }
-        }
-        
-        private func hideRefreshControl(animated: Bool) {
-            self.setOffset(withRefreshControl: false, animated: animated)
         }
         
         private func setOffset(withRefreshControl: Bool, animated: Bool) {
@@ -252,27 +327,32 @@ extension TransactionsListScene {
                     return
             }
             
-            var oldOffset = self.tableView.contentOffset
-            oldOffset.y = -self.tableView.contentInset.top
-            if withRefreshControl {
-                oldOffset.y -= self.refreshControl.frame.height
-            }
-            self.tableView.setContentOffset(oldOffset, animated: animated)
+            let targetOffset = self.getZeroTableOffset(withRefreshControl: withRefreshControl)
+            var contentOffset = self.tableView.contentOffset
+            contentOffset.y = targetOffset
+            self.tableView.setContentOffset(contentOffset, animated: animated)
         }
         
-        private func updateSectionTitle() {
-            if let currentTopIndexPath: IndexPath = self.tableView.indexPathsForVisibleRows?.first {
-                self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    let request = Event.ScrollViewDidScroll.Request(indexPath: currentTopIndexPath)
-                    businessLogic.onScrollViewDidScroll(request: request)
-                })
+        private func getZeroTableOffset(withRefreshControl: Bool) -> CGFloat {
+            var offset = -self.topContentInset
+            if withRefreshControl {
+                offset -= self.refreshControl.frame.height
             }
+            
+            return offset
+        }
+        
+        private func getRefreshHeight() -> CGFloat {
+            return self.refreshControl.frame.height
         }
     }
 }
 
+// MARK: - TransactionsListScene.DisplayLogic
+
 extension TransactionsListScene.ViewController: TransactionsListScene.DisplayLogic {
-    func displayTransactionsDidUpdate(viewModel: TransactionsListScene.Event.TransactionsDidUpdate.ViewModel) {
+    
+    func displayTransactionsDidUpdate(viewModel: Event.TransactionsDidUpdate.ViewModel) {
         switch viewModel {
             
         case .empty(let title):
@@ -288,7 +368,7 @@ extension TransactionsListScene.ViewController: TransactionsListScene.DisplayLog
         self.updateSectionTitle()
     }
     
-    func displayLoadingStatusDidChange(viewModel: TransactionsListScene.Event.LoadingStatusDidChange.ViewModel) {
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
         switch viewModel {
             
         case .loaded:
@@ -299,22 +379,32 @@ extension TransactionsListScene.ViewController: TransactionsListScene.DisplayLog
         }
     }
     
-    func displayHeaderTitleDidChange(viewModel: TransactionsListScene.Event.HeaderTitleDidChange.ViewModel) {
+    func displayHeaderTitleDidChange(viewModel: Event.HeaderTitleDidChange.ViewModel) {
         self.stickyHeader.setText(viewModel.title, animation: viewModel.animation)
+    }
+    
+    func displaySendAction(viewModel: Event.SendAction.ViewModel) {
+        self.routing?.showSendPayment(viewModel.balanceId)
     }
 }
 
+// MARK: - UITableViewDelegate
+
 extension TransactionsListScene.ViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let model = self.modelForIndexPath(indexPath) else {
             return
         }
-        self.routing?.onDidSelectItemWithIdentifier(model.identifier, model.asset)
+        self.routing?.onDidSelectItemWithIdentifier(model.identifier, model.balanceId)
     }
 }
 
+// MARK: - UITableViewDataSource
+
 extension TransactionsListScene.ViewController: UITableViewDataSource {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
     }
@@ -332,7 +422,10 @@ extension TransactionsListScene.ViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UIScrollViewDelegate
+
 extension TransactionsListScene.ViewController: UIScrollViewDelegate {
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.oldPanTranslation = 0
     }
@@ -361,7 +454,7 @@ extension TransactionsListScene.ViewController: UIScrollViewDelegate {
             deltaOffset <= 0 {
             
             self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                let request = TransactionsListScene.Event.DidInitiateLoadMore.Request()
+                let request = Event.DidInitiateLoadMore.Request()
                 businessLogic.onDidInitiateLoadMore(request: request)
             })
         }
@@ -389,14 +482,16 @@ extension TransactionsListScene.ViewController: UIScrollViewDelegate {
     }
 }
 
+// MARK: - FlexibleHeaderContainerContentViewControllerProtocol
+
 extension TransactionsListScene.ViewController: FlexibleHeaderContainerContentViewControllerProtocol {
+    
     var viewController: UIViewController {
         return self
     }
     
     func setTopContentInset(_ inset: CGFloat) {
-        self.tableView.contentInset.top = inset
-        self.tableView.scrollIndicatorInsets.top = inset
+        self.topContentInset = inset
     }
     
     func setMinimumTopContentInset(_ inset: CGFloat) {

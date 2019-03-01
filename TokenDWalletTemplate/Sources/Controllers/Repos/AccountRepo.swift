@@ -10,7 +10,7 @@ class AccountRepo {
         case loaded
     }
     
-    typealias Account = TokenDSDK.Account
+    typealias Account = TokenDSDK.AccountResponse
     
     // MARK: - Private properties
     
@@ -59,13 +59,13 @@ class AccountRepo {
     
     enum UpdateAccountResult {
         case succeeded
-        case failed(TokenDSDK.AccountApi.RequestAccountResult.RequestError)
+        case failed(TokenDSDK.AccountsApi.RequestAccountResult.RequestError)
     }
     public func updateAccount(
         _ completion: @escaping (UpdateAccountResult) -> Void
         ) {
         self.loadingStatus.accept(.loading)
-        self.api.accountApi.requestAccount(
+        self.api.accountsApi.requestAccount(
             accountId: self.originalAccountId,
             completion: { [weak self] (result) in
                 self?.loadingStatus.accept(.loaded)

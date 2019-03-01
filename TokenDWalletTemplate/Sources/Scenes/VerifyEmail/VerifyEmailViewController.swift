@@ -64,13 +64,11 @@ extension VerifyEmail {
             self.messageLabel.textColor = Theme.Colors.textOnContentBackgroundColor
             self.messageLabel.textAlignment = .center
             self.messageLabel.numberOfLines = 0
-            // swiftlint:disable line_length
-            self.messageLabel.text = "Verification link is sent to your email\n\nIn case email is not received press resend email button"
-            // swiftlint:enable line_length
+            self.messageLabel.text = Localized(.verification_link_is_sent)
         }
         
         private func setupResendButton() {
-            SharedViewsBuilder.configureActionButton(self.resendButton, title: "Resend Email")
+            SharedViewsBuilder.configureActionButton(self.resendButton, title: Localized(.resend_email))
             self.resendButton
                 .rx
                 .controlEvent(.touchUpInside)

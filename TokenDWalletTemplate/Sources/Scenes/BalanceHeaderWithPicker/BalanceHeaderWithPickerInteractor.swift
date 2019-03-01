@@ -6,7 +6,7 @@ protocol BalanceHeaderWithPickerBusinessLogic {
     typealias Event = BalanceHeaderWithPicker.Event
     
     func onDidInjectModules(_ request: Event.DidInjectModules.Request)
-    func onDidSelectBalance(_ request: Event.DidSelectBalance.Request)
+    func onSelectedBalanceDidChange(_ request: Event.SelectedBalanceDidChange.Request)
 }
 
 extension BalanceHeaderWithPicker {
@@ -61,8 +61,6 @@ extension BalanceHeaderWithPicker {
                 .subscribe(onNext: { [weak self] (balances) in
                     self?.sceneModel.balances = balances
                     self?.onBalancesDidChange()
-                    self?.updateSelectedBalance()
-                    self?.onDidSelectBalance()
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -71,49 +69,70 @@ extension BalanceHeaderWithPicker {
             self.rateProvider
                 .rate
                 .subscribe(onNext: { [weak self] (_) in
-                    self?.onRateDidChange()
+                    self?.updateSelectedBalance()
                 })
                 .disposed(by: self.disposeBag)
         }
         
         private func onBalancesDidChange() {
+            self.setSelectedBalanceIdIfNeeded()
+            self.updateSelectedBalance()
+            
+            let index = self.sceneModel.balances.firstIndex { (balance) -> Bool in
+                return balance.balanceId == self.sceneModel.selectedBalanceId
+            }
+            
+            var balances: [Model.Balance]
+            
+            if self.sceneModel.balances.isEmpty {
+                let amount = Model.Amount(
+                    value: 0,
+                    asset: Localized(.no_balances)
+                )
+                let balance = Model.Balance(
+                    balance: amount,
+                    balanceId: nil
+                )
+                balances = [balance]
+            } else {
+                balances = self.sceneModel.balances
+            }
+            
             let response = Event.BalancesDidChange.Response(
-                balances: self.sceneModel.balances
+                balances: balances,
+                selectedBalanceId: self.sceneModel.selectedBalanceId,
+                selectedBalanceIndex: index
             )
             self.presenter.presentBalancesDidChange(response: response)
         }
         
-        private func onRateDidChange() {
-            let rate: Model.Amount? = self.selectedBalanceRate
-            let response = Event.RateDidChange.Response(rate: rate)
-            self.presenter.presentRateDidChange(response: response)
-        }
-        
-        private func onDidSelectBalance() {
+        private func updateSelectedBalance() {
             guard let selectedBalance = self.selectedBalance() else {
                 return
             }
             
-            let rate: Model.Amount? = self.selectedBalanceRate
-            let response = Event.BalanceDidChange.Response(
-                balance: selectedBalance.balance,
-                rate: rate
+            let rateAmount = self.rateProvider.rateForAmount(
+                selectedBalance.balance.value,
+                ofAsset: selectedBalance.balance.asset,
+                destinationAsset: self.rateAsset
             )
-            self.presenter.presentBalanceDidChange(response: response)
-        }
-        
-        private func selectedBalanceId() -> String? {
-            if let selectedId = self.sceneModel.selectedBalanceId {
-                return selectedId
+            
+            var rate: Event.Model.Amount?
+            
+            if let amount = rateAmount {
+                rate = Event.Model.Amount(
+                    value: amount,
+                    asset: self.rateAsset
+                )
             }
             
-            if let firstId = self.sceneModel.balances.first?.balanceId {
-                self.sceneModel.selectedBalanceId = firstId
-                self.updateSelectedBalance()
-                return firstId
-            }
-            
-            return nil
+            let response = Event.SelectedBalanceDidChange.Response(
+                balance: selectedBalance.balance,
+                rate: rate,
+                id: selectedBalance.balanceId,
+                asset: selectedBalance.balance.asset
+            )
+            self.presenter.presentSelectedBalanceDidChange(response: response)
         }
         
         private func selectedBalance() -> Model.Balance? {
@@ -129,34 +148,38 @@ extension BalanceHeaderWithPicker {
             
             if let first = self.sceneModel.balances.first {
                 self.sceneModel.selectedBalanceId = first.balanceId
-                self.updateSelectedBalance()
                 return first
             }
-            
             return nil
         }
         
-        private func updateSelectedBalance() {
-            guard let selectedBalance = self.selectedBalance(),
-                let index = self.sceneModel.balances.index(of: selectedBalance)
-                else {
-                    return
+        private func selectedBalanceId() -> String? {
+            if let selectedId = self.sceneModel.selectedBalanceId {
+                return selectedId
             }
             
-            let response = Event.SelectedBalanceDidChange.Response(index: index)
-            self.presenter.presentSelectedBalanceDidChange(respose: response)
-            
-            if let id = selectedBalance.balanceId {
-                self.selectBalanceIfNeeded(id)
+            if let firstId = self.sceneModel.balances.first?.balanceId {
+                self.sceneModel.selectedBalanceId = firstId
+                return firstId
+            }
+            return nil
+        }
+        
+        private func setSelectedBalanceIdIfNeeded() {
+            if let selectedBalanceId = self.sceneModel.selectedBalanceId,
+                !self.sceneModel.balances.contains(where: { (balance) -> Bool in
+                    return balance.balanceId == selectedBalanceId
+                }) {
+                
+                self.setFirstBalanceSelected()
             }
         }
         
-        private func selectBalanceIfNeeded(_ id: Identifier) {
-            guard self.sceneModel.selectedBalanceId != id else {
+        private func setFirstBalanceSelected() {
+            guard let balance = self.sceneModel.balances.first else {
                 return
             }
-            self.sceneModel.selectedBalanceId = id
-            self.onDidSelectBalance()
+            self.sceneModel.selectedBalanceId = balance.balanceId
         }
     }
 }
@@ -167,7 +190,8 @@ extension BalanceHeaderWithPicker.Interactor: BalanceHeaderWithPicker.BusinessLo
         self.observeRate()
     }
     
-    func onDidSelectBalance(_ request: Event.DidSelectBalance.Request) {
-        self.selectBalanceIfNeeded(request.id)
+    func onSelectedBalanceDidChange(_ request: Event.SelectedBalanceDidChange.Request) {
+        self.sceneModel.selectedBalanceId = request.id
+        self.updateSelectedBalance()
     }
 }

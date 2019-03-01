@@ -66,13 +66,7 @@ extension RecoverySeed {
             self.messageLabel.textColor = Theme.Colors.textOnContentBackgroundColor
             self.messageLabel.textAlignment = .left
             self.messageLabel.numberOfLines = 0
-            self.messageLabel.text = """
-            Save this seed in a secure place.
-            
-            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            
-            In case you lose your password you will be able to recover access to your account by using this seed.
-            """
+            self.messageLabel.text = Localized(.save_this_seed_in_x)
         }
         
         private func setupValidateTitleLabel() {
@@ -80,13 +74,11 @@ extension RecoverySeed {
             self.validateTitleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
             self.validateTitleLabel.textAlignment = .left
             self.validateTitleLabel.numberOfLines = 0
-            self.validateTitleLabel.text = """
-            Please validate this seed in the field below to ensure that you copied it properly:
-            """
+            self.validateTitleLabel.text = Localized(.please_validate_this_seed)
         }
         
         private func setupTextFieldView() {
-            self.textFieldView.placeholder = "Enter Recovery Seed"
+            self.textFieldView.placeholder = Localized(.enter_recovery_seed)
             self.textFieldView.autocapitalizationType = .none
             self.textFieldView.autocorrectionType = .no
             
@@ -110,7 +102,7 @@ extension RecoverySeed {
         }
         
         private func setupCopyButton() {
-            SharedViewsBuilder.configureActionButton(self.copyButton, title: "Copy")
+            SharedViewsBuilder.configureActionButton(self.copyButton, title: Localized(.copy))
             self.copyButton
                 .rx
                 .controlEvent(.touchUpInside)
@@ -213,13 +205,12 @@ extension RecoverySeed {
         }
         
         private func setupLabelsWithSeed(_ seed: String) {
-            self.messageLabel.text = """
-            Save this seed in a secure place:
-            
-            \(seed)
-            
-            In case you lose your password you will be able to recover access to your account by using this seed.
-            """
+            self.messageLabel.text = Localized(
+                .save_this_seed_in,
+                replace: [
+                    .save_this_seed_in_replace_seed: seed
+                ]
+            )
         }
         
         private func updateInputSeedValid(_ valid: Model.InputSeedValidation) {
@@ -240,10 +231,8 @@ extension RecoverySeed {
         }
         
         private func showLastChanceAlert(onUnderstood: @escaping () -> Void) {
-            // swiftlint:disable line_length
-            let message = "This seed is the only way to recover your account in case of password loss. You will not be able to get it later."
-            // swiftlint:enable line_length
-            let options: [String] = [ "I understand" ]
+            let message = Localized(.this_seed_is_the_only_way)
+            let options: [String] = [ Localized(.i_understand) ]
             let onSelected: (Int) -> Void = { _ in
                 onUnderstood()
             }

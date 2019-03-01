@@ -83,6 +83,8 @@ extension DepositScene {
                 self.setSelectedAssetId(asset.id)
                 self.updateSelectedAsset()
                 return
+            } else {
+                self.assetDidChange()
             }
             
             let response = Event.SelectAsset.Response(index: index)

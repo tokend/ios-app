@@ -12,6 +12,7 @@ extension UpdatePassword {
         let keychainManager: KeychainManagerProtocol
         let userDataManager: UserDataManagerProtocol
         let networkInfoFetcher: NetworkInfoFetcher
+        let updateRequestBuilder: UpdatePasswordRequestBuilderProtocol
         
         // MARK: -
         
@@ -19,13 +20,15 @@ extension UpdatePassword {
             keyserverApi: KeyServerApi,
             keychainManager: KeychainManagerProtocol,
             userDataManager: UserDataManagerProtocol,
-            networkInfoFetcher: NetworkInfoFetcher
+            networkInfoFetcher: NetworkInfoFetcher,
+            updateRequestBuilder: UpdatePasswordRequestBuilderProtocol
             ) {
             
             self.keyserverApi = keyserverApi
             self.keychainManager = keychainManager
             self.userDataManager = userDataManager
             self.networkInfoFetcher = networkInfoFetcher
+            self.updateRequestBuilder = updateRequestBuilder
         }
         
         // MARK: - Public

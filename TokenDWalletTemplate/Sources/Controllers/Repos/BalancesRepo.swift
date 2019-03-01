@@ -56,6 +56,7 @@ class BalancesRepo {
         self.networkInfoFetcher = networkInfoFetcher
         
         self.observeRepoErrorStatus()
+        self.observeTransactionActions()
     }
     
     // MARK: - Private
@@ -91,6 +92,16 @@ class BalancesRepo {
             .subscribe(onNext: { [weak self] (_) in
                 self?.shouldInitiateLoad = true
             })
+            .disposed(by: self.disposeBag)
+    }
+    
+    private func observeTransactionActions() {
+        self.transactionSender
+            .observeTransactionActions()
+            .do(onNext: { [weak self] in
+                self?.reloadBalancesDetails()
+            })
+            .subscribe()
             .disposed(by: self.disposeBag)
     }
     

@@ -7,7 +7,9 @@ protocol TransactionsListSceneBusinessLogic {
     func onDidInitiateRefresh(request: TransactionsListScene.Event.DidInitiateRefresh.Request)
     func onDidInitiateLoadMore(request: TransactionsListScene.Event.DidInitiateLoadMore.Request)
     func onAssetDidChange(request: TransactionsListScene.Event.AssetDidChange.Request)
+    func onBalanceDidChange(request: TransactionsListScene.Event.BalanceDidChange.Request)
     func onScrollViewDidScroll(request: TransactionsListScene.Event.ScrollViewDidScroll.Request)
+    func onSendAction(request: TransactionsListScene.Event.SendAction.Request)
 }
 
 extension TransactionsListScene {
@@ -29,6 +31,7 @@ extension TransactionsListScene {
             
             self.sceneModel = Model.SceneModel(
                 asset: "",
+                balanceId: nil,
                 sections: [],
                 sectionTitleIndex: nil,
                 sectionTitleDate: nil,
@@ -106,7 +109,6 @@ extension TransactionsListScene {
                 )
                 sections.append(section)
             }
-            
             self.sceneModel.sections = sections
         }
         
@@ -127,7 +129,6 @@ extension TransactionsListScene {
         }
         
         private func onAssetDidChange() {
-            self.transactionsFetcher.setAsset(self.sceneModel.asset)
             self.updateSectionTitle(0, animated: false)
         }
         
@@ -196,14 +197,26 @@ extension TransactionsListScene.Interactor: TransactionsListScene.BusinessLogic 
     }
     
     private var isLoading: Bool {
-        return self.transactionsFetcher.loadingStatus == .loading
-            || self.transactionsFetcher.loadingMoreStatus == .loading
+        return self.transactionsFetcher.loadingStatusValue == .loading
+            || self.transactionsFetcher.loadingMoreStatusValue == .loading
     }
     
+    func onBalanceDidChange(request: TransactionsListScene.Event.BalanceDidChange.Request) {
+        self.sceneModel.balanceId = request.balanceId
+        if let balanceId = request.balanceId {
+            self.transactionsFetcher.setBalanceId(balanceId)
+        }
+    }
+
     func onScrollViewDidScroll(request: TransactionsListScene.Event.ScrollViewDidScroll.Request) {
         let indexPath = request.indexPath
         let section = indexPath.section
         
         self.updateSectionTitle(section, animated: true)
+    }
+    
+    func onSendAction(request: TransactionsListScene.Event.SendAction.Request) {
+        let response = TransactionsListScene.Event.SendAction.Response(balanceId: self.sceneModel.balanceId)
+        self.presenter.presentSendAction(response: response)
     }
 }

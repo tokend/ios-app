@@ -2,8 +2,8 @@ import Foundation
 
 extension BalanceHeaderWithPicker {
     struct Routing {
-        typealias DidSelectAsset = (String) -> Void
+        typealias DidSelectBalance = (_ balance: String?, _ asset: String) -> Void
         
-        let onDidSelectAsset: DidSelectAsset
+        let onDidSelectBalance: DidSelectBalance
     }
 }

@@ -175,7 +175,7 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel) {
         let options: [String] = viewModel.balances.map({ $0.asset })
-        self.routing?.onPresentPicker("Select Asset", options, { [weak self] (selectedIndex) in
+        self.routing?.onPresentPicker(Localized(.select_asset), options, { [weak self] (selectedIndex) in
             let balance = viewModel.balances[selectedIndex]
             let request = Event.BalanceSelected.Request(balanceId: balance.balanceId)
             self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in

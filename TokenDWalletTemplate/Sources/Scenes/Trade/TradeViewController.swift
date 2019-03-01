@@ -202,14 +202,14 @@ extension Trade {
             var items: [UIBarButtonItem] = []
             
             let createBarButtonItem = UIBarButtonItem(
-                image: #imageLiteral(resourceName: "Add icon"),
+                image: Assets.addIcon.image,
                 style: .plain,
                 target: self,
                 action: #selector(self.onCreateOffer)
             )
             items.append(createBarButtonItem)
             let pendingBarButtonItem = UIBarButtonItem(
-                image: #imageLiteral(resourceName: "Pending icon"),
+                image: Assets.pendingIcon.image,
                 style: .plain,
                 target: self,
                 action: #selector(self.showPendingTransactions)
@@ -292,7 +292,7 @@ extension Trade.ViewController: Trade.DisplayLogic {
     func displayBuyOffersDidUpdate(viewModel: Trade.Event.BuyOffersDidUpdate.ViewModel) {
         switch viewModel {
         case .empty:
-            self.orderBookCard.showEmptyBuyTable("No bids")
+            self.orderBookCard.showEmptyBuyTable(Localized(.no_bids))
             self.orderBookCard.buyCells = []
         case .cells(let cells):
             self.orderBookCard.hideEmptyBuyTable()
@@ -303,7 +303,7 @@ extension Trade.ViewController: Trade.DisplayLogic {
     func displaySellOffersDidUpdate(viewModel: Trade.Event.SellOffersDidUpdate.ViewModel) {
         switch viewModel {
         case .empty:
-            self.orderBookCard.showEmptySellTable("No asks")
+            self.orderBookCard.showEmptySellTable(Localized(.no_asks))
             self.orderBookCard.sellCells = []
         case .cells(let cells):
             self.orderBookCard.hideEmptySellTable()

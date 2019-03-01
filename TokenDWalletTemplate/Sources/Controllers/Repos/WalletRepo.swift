@@ -14,7 +14,9 @@ class WalletRepo {
     
     // MARK: - Private properties
     
-    private let api: TokenDSDK.KeyServerApi
+    private let generalApi: TokenDSDK.GeneralApi
+    private let keyServerApi: TokenDSDK.KeyServerApi
+    private let apiConfigurationModel: APIConfigurationModel
     private let userDataManager: UserDataManagerProtocol
     private let userDataProvider: UserDataProviderProtocol
     
@@ -35,12 +37,16 @@ class WalletRepo {
     // MARK: -
     
     init(
-        api: TokenDSDK.KeyServerApi,
+        generalApi: TokenDSDK.GeneralApi,
+        keyServerApi: TokenDSDK.KeyServerApi,
+        apiConfigurationModel: APIConfigurationModel,
         userDataManager: UserDataManagerProtocol,
         userDataProvider: UserDataProviderProtocol
         ) {
         
-        self.api = api
+        self.generalApi = generalApi
+        self.keyServerApi = keyServerApi
+        self.apiConfigurationModel = apiConfigurationModel
         self.userDataManager = userDataManager
         self.userDataProvider = userDataProvider
         self.wallet = BehaviorRelay(value: userDataProvider.walletData)
@@ -70,7 +76,7 @@ class WalletRepo {
         let walletKDF = self.userDataProvider.walletData.walletKDF.getWalletKDFParams()
         
         self.loadingStatus.accept(.loading)
-        self.api.requestWallet(
+        self.keyServerApi.requestWallet(
             walletId: walletId,
             walletKDF: walletKDF,
             completion: { [weak self] (result) in
@@ -82,13 +88,41 @@ class WalletRepo {
                     self?.errorStatus.accept(error)
                     
                 case .success(let walletData):
-                    guard let serializable = WalletDataSerializable.fromWalletData(walletData) else {
-                        return
-                    }
-                    
-                    _ = self?.userDataManager.saveWalletData(serializable, account: account)
-                    self?.wallet.accept(serializable)
+                    self?.requestNetworkModel(walletData: walletData, account: account)
                 }
         })
+    }
+    
+    // MARK: - Private
+    
+    private func requestNetworkModel(walletData: WalletDataModel, account: String) {
+        self.generalApi.requestNetworkInfo { [weak self] (result) in
+            switch result {
+                
+            case .failed(let error):
+                self?.errorStatus.accept(error)
+                
+            case .succeeded(let network):
+                self?.saveWalletData(walletData: walletData, account: account, network: network)
+            }
+        }
+    }
+    
+    private func saveWalletData(walletData: WalletDataModel, account: String, network: NetworkInfoModel) {
+        let accountNetwork = WalletDataSerializable.AccountNetworkModel(
+            masterAccountId: network.masterAccountId,
+            name: network.masterExchangeName,
+            passphrase: network.networkParams.passphrase,
+            rootUrl: self.apiConfigurationModel.apiEndpoint,
+            storageUrl: self.apiConfigurationModel.storageEndpoint
+        )
+        guard let serializable = WalletDataSerializable.fromWalletData(
+            walletData,
+            signedViaAuthenticator: false,
+            network: accountNetwork
+            ) else { return }
+        
+        _ = self.userDataManager.saveWalletData(serializable, account: account)
+        self.wallet.accept(serializable)
     }
 }

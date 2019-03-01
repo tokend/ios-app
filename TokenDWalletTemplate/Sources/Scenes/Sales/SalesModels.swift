@@ -63,14 +63,28 @@ extension Sales.Event {
         typealias Response = Sales.SectionsProvider.LoadingStatus
         typealias ViewModel = Sales.SectionsProvider.LoadingStatus
     }
-    
+
     enum EmptyResult {
         typealias Response = Sales.EmptyView.Model
         typealias ViewModel = Sales.EmptyView.ViewModel
     }
-    
+
     enum DidInitiateRefresh {
         struct Request {}
+    }
+    
+    enum DidInitiateLoadMore {
+        struct Request {}
+    }
+    
+    enum LoadingError {
+        struct Response {
+            let error: Swift.Error
+        }
+        
+        struct ViewModel {
+            let errorMessage: String
+        }
     }
 }
 

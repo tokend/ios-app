@@ -1,9 +1,10 @@
 import UIKit
 import TokenDSDK
 import TokenDWallet
+import DLJSONAPI
 
 protocol AppControllerProtocol: class {
-    func updateFlowControllerStack(_ configuration: APIConfigurationModel)
+    func updateFlowControllerStack(_ configuration: APIConfigurationModel, _ keychainManager: KeychainManagerProtocol)
     
     func addUserAcivity(subscriber: UserActivitySubscriber)
     func removeUserAcivity(subscriber: UserActivitySubscriber)
@@ -12,6 +13,9 @@ protocol AppControllerProtocol: class {
     func launchOptionsUrlHandled(url: URL)
     func getLastUserActivityWebLink() -> URL?
     func lastUserActivityWebLinkHandled(url: URL)
+    
+    func addOpenURL(subscriber: OpenURLSubscriber)
+    func removeOpenURL(subscriber: OpenURLSubscriber)
 }
 
 class AppController {
@@ -23,8 +27,8 @@ class AppController {
     // MARK: - Private properties
     
     let flowControllerStack: FlowControllerStack
-    let userDataManager: UserDataManagerProtocol & TFADataProviderProtocol
-    let keychainManager: KeychainManagerProtocol
+    var userDataManager: UserDataManagerProtocol & TFADataProviderProtocol
+    var keychainManager: KeychainManagerProtocol
     private lazy var reposControllerStack: ReposControllerStack = {
         return self.setupReposControllerStack()
     }()
@@ -34,6 +38,9 @@ class AppController {
     private var launchOptions: [UIApplicationLaunchOptionsKey: Any]?
     internal var lastUserActivityURL: URL?
     internal var userActivitySubscribers = [UserActivitySubscriber]()
+    internal var lastOpenURL: URL?
+    internal var openURLSubscribers = [OpenURLSubscriber]()
+    private var unauthorizedSignOutInitiated: Bool = false
     
     // MARK: -
     
@@ -46,7 +53,33 @@ class AppController {
         self.rootNavigation = rootNavigation
         self.launchOptions = launchOptions
         
-        let callbacks = ApiCallbacks(onTFARequired: { (_, _) in })
+        let callbacks = ApiCallbacks(
+            onTFARequired: { (_, _) in },
+            onUnathorizedRequest: { _ in }
+        )
+        
+        let callbacksV3 = JSONAPI.ApiCallbacks(
+            onUnathorizedRequest: { _ in }
+        )
+        
+        let network = AlamofireNetwork(
+            onUnathorizedRequest: callbacks.onUnathorizedRequest
+        )
+        
+        // TODO
+        // network.startLogger()
+        
+        let queue = DispatchQueue(label: "io.tokend.resources", qos: .background, attributes: .concurrent)
+        let resourcePool = ResourcePool(
+            queue: queue
+        )
+        let networkV3 = JSONAPI.AlamofireNetwork(
+            resourcePool: resourcePool,
+            onUnathorizedRequest: callbacksV3.onUnathorizedRequest
+        )
+        
+        // TODO
+        // networkV3.startLogger()
         
         self.keychainManager = KeychainManager()
         self.userDataManager = UserDataManager(keychainManager: self.keychainManager)
@@ -56,8 +89,10 @@ class AppController {
         self.flowControllerStack = FlowControllerStack(
             apiConfigurationModel: apiConfigurationModel,
             tfaDataProvider: self.userDataManager,
-            userAgent: AppController.getUserAgent(),
+            network: network,
+            networkV3: networkV3,
             apiCallbacks: callbacks,
+            apiCallbacksV3: callbacksV3,
             keyDataProvider: keyDataProvider,
             settingsManager: SettingsManager()
         )
@@ -92,7 +127,18 @@ class AppController {
     // MARK: - Private
     
     private func runLaunchFlow() {
-        self.updateFlowControllerStack(self.flowControllerStack.apiConfigurationModel)
+        if let mainAccount = self.userDataManager.getMainAccount(),
+            let walletData = self.userDataManager.getWalletData(account: mainAccount) {
+            
+            let apiConfigurationModel = APIConfigurationModel(
+                storageEndpoint: walletData.network.storageUrl,
+                apiEndpoint: walletData.network.rootUrl,
+                termsAddress: nil,
+                webClient: nil,
+                downloadUrl: nil
+            )
+            self.updateFlowControllerStack(apiConfigurationModel, self.keychainManager)
+        }
         
         let launchFlowController = LaunchFlowController(
             appController: self,
@@ -115,7 +161,7 @@ class AppController {
             account: account,
             keychainManager: self.keychainManager
             ) else {
-                self.showErrorAlertAndSignout(message: "Unable to read keychain data")
+                self.showErrorAlertAndSignout(message: Localized(.unable_to_read_keychain_data))
                 return
         }
         
@@ -125,7 +171,7 @@ class AppController {
                 expectedVersion: .accountIdEd25519
             )
             else {
-                self.showErrorAlertAndSignout(message: "Unable to read wallet data")
+                self.showErrorAlertAndSignout(message: Localized(.unable_to_read_wallet_data))
                 return
         }
         
@@ -134,7 +180,7 @@ class AppController {
             accountId: accountId,
             userDataManager: self.userDataManager
             ) else {
-                self.showErrorAlertAndSignout(message: "Unable to read user data")
+                self.showErrorAlertAndSignout(message: Localized(.unable_to_read_user_data))
                 return
         }
         
@@ -163,7 +209,8 @@ class AppController {
             networkInfoRepo: self.flowControllerStack.networkInfoFetcher,
             userDataProvider: userDataProvider,
             keychainDataProvider: keychainDataProvider,
-            originalAccountId: walletData.accountId
+            originalAccountId: walletData.accountId,
+            apiConfigurationModel: self.flowControllerStack.apiConfigurationModel
         )
         let managersController = ManagersController(
             accountRepo: accountRepo,
@@ -195,6 +242,7 @@ class AppController {
     private func setupReposControllerStack() -> ReposControllerStack {
         return ReposControllerStack(
             api: self.flowControllerStack.api,
+            apiV3: self.flowControllerStack.apiV3,
             keyServerApi: self.flowControllerStack.keyServerApi,
             storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
@@ -208,20 +256,20 @@ class AppController {
     
     private func initiateSignOut() {
         let alert = UIAlertController(
-            title: "Sign Out",
-            message: "Are you sure you want to Sign Out and Erase All Data from device?",
+            title: Localized(.sign_out),
+            message: Localized(.are_you_sure_you_want_to_sign_out),
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "Sign Out and Erase",
+            title: Localized(.sign_out_and_erase),
             style: .default,
             handler: { [weak self] _ in
                 self?.performSignOut()
         }))
         
         alert.addAction(UIAlertAction(
-            title: "Cancel",
+            title: Localized(.cancel),
             style: .cancel,
             handler: nil
         ))
@@ -241,80 +289,96 @@ class AppController {
         })
     }
     
-    private func showErrorAlertAndSignout(message: String) {
+    private func showErrorAlertAndSignout(
+        message: String,
+        completion: (() -> Void)? = nil
+        ) {
+        
         let alert = UIAlertController(
-            title: "Fatal Error",
+            title: Localized(.fatal_error),
             message: message,
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "Cancel",
+            title: Localized(.cancel),
             style: .cancel,
             handler: { [weak self] _ in
                 self?.performSignOut(completion: { [weak self] in
                     self?.rootNavigation.hideBackgroundCover()
+                    completion?()
                 })
         }))
         
         self.rootNavigation.showBackgroundCover()
         self.rootNavigation.presentAlert(alert, animated: true, completion: nil)
     }
-    
-    // MARK: - System Info
-    
-    static private func getUserAgent() -> String {
-        let appPrefix = "TOKEND_WALLET"
-        let bundleName: String = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? ""
-        let version: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        let deviceName = UIDevice.current.name
-        let platform = self.platform()
-        let systemName = UIDevice.current.systemName
-        let systemVersion = UIDevice.current.systemVersion
-        
-        let components = [
-            appPrefix,
-            bundleName,
-            version,
-            deviceName,
-            platform
-        ]
-        let componentsJoined = components.joined(separator: "|")
-        
-        let userAgent = [
-            componentsJoined,
-            systemName,
-            systemVersion
-            ].joined(separator: " ")
-        
-        return userAgent
-    }
-    
-    static private func platform() -> String {
-        var sysinfo = utsname()
-        uname(&sysinfo) // ignore return value
-        return String(
-            bytes: Data(
-                bytes: &sysinfo.machine,
-                count: Int(_SYS_NAMELEN)
-            ),
-            encoding: .ascii)!.trimmingCharacters(in: .controlCharacters)
-    }
 }
 
 extension AppController: AppControllerProtocol {
-    func updateFlowControllerStack(_ configuration: APIConfigurationModel) {
-        let apiCallbacks = ApiCallbacks(onTFARequired: { [weak self] (input, cancelBlock) in
-            self?.onTFARequired(tfaInput: input, cancel: cancelBlock)
+    
+    func updateFlowControllerStack(_ configuration: APIConfigurationModel, _ keychainManager: KeychainManagerProtocol) {
+        self.keychainManager = keychainManager
+        self.userDataManager = UserDataManager(keychainManager: keychainManager)
+        
+        let onUnauthoziedRequest: (String) -> Void = { [weak self] (message) in
+            print(Localized(
+                .unathorized_request,
+                replace: [
+                    .unathorized_request_replace_message: message
+                ]
+                )
+            )
+            DispatchQueue.main.async(execute: { [weak self] in
+                self?.unauthorizedSignOutInitiated = true
+                self?.showErrorAlertAndSignout(
+                    message: Localized(.access_revoked_sign_in_required),
+                    completion: { [weak self] in
+                        self?.unauthorizedSignOutInitiated = false
+                })
+            })
+        }
+        
+        let apiCallbacks = ApiCallbacks(
+            onTFARequired: { [weak self] (input, cancelBlock) in
+                self?.onTFARequired(tfaInput: input, cancel: cancelBlock)
+            },
+            onUnathorizedRequest: { (error) in
+                onUnauthoziedRequest(error.localizedDescription)      
         })
+        
+        let apiCallbacksV3 = JSONAPI.ApiCallbacks(
+            onUnathorizedRequest: { (error) in
+                onUnauthoziedRequest(error.localizedDescription)
+        })
+        
+        let network = AlamofireNetwork(
+            onUnathorizedRequest: apiCallbacks.onUnathorizedRequest
+        )
+        
+        let queue = DispatchQueue(
+            label: "io.tokend.resources",
+            qos: .background,
+            attributes: .concurrent
+        )
+        
+        let resourcePool = ResourcePool(
+            queue: queue
+        )
+        let networkV3 = JSONAPI.AlamofireNetwork(
+            resourcePool: resourcePool,
+            onUnathorizedRequest: apiCallbacksV3.onUnathorizedRequest
+        )
         
         let keyDataProvider = RequestSignKeyDataProvider(keychainManager: self.keychainManager)
         
         self.flowControllerStack.updateWith(
             apiConfigurationModel: configuration,
             tfaDataProvider: self.userDataManager,
-            userAgent: AppController.getUserAgent(),
+            network: network,
+            networkV3: networkV3,
             apiCallbacks: apiCallbacks,
+            apiCallbacksV3: apiCallbacksV3,
             keyDataProvider: keyDataProvider,
             settingsManager: SettingsManager()
         )

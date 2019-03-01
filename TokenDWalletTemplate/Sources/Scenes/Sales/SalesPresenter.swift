@@ -37,11 +37,16 @@ extension Sales {
                 )
                 
                 let days = components.day ?? 0
-                let startsInString =  "\(days) days"
+                let startsInString = Localized(
+                    .days_days,
+                    replace: [
+                        .days_days_replace_days: days
+                    ]
+                )
                 
                 isUpcomming = true
                 
-                daysRemaining = ["Starts in ", startsInString].joined()
+                daysRemaining = [Localized(.starts_in), startsInString].joined()
             } else {
                 isUpcomming = false
                 
@@ -53,10 +58,15 @@ extension Sales {
                 
                 if let days = components.day,
                     days >= 0 {
-                    let daysRemainingString =  "\(days) days"
-                    daysRemaining = [daysRemainingString, " left"].joined()
+                    let daysRemainingString = Localized(
+                        .days_days,
+                        replace: [
+                            .days_days_replace_days: days
+                        ]
+                    )
+                    daysRemaining = [daysRemainingString, Localized(.left_lowercased)].joined()
                 } else {
-                    daysRemaining = "ended"
+                    daysRemaining = Localized(.ended)
                 }
             }
             
@@ -69,16 +79,32 @@ extension Sales.Presenter: Sales.PresentationLogic {
     func presentSectionsUpdated(response: Sales.Event.SectionsUpdated.Response) {
         let sections = response.sections.map { (sectioModel) -> Sales.Model.SectionViewModel in
             return Sales.Model.SectionViewModel(cells: sectioModel.sales.map({ (sale) -> CellViewAnyModel in
-                let saleName = "\(sale.name) (\(sale.asset))"
+                let name = sale.name
+                let asset = sale.asset
+                let investorsCount = sale.investorsCount
+                
+                let saleName = "\(name) (\(asset))"
                 let investedAmountFormatted = self.investedAmountFormatter.formatAmount(
                     sale.investmentAmount,
                     currency: sale.investmentAsset
                 )
-                let investedAmount = "\(investedAmountFormatted) invested"
+                let investedAmount = Localized(
+                    .invested,
+                    replace: [
+                        .invested_replace_amount: investedAmountFormatted
+                    ]
+                )
+
                 let investedPercentage = sale.investmentPercentage
                 let investedPercentageRounded = Int(roundf(investedPercentage * 100))
                 let investedPercentageText = "\(investedPercentageRounded)%"
-                let investorsText = "\(sale.investorsCount) investors"
+                let investorsText = Localized(
+                    .investors,
+                    replace: [
+                        .investors_replace_count: investorsCount
+                    ]
+                )
+
                 let timeText = self.getTimeText(sale: sale)
                 
                 return Sales.SaleListCell.ViewModel(
@@ -116,5 +142,4 @@ extension Sales.Presenter: Sales.PresentationLogic {
             displayLogic.displayEmptyResult(viewModel: viewModel)
         }
     }
-
 }

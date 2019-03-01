@@ -32,33 +32,7 @@ extension ConfirmationScene.ConfirmationSectionsProviderDummy: ConfirmationScene
     }
     
     func loadConfirmationSections() {
-        let textCell = ConfirmationScene.Model.CellModel(
-            title: "Text test",
-            cellType: .text(value: "Some text"),
-            identifier: "textTest"
-        )
-        let textSection = ConfirmationScene.Model.SectionModel(cells: [textCell])
         
-        let boolCell = ConfirmationScene.Model.CellModel(
-            title: "Bool test",
-            cellType: .boolSwitch(value: true),
-            identifier: "boolTest"
-        )
-        let boolSection = ConfirmationScene.Model.SectionModel(cells: [boolCell])
-        
-        let textEditCell = ConfirmationScene.Model.CellModel(
-            title: "Text Edit test",
-            cellType: .textField(value: nil, placeholder: "Enter text", maxCharacters: 100),
-            identifier: "textEditTest"
-        )
-        let textEditSection = ConfirmationScene.Model.SectionModel(cells: [textEditCell])
-        
-        self.sectionsRelay.accept([
-            textSection,
-            boolSection,
-            textEditSection
-            ]
-        )
     }
     
     func handleTextEdit(

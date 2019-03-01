@@ -5,6 +5,7 @@ extension SendPayment {
         let onShowProgress: () -> Void
         let onHideProgress: () -> Void
         let onShowError: (_ erroMessage: String) -> Void
+        let onSelectContactEmail: (_ completion: @escaping SelectContactEmailCompletion) -> Void
         let onPresentQRCodeReader: (_ completion: @escaping QRCodeReaderCompletion) -> Void
         let onPresentPicker: (
         _ title: String,

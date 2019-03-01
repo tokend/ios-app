@@ -13,14 +13,17 @@ extension TokenDetailsScene {
         
         private let presenterDispatch: PresenterDispatch
         private let amountFormatter: AmountFormatterProtocol
+        private let tokenColoringProvider: TokenColoringProvider
         
         init(
             presenterDispatch: PresenterDispatch,
-            amountFormatter: AmountFormatterProtocol
+            amountFormatter: AmountFormatterProtocol,
+            tokenColoringProvider: TokenColoringProvider
             ) {
             
             self.presenterDispatch = presenterDispatch
             self.amountFormatter = amountFormatter
+            self.tokenColoringProvider = tokenColoringProvider
         }
     }
 }
@@ -48,20 +51,26 @@ extension TokenDetailsScene.Presenter: TokenDetailsScene.PresentationLogic {
                 return "View history"
             }
         }()
+        
         let actionButtonLoading: Bool = {
             if case .creating = token.balanceState {
                 return true
             }
             return false
         }()
+        
+        let codeColor = self.tokenColoringProvider.coloringForCode(token.code)
+        
         let mainCardModel = ExploreTokensTableViewCell.Model(
             identifier: token.identifier,
             iconUrl: token.iconUrl,
+            codeColor: codeColor,
             title: token.code,
             description: token.name,
             actionButtonTitle: actionButtonTitle,
             actionButtonLoading: actionButtonLoading
         )
+        
         let mainCardSection = TokenDetailsScene.Model.TableSection(
             title: nil,
             cells: [mainCardModel],

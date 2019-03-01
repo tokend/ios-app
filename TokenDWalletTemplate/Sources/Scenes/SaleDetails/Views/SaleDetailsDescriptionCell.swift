@@ -22,7 +22,7 @@ extension SaleDetails {
             
             let timeText: String
             
-            let identifier: String
+            let identifier: CellIdentifier
             
             func setup(cell: DescriptionCell.View) {
                 cell.imageURL = self.imageUrl
@@ -111,7 +111,7 @@ extension SaleDetails {
                 set { self.timeLabel.text = newValue }
             }
             
-            public var identifier: CellIdentifier = ""
+            public var identifier: CellIdentifier = .empty
             
             // MARK: - Private properties
             
@@ -251,7 +251,7 @@ extension SaleDetails {
             private func setupMoreInfoButton() {
                 self.moreInfoButton.setTitleColor(Theme.Colors.actionButtonColor, for: .normal)
                 self.moreInfoButton.titleLabel?.font = Theme.Fonts.actionButtonFont
-                self.moreInfoButton.setTitle("MORE INFO", for: .normal)
+                self.moreInfoButton.setTitle(Localized(.more_info), for: .normal)
                 self.moreInfoButton.contentEdgeInsets = UIEdgeInsets(
                     top: 0.0, left: self.sideInset, bottom: 0.0, right: 0.0
                 )
@@ -261,7 +261,7 @@ extension SaleDetails {
                     .controlEvent(.touchUpInside)
                     .asDriver()
                     .drive(onNext: { [weak self] in
-                        self?.onDidSelectMoreInfoButton?("detailsCell")
+                        self?.onDidSelectMoreInfoButton?(.details)
                     })
                     .disposed(by: self.disposeBag)
             }

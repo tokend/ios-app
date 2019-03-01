@@ -5,7 +5,7 @@ extension Trade {
     class OffersFetcher {
         
         private let orderBookApi: TokenDSDK.OrderBookApi
-        private var cancellableTokens: [CancellableToken] = []
+        private var cancelables: [Cancelable] = []
         
         init(
             orderBookApi: TokenDSDK.OrderBookApi
@@ -46,11 +46,11 @@ extension Trade.OffersFetcher: Trade.OffersFetcherProtocol {
                 }
         })
         
-        self.cancellableTokens.append(token)
+        self.cancelables.append(token)
     }
     
     func cancelRequests() {
-        for token in self.cancellableTokens {
+        for token in self.cancelables {
             token.cancel()
         }
     }

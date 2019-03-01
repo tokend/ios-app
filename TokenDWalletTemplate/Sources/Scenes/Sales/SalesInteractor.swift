@@ -5,6 +5,7 @@ import RxCocoa
 protocol SalesBusinessLogic {
     func onViewDidLoad(request: Sales.Event.ViewDidLoad.Request)
     func onDidInitiateRefresh(request: Sales.Event.DidInitiateRefresh.Request)
+    func onDidInitiateLoadMore(request: Sales.Event.DidInitiateLoadMore.Request)
 }
 
 extension Sales {
@@ -40,6 +41,7 @@ extension Sales {
 }
 
 extension Sales.Interactor: Sales.BusinessLogic {
+    
     func onViewDidLoad(request: Sales.Event.ViewDidLoad.Request) {
         self.sectionsProvider
             .observeLoadingStatus()
@@ -49,10 +51,17 @@ extension Sales.Interactor: Sales.BusinessLogic {
             .disposed(by: self.disposeBag)
         
         self.sectionsProvider
+            .observeLoadingMoreStatus()
+            .subscribe(onNext: { [weak self] (status) in
+                self?.presenter.presentLoadingStatusDidChange(response: status)
+            })
+            .disposed(by: self.disposeBag)
+        
+        self.sectionsProvider
             .observeSections()
             .subscribe(onNext: { [weak self] (sections) in
                 if self?.getSalesCount(sections: sections) == 0 {
-                    self?.showEmptyView(message: "No open funds")
+                    self?.showEmptyView(message: Localized(.no_open_funds))
                 } else {
                     let response = Sales.Event.SectionsUpdated.Response(sections: sections)
                     self?.presenter.presentSectionsUpdated(response: response)
@@ -70,5 +79,9 @@ extension Sales.Interactor: Sales.BusinessLogic {
     
     func onDidInitiateRefresh(request: Sales.Event.DidInitiateRefresh.Request) {
         self.sectionsProvider.refreshSales()
+    }
+    
+    func onDidInitiateLoadMore(request: Sales.Event.DidInitiateLoadMore.Request) {
+        self.sectionsProvider.loadMoreSales()
     }
 }

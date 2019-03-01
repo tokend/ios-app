@@ -15,7 +15,6 @@ extension ConfirmationScene {
         private let amountFormatter: AmountFormatterProtocol
         private let percentFormatter: PercentFormatterProtocol
         private let amountConverter: AmountConverterProtocol
-        private let amountPrecision: Int
         private let sectionsRelay: BehaviorRelay<[ConfirmationScene.Model.SectionModel]> = BehaviorRelay(value: [])
         
         // MARK: -
@@ -27,16 +26,15 @@ extension ConfirmationScene {
             amountFormatter: AmountFormatterProtocol,
             userDataProvider: UserDataProviderProtocol,
             amountConverter: AmountConverterProtocol,
-            percentFormatter: PercentFormatterProtocol,
-            amountPrecision: Int
+            percentFormatter: PercentFormatterProtocol
             ) {
+            
             self.saleInvestModel = saleInvestModel
             self.transactionSender = transactionSender
             self.networkInfoFetcher = networkInfoFetcher
             self.userDataProvider = userDataProvider
             self.amountFormatter = amountFormatter
             self.amountConverter = amountConverter
-            self.amountPrecision = amountPrecision
             self.percentFormatter = percentFormatter
         }
         
@@ -51,7 +49,7 @@ extension ConfirmationScene {
                 base32EncodedString: self.saleInvestModel.baseBalance,
                 expectedVersion: .balanceIdEd25519
                 ) else {
-                    completion(.failed(.failedToDecodeBalanceId("baseBalance")))
+                    completion(.failed(.failedToDecodeBalanceId(.baseBalance)))
                     return
             }
             
@@ -59,23 +57,23 @@ extension ConfirmationScene {
                 base32EncodedString: self.saleInvestModel.quoteBalance,
                 expectedVersion: .balanceIdEd25519
                 ) else {
-                    completion(.failed(.failedToDecodeBalanceId("quoteBalance")))
+                    completion(.failed(.failedToDecodeBalanceId(.quoteBalance)))
                     return
             }
             
             let amount = self.amountConverter.convertDecimalToInt64(
                 value: self.saleInvestModel.baseAmount,
-                precision: self.amountPrecision
+                precision: networkInfo.precision
             )
             
             let price = self.amountConverter.convertDecimalToInt64(
                 value: self.saleInvestModel.price,
-                precision: self.amountPrecision
+                precision: networkInfo.precision
             )
             
             let fee = self.amountConverter.convertDecimalToInt64(
                 value: self.saleInvestModel.fee,
-                precision: self.amountPrecision
+                precision: networkInfo.precision
             )
             
             let manageOfferOp = ManageOfferOp(
@@ -150,9 +148,10 @@ extension ConfirmationScene.SaleInvestConfirmationProvider: ConfirmationScene.Se
     func loadConfirmationSections() {
         var sections: [ConfirmationScene.Model.SectionModel] = []
         let tokenCell = ConfirmationScene.Model.CellModel(
-            title: "Token",
+            title: Localized(.token),
             cellType: .text(value: self.saleInvestModel.baseAsset),
-            identifier: "tokenCell")
+            identifier: .token
+        )
         
         let tokenSection = ConfirmationScene.Model.SectionModel(
             cells: [tokenCell]
@@ -165,9 +164,9 @@ extension ConfirmationScene.SaleInvestConfirmationProvider: ConfirmationScene.Se
             ) + " " + self.saleInvestModel.quoteAsset
         
         let amountCell = ConfirmationScene.Model.CellModel(
-            title: "Investment",
+            title: Localized(.investment),
             cellType: .text(value: amountCellText),
-            identifier: "investmentCell"
+            identifier: .investment
         )
         
         let feeCellText = self.amountFormatter.assetAmountToString(
@@ -175,9 +174,9 @@ extension ConfirmationScene.SaleInvestConfirmationProvider: ConfirmationScene.Se
             ) + " " + self.saleInvestModel.quoteAsset
         
         let feeCell = ConfirmationScene.Model.CellModel(
-            title: "Fee",
+            title: Localized(.fee),
             cellType: .text(value: feeCellText),
-            identifier: "feeCell"
+            identifier: .fee
         )
         
         let toPayCellAmount = self.saleInvestModel.fee + self.saleInvestModel.quoteAmount
@@ -185,9 +184,9 @@ extension ConfirmationScene.SaleInvestConfirmationProvider: ConfirmationScene.Se
         let toPayCellText = toPayCellAmountFormatted + " " + self.saleInvestModel.quoteAsset
         
         let toPayCell = ConfirmationScene.Model.CellModel(
-            title: "To pay",
+            title: Localized(.to_pay),
             cellType: .text(value: toPayCellText),
-            identifier: "toPayCell"
+            identifier: .toPay
         )
         
         let amountSection = ConfirmationScene.Model.SectionModel(cells: [amountCell, feeCell, toPayCell])
@@ -198,21 +197,29 @@ extension ConfirmationScene.SaleInvestConfirmationProvider: ConfirmationScene.Se
             let baseAsset = self.saleInvestModel.baseAsset
             let quoteAsset = self.saleInvestModel.quoteAsset
             let saleInvestPriceAmount = self.amountFormatter.assetAmountToString(self.saleInvestModel.price)
-            let priceCellText = "1 \(baseAsset) for \(saleInvestPriceAmount) \(quoteAsset)"
+            let pricecelltext = Localized(
+                .one_for,
+                replace: [
+                    .one_for_replace_base_asset: baseAsset,
+                    .one_for_replace_quote_asset: quoteAsset,
+                    .one_for_replace_sale_invest_price_amount: saleInvestPriceAmount
+                    
+                ]
+            )
             
             let priceCell = ConfirmationScene.Model.CellModel(
-                title: "Price",
-                cellType: .text(value: priceCellText),
-                identifier: "priceCell"
+                title: Localized(.price),
+                cellType: .text(value: pricecelltext),
+                identifier: .price
             )
             
             let saleInvestBaseAmount = self.amountFormatter.assetAmountToString(self.saleInvestModel.baseAmount)
             let toReceiveText = "\(saleInvestBaseAmount) \(baseAsset)"
             
             let toReceiveCell = ConfirmationScene.Model.CellModel(
-                title: "To receive",
+                title: Localized(.to_receive),
                 cellType: .text(value: toReceiveText),
-                identifier: "toReceiveCell"
+                identifier: .toReceive
             )
             
             let receiveSection = ConfirmationScene.Model.SectionModel(

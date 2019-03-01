@@ -10,7 +10,6 @@ extension TransactionDetails {
         private let pendingOffersRepo: PendingOffersRepo
         private let transactionSender: TransactionSender
         private let amountConverter: AmountConverterProtocol
-        private let amountPrecision: Int
         private let networkInfoFetcher: NetworkInfoFetcher
         private let userDataProvider: UserDataProviderProtocol
         private let identifier: UInt64
@@ -19,7 +18,6 @@ extension TransactionDetails {
             pendingOffersRepo: PendingOffersRepo,
             transactionSender: TransactionSender,
             amountConverter: AmountConverterProtocol,
-            amountPrecision: Int,
             networkInfoFetcher: NetworkInfoFetcher,
             userDataProvider: UserDataProviderProtocol,
             identifier: UInt64
@@ -28,7 +26,6 @@ extension TransactionDetails {
             self.pendingOffersRepo = pendingOffersRepo
             self.transactionSender = transactionSender
             self.amountConverter = amountConverter
-            self.amountPrecision = amountPrecision
             self.networkInfoFetcher = networkInfoFetcher
             self.userDataProvider = userDataProvider
             self.identifier = identifier
@@ -42,9 +39,9 @@ extension TransactionDetails {
             let amountFormatter = TransactionDetails.AmountFormatter()
             
             let stateCell = TransactionDetails.Model.CellModel(
-                title: "State",
-                value: "Investment",
-                identifier: "stateCell"
+                title: Localized(.state),
+                value: Localized(.investment),
+                identifier: .state
             )
             let stateSection = TransactionDetails.Model.SectionModel(
                 title: "",
@@ -57,27 +54,27 @@ extension TransactionDetails {
                 asset: offer.quoteAssetCode
             )
             let toPayCell = TransactionDetails.Model.CellModel(
-                title: "Paid",
+                title: Localized(.paid),
                 value: amountFormatter.formatAmount(toPay),
-                identifier: "toPayCell"
+                identifier: .toPay
             )
             let toPayAmount: Model.Amount = Model.Amount(
                 value: offer.quoteAmount,
                 asset: offer.quoteAssetCode
             )
             let toPayAmountCell = TransactionDetails.Model.CellModel(
-                title: "Amount",
+                title: Localized(.amount),
                 value: amountFormatter.formatAmount(toPayAmount),
-                identifier: "toPayAmountCell"
+                identifier: .toPayAmount
             )
             let toPayFee: Model.Amount = Model.Amount(
                 value: offer.fee,
                 asset: offer.quoteAssetCode
             )
             let toPayFeeCell = TransactionDetails.Model.CellModel(
-                title: "Fee",
+                title: Localized(.fee),
                 value: amountFormatter.formatAmount(toPayFee),
-                identifier: "toPayFeeCell"
+                identifier: .toPayFee
             )
             let toPaySection = TransactionDetails.Model.SectionModel(
                 title: "",
@@ -90,9 +87,9 @@ extension TransactionDetails {
                 asset: offer.baseAssetCode
             )
             let toReceiveCell = TransactionDetails.Model.CellModel(
-                title: "Received",
+                title: Localized(.received),
                 value: amountFormatter.formatAmount(toReceive),
-                identifier: "toReceiveCell"
+                identifier: .toReceive
             )
             let toReceivePrice: Model.Amount = Model.Amount(
                 value: offer.quoteAmount / offer.baseAmount,
@@ -104,11 +101,17 @@ extension TransactionDetails {
             )
             let toReceiveBaseAmount = amountFormatter.formatAmount(toReceiveBase)
             let toReceivePriceAmount = amountFormatter.formatAmount(toReceivePrice)
-            let toReceivePriceCellValue = "\(toReceiveBaseAmount) for \(toReceivePriceAmount)"
+            let toReceivePriceCellValue = Localized(
+                .base_for_price,
+                replace: [
+                    .base_for_price_replace_base_amount: toReceiveBaseAmount,
+                    .base_for_price_replace_price_amount: toReceivePriceAmount
+                ]
+            )
             let toReceivePriceCell = TransactionDetails.Model.CellModel(
-                title: "Price",
+                title: Localized(.price),
                 value: toReceivePriceCellValue,
-                identifier: "toReceivePriceCell"
+                identifier: .toReceivePrice
             )
             let toReceivedSection = TransactionDetails.Model.SectionModel(
                 title: "",
@@ -117,9 +120,9 @@ extension TransactionDetails {
             )
             
             let dateCell = TransactionDetails.Model.CellModel(
-                title: "Date",
+                title: Localized(.date),
                 value: dateFormatter.dateToString(date: offer.createdAt),
-                identifier: "dateCell"
+                identifier: .date
             )
             let dateSection = TransactionDetails.Model.SectionModel(
                 title: "",
@@ -158,7 +161,7 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
         var title: String {
             switch self {
             case .cancel:
-                return "Cancel"
+                return Localized(.cancel)
             }
         }
     }
@@ -238,7 +241,7 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
             base32EncodedString: offer.baseBalanceId,
             expectedVersion: .balanceIdEd25519
             ) else {
-                onError("Failed to decode base balance id")
+                onError(Localized(.failed_to_decode_base_balance_id))
                 onHideLoading()
                 return
         }
@@ -247,7 +250,7 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
             base32EncodedString: offer.quoteBalanceId,
             expectedVersion: .balanceIdEd25519
             ) else {
-                onError("Failed to decode quote balance id")
+                onError(Localized(.failed_to_decode_quote_balance_id))
                 onHideLoading()
                 return
         }
@@ -257,8 +260,8 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
             quoteBalance: quoteBalanceId,
             isBuy: offer.isBuy,
             amount: 0,
-            price: self.amountConverter.convertDecimalToInt64(value: offer.price, precision: self.amountPrecision),
-            fee: self.amountConverter.convertDecimalToInt64(value: offer.fee, precision: self.amountPrecision),
+            price: self.amountConverter.convertDecimalToInt64(value: offer.price, precision: networkInfo.precision),
+            fee: self.amountConverter.convertDecimalToInt64(value: offer.fee, precision: networkInfo.precision),
             offerID: offer.offerId,
             orderBookID: Uint64(offer.orderBookId),
             ext: .emptyVersion()

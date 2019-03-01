@@ -4,9 +4,38 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
     
-    private let navigationController: NavigationControllerProtocol = NavigationController()
+    private let navigationController: NavigationControllerProtocol
+    private let selectedBalanceId: String?
     
     private var onShowWalletScreen: (() -> Void)?
+    
+    // MARK: -
+    
+    init(
+        navigationController: NavigationControllerProtocol,
+        appController: AppControllerProtocol,
+        flowControllerStack: FlowControllerStack,
+        reposController: ReposController,
+        managersController: ManagersController,
+        userDataProvider: UserDataProviderProtocol,
+        keychainDataProvider: KeychainDataProviderProtocol,
+        rootNavigation: RootNavigationProtocol,
+        selectedBalanceId: String?
+        ) {
+        
+        self.navigationController = navigationController
+        self.selectedBalanceId = selectedBalanceId
+        
+        super.init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation
+        )
+    }
     
     // MARK: - Public
     
@@ -24,17 +53,10 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     private func startFromSendScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let viewController = self.setupSendScreen()
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        
-        viewController.navigationItem.title = "Send"
-        
-        self.navigationController.setViewControllers([viewController], animated: false)
+        viewController.navigationItem.title = Localized(.send)
         
         if let showRoot = showRootScreen {
-            showRoot(self.navigationController.getViewController())
+            showRoot(viewController)
         } else {
             self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
         }
@@ -72,17 +94,29 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onShowError: { [weak self] (errorMessage) in
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)
             },
+            onSelectContactEmail: { [weak self] (completion) in
+                self?.presentContactEmailPicker(
+                    completion: completion,
+                    presentViewController: { [weak self] (vc, animated, completion) in
+                        self?.navigationController.present(vc, animated: animated, completion: completion)
+                })
+            },
             onPresentQRCodeReader: { [weak self] (completion) in
                 self?.presentQRCodeReader(completion: completion)
             },
             onPresentPicker: { [weak self] (title, options, onSelected) in
-                self?.navigationController.showDialog(
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
                     title: title,
                     message: nil,
                     style: .actionSheet,
                     options: options,
                     onSelected: onSelected,
-                    onCanceled: nil
+                    onCanceled: nil,
+                    presentViewController: present
                 )
             },
             onSendAction: { [weak self] (sendModel) in
@@ -94,6 +128,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         SendPayment.Configurator.configure(
             viewController: vc,
             senderAccountId: self.userDataProvider.walletData.accountId,
+            selectedBalanceId: self.selectedBalanceId,
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
             recipientAddressResolver: recipientAddressResolver,
@@ -142,7 +177,8 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             recipientNickname: sendPaymentModel.recipientNickname,
             recipientAccountId: sendPaymentModel.recipientAccountId,
             senderFee: senderFee,
-            recipientFee: recipientFee
+            recipientFee: recipientFee,
+            reference: sendPaymentModel.reference
         )
         
         let sectionsProvider = ConfirmationScene.SendPaymentConfirmationSectionsProvider(
@@ -152,8 +188,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             amountFormatter: amountFormatter,
             userDataProvider: self.userDataProvider,
             amountConverter: amountConverter,
-            percentFormatter: percentFormatter,
-            amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision
+            percentFormatter: percentFormatter
         )
         
         let routing = ConfirmationScene.Routing(
@@ -176,7 +211,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Confirmation"
+        vc.navigationItem.title = Localized(.confirmation)
         
         return vc
     }

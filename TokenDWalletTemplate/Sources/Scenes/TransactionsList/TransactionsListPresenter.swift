@@ -5,6 +5,7 @@ protocol TransactionsListScenePresentationLogic {
     func presentTransactionsDidUpdate(response: TransactionsListScene.Event.TransactionsDidUpdate.Response)
     func presentLoadingStatusDidChange(response: TransactionsListScene.Event.LoadingStatusDidChange.Response)
     func presentHeaderTitleDidChange(response: TransactionsListScene.Event.HeaderTitleDidChange.Response)
+    func presentSendAction(response: TransactionsListScene.Event.SendAction.Response)
 }
 
 extension TransactionsListScene {
@@ -46,56 +47,62 @@ extension TransactionsListScene {
                         let title: String
                         let icon: UIImage
                         
-                        switch transaction.type {
-                        case .payment(let sent):
-                            title = sent ? "Sent" : "Received"
-                            icon = sent ? #imageLiteral(resourceName: "Outcome icon") : #imageLiteral(resourceName: "Income icon")
+                        switch transaction.amountEffect {
                             
-                        case .createIssuance:
-                            title = "Deposit"
-                            icon = #imageLiteral(resourceName: "Income icon")
+                        case .charged:
+                            title = Localized(.charged)
+                            icon = Assets.outcomeIcon.image
+                        case .charged_from_locked:
+                            title = Localized(.charged_from_lock)
+                            icon = Assets.outcomeIcon.image
+                        case .funded:
+                            title = Localized(.funded)
+                            icon = Assets.incomeIcon.image
+                        case .issued:
+                            title = Localized(.issued)
+                            icon = Assets.outcomeIcon.image
+                        case .locked:
+                            title = Localized(.locked)
+                            icon = Assets.lock.image
+                        case .matched:
+                            title = Localized(.matched)
+                            icon = Assets.match.image
+                        case .no_effect:
+                            title = ""
+                            icon = Assets.match.image
+                        case .unlocked:
+                            title = Localized(.unlocked)
+                            icon = Assets.unlock.image
+                        case .withdrawn:
+                            title = Localized(.withdrawn)
+                            icon = Assets.outcomeIcon.image
                             
-                        case .createWithdrawal:
-                            title = "Withdrawal"
-                            icon = #imageLiteral(resourceName: "Outcome icon")
+                        case .pending:
+                            title = Localized(.pending_offer)
+                            icon = Assets.outcomeIcon.image
                             
-                        case .manageOffer(let sold):
-                            title = sold ? "Sold" : "Bought"
-                            icon = sold ? #imageLiteral(resourceName: "Outcome icon") : #imageLiteral(resourceName: "Income icon")
-                            
-                        case .checkSaleState(let income):
-                            title = "Investment"
-                            icon = income ? #imageLiteral(resourceName: "Income icon") : #imageLiteral(resourceName: "Outcome icon")
-                            
-                        case .pendingOffer(let buy):
-                            title = buy ? "Buy" : "Sell"
-                            icon = buy ? #imageLiteral(resourceName: "Income icon") : #imageLiteral(resourceName: "Outcome icon")
+                        case .sale:
+                            title = Localized(.sale)
+                            icon = Assets.outcomeIcon.image
                         }
                         
-                        let amount: String = self.amountFormatter.formatAmount(transaction.amount)
-                        let amountColor: UIColor = {
-                            switch transaction.amountType {
-                            case .positive:
-                                return Theme.Colors.positiveAmountColor
-                            case .negative:
-                                return Theme.Colors.negativeAmountColor
-                            case .neutral:
-                                return Theme.Colors.neutralAmountColor
-                            }
-                        }()
+                        let amount: String = self.amountFormatter.formatAmount(
+                            transaction.amount,
+                            isIncome: nil
+                        )
                         
+                        let amountColor = Theme.Colors.neutralAmountColor
                         let counterparty: String? = transaction.counterparty
                         
                         var additionalInfo: String?
                         if let rate = transaction.rate {
-                            additionalInfo = self.amountFormatter.formatAmount(rate)
+                            additionalInfo = self.amountFormatter.formatAmount(rate, isIncome: nil)
                         } else {
                             additionalInfo = self.dateFormatter.formatDateForTransaction(transaction.date)
                         }
-                        
                         return TransactionsListTableViewCell.Model(
                             identifier: transaction.identifier,
-                            asset: transaction.amount.asset,
+                            balanceId: transaction.balanceId,
                             icon: icon,
                             title: title,
                             amount: amount,
@@ -172,6 +179,13 @@ extension TransactionsListScene.Presenter: TransactionsListScene.PresentationLog
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayHeaderTitleDidChange(viewModel: viewModel)
+        }
+    }
+    
+    func presentSendAction(response: TransactionsListScene.Event.SendAction.Response) {
+        let viewModel = TransactionsListScene.Event.SendAction.ViewModel(balanceId: response.balanceId)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displaySendAction(viewModel: viewModel)
         }
     }
 }

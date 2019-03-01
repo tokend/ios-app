@@ -62,7 +62,12 @@ extension DashboardPendingOffersPreviewPlugIn {
         }
         
         private func addNewTransactionsList(_ new: TransactionsListScene.ViewController) {
-            self.addChildViewController(new, to: self.transactionsListContainerView)
+            self.addChildViewController(
+                new,
+                to: self.transactionsListContainerView,
+                layoutFulledge: true
+            )
+            
             new.scrollEnabled = false
             new.onContentSizeDidChange = { [weak new] (newSize) in
                 new?.view.snp.remakeConstraints({ [weak self] (make) in
@@ -79,7 +84,7 @@ extension DashboardPendingOffersPreviewPlugIn {
         private func setupTitleLabel() {
             self.titleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
             self.titleLabel.font = Theme.Fonts.largeTitleFont
-            self.titleLabel.text = "Pending offers"
+            self.titleLabel.text = Localized(.pending_offers)
             self.titleLabel.numberOfLines = 0
         }
         
@@ -88,7 +93,7 @@ extension DashboardPendingOffersPreviewPlugIn {
             self.viewMoreButton.setBackgroundImage(buttonImage, for: .normal)
             self.viewMoreButton.titleLabel?.font = Theme.Fonts.actionButtonFont
             self.viewMoreButton.setTitleColor(Theme.Colors.actionTitleButtonColor, for: .normal)
-            self.viewMoreButton.setTitle("View more", for: .normal)
+            self.viewMoreButton.setTitle(Localized(.view_more), for: .normal)
             self.viewMoreButton.addTarget(
                 self,
                 action: #selector(self.viewMoreButtonAction),

@@ -16,22 +16,27 @@ extension SaleInfo {
         private let presenterDispatch: PresenterDispatch
         private let dateFormatter: SaleInfo.DateFormatter
         private let amountFormatter: SaleInfo.AmountFormatter
+        private let textFormatter: SaleInfoTextFormatterProtocol
         
         init(
             presenterDispatch: PresenterDispatch,
             dateFormatter: DateFormatter,
-            amountFormatter: AmountFormatter
+            amountFormatter: AmountFormatter,
+            textFormatter: SaleInfoTextFormatterProtocol
             ) {
+            
             self.presenterDispatch = presenterDispatch
             self.dateFormatter = dateFormatter
             self.amountFormatter = amountFormatter
+            self.textFormatter = textFormatter
         }
         
         private func getPlainTextTabViewModel(
             model: SaleInfo.PlainTextContent.Model
             ) -> SaleInfo.PlainTextContent.ViewModel {
             
-            let viewModel = SaleInfo.PlainTextContent.ViewModel(contentText: model.contentText)
+            let contentText = self.textFormatter.formatText(text: model.contentText)
+            let viewModel = SaleInfo.PlainTextContent.ViewModel(contentText: contentText)
             return viewModel
         }
         
@@ -40,41 +45,41 @@ extension SaleInfo {
             
             let startTimeCellValue = self.dateFormatter.dateToString(date: model.startTime)
             let startTimeCell = SaleInfo.GeneralContent.TitleValueCellModel(
-                title: "Start time",
-                identifier: "startTimeCell",
+                title: Localized(.start_time),
+                identifier: .startTime,
                 value: startTimeCellValue
             )
             
             let closeTimeCellValue = self.dateFormatter.dateToString(date: model.endTime)
             let closeTimeCell = SaleInfo.GeneralContent.TitleValueCellModel(
-                title: "Close time",
-                identifier: "closeTimeCell",
+                title: Localized(.close_time),
+                identifier: .closeTime,
                 value: closeTimeCellValue
             )
             
             let baseAssetCell = SaleInfo.GeneralContent.TitleValueCellModel(
-                title: "Base asset for hard cap",
-                identifier: "baseAssetCell",
+                title: Localized(.base_asset_for_hard_cap),
+                identifier: .baseAsset,
                 value: model.defaultQuoteAsset
             )
             
             let softCapCellValue = self.amountFormatter.formatAmount(model.softCap, currency: model.defaultQuoteAsset)
             let softCapCell = SaleInfo.GeneralContent.TitleValueCellModel(
-                title: "Soft Cap",
-                identifier: "softCapCell",
+                title: Localized(.soft_cap),
+                identifier: .softCap,
                 value: softCapCellValue
             )
             
             let hardCapCellValue = self.amountFormatter.formatAmount(model.hardCap, currency: model.defaultQuoteAsset)
             let hardCapCell = SaleInfo.GeneralContent.TitleValueCellModel(
-                title: "Hard Cap",
-                identifier: "hardCapCell",
+                title: Localized(.hard_cap),
+                identifier: .hardCap,
                 value: hardCapCellValue
             )
             
             let baseHardCapCell = SaleInfo.GeneralContent.TitleValueCellModel(
-                title: model.baseAsset + " to sell",
-                identifier: "hardCapCell",
+                title: model.baseAsset + Localized(.to_sell),
+                identifier: .hardCap,
                 value: self.amountFormatter.assetAmountToString(model.baseHardCap)
             )
             
@@ -98,25 +103,25 @@ extension SaleInfo {
         
         private func getTokenTabViewModel(model: SaleInfo.TokenContent.Model) -> SaleInfo.TokenContent.ViewModel {
             let availableCell = SaleInfo.TokenCellModel(
-                title: "Available",
-                identifier: "availableCell",
+                title: Localized(.available),
+                identifier: .available,
                 value: self.amountFormatter.assetAmountToString(model.availableTokenAmount)
             )
             
             let issuedCell = SaleInfo.TokenCellModel(
-                title: "Issued",
-                identifier: "issuedCell",
+                title: Localized(.issued),
+                identifier: .issued,
                 value: self.amountFormatter.assetAmountToString(model.issuedTokenAmount)
             )
             
             let maxCell = SaleInfo.TokenCellModel(
-                title: "Maximum",
-                identifier: "maxCell",
+                title: Localized(.maximum),
+                identifier: .max,
                 value: self.amountFormatter.assetAmountToString(model.maxTokenAmount)
             )
             
             let tokenSummerySections = SaleInfo.SectionViewModel(
-                title: "Token Summary",
+                title: Localized(.token_summary),
                 cells: [
                     availableCell,
                     issuedCell,

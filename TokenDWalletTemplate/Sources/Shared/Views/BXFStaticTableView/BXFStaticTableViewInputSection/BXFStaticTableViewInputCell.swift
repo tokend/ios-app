@@ -80,7 +80,7 @@
 //        self.backgroundColor = UIColor.TableView.Grouped.Cell.background
 //
 //        self.textField.textColor = UIColor.Textfield.text
-//        self.textField.placeholder = "Set placeholder".localized
+//        self.textField.placeholder = Localized(.set_placeholder).localized
 //        self.textField.font = UIFont.TableView.Grouped.Cell.textfield
 //        self.textField.keyboardType = .default
 //        self.textField.backgroundColor = UIColor.TableView.Grouped.Cell.background

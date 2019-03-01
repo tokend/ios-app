@@ -1,5 +1,6 @@
 import Foundation
 import TokenDSDK
+import TokenDWallet
 
 enum SendPaymentFeeLoaderResult {
     typealias FeeLoaderError = ApiErrors
@@ -13,6 +14,7 @@ protocol SendPaymentFeeLoaderProtocol {
         asset: String,
         feeType: SendPayment.Model.FeeType,
         amount: Decimal,
+        subtype: Int32,
         completion: @escaping (_ result: SendPaymentFeeLoaderResult) -> Void
     )
 }
@@ -42,6 +44,7 @@ extension SendPayment {
             asset: String,
             feeType: Model.FeeType,
             amount: Decimal,
+            subtype: Int32,
             completion: @escaping (SendPaymentFeeLoaderResult) -> Void
             ) {
             
@@ -50,6 +53,7 @@ extension SendPayment {
                 asset: asset,
                 feeType: self.feeTypeForFeeType(feeType),
                 amount: amount,
+                subtype: subtype,
                 completion: { (result) in
                     switch result {
                         
@@ -58,7 +62,7 @@ extension SendPayment {
                         
                     case .succeeded(let response):
                         let feeModel = Model.FeeModel(
-                            asset: response.asset,
+                            asset: response.feeAsset,
                             fixed: response.fixed,
                             percent: response.percent
                         )

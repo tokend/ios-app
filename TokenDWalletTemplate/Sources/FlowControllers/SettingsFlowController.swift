@@ -1,4 +1,6 @@
 import UIKit
+import WebKit
+import TokenDSDK
 
 class SettingsFlowController: BaseSignedInFlowController {
     
@@ -38,20 +40,23 @@ class SettingsFlowController: BaseSignedInFlowController {
             },
             onCellSelected: { [weak self] (cellIdentifier) in
                 self?.switchToSetting(cellIdentifier)
+            },
+            onShowTerms: { [weak self] (url) in
+                self?.showTermsOfService(url: url)
         })
+        
+        let provider = TermsInfoProvider(apiConfigurationModel: self.flowControllerStack.apiConfigurationModel)
+        let termsUrl = provider.getTermsUrl()
+        let sceneModel = Settings.Model.SceneModel(termsUrl: termsUrl)
         
         Settings.Configurator.configure(
             viewController: vc,
+            sceneModel: sceneModel,
             sectionsProvider: sectionsProvider,
             routing: rounting
         )
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        
-        vc.navigationItem.title = "Settings"
+        vc.navigationItem.title = Localized(.settings)
         
         self.navigationController.setViewControllers([vc], animated: false)
         
@@ -65,14 +70,26 @@ class SettingsFlowController: BaseSignedInFlowController {
     private func switchToSetting(_ identifier: Settings.CellIdentifier) {
         switch identifier {
             
-        case Settings.SettingsSectionsProvider.accountIdCellIdentifier:
-            self.showAccountIdScreen()
+        case .accountId:
+            let addressManager = ReceiveAddress.ReceiveAddressManager(
+                accountId: self.userDataProvider.walletData.accountId
+            )
+            self.showInfoScreen(title: Localized(.account_id), addressManager: addressManager)
             
-        case Settings.SettingsSectionsProvider.verificationCellIdentifier:
+        case .seed:
+            let addressManager = ReceiveAddress.ExportSeedManager(
+                keychainDataProvider: self.keychainDataProvider
+            )
+            self.showInfoScreen(title: Localized(.secret_seed), addressManager: addressManager)
+            
+        case .verification:
             self.showVerificationScreen()
             
-        case Settings.SettingsSectionsProvider.changePasswordCellIdentifier:
+        case .changePassword:
             self.showChangePasswordScreen()
+            
+        case .licenses:
+            self.showLicenses()
             
         default:
             break
@@ -81,17 +98,15 @@ class SettingsFlowController: BaseSignedInFlowController {
     
     // MARK: - Settings
     
-    private func showAccountIdScreen() {
+    private func showInfoScreen(title: String, addressManager: ReceiveAddressManagerProtocol) {
         let vc = ReceiveAddress.ViewController()
         
         let viewConfig = ReceiveAddress.Model.ViewConfig(
-            copiedLocalizationKey: "Copied",
+            copiedLocalizationKey: Localized(.copied),
             tableViewTopInset: 24
         )
         
         let sceneModel = ReceiveAddress.Model.SceneModel()
-        
-        let addressManager = ReceiveAddress.ReceiveAddressManager(accountId: self.userDataProvider.walletData.accountId)
         
         let qrCodeGenerator = QRCodeGenerator()
         let shareUtil = ReceiveAddress.ReceiveAddressShareUtil(
@@ -119,7 +134,7 @@ class SettingsFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Account ID"
+        vc.navigationItem.title = title
         
         self.navigationController.pushViewController(vc, animated: true)
     }
@@ -153,12 +168,16 @@ class SettingsFlowController: BaseSignedInFlowController {
     private func setupChangePasswordScreen(onSuccess: @escaping () -> Void) -> UpdatePassword.ViewController {
         let vc = UpdatePassword.ViewController()
         
+        let updateRequestBuilder = UpdatePasswordRequestBuilder(
+            keyServerApi: self.flowControllerStack.keyServerApi
+        )
         let submitPasswordHandler = UpdatePassword.ChangePasswordWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.managersController.keychainManager,
             userDataManager: self.managersController.userDataManager,
             userDataProvider: self.userDataProvider,
-            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher
+            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
+            updateRequestBuilder: updateRequestBuilder
         )
         
         let fields = submitPasswordHandler.getExpectedFields()
@@ -185,8 +204,35 @@ class SettingsFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Change Password"
+        vc.navigationItem.title = Localized(.change_password)
         
         return vc
+    }
+    
+    private func showTermsOfService(url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    private func showLicenses() {
+        let vc = MarkdownViewer.ViewController()
+        
+        guard let filePath = Bundle.main.path(
+            forResource: "acknowledgements",
+            ofType: "markdown"
+            ) else {
+                return
+        }
+        
+        let routing = MarkdownViewer.Routing()
+        
+        MarkdownViewer.Configurator.configure(
+            viewController: vc,
+            filePath: filePath,
+            routing: routing
+        )
+        
+        vc.navigationItem.title = Localized(.acknowledgements)
+        
+        self.navigationController.pushViewController(vc, animated: true)
     }
 }

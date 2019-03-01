@@ -15,7 +15,6 @@ extension ConfirmationScene {
         private let userDataProvider: UserDataProviderProtocol
         private let amountFormatter: AmountFormatterProtocol
         private let amountConverter: AmountConverterProtocol
-        private let amountPrecision: Int
         private let balanceCreator: BalanceCreatorProtocol
         private let balancesRepo: BalancesRepo
         
@@ -28,7 +27,6 @@ extension ConfirmationScene {
             userDataProvider: UserDataProviderProtocol,
             amountFormatter: AmountFormatterProtocol,
             amountConverter: AmountConverterProtocol,
-            amountPrecision: Int,
             balanceCreator: BalanceCreatorProtocol,
             balancesRepo: BalancesRepo
             ) {
@@ -39,7 +37,6 @@ extension ConfirmationScene {
             self.userDataProvider = userDataProvider
             self.amountFormatter = amountFormatter
             self.amountConverter = amountConverter
-            self.amountPrecision = amountPrecision
             self.balanceCreator = balanceCreator
             self.balancesRepo = balancesRepo
         }
@@ -64,6 +61,7 @@ extension ConfirmationScene {
                 }
                 group.leave()
             })
+            
             group.enter()
             self.balanceForAsset( self.createOfferModel.quoteAsset, completion: { (result) in
                 switch result {
@@ -76,115 +74,116 @@ extension ConfirmationScene {
             })
             
             group.notify(
-            queue: DispatchQueue.global()) { [weak self] in
-                guard let strongSelf = self else { return }
-                
-                guard let baseBalance = baseBalance else {
-                    completion(.failed(.failedToCreateBalance(asset: strongSelf.createOfferModel.baseAsset)))
-                    return
-                }
-                guard let quoteBalance = quoteBalance else {
-                    completion(.failed(.failedToCreateBalance(asset: strongSelf.createOfferModel.quoteAsset)))
-                    return
-                }
-                
-                let offer = strongSelf.createOfferModel
-                let quoteAmount = offer.price * offer.amount
-                
-                if quoteAmount <= 0 {
-                    completion(.failed(.notEnoughData))
-                    return
-                }
-                if offer.isBuy {
-                    if quoteAmount + offer.fee > quoteBalance.balance {
-                        completion(.failed(.notEnoughMoneyOnBalance(asset: quoteBalance.asset)))
-                        return
-                    }
-                } else {
-                    if quoteAmount - offer.fee <= 0 {
-                        completion(.failed(.other(NSError(
-                            domain: "Order price cannot be less than or equal to 0",
-                            code: 1111,
-                            userInfo: nil)
-                            ))
-                        )
-                        return
-                    }
-                    if offer.amount > baseBalance.balance {
-                        completion(.failed(.notEnoughMoneyOnBalance(asset: baseBalance.asset)))
-                        return
-                    }
-                }
-                
-                guard let baseBalanceId = BalanceID(
-                    base32EncodedString: baseBalance.balanceId,
-                    expectedVersion: .balanceIdEd25519
-                    ) else {
-                        completion(.failed(.failedToDecodeBalanceId("baseBalanceId")))
-                        return
-                }
-                
-                guard let quoteBalanceId = BalanceID(
-                    base32EncodedString: quoteBalance.balanceId,
-                    expectedVersion: .balanceIdEd25519
-                    ) else {
-                        completion(.failed(.failedToDecodeBalanceId("quoteBalanceId")))
-                        return
-                }
-                
-                let amount = strongSelf.amountConverter.convertDecimalToInt64(
-                    value: strongSelf.createOfferModel.amount,
-                    precision: strongSelf.amountPrecision
-                )
-                let price = strongSelf.amountConverter.convertDecimalToInt64(
-                    value: strongSelf.createOfferModel.price,
-                    precision: strongSelf.amountPrecision
-                )
-                let fee = strongSelf.amountConverter.convertDecimalToInt64(
-                    value: strongSelf.createOfferModel.fee,
-                    precision: strongSelf.amountPrecision
-                )
-                
-                let operation = ManageOfferOp(
-                    baseBalance: baseBalanceId,
-                    quoteBalance: quoteBalanceId,
-                    isBuy: strongSelf.createOfferModel.isBuy,
-                    amount: amount,
-                    price: price,
-                    fee: fee,
-                    offerID: 0,
-                    orderBookID: 0,
-                    ext: .emptyVersion()
-                )
-                
-                let transactionBuilder = TransactionBuilder(
-                    networkParams: networkInfo.networkParams,
-                    sourceAccountId: strongSelf.userDataProvider.accountId,
-                    params: networkInfo.getTxBuilderParams(sendDate: Date())
-                )
-                
-                transactionBuilder.add(
-                    operationBody: .manageOffer(operation),
-                    operationSourceAccount: strongSelf.userDataProvider.accountId
-                )
-                do {
-                    let transaction = try transactionBuilder.buildTransaction()
+                queue: DispatchQueue.global(),
+                execute: { [weak self] in
+                    guard let strongSelf = self else { return }
                     
-                    try strongSelf.transactionSender.sendTransaction(
-                        transaction,
-                        walletId: strongSelf.userDataProvider.walletId,
-                        completion: { (result) in
-                            switch result {
-                            case .succeeded:
-                                completion(.succeeded)
-                            case .failed(let error):
-                                completion(.failed(.sendTransactionError(error)))
-                            }
-                    })
-                } catch let error {
-                    completion(.failed(.sendTransactionError(error)))
-                }
-            }
+                    guard let baseBalance = baseBalance else {
+                        completion(.failed(.failedToCreateBalance(asset: strongSelf.createOfferModel.baseAsset)))
+                        return
+                    }
+                    guard let quoteBalance = quoteBalance else {
+                        completion(.failed(.failedToCreateBalance(asset: strongSelf.createOfferModel.quoteAsset)))
+                        return
+                    }
+                    
+                    let offer = strongSelf.createOfferModel
+                    let quoteAmount = offer.price * offer.amount
+                    
+                    if quoteAmount <= 0 {
+                        completion(.failed(.notEnoughData))
+                        return
+                    }
+                    if offer.isBuy {
+                        if quoteAmount + offer.fee > quoteBalance.balance {
+                            completion(.failed(.notEnoughMoneyOnBalance(asset: quoteBalance.asset)))
+                            return
+                        }
+                    } else {
+                        if quoteAmount - offer.fee <= 0 {
+                            completion(.failed(.other(NSError(
+                                domain: Localized(.order_price_cannot_be_less_than_or_equal_to_0),
+                                code: 1111,
+                                userInfo: nil)
+                                ))
+                            )
+                            return
+                        }
+                        if offer.amount > baseBalance.balance {
+                            completion(.failed(.notEnoughMoneyOnBalance(asset: baseBalance.asset)))
+                            return
+                        }
+                    }
+                    
+                    guard let baseBalanceId = BalanceID(
+                        base32EncodedString: baseBalance.balanceId,
+                        expectedVersion: .balanceIdEd25519
+                        ) else {
+                            completion(.failed(.failedToDecodeBalanceId(.baseBalanceId)))
+                            return
+                    }
+                    
+                    guard let quoteBalanceId = BalanceID(
+                        base32EncodedString: quoteBalance.balanceId,
+                        expectedVersion: .balanceIdEd25519
+                        ) else {
+                            completion(.failed(.failedToDecodeBalanceId(.quoteBalanceId)))
+                            return
+                    }
+                    
+                    let amount = strongSelf.amountConverter.convertDecimalToInt64(
+                        value: strongSelf.createOfferModel.amount,
+                        precision: networkInfo.precision
+                    )
+                    let price = strongSelf.amountConverter.convertDecimalToInt64(
+                        value: strongSelf.createOfferModel.price,
+                        precision: networkInfo.precision
+                    )
+                    let fee = strongSelf.amountConverter.convertDecimalToInt64(
+                        value: strongSelf.createOfferModel.fee,
+                        precision: networkInfo.precision
+                    )
+                    
+                    let operation = ManageOfferOp(
+                        baseBalance: baseBalanceId,
+                        quoteBalance: quoteBalanceId,
+                        isBuy: strongSelf.createOfferModel.isBuy,
+                        amount: amount,
+                        price: price,
+                        fee: fee,
+                        offerID: 0,
+                        orderBookID: 0,
+                        ext: .emptyVersion()
+                    )
+                    
+                    let transactionBuilder = TransactionBuilder(
+                        networkParams: networkInfo.networkParams,
+                        sourceAccountId: strongSelf.userDataProvider.accountId,
+                        params: networkInfo.getTxBuilderParams(sendDate: Date())
+                    )
+                    
+                    transactionBuilder.add(
+                        operationBody: .manageOffer(operation),
+                        operationSourceAccount: strongSelf.userDataProvider.accountId
+                    )
+                    do {
+                        let transaction = try transactionBuilder.buildTransaction()
+                        
+                        try strongSelf.transactionSender.sendTransaction(
+                            transaction,
+                            walletId: strongSelf.userDataProvider.walletId,
+                            completion: { (result) in
+                                switch result {
+                                case .succeeded:
+                                    completion(.succeeded)
+                                case .failed(let error):
+                                    completion(.failed(.sendTransactionError(error)))
+                                }
+                        })
+                    } catch let error {
+                        completion(.failed(.sendTransactionError(error)))
+                    }
+            })
         }
         
         enum BalanceForAssetResult {
@@ -249,26 +248,26 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         let toPayString = self.amountFormatter.assetAmountToString(toPayAmount + (toPayFee ?? 0)) + " " + toPayAsset
         
         let toPayCell = ConfirmationScene.Model.CellModel(
-            title: "To pay",
+            title: Localized(.to_pay),
             cellType: .text(value: toPayString),
-            identifier: "toPayCell"
+            identifier: .toPay
         )
         toPayCells.append(toPayCell)
         
         let toPayAmountString = self.amountFormatter.assetAmountToString(toPayAmount) + " " + toPayAsset
         let toPayAmountCell = ConfirmationScene.Model.CellModel(
-            title: "Amount",
+            title: Localized(.amount),
             cellType: .text(value: toPayAmountString),
-            identifier: "toPayAmountCell"
+            identifier: .toPayAmount
         )
         toPayCells.append(toPayAmountCell)
         
         if let fee = toPayFee {
             let feeString = self.amountFormatter.assetAmountToString(fee) + " " + toPayAsset
             let feeCell = ConfirmationScene.Model.CellModel(
-                title: "Fee",
+                title: Localized(.fee),
                 cellType: .text(value: feeString),
-                identifier: "toPayFeeCell"
+                identifier: .toPayFee
             )
             toPayCells.append(feeCell)
         }
@@ -284,26 +283,26 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         let amountFormatted = self.amountFormatter.assetAmountToString(toReceiveAmount - (toReceiveFee ?? 0))
         let toReceiveString = amountFormatted + " " + toReceiveAsset
         let toReceiveCell = ConfirmationScene.Model.CellModel(
-            title: "To receive",
+            title: Localized(.to_receive),
             cellType: .text(value: toReceiveString),
-            identifier: "toReceiveCell"
+            identifier: .toReceive
         )
         toReceiveCells.append(toReceiveCell)
         
         let toReceiveAmountString = self.amountFormatter.assetAmountToString(toReceiveAmount) + " " + toReceiveAsset
         let toReceiveAmountCell = ConfirmationScene.Model.CellModel(
-            title: "Amount",
+            title: Localized(.amount),
             cellType: .text(value: toReceiveAmountString),
-            identifier: "toReceiveAmountCell"
+            identifier: .toReceiveAmount
         )
         toReceiveCells.append(toReceiveAmountCell)
         
         if let fee = toReceiveFee {
             let feeString = self.amountFormatter.assetAmountToString(fee) + " " + toPayAsset
             let feeCell = ConfirmationScene.Model.CellModel(
-                title: "Fee",
+                title: Localized(.fee),
                 cellType: .text(value: feeString),
-                identifier: "toReceiveFeeCell"
+                identifier: .toReceiveFee
             )
             toReceiveCells.append(feeCell)
         }

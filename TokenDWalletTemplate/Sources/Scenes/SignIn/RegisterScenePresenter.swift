@@ -44,12 +44,12 @@ extension RegisterScene {
             switch sceneModel.state {
                 
             case .signIn, .localAuth:
-                title = "Sign in"
-                actionTitle = "SignIn"
+                title = Localized(.sign_in)
+                actionTitle = Localized(.signin)
                 
             case .signUp:
-                title = "Sign up"
-                actionTitle = "Register"
+                title = Localized(.sign_up)
+                actionTitle = Localized(.register)
             }
             
             let sceneViewModel = Model.SceneViewModel(
@@ -74,8 +74,8 @@ extension RegisterScene {
             switch field.type {
                 
             case .scanServerInfo:
-                title = "Server"
-                placeholder = "Scan server info QR code"
+                title = Localized(.server)
+                placeholder = Localized(.scan_server_info_qr_code)
                 keyboardType = .emailAddress
                 secureInput = false
                 
@@ -83,20 +83,20 @@ extension RegisterScene {
                 switch purpose {
                     
                 case .email:
-                    title = "Email"
-                    placeholder = "Enter email"
+                    title = Localized(.email)
+                    placeholder = Localized(.enter_email)
                     keyboardType = .emailAddress
                     secureInput = false
                     
                 case .password:
-                    title = "Password"
-                    placeholder = "Enter password"
+                    title = Localized(.password)
+                    placeholder = Localized(.enter_password)
                     keyboardType = .default
                     secureInput = true
                     
                 case .confirmPassword:
-                    title = "Confirm"
-                    placeholder = "Confirm password"
+                    title = Localized(.confirm)
+                    placeholder = Localized(.confirm_password)
                     keyboardType = .default
                     secureInput = true
                 }
@@ -122,26 +122,32 @@ extension RegisterScene {
                 
             case .recovery:
                 return self.getSubActionTextViewModel(
-                    plainPart: "Forgot your password? ",
-                    actionPart: "Recover it"
+                    plainPart: Localized(.forgot_your_password),
+                    actionPart: Localized(.recover_it)
                 )
                 
             case .signIn:
                 return self.getSubActionTextViewModel(
-                    plainPart: "Already have an account? ",
-                    actionPart: "Sign in now"
+                    plainPart: Localized(.already_have_an_account),
+                    actionPart: Localized(.sign_in_now)
                 )
                 
             case .signUp:
                 return self.getSubActionTextViewModel(
-                    plainPart: "Don't have an account? ",
-                    actionPart: "Register now"
+                    plainPart: Localized(.dont_have_an_account),
+                    actionPart: Localized(.register_now)
+                )
+                
+            case .authenticator:
+                return self.getSubActionTextViewModel(
+                    plainPart: Localized(.sign_in_via),
+                    actionPart: Localized(.authenticator)
                 )
                 
             case .signOut:
                 return self.getSubActionTextViewModel(
-                    plainPart: "Erase all data and ",
-                    actionPart: "Sign out"
+                    plainPart: Localized(.erase_all_data_and),
+                    actionPart: Localized(.sign_out)
                 )
                 
             case .agreeOnTerms(let checked, _):
@@ -213,25 +219,25 @@ extension RegisterScene {
                 
             case .emptyConfirmPassword:
                 error = SignError(
-                    message: "Enter password confirmation",
+                    message: Localized(.enter_password_confirmation),
                     type: .emptyConfirmPassword
                 )
                 
             case .emptyEmail:
                 error = SignError(
-                    message: "Enter email",
+                    message: Localized(.enter_email),
                     type: .wrongEmail
                 )
                 
             case .emptyPassword:
                 error = SignError(
-                    message: "Enter password",
+                    message: Localized(.enter_password),
                     type: .wrongPassword
                 )
                 
             case .passwordsDontMatch:
                 error = SignError(
-                    message: "Passwords don't match",
+                    message: Localized(.passwords_dont_match),
                     type: .passwordsDontMatch
                 )
                 
@@ -243,7 +249,7 @@ extension RegisterScene {
                 
             case .termsNotAgreed:
                 error = SignError(
-                    message: "Terms of Service not agreed",
+                    message: Localized(.terms_of_service_not_agreed),
                     type: .termsNotAgreed
                 )
             }
@@ -264,37 +270,43 @@ extension RegisterScene {
                 
             case .wrongEmail:
                 return SignError(
-                    message: "Wrong email",
+                    message: Localized(.wrong_email),
                     type: .wrongEmail
                 )
                 
             case .wrongPassword:
                 return SignError(
-                    message: "Wrong password",
+                    message: Localized(.wrong_password),
                     type: .wrongPassword
                 )
                 
             case .emailAlreadyTaken:
                 return SignError(
-                    message: "Email already taken",
+                    message: Localized(.email_already_taken),
                     type: .emailAlreadyTaken
                 )
                 
             case .failedToSaveAccount:
                 return SignError(
-                    message: "Failed to save account data",
+                    message: Localized(.failed_to_save_account_data),
                     type: .failedToSaveAccount
+                )
+                
+            case .failedToSaveNetwork:
+                return SignError(
+                    message: Localized(.failed_to_save_network_info),
+                    type: .failedToSaveNetwork
                 )
                 
             case .emailShouldBeVerified(let walletId):
                 return SignError(
-                    message: "Email address is not verified",
+                    message: Localized(.email_address_is_not_verified),
                     type: .emailShouldBeVerified(walletId: walletId)
                 )
                 
             case .tfaFailed:
                 return SignError(
-                    message: "Two-factor authentication failed",
+                    message: Localized(.twofactor_authentication_failed),
                     type: .tfaFailed
                 )
             }
@@ -318,7 +330,7 @@ extension RegisterScene.Presenter: RegisterScene.PresentationLogic {
             viewModel = .canceled
             
         case .failed:
-            viewModel = .failed(errorMessage: "Failed to scan server info")
+            viewModel = .failed(errorMessage: Localized(.failed_to_scan_server_info))
             
         case .succeeded(let sceneModel):
             let sceneViewModel = self.getSceneViewModelForModel(sceneModel)

@@ -52,7 +52,7 @@ extension CreateOffer {
         }
         
         private func setupTitleLabel() {
-            self.titleLabel.text = "Total:"
+            self.titleLabel.text = Localized(.total_colon)
             SharedViewsBuilder.configureInputForm(titleLabel: self.titleLabel)
         }
         

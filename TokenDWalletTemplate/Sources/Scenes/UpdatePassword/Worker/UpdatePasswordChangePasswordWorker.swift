@@ -17,7 +17,8 @@ extension UpdatePassword {
             keychainManager: KeychainManagerProtocol,
             userDataManager: UserDataManagerProtocol,
             userDataProvider: UserDataProviderProtocol,
-            networkInfoFetcher: NetworkInfoFetcher
+            networkInfoFetcher: NetworkInfoFetcher,
+            updateRequestBuilder: UpdatePasswordRequestBuilderProtocol
             ) {
             
             self.userDataProvider = userDataProvider
@@ -26,7 +27,8 @@ extension UpdatePassword {
                 keyserverApi: keyserverApi,
                 keychainManager: keychainManager,
                 userDataManager: userDataManager,
-                networkInfoFetcher: networkInfoFetcher
+                networkInfoFetcher: networkInfoFetcher,
+                updateRequestBuilder: updateRequestBuilder
             )
         }
         
@@ -63,12 +65,56 @@ extension UpdatePassword {
             ) {
             
             let email = self.userDataProvider.userEmail
+            let onSignRequest = JSONAPI.RequestSignerBlockCaller.getUnsafeSignRequestBlock()
             
-            _ = self.keyserverApi.changeWalletPassword(
-                email: email,
+            _ = self.updateRequestBuilder.buildChangePasswordRequest(
+                for: email,
                 oldPassword: oldPassword,
                 newPassword: newPassword,
+                onSignRequest: onSignRequest,
                 networkInfo: networkInfo,
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failure(let error):
+                        completion(.failed(.submitError(error)))
+                        
+                    case .success(let components):
+                        
+                        self?.changePassword(
+                            email: components.email,
+                            walletId: components.walletId,
+                            signingPassword: components.signingPassword,
+                            walletKDF: components.walletKDF,
+                            walletInfo: components.walletInfo,
+                            requestSigner: components.requestSigner,
+                            sendDate: Date(),
+                            stopLoading: stopLoading,
+                            completion: completion
+                        )
+                    }
+            })
+        }
+        
+        private func changePassword(
+            email: String,
+            walletId: String,
+            signingPassword: String,
+            walletKDF: WalletKDFParams,
+            walletInfo: WalletInfoModel,
+            requestSigner: JSONAPI.RequestSignerProtocol,
+            sendDate: Date,
+            stopLoading: @escaping () -> Void,
+            completion: @escaping (UpdatePasswordSubmitResult) -> Void
+            ) {
+            
+            _ = self.keyserverApi.performUpdatePasswordRequest(
+                email: email,
+                walletId: walletId,
+                signingPassword: signingPassword,
+                walletKDF: walletKDF,
+                walletInfo: walletInfo,
+                requestSigner: requestSigner,
                 completion: { (result) in
                     stopLoading()
                     

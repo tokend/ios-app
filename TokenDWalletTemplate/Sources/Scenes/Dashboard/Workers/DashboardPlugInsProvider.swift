@@ -5,19 +5,19 @@ import RxCocoa
 extension DashboardScene {
     class PlugInsProvider {
         
-        private let plugIns: [PlugIn]
+        private let plugIns: BehaviorRelay<[PlugIn]>
         
         init(
             plugIns: [PlugIn]
             ) {
             
-            self.plugIns = plugIns
+            self.plugIns = BehaviorRelay(value: plugIns)
         }
     }
 }
 
 extension DashboardScene.PlugInsProvider: DashboardScene.PlugInsProviderProtocol {
     func observePlugIns() -> Observable<[DashboardPlugInsProviderProtocol.PlugIn]> {
-        return BehaviorRelay(value: self.plugIns).asObservable()
+        return self.plugIns.asObservable()
     }
 }

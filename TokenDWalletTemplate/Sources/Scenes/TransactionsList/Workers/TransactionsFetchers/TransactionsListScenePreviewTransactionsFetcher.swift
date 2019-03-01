@@ -28,19 +28,19 @@ extension TransactionsListScene {
 
 extension TransactionsListScene.PreviewTransactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol {
     
-    var transactions: Transactions {
-        return self.convertTransactionsToPreview(self.transactionsFetcher.transactions)
+    var transactionsValue: Transactions {
+        return self.convertTransactionsToPreview(self.transactionsFetcher.transactionsValue)
     }
     
-    var loadingStatus: LoadingStatus {
-        return self.transactionsFetcher.loadingStatus
+    var loadingStatusValue: LoadingStatus {
+        return self.transactionsFetcher.loadingStatusValue
     }
-    var loadingMoreStatus: LoadingStatus {
+    var loadingMoreStatusValue: LoadingStatus {
         return .loaded
     }
     
-    func setAsset(_ asset: String) {
-        self.transactionsFetcher.setAsset(asset)
+    func setBalanceId(_ balanceId: String) {
+        self.transactionsFetcher.setBalanceId(balanceId)
     }
     
     func observeTransactions() -> Observable<Transactions> {
@@ -62,7 +62,7 @@ extension TransactionsListScene.PreviewTransactionsFetcher: TransactionsListScen
     }
     
     func observeLoadingMoreStatus() -> Observable<LoadingStatus> {
-        return BehaviorRelay(value: self.loadingMoreStatus).asObservable()
+        return BehaviorRelay(value: self.loadingMoreStatusValue).asObservable()
     }
     
     func observeErrorStatus() -> Observable<Error> {

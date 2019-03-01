@@ -35,14 +35,20 @@ class DashboardFlowController: BaseSignedInFlowController {
             ),
             previewMaxLength: previewMaxLength
         )
+        
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
+        
         let pendingOffersPreviewRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
                 self?.showPendingOfferDetailsScreen(offerId: identifier)
-            }
+            },
+            showSendPayment: { _ in }
         )
+        
         let pendingOffersPreviewList = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: pendingOffersPreviewFetcher,
-            emptyTitle: "No pending offers",
+            emptyTitle: Localized(.no_pending_offers),
+            viewConfig: viewConfig,
             routing: pendingOffersPreviewRouting
         )
         
@@ -55,13 +61,16 @@ class DashboardFlowController: BaseSignedInFlowController {
             previewMaxLength: previewMaxLength
         )
         let paymentsPreviewRouting = TransactionsListScene.Routing(
-            onDidSelectItemWithIdentifier: { [weak self] (identifier, asset) in
-                self?.showTransactionDetailsScreen(transactionId: identifier, asset: asset)
-            }
+            onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
+                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+            },
+            showSendPayment: { _ in }
         )
+        
         let paymentsPreviewList = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: paymentsPreviewFetcher,
-            emptyTitle: "No payments",
+            emptyTitle: Localized(.no_payments),
+            viewConfig: viewConfig,
             routing: paymentsPreviewRouting
         )
         
@@ -110,13 +119,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             plugInsProvider: plugInsProvider,
             routing: routing
         )
-        viewController.navigationItem.title = "Dashboard"
-        
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        self.navigationController.navigationBar.shadowImage = UIImage()
+        viewController.navigationItem.title = Localized(.dashboard)
         
         self.navigationController.setViewControllers([viewController], animated: false)
         
@@ -138,9 +141,13 @@ class DashboardFlowController: BaseSignedInFlowController {
         )
         
         let transactionsRouting = TransactionsListScene.Routing(
-            onDidSelectItemWithIdentifier: { [weak self] (transactionId, asset) in
-                self?.showTransactionDetailsScreen(transactionId: transactionId, asset: asset)
-        })
+            onDidSelectItemWithIdentifier: { [weak self] (transactionId, balanceId) in
+                self?.showTransactionDetailsScreen(transactionId: transactionId, balanceId: balanceId)
+            },
+            showSendPayment: { [weak self] (balanceId) in
+                self?.runSendPaymentFlow(balanceId: balanceId)
+            }
+        )
         
         let balancesFetcher = BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo
@@ -157,12 +164,6 @@ class DashboardFlowController: BaseSignedInFlowController {
             selectedBalanceId: selectedBalanceId
         )
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        self.navigationController.navigationBar.shadowImage = UIImage()
-        
         self.navigationController.pushViewController(container, animated: true)
     }
     
@@ -177,40 +178,41 @@ class DashboardFlowController: BaseSignedInFlowController {
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
+        
         let transactionsListRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
                 self?.showPendingOfferDetailsScreen(offerId: identifier)
-        })
+            },
+            showSendPayment: { _ in }
+        )
         
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
-            emptyTitle: "No pending offers",
+            emptyTitle: Localized(.no_pending_offers),
+            viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
-        self.navigationController.navigationBar.shadowImage = UIImage()
-        
-        viewController.navigationItem.title = "Pending offers"
+        viewController.navigationItem.title = Localized(.pending_offers)
         
         self.navigationController.pushViewController(viewController, animated: true)
     }
     
     private func showTransactionDetailsScreen(
         transactionId: UInt64,
-        asset: String
+        balanceId: String
         ) {
+        
+        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
         let sectionsProvider = TransactionDetails.OperationSectionsProvider(
-            transactionsRepo: self.reposController.transactionsRepoForAsset(asset),
+            transactionsHistoryRepo: transactionsHistoryRepo,
             identifier: transactionId,
             accountId: self.userDataProvider.walletData.accountId
         )
         let vc = self.setupTransactionDetailsScreen(
             sectionsProvider: sectionsProvider,
-            title: "Transaction details"
+            title: Localized(.transaction_details)
         )
         self.navigationController.pushViewController(vc, animated: true)
     }
@@ -218,18 +220,18 @@ class DashboardFlowController: BaseSignedInFlowController {
     private func showPendingOfferDetailsScreen(
         offerId: UInt64
         ) {
+        
         let sectionsProvider = TransactionDetails.PendingOfferSectionsProvider(
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             transactionSender: self.managersController.transactionSender,
             amountConverter: AmountConverter(),
-            amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
             userDataProvider: self.userDataProvider,
             identifier: offerId
         )
         let vc = self.setupTransactionDetailsScreen(
             sectionsProvider: sectionsProvider,
-            title: "Pending offer details"
+            title: Localized(.pending_offer_details)
         )
         self.navigationController.pushViewController(vc, animated: true)
     }
@@ -261,5 +263,28 @@ class DashboardFlowController: BaseSignedInFlowController {
         vc.navigationItem.title = title
         
         return vc
+    }
+    
+    private func runSendPaymentFlow(balanceId: String?) {
+        let flow = SendPaymentFlowController(
+            navigationController: self.navigationController,
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            selectedBalanceId: balanceId
+        )
+        self.currentFlowController = flow
+        flow.run(
+            showRootScreen: { [weak self] (vc) in
+                self?.navigationController.pushViewController(vc, animated: true)
+            },
+            onShowWalletScreen: { [weak self] in
+                self?.currentFlowController = nil
+                self?.navigationController.popViewController(true)
+        })
     }
 }

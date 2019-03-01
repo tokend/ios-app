@@ -13,7 +13,10 @@ extension Trade {
 
 extension Trade.AmountFormatter: Trade.AmountFormatterProtocol {
     func formatToken(_ amount: Trade.Model.Amount) -> String {
-        return "\(amount.value) \(amount.currency)"
+        let value = amount.value
+        let currency = amount.currency
+        
+        return "\(value) \(currency)"
     }
     
     func formatTradeOrderToken(value: Decimal) -> String {

@@ -9,6 +9,7 @@ extension DepositScene {
             dateFormatter: DateFormatterProtocol,
             assetsFetcher: AssetsFetcherProtocol,
             addressManager: AddressManagerProtocol,
+            errorFormatter: ErrorFormatterProtocol,
             routing: Routing?
             ) {
             
@@ -16,7 +17,8 @@ extension DepositScene {
             let presenter = Presenter(
                 presenterDispatch: presenterDispatch,
                 qrCodeGenerator: qrCodeGenerator,
-                dateFormatter: dateFormatter
+                dateFormatter: dateFormatter,
+                errorFormatter: errorFormatter
             )
             let interactor = Interactor(
                 presenter: presenter,

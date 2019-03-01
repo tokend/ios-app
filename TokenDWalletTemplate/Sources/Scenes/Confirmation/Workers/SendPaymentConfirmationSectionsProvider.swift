@@ -6,6 +6,9 @@ import RxCocoa
 import RxSwift
 
 extension ConfirmationScene {
+    
+    typealias Fee = TokenDWallet.Fee
+    
     class SendPaymentConfirmationSectionsProvider {
         
         private struct DestinationAddress: Encodable {
@@ -21,7 +24,6 @@ extension ConfirmationScene {
         private let amountFormatter: AmountFormatterProtocol
         private let percentFormatter: PercentFormatterProtocol
         private let amountConverter: AmountConverterProtocol
-        private let amountPrecision: Int
         private let sectionsRelay: BehaviorRelay<[ConfirmationScene.Model.SectionModel]> = BehaviorRelay(value: [])
         private var payRecipientFeeCellState: Bool = true
         private var descriptionCellText: String = ""
@@ -35,8 +37,7 @@ extension ConfirmationScene {
             amountFormatter: AmountFormatterProtocol,
             userDataProvider: UserDataProviderProtocol,
             amountConverter: AmountConverterProtocol,
-            percentFormatter: PercentFormatterProtocol,
-            amountPrecision: Int
+            percentFormatter: PercentFormatterProtocol
             ) {
             self.sendPaymentModel = sendPaymentModel
             self.transactionSender = transactionSender
@@ -44,7 +45,6 @@ extension ConfirmationScene {
             self.userDataProvider = userDataProvider
             self.amountFormatter = amountFormatter
             self.amountConverter = amountConverter
-            self.amountPrecision = amountPrecision
             self.percentFormatter = percentFormatter
         }
         
@@ -55,10 +55,16 @@ extension ConfirmationScene {
             completion: @escaping (ConfirmationResult) -> Void
             ) {
             
-            let sourceFee = self.createFee(feeModel: self.sendPaymentModel.senderFee)
-            let destinationFee = self.createFee(feeModel: self.sendPaymentModel.recipientFee)
+            let sourceFee = self.createFee(
+                feeModel: self.sendPaymentModel.senderFee,
+                networkInfo: networkInfo
+            )
+            let destinationFee = self.createFee(
+                feeModel: self.sendPaymentModel.recipientFee,
+                networkInfo: networkInfo
+            )
             
-            let feeData = PaymentFeeDataV2(
+            let feeData = PaymentFeeData(
                 sourceFee: sourceFee,
                 destinationFee: destinationFee,
                 sourcePaysForDest: self.payRecipientFeeCellState,
@@ -67,14 +73,14 @@ extension ConfirmationScene {
             
             let amount = self.amountConverter.convertDecimalToUInt64(
                 value: self.sendPaymentModel.amount,
-                precision: self.amountPrecision
+                precision: networkInfo.precision
             )
             
             guard let sourceBalanceID = BalanceID(
                 base32EncodedString: self.sendPaymentModel.senderBalanceId,
                 expectedVersion: .balanceIdEd25519
                 ) else {
-                    completion(.failed(.failedToDecodeBalanceId("senderBalanceId")))
+                    completion(.failed(.failedToDecodeBalanceId(.senderBalanceId)))
                     return
             }
             
@@ -82,17 +88,17 @@ extension ConfirmationScene {
                 base32EncodedString: self.sendPaymentModel.recipientAccountId,
                 expectedVersion: .accountIdEd25519
                 ) else {
-                    completion(.failed(.failedToDecodeAccountId("recipientAccountId")))
+                    completion(.failed(.failedToDecodeAccountId(.recipientAccountId)))
                     return
             }
             
-            let operation = PaymentOpV2(
+            let operation = PaymentOp(
                 sourceBalanceID: sourceBalanceID,
                 destination: .account(destinationAccountID),
                 amount: amount,
                 feeData: feeData,
                 subject: self.descriptionCellText,
-                reference: "",
+                reference: self.sendPaymentModel.reference,
                 ext: .emptyVersion()
             )
             
@@ -103,7 +109,7 @@ extension ConfirmationScene {
             )
             
             transactionBuilder.add(
-                operationBody: .paymentV2(operation),
+                operationBody: .payment(operation),
                 operationSourceAccount: self.userDataProvider.accountId
             )
             do {
@@ -125,22 +131,20 @@ extension ConfirmationScene {
             }
         }
         
-        private func createFee(feeModel: Model.FeeModel) -> FeeDataV2 {
-            let maxPaymentFeeDecimal = feeModel.fixed + feeModel.percent
-            
-            let maxPaymentFee = self.amountConverter.convertDecimalToUInt64(
-                value: maxPaymentFeeDecimal,
-                precision: self.amountPrecision
-            )
+        private func createFee(feeModel: Model.FeeModel, networkInfo: NetworkInfoModel) -> Fee {
             let fixedFee = self.amountConverter.convertDecimalToUInt64(
                 value: feeModel.fixed,
-                precision: self.amountPrecision
+                precision: networkInfo.precision
             )
             
-            let destinationFee = FeeDataV2(
-                maxPaymentFee: maxPaymentFee,
-                fixedFee: fixedFee,
-                feeAsset: feeModel.asset,
+            let percent = self.amountConverter.convertDecimalToUInt64(
+                value: feeModel.percent ,
+                precision: networkInfo.precision
+            )
+            
+            let destinationFee = Fee(
+                fixed: fixedFee,
+                percent: percent,
                 ext: .emptyVersion()
             )
             return destinationFee
@@ -155,9 +159,9 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
     
     func loadConfirmationSections() {
         let recipientCell = ConfirmationScene.Model.CellModel(
-            title: "Recipient",
+            title: Localized(.recipient),
             cellType: .text(value: self.sendPaymentModel.recipientAccountId),
-            identifier: "recipientCell"
+            identifier: .recipient
         )
         let recipientSection = ConfirmationScene.Model.SectionModel(cells: [recipientCell])
         
@@ -166,19 +170,19 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
             ) + " " + self.sendPaymentModel.asset
         
         let amountCell = ConfirmationScene.Model.CellModel(
-            title: "Amount",
+            title: Localized(.amount),
             cellType: .text(value: amountCellText),
-            identifier: "amountCell"
+            identifier: .amount
         )
         
-        let feeCellText = self.amountFormatter.assetAmountToString(
-            self.sendPaymentModel.senderFee.fixed
-            ) + " " + self.sendPaymentModel.senderFee.asset
+        let feeAmount = self.sendPaymentModel.senderFee.fixed + self.sendPaymentModel.senderFee.percent
+        let formattedAmount = self.amountFormatter.assetAmountToString(feeAmount)
+        let feeCellText = formattedAmount + " " + self.sendPaymentModel.senderFee.asset
         
         let feeCell = ConfirmationScene.Model.CellModel(
-            title: "Fee",
+            title: Localized(.fee),
             cellType: .text(value: feeCellText),
-            identifier: "feeCell"
+            identifier: .fee
         )
         
         let recipientFeeCellText = self.percentFormatter.percentToString(
@@ -186,24 +190,24 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
             ) + " " + self.sendPaymentModel.recipientFee.asset
         
         let recipientFeeCell = ConfirmationScene.Model.CellModel(
-            title: "Recipient's fee",
+            title: Localized(.recipients_fee),
             cellType: .text(value: recipientFeeCellText),
-            identifier: "recipientFeeCell"
+            identifier: .recipientFee
         )
         
         let payRecipientFeeCell = ConfirmationScene.Model.CellModel(
-            title: "Pay recipient's fee",
+            title: Localized(.pay_recipients_fee),
             cellType: .boolSwitch(value: self.payRecipientFeeCellState),
-            identifier: "payRecipientFeeCell"
+            identifier: .payRecipientFee
         )
         
         let descriptionCell = ConfirmationScene.Model.CellModel(
-            title: "Description",
+            title: Localized(.description),
             cellType: .textField(
                 value: self.descriptionCellText,
-                placeholder: "Description(optional)", maxCharacters: 100
+                placeholder: Localized(.description_optional), maxCharacters: 100
             ),
-            identifier: "descriptionCell"
+            identifier: .description
         )
         
         let amountSection = ConfirmationScene.Model.SectionModel(
@@ -227,7 +231,7 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
         identifier: ConfirmationScene.CellIdentifier,
         value: String?
         ) {
-        if identifier == "descriptionCell" {
+        if identifier == .description {
             self.descriptionCellText = value ?? ""
         }
     }
@@ -236,7 +240,7 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
         identifier: ConfirmationScene.CellIdentifier,
         value: Bool
         ) {
-        if identifier == "payRecipientFeeCell" {
+        if identifier == .payRecipientFee {
             self.payRecipientFeeCellState = value
         }
     }

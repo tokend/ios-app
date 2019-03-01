@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import RxSwift
+import Down
 
 extension SaleInfo {
     enum PlainTextContent {
@@ -21,7 +22,7 @@ extension SaleInfo {
             
             public var saleDescription: String? {
                 get { return self.saleDescriptionLabel.text }
-                set { self.saleDescriptionLabel.text = newValue }
+                set { self.handle(text: newValue) }
             }
             
             // MARK: Private
@@ -68,6 +69,31 @@ extension SaleInfo {
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
                     make.top.equalToSuperview().offset(self.sideInset)
                 }
+            }
+            
+            private func handle(text: String?) {
+                guard let text = text else {
+                    return
+                }
+                
+                if let view = self.getMarkdownView(text: text) {
+                    self.saleDescriptionLabel.isHidden = true
+                    self.addSubview(view)
+
+                    view.snp.makeConstraints { (make) in
+                        make.edges.equalToSuperview()
+                    }
+                } else {
+                    self.saleDescriptionLabel.text = self.saleDescription
+                }
+            }
+            
+            private func getMarkdownView(text: String) -> DownView? {
+                return try? DownView(
+                        frame: self.bounds,
+                        markdownString: text,
+                        openLinksInBrowser: false
+                    )
             }
         }
     }

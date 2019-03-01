@@ -7,8 +7,8 @@ class LaunchFlowController: BaseFlowController {
     // MARK: - Private properties
     
     private let navigationController: NavigationControllerProtocol = NavigationController()
-    private let userDataManager: UserDataManagerProtocol
-    private let keychainManager: KeychainManagerProtocol
+    private var userDataManager: UserDataManagerProtocol
+    private var keychainManager: KeychainManagerProtocol
     private let onAuthorized: (_ account: String) -> Void
     private let onSignOut: () -> Void
     
@@ -36,11 +36,6 @@ class LaunchFlowController: BaseFlowController {
             flowControllerStack: flowControllerStack,
             rootNavigation: rootNavigation
         )
-        
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
     }
     
     // MARK: - Overridden
@@ -94,8 +89,8 @@ class LaunchFlowController: BaseFlowController {
         }
         
         if let mainAccount = self.userDataManager.getMainAccount(),
-            self.keychainManager.hasKeyDataForMainAccount(),
-            self.userDataManager.hasWalletDataForMainAccount() {
+            self.userDataManager.hasWalletDataForMainAccount(),
+            !self.userDataManager.isSignedViaAuthenticator() {
             
             self.runLocalAuthFlow(account: mainAccount, fromBackground: false)
         } else if
@@ -161,11 +156,15 @@ class LaunchFlowController: BaseFlowController {
     private func setupRecoveryScreen(onSuccess: @escaping () -> Void) -> UpdatePassword.ViewController {
         let vc = UpdatePassword.ViewController()
         
+        let updateRequestBuilder = UpdatePasswordRequestBuilder(
+            keyServerApi: self.flowControllerStack.keyServerApi
+        )
         let submitPasswordHandler = UpdatePassword.RecoverWalletWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.keychainManager,
             userDataManager: self.userDataManager,
-            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher
+            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
+            updateRequestBuilder: updateRequestBuilder
         )
         
         let fields = submitPasswordHandler.getExpectedFields()
@@ -192,7 +191,7 @@ class LaunchFlowController: BaseFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Recovery"
+        vc.navigationItem.title = Localized(.recovery)
         
         return vc
     }
@@ -244,7 +243,7 @@ class LaunchFlowController: BaseFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Verify Email"
+        vc.navigationItem.title = Localized(.verify_email)
         
         return vc
     }
@@ -281,28 +280,42 @@ class LaunchFlowController: BaseFlowController {
         
         let routing = RecoverySeed.Routing(
             onShowMessage: { [weak self] message in
-                self?.navigationController.showDialog(
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
                     title: message,
                     message: nil,
                     style: .alert,
                     options: [],
                     onSelected: { _ in },
-                    onCanceled: nil
+                    onCanceled: nil,
+                    presentViewController: present
                 )
             },
             onShowAlertDialog: { [weak self] (message, options, onSelected) in
-                self?.navigationController.showDialog(
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
                     title: nil,
                     message: message,
                     style: .alert,
                     options: options,
                     onSelected: onSelected,
-                    onCanceled: nil
+                    onCanceled: nil,
+                    presentViewController: present
                 )
             },
             onProceed: { [weak self] in
                 if walletData.verified {
-                    self?.onAuthorized(account)
+                    if self?.keychainManager.hasKeyDataForMainAccount() ?? false {
+                        self?.onAuthorized(account)
+                    } else {
+                        self?.showSignInScreenOnVerified()
+                    }
                 } else {
                     self?.showVerifyEmailScreen(walletId: walletData.walletId)
                 }
@@ -314,7 +327,7 @@ class LaunchFlowController: BaseFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Recovery Seed"
+        vc.navigationItem.title = Localized(.recovery_seed)
         vc.navigationItem.hidesBackButton = true
         
         return vc
@@ -329,20 +342,19 @@ class LaunchFlowController: BaseFlowController {
     private func setupRegisterScreen() -> RegisterScene.ViewController {
         let vc = RegisterScene.ViewController()
         
-        var termsUrl: URL?
-        if var termsAddress = self.flowControllerStack.apiConfigurationModel.termsAddress {
-            if !termsAddress.hasPrefix("http") {
-                termsAddress = "https://\(termsAddress)"
-            }
-            termsUrl = URL(string: termsAddress)
-        }
+        let provider = TermsInfoProvider(apiConfigurationModel: self.flowControllerStack.apiConfigurationModel)
+        let termsUrl = provider.getTermsUrl()
         let sceneModel = RegisterScene.Model.SceneModel.signInWithEmail(self.submittedEmail, termsUrl: termsUrl)
+        let signUpRequestBuilder = SignUpRequestBuilder(
+            keyServerApi: self.flowControllerStack.keyServerApi
+        )
         
         let registrationWorker = RegisterScene.TokenDRegisterWorker(
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
             userDataManager: self.userDataManager,
             keychainManager: self.keychainManager,
+            signUpRequestBuilder: signUpRequestBuilder,
             onSubmitEmail: { [weak self] (email) in
                 self?.submittedEmail = email
         })
@@ -372,14 +384,22 @@ class LaunchFlowController: BaseFlowController {
             onRecovery: { [weak self] in
                 self?.showRecoveryScreen()
             },
+            onAuthenticatorSignIn: { [weak self] in
+                self?.runAuthenticatorAuthFlow()
+            },
             showDialogAlert: { [weak self] (title, message, options, onSelected, onCanceled) in
-                self?.navigationController.showDialog(
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
                     title: title,
                     message: message,
                     style: .alert,
                     options: options,
                     onSelected: onSelected,
-                    onCanceled: onCanceled
+                    onCanceled: onCanceled,
+                    presentViewController: present
                 )
             },
             onSignedOut: {},
@@ -394,9 +414,45 @@ class LaunchFlowController: BaseFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "TokenD"
+        vc.navigationItem.title = Localized(.tokend)
         
         return vc
+    }
+    
+    private func runAuthenticatorAuthFlow() {
+        self.keychainManager = AuthKeychainManager()
+        self.appController.updateFlowControllerStack(
+            self.flowControllerStack.apiConfigurationModel,
+            self.keychainManager
+        )
+        
+        let flowController = AuthenticatorAuthFlowController(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            rootNavigation: self.rootNavigation,
+            navigationController: self.navigationController,
+            userDataManager: self.userDataManager,
+            keychainManager: self.keychainManager,
+            onAuthorized: { [weak self] (account) in
+                self?.onAuthorized(account)
+            },
+            onCancelled: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.navigationController.popViewController(true)
+                strongSelf.keychainManager = KeychainManager()
+                strongSelf.appController.updateFlowControllerStack(
+                    strongSelf.flowControllerStack.apiConfigurationModel,
+                    strongSelf.keychainManager
+                )
+                strongSelf.currentFlowController = nil
+        })
+        
+        flowController.run { [weak self] (vc) in
+            self?.navigationController.pushViewController(vc, animated: true)
+            self?.currentFlowController = flowController
+        }
     }
     
     // MARK: -

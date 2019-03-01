@@ -6,7 +6,7 @@ extension SaleDetails {
     class ChartsFetcher {
         
         private let chartsApi: TokenDSDK.ChartsApi
-        private var cancellableToken: CancellableToken?
+        private var cancelable: Cancelable?
         
         init(
             chartsApi: TokenDSDK.ChartsApi
@@ -24,7 +24,7 @@ extension SaleDetails.ChartsFetcher: SaleDetails.ChartsFetcherProtocol {
         completion: @escaping Completion
         ) {
         
-        self.cancellableToken = self.chartsApi.requestCharts(
+        self.cancelable = self.chartsApi.requestCharts(
             asset: "\(base)-\(quote)",
             completion: { (result) in
                 switch result {
@@ -52,7 +52,7 @@ extension SaleDetails.ChartsFetcher: SaleDetails.ChartsFetcherProtocol {
     }
     
     func cancelRequests() {
-        self.cancellableToken?.cancel()
+        self.cancelable?.cancel()
     }
 }
 

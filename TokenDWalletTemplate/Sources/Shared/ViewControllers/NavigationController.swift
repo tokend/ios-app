@@ -1,5 +1,11 @@
 import UIKit
 
+typealias PresentViewControllerClosure = (
+    _ vc: UIViewController,
+    _ animated: Bool,
+    _ completion: (() -> Void)?
+    ) -> Void
+
 protocol NavigationControllerProtocol: RootContentProtocol {
     func getViewController() -> UIViewController
     
@@ -11,14 +17,7 @@ protocol NavigationControllerProtocol: RootContentProtocol {
     
     func showErrorMessage(_ errorMessage: String, completion: (() -> Void)?)
     
-    func showDialog(
-        title: String?,
-        message: String?,
-        style: UIAlertControllerStyle,
-        options: [String],
-        onSelected: @escaping (_ selectedIndex: Int) -> Void,
-        onCanceled: (() -> Void)?
-    )
+    func getPresentViewControllerClosure() -> PresentViewControllerClosure
     
     func present(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?)
     
@@ -99,6 +98,12 @@ class NavigationController: UINavigationController {
         self.navigationBar.isTranslucent = false
         self.navigationBar.barTintColor = Theme.Colors.mainColor
         self.navigationBar.tintColor = Theme.Colors.textOnMainColor
+        
+        self.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
+            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
+        ]
+        self.navigationBar.shadowImage = UIImage()
     }
 }
 
@@ -119,13 +124,13 @@ extension NavigationController: NavigationControllerProtocol {
     
     func showErrorMessage(_ errorMessage: String, completion: (() -> Void)?) {
         let alert = UIAlertController(
-            title: "Error",
+            title: Localized(.error),
             message: errorMessage,
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "Cancel",
+            title: Localized(.cancel),
             style: .cancel,
             handler: { _ in
                 completion?()
@@ -134,38 +139,10 @@ extension NavigationController: NavigationControllerProtocol {
         self.present(alert, animated: true, completion: nil)
     }
     
-    func showDialog(
-        title: String?,
-        message: String?,
-        style: UIAlertControllerStyle,
-        options: [String],
-        onSelected: @escaping (_ selectedIndex: Int) -> Void,
-        onCanceled: (() -> Void)?
-        ) {
-        
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: style
-        )
-        
-        for (index, option) in options.enumerated() {
-            alert.addAction(UIAlertAction(
-                title: option,
-                style: .default,
-                handler: { _ in
-                    onSelected(index)
-            }))
+    func getPresentViewControllerClosure() -> PresentViewControllerClosure {
+        return { [weak self] (vc, animated, completion) in
+            self?.present(vc, animated: animated, completion: completion)
         }
-        
-        alert.addAction(UIAlertAction(
-            title: "Cancel",
-            style: .cancel,
-            handler: { _ in
-                onCanceled?()
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
     }
     
     func popViewController(_ animated: Bool) {

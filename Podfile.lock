@@ -1,75 +1,86 @@
 PODS:
-  - Alamofire (4.7.3)
+  - Alamofire (4.8.1)
+  - AlamofireNetworkActivityLogger (2.3.0):
+    - Alamofire (~> 4.6)
   - Charts (3.0.4):
     - Charts/Core (= 3.0.4)
   - Charts/Core (3.0.4)
-  - DLCryptoKit (1.0.1):
-    - DLCryptoKit/AES256 (= 1.0.1)
-    - DLCryptoKit/ECDSA (= 1.0.1)
-    - DLCryptoKit/TokenDKDF (= 1.0.1)
+  - DLCryptoKit (2.0.1):
     - DLOpenSSL
-    - libsodium
-  - DLCryptoKit/AES256 (1.0.1):
-    - DLOpenSSL
-    - libsodium
-  - DLCryptoKit/ECDSA (1.0.1):
-    - DLOpenSSL
-    - libsodium
-  - DLCryptoKit/TokenDKDF (1.0.1):
-    - DLOpenSSL
-    - libsodium
-  - DLOpenSSL (1.0)
-  - libsodium (1.0.12)
-  - Nuke (7.5)
+  - DLJSONAPI (1.0.2):
+    - DLJSONAPI/Default (= 1.0.2)
+  - DLJSONAPI/Default (1.0.2)
+  - DLOpenSSL (1.0.2)
+  - Down (0.6.2)
+  - Nuke (7.5.2)
   - PullToRefresher (3.1)
   - QRCodeReader.swift (8.1.1)
-  - ReachabilitySwift (4.1.0)
-  - RxCocoa (4.1.2):
+  - ReachabilitySwift (4.3.0)
+  - RxAtomic (4.4.1)
+  - RxCocoa (4.4.1):
     - RxSwift (~> 4.0)
-  - RxSwift (4.1.2)
+  - RxSwift (4.4.1):
+    - RxAtomic (~> 4.4)
   - SideMenuController (0.2.4)
-  - SnapKit (4.0.0)
+  - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (1.0):
-    - Alamofire (~> 4.1)
-    - TokenDSDK/API (= 1.0)
-    - TokenDSDK/KeyServer (= 1.0)
-    - TokenDWallet (< 2.0)
-  - TokenDSDK/API (1.0):
-    - Alamofire (~> 4.1)
-    - TokenDWallet (< 2.0)
-  - TokenDSDK/KeyServer (1.0):
-    - Alamofire (~> 4.1)
-    - TokenDWallet (< 2.0)
-  - TokenDWallet (1.0.1):
-    - DLCryptoKit (< 2.0)
+  - TokenDSDK (3.0.1):
+    - TokenDSDK/API (= 3.0.1)
+    - TokenDSDK/JSONAPI (= 3.0.1)
+    - TokenDSDK/KeyServer (= 3.0.1)
+    - TokenDWallet (>= 3.0.1)
+  - TokenDSDK/AlamofireNetwork (3.0.1):
+    - Alamofire
+    - AlamofireNetworkActivityLogger
+    - TokenDWallet (>= 3.0.1)
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.0.1):
+    - Alamofire
+    - AlamofireNetworkActivityLogger
+    - TokenDWallet (>= 3.0.1)
+  - TokenDSDK/API (3.0.1):
+    - TokenDWallet (>= 3.0.1)
+  - TokenDSDK/JSONAPI (3.0.1):
+    - DLJSONAPI (>= 1.0.2)
+    - TokenDWallet (>= 3.0.1)
+  - TokenDSDK/KeyServer (3.0.1):
+    - TokenDWallet (>= 3.0.1)
+  - TokenDWallet (3.0.1):
+    - DLCryptoKit (>= 2.0.1)
 
 DEPENDENCIES:
-  - Charts (from `https://github.com/tokend/Charts.git`, branch `master`)
+  - Charts (from `https://github.com/tokend/Charts.git`)
+  - Down
   - Nuke
   - PullToRefresher (~> 3.0)
   - QRCodeReader.swift (= 8.1.1)
-  - ReachabilitySwift (= 4.1.0)
-  - RxCocoa (= 4.1.2)
-  - RxSwift (= 4.1.2)
-  - SideMenuController (from `https://github.com/tokend/SideMenuController.git`, commit `71763cbdd40cc717cdebb467d2f14b54cde359f7`)
-  - SnapKit (= 4.0.0)
+  - ReachabilitySwift (~> 4.1)
+  - RxCocoa (~> 4.1)
+  - RxSwift (~> 4.1)
+  - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
+  - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (< 2.0)
+  - TokenDSDK (= 3.0.1)
+  - TokenDSDK/AlamofireNetwork
+  - TokenDSDK/AlamofireNetworkJSONAPI
+  - TokenDSDK/JSONAPI
+  - TokenDSDK/KeyServer
 
 SPEC REPOS:
   "git@github.com:tokend/ios-specs.git":
     - DLCryptoKit
+    - DLJSONAPI
     - DLOpenSSL
     - TokenDSDK
     - TokenDWallet
   https://github.com/cocoapods/specs.git:
     - Alamofire
-    - libsodium
+    - AlamofireNetworkActivityLogger
+    - Down
     - Nuke
     - PullToRefresher
     - QRCodeReader.swift
     - ReachabilitySwift
+    - RxAtomic
     - RxCocoa
     - RxSwift
     - SnapKit
@@ -77,10 +88,8 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Charts:
-    :branch: master
     :git: https://github.com/tokend/Charts.git
   SideMenuController:
-    :commit: 71763cbdd40cc717cdebb467d2f14b54cde359f7
     :git: https://github.com/tokend/SideMenuController.git
 
 CHECKOUT OPTIONS:
@@ -88,27 +97,30 @@ CHECKOUT OPTIONS:
     :commit: d8acd07e592e08ad4d3d717044080257f637a4f6
     :git: https://github.com/tokend/Charts.git
   SideMenuController:
-    :commit: 71763cbdd40cc717cdebb467d2f14b54cde359f7
+    :commit: a69b0c5704353ed5c35eb7df21d37f094e7582bf
     :git: https://github.com/tokend/SideMenuController.git
 
 SPEC CHECKSUMS:
-  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  AlamofireNetworkActivityLogger: 6f3076652ab7fa6c819b59be08ea038d339e36d8
   Charts: c5f4491efc3a24de9213fe3e68484bfdff881cfb
-  DLCryptoKit: 4f990dec196f9cbf5c49f0d2972ed7e9c402364a
-  DLOpenSSL: e7f152c7108fcf5dcec54b46ecfd22051bd941aa
-  libsodium: 9a8faa5ef2fa0d2d57bd7f7d79bf8fb7c1a9f0ea
-  Nuke: 799c0430f87b11c4dacfa80b13e1c4f0a1464b90
+  DLCryptoKit: 491c522583e92c90c09c06bf1192ef741022af33
+  DLJSONAPI: 898ebfa4a61c5ea6150f2a7ea9acf009a4b8828f
+  DLOpenSSL: 78d928228cb6d95fcaa354f4f9aba041ccf95457
+  Down: 8c59a03cb229ef28dfa774b2132da860f3dee0ac
+  Nuke: 0350d346a688426e8f2331253ef28dc2fc4f6178
   PullToRefresher: ec8c1942bd61bb512ff520c49f9f00903cfa86c7
   QRCodeReader.swift: b164a681887de276d405ff02bce854d82cd6360b
-  ReachabilitySwift: 6849231cd4e06559f3b9ef4a97a0a0f96d41e09f
-  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
-  RxSwift: e49536837d9901277638493ea537394d4b55f570
+  ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
+  RxAtomic: f8d6adc1ccb87a767811269e4875887bc74dbf19
+  RxCocoa: 2f35a76bf8887872e28a1914112395b11b8e0e64
+  RxSwift: 92fcf68dfef21f3e2ab1965363d9e7b3d787597e
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
-  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: 522cb71fa3e363021cc1a950bbf88f56ff578936
-  TokenDWallet: 4309ff92988d678d0de2b345efdc53194d647f1b
+  TokenDSDK: a2820b5514d1f83523b467c1b9b81b7c51b84235
+  TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: 35763de8209a7f369b73d445c398a6c65ef2769b
+PODFILE CHECKSUM: df4ca214b23927da40d4ae53aa0f416c2eabab43
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1

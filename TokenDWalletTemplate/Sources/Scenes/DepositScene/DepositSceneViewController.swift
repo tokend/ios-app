@@ -72,6 +72,7 @@ extension DepositScene {
             self.setupGetAddressButton()
             
             self.setupEmptyContentView()
+            self.setupEmptyHintLabel()
             
             self.setupLayout()
             
@@ -156,7 +157,7 @@ extension DepositScene {
         
         private func setupRenewAddressButton() {
             self.setupButton(self.renewAddressButton)
-            self.renewAddressButton.setTitle("Renew", for: .normal)
+            self.renewAddressButton.setTitle(Localized(.renew), for: .normal)
             self.renewAddressButton.addTarget(
                 self,
                 action: #selector(self.renewAddressButtonAction),
@@ -177,7 +178,7 @@ extension DepositScene {
         
         private func setupGetAddressButton() {
             self.setupButton(self.getAddressButton)
-            self.getAddressButton.setTitle("Get address", for: .normal)
+            self.getAddressButton.setTitle(Localized(.get_address), for: .normal)
             self.getAddressButton.addTarget(
                 self,
                 action: #selector(self.getAddressButtonAction),
@@ -384,7 +385,7 @@ extension DepositScene {
             
             if enable {
                 let shareItem = UIBarButtonItem(
-                    image: #imageLiteral(resourceName: "Share icon"),
+                    image: Assets.shareIcon.image,
                     style: .plain,
                     target: self,
                     action: #selector(self.shareAction)

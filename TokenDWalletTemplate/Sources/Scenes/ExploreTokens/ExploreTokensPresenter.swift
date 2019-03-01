@@ -14,9 +14,15 @@ extension ExploreTokensScene {
     struct Presenter {
         
         private let presenterDispatch: PresenterDispatch
+        private let tokenColoringProvider: TokenColoringProvider
         
-        init(presenterDispatch: PresenterDispatch) {
+        init(
+            presenterDispatch: PresenterDispatch,
+            tokenColoringProvider: TokenColoringProvider
+            ) {
+            
             self.presenterDispatch = presenterDispatch
+            self.tokenColoringProvider = tokenColoringProvider
         }
     }
 }
@@ -36,16 +42,19 @@ extension ExploreTokensScene.Presenter: ExploreTokensScene.PresentationLogic {
                 
             case .notCreated:
                 actionButtonLoading = false
-                actionButtonTitle = "Create balance"
+                actionButtonTitle = Localized(.create_balance)
                 
             case .created:
                 actionButtonLoading = false
-                actionButtonTitle = "View history"
+                actionButtonTitle = Localized(.view_history)
             }
+            
+            let codeColor = self.tokenColoringProvider.coloringForCode(token.code)
             
             let cellModel = ExploreTokensTableViewCell.Model(
                 identifier: token.identifier,
                 iconUrl: token.iconUrl,
+                codeColor: codeColor,
                 title: token.code,
                 description: token.name,
                 actionButtonTitle: actionButtonTitle,
@@ -56,7 +65,7 @@ extension ExploreTokensScene.Presenter: ExploreTokensScene.PresentationLogic {
         
         let viewModel: ExploreTokensScene.Event.TokensDidChange.ViewModel = {
             if sections.isEmpty {
-                return .empty(title: "No tokens")
+                return .empty(title: Localized(.no_tokens))
             }
             return .sections(sections)
         }()

@@ -2,7 +2,8 @@ import Foundation
 
 protocol TransactionsListSceneAmountFormatterProtocol {
     func formatAmount(
-        _ amount: TransactionsListScene.Model.Amount
+        _ amount: TransactionsListScene.Model.Amount,
+        isIncome: Bool?
         ) -> String
 }
 
@@ -13,7 +14,19 @@ extension TransactionsListScene {
 }
 
 extension TransactionsListScene.AmountFormatter: TransactionsListScene.AmountFormatterProtocol {
-    func formatAmount(_ amount: TransactionsListScene.Model.Amount) -> String {
-        return self.formatAmount(amount.value, currency: amount.asset)
+    func formatAmount(
+        _ amount: TransactionsListScene.Model.Amount,
+        isIncome: Bool?
+        ) -> String {
+        
+        let value: Decimal
+        if let isIncome = isIncome {
+            let absValue = abs(amount.value)
+            value = isIncome ? absValue : -absValue
+        } else {
+            value = amount.value
+        }
+        
+        return self.formatAmount(value, currency: amount.asset)
     }
 }

@@ -267,16 +267,30 @@ class RequestSignKeyDataProvider: RequestSignKeyDataProviderProtocol {
     
     // MARK: - RequestSignKeyDataProviderProtocol
     
-    func getPrivateKeyData() -> ECDSA.KeyData? {
+    func getPrivateKeyData(completion: @escaping (ECDSA.KeyData?) -> Void) {
         guard let mainAccount = self.keychainManager.getMainAccount() else {
-            return nil
+            completion(nil)
+            return
         }
         
-        return self.keychainManager.getKeyData(account: mainAccount)
+        let keyData = self.keychainManager.getKeyData(account: mainAccount)
+        completion(keyData)
     }
     
-    func getPublicKeyString() -> String? {
-        guard let publicKey = self.getPrivateKeyData()?.getPublicKeyData() else { return nil }
-        return Base32Check.encode(version: .accountIdEd25519, data: publicKey)
+    func getPublicKeyString(completion: @escaping (String?) -> Void) {
+        guard let mainAccount = self.keychainManager.getMainAccount() else {
+            completion(nil)
+            return
+        }
+        
+        let keyData = self.keychainManager.getKeyData(account: mainAccount)
+        
+        guard let publicKeyData = keyData?.getPublicKeyData() else {
+            completion(nil)
+            return
+        }
+        
+        let publicKey = Base32Check.encode(version: .accountIdEd25519, data: publicKeyData)
+        completion(publicKey)
     }
 }

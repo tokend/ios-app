@@ -9,6 +9,7 @@ protocol DashboardPaymentsPlugInBalancesFetcherProtocol {
     var paymentsPreviewBalances: [PaymentsPreviewBalance] { get }
     
     func observePaymentsPreviewBalances() -> Observable<[PaymentsPreviewBalance]>
+    func refreshPaymentsPreviewBalances()
 }
 
 extension DashboardPaymentsPlugIn {

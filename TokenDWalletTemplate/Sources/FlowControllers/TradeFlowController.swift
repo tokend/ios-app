@@ -65,12 +65,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Trade"
-        
-        self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
-        ]
+        vc.navigationItem.title = Localized(.trade)
         
         self.navigationController.setViewControllers([vc], animated: false)
         
@@ -128,7 +123,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Create offer"
+        vc.navigationItem.title = Localized(.create_offer)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
@@ -144,27 +139,33 @@ class TradeFlowController: BaseSignedInFlowController {
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         
-        let transactionsListRouting = TransactionsListScene.Routing { [weak self] (identifier, _) in
-            guard let strongSelf = self else { return }
-            strongSelf.showOfferDetailsScreen(
-                offerId: identifier,
-                navigationController: strongSelf.navigationController
-            )
-        }
+        let transactionsListRouting = TransactionsListScene.Routing(
+            onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
+                guard let navigationController = self?.navigationController else { return }
+                self?.showOfferDetailsScreen(
+                    offerId: identifier,
+                    navigationController: navigationController
+                )
+            },
+            showSendPayment: { _ in }
+        )
+        
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
         
         let vc = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
-            emptyTitle: "No pending offers",
+            emptyTitle: Localized(.no_pending_offers),
+            viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        vc.navigationItem.title = "Pending offers"
+        vc.navigationItem.title = Localized(.pending_offers)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func showOfferDetailsScreen(
         offerId: UInt64,
-        navigationController: NavigationController
+        navigationController: NavigationControllerProtocol
         ) {
         
         let vc = self.setupOfferDetailsScreen(
@@ -176,12 +177,12 @@ class TradeFlowController: BaseSignedInFlowController {
     
     private func setupOfferDetailsScreen(
         offerId: UInt64,
-        navigationController: NavigationController
+        navigationController: NavigationControllerProtocol
         ) -> TransactionDetails.ViewController {
         
         let routing = TransactionDetails.Routing(
             successAction: {
-                navigationController.popViewController(animated: true)
+                navigationController.popViewController(true)
         },
             showProgress: {
                 navigationController.showProgress()
@@ -196,7 +197,6 @@ class TradeFlowController: BaseSignedInFlowController {
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             transactionSender: self.managersController.transactionSender,
             amountConverter: AmountConverter(),
-            amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
             userDataProvider: self.userDataProvider,
             identifier: offerId
@@ -206,7 +206,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Pending offer details"
+        vc.navigationItem.title = Localized(.pending_offer_details)
         
         return vc
     }
@@ -247,7 +247,6 @@ class TradeFlowController: BaseSignedInFlowController {
             userDataProvider: self.userDataProvider,
             amountFormatter: amountFormatter,
             amountConverter: amountConverter,
-            amountPrecision: self.flowControllerStack.apiConfigurationModel.amountPrecision,
             balanceCreator: balanceCreator,
             balancesRepo: self.reposController.balancesRepo
         )
@@ -276,7 +275,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = "Confirmation"
+        vc.navigationItem.title = Localized(.confirmation)
         
         return vc
     }

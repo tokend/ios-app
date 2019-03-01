@@ -15,10 +15,12 @@ class SalesRepo {
     
     private let sales: BehaviorRelay<[Sale]> = BehaviorRelay(value: [])
     private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+    private let loadingMoreStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
     private var errorStatus: PublishRelay<Swift.Error> = PublishRelay()
     
     private let disposeBag = DisposeBag()
-    private let pageSize: Int = 20
+    private let pageSize: Int = 25
+    private var currentPage: Int = 0
     
     private var shouldInitiateLoad: Bool = true
     private var shouldLoadMore: Bool = false
@@ -30,6 +32,9 @@ class SalesRepo {
     }
     public var loadingStatusValue: LoadingStatus {
         return self.loadingStatus.value
+    }
+    public var loadingMoreStatusValue: LoadingStatus {
+        return self.loadingMoreStatus.value
     }
     
     // MARK: -
@@ -52,10 +57,13 @@ class SalesRepo {
         completion: @escaping () -> Void
         ) {
         
+        self.currentPage = fromLast ? self.currentPage + 1 : self.currentPage
+        
         self.api.getSales(
             SaleResponse.self,
-            limit: nil,
-            cursor: nil,
+            limit: self.pageSize,
+            cursor: fromLast ? self.salesValue.last?.pagingToken : nil,
+            page: self.currentPage,
             owner: nil,
             name: nil,
             baseAsset: nil,
@@ -64,8 +72,19 @@ class SalesRepo {
                 switch result {
                     
                 case .success(let sales):
-                    self?.shouldLoadMore = false
-                    self?.sales.accept(sales)
+                    let pageSize = self?.pageSize ?? 0
+                    self?.shouldLoadMore = sales.count == pageSize
+                    if fromLast && sales.isEmpty {
+                        completion()
+                        return
+                    }
+                    
+                    var newSales: [Sale] = []
+                    if fromLast {
+                        newSales = self?.salesValue ?? []
+                    }
+                    newSales.append(contentsOf: sales)
+                    self?.sales.accept(newSales)
                     
                 case .failure(let errors):
                     self?.errorStatus.accept(errors)
@@ -94,6 +113,18 @@ class SalesRepo {
         })
     }
     
+    public func loadMoreSales() {
+        guard self.shouldLoadMore else {
+            self.loadingMoreStatus.accept(.loaded)
+            return
+        }
+        
+        self.loadingMoreStatus.accept(.loading)
+        self.loadSales(fromLast: true, completion: { [weak self] in
+            self?.loadingMoreStatus.accept(.loaded)
+        })
+    }
+    
     public func observeSales() -> Observable<[Sale]> {
         if self.shouldInitiateLoad {
             self.shouldInitiateLoad = false
@@ -112,6 +143,10 @@ class SalesRepo {
     
     public func observeLoadingStatus() -> Observable<LoadingStatus> {
         return self.loadingStatus.asObservable()
+    }
+    
+    public func observeLoadingMoreStatus() -> Observable<LoadingStatus> {
+        return self.loadingMoreStatus.asObservable()
     }
     
     public func observeErrorStatus() -> Observable<Swift.Error> {

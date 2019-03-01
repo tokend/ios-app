@@ -18,7 +18,7 @@ extension SaleInfo {
         private let blobId: String
         
         private let salesApi: SalesApi
-        private let usersApi: UsersApi
+        private let blobsApi: BlobsApi
         
         private let assetsRepo: AssetsRepo
         private let imagesUtility: ImagesUtility
@@ -54,7 +54,7 @@ extension SaleInfo {
             blobId: String,
             asset: String,
             salesApi: SalesApi,
-            userApi: UsersApi,
+            blobsApi: BlobsApi,
             assetsRepo: AssetsRepo,
             imagesUtility: ImagesUtility,
             balancesRepo: BalancesRepo
@@ -64,7 +64,7 @@ extension SaleInfo {
             self.blobId = blobId
             self.asset = asset
             self.salesApi = salesApi
-            self.usersApi = userApi
+            self.blobsApi = blobsApi
             self.assetsRepo = assetsRepo
             self.imagesUtility = imagesUtility
             self.balancesRepo = balancesRepo
@@ -79,21 +79,21 @@ extension SaleInfo {
                         let tab = self?.getPlainTextTab(blobStatus: blob) {
                         tabs.append(tab)
                     } else {
-                        self?.addLoadingTab(to: &tabs, title: "Overview")
+                        self?.addLoadingTab(to: &tabs, title: Localized(.overview))
                     }
                     
                     if let saleDetails = self?.saleDetailsStatus,
                         let tab = self?.getSaleDetailsTab(saleDetailsStatus: saleDetails) {
                         tabs.append(tab)
                     } else {
-                        self?.addLoadingTab(to: &tabs, title: "General")
+                        self?.addLoadingTab(to: &tabs, title: Localized(.general))
                     }
                     
                     if let asset = self?.assetModel,
                         let tab = self?.getAssetDetailsTab(assetStatus: asset) {
                         tabs.append(tab)
                     } else {
-                        self?.addLoadingTab(to: &tabs, title: "Token")
+                        self?.addLoadingTab(to: &tabs, title: Localized(.token))
                     }
                     
                     self?.tabs.onNext(tabs)
@@ -133,12 +133,12 @@ extension SaleInfo {
                 
             case .failure(let error):
                 let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: "Overview", contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.overview), contentModel: model)
                 return tabModel
                 
             case .success(let blob):
                 let model = SaleInfo.PlainTextContent.Model(contentText: blob.attributes.value)
-                let tabModel = Model.TabModel(title: "Overview", contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.overview), contentModel: model)
                 return tabModel
             }
         }
@@ -148,7 +148,7 @@ extension SaleInfo {
                 
             case .failure(let error):
                 let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: "General", contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.general), contentModel: model)
                 return tabModel
                 
             case .success(let saleDetails):
@@ -161,7 +161,7 @@ extension SaleInfo {
                     startTime: saleDetails.startTime,
                     endTime: saleDetails.endTime
                 )
-                let tabModel = Model.TabModel(title: "General", contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.general), contentModel: model)
                 
                 return tabModel
             }
@@ -172,7 +172,7 @@ extension SaleInfo {
                 
             case .failure(let error):
                 let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: "Token", contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.token), contentModel: model)
                 return tabModel
                 
             case .success(let asset):
@@ -201,7 +201,7 @@ extension SaleInfo {
                     maxTokenAmount: asset.maxIssuanceAmount
                 )
                 
-                let tabModel = Model.TabModel(title: "Token", contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.token), contentModel: model)
                 
                 return tabModel
             }
@@ -217,25 +217,20 @@ extension SaleInfo {
         }
         
         private func downloadBlob() {
-            self.usersApi.getBlob(
-                BlobResponse.self,
-                accountId: self.accountId,
+            self.blobsApi.requestBlob(
                 blobId: self.blobId,
-                fundId: nil,
-                tokenCode: nil,
-                fundOwner: nil,
-                type: nil
-            ) { [weak self] (result) in
-                switch result {
-                    
-                case .failure(let error):
-                    self?.tabsErrorStatus.accept(error)
-                    self?.blobStatus = .failure(error: error)
-                    
-                case .success(let blob):
-                    self?.blobStatus = .success(response: blob)
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failure(let error):
+                        self?.tabsErrorStatus.accept(error)
+                        self?.blobStatus = .failure(error: error)
+                        
+                    case .success(let blob):
+                        self?.blobStatus = .success(response: blob)
+                    }
                 }
-            }
+            )
         }
         
         private func observeAsset(assetCode: String) {
@@ -290,7 +285,7 @@ extension SaleInfo.SaleInfoDataProvider {
             switch self {
                 
             case .noToken:
-                return "No token"
+                return Localized(.no_token)
             }
         }
     }

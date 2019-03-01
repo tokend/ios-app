@@ -78,16 +78,14 @@ class PermissionRequestFlowController: BaseFlowController {
     }
     
     private func handleDeniedOnRepeatedRequest() {
-        // swiftlint:disable line_length
         let alert = UIAlertController(
-            title: "Permissions Denied",
-            message: "You can grant permissions from app Settings in System Preferences. Would you like to open Settings?",
+            title: Localized(.permissions_denied),
+            message: Localized(.you_can_grant_permissions),
             preferredStyle: .alert
         )
-        // swiftlint:enable line_length
         
         alert.addAction(UIAlertAction(
-            title: "Settings",
+            title: Localized(.settings),
             style: .default,
             handler: { [weak self] (_) in
                 self?.appSystemSettingsRequested = true
@@ -104,7 +102,7 @@ class PermissionRequestFlowController: BaseFlowController {
         }))
         
         alert.addAction(UIAlertAction(
-            title: "Cancel",
+            title: Localized(.cancel),
             style: .cancel,
             handler: { [weak self] (_) in
                 self?.onDenied()

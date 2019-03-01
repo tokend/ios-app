@@ -133,8 +133,7 @@ extension SaleDetails {
                     url: asset.details.logo?.url
                 )
                 let assetModel = Model.AssetModel(
-                    logoUrl: self.logoUrl(logo),
-                    verificationRequired: asset.meetsPolicy(.requiresVerification)
+                    logoUrl: self.logoUrl(logo)
                 )
                 
                 return assetModel

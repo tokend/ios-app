@@ -36,6 +36,7 @@ extension RegisterScene.Model {
     enum SubAction {
         case signUp
         case signIn
+        case authenticator
         case recovery
         case signOut
         case agreeOnTerms(checked: Bool, link: URL)
@@ -119,6 +120,7 @@ extension RegisterScene.Model {
         let kyc: String
         let terms: String?
         let web: String?
+        let download: String?
     }
 }
 
@@ -249,6 +251,7 @@ extension RegisterScene.Event.SubAction {
     enum Action {
         case routeToRecovery
         case routeToSignOut
+        case routeToSignInAuthenticator
         case showTermsPage(link: URL)
     }
 }
@@ -272,6 +275,7 @@ extension RegisterScene.Event.SignAction.ViewModel {
             case emailShouldBeVerified(walletId: String)
             case emptyConfirmPassword
             case failedToSaveAccount
+            case failedToSaveNetwork
             case otherError
             case passwordsDontMatch
             case termsNotAgreed

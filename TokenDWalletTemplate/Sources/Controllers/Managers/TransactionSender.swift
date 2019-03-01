@@ -1,11 +1,14 @@
 import Foundation
 import TokenDWallet
 import TokenDSDK
+import RxCocoa
+import RxSwift
 
 class TransactionSender {
     
     private let api: TransactionsApi
     private let keychainDataProvider: KeychainDataProviderProtocol
+    private let transactionActionRelay: PublishRelay<Void> = PublishRelay()
     
     init(
         api: TransactionsApi,
@@ -34,11 +37,16 @@ class TransactionSender {
             switch result {
                 
             case .success:
+                self.transactionActionRelay.accept(())
                 completion(.succeeded)
                 
             case .failure(let error):
                 completion(.failed(error))
             }
         }
+    }
+    
+    public func observeTransactionActions() -> Observable<Void> {
+        return self.transactionActionRelay.asObservable()
     }
 }

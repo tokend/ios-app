@@ -5,9 +5,52 @@ enum TransactionDetails {
     
     // MARK: - Typealiases
     
-    typealias CellIdentifier = String
-    
     // MARK: -
+    
+    enum CellIdentifier: String {
+        case date
+        case description
+        case recipient
+        case amount
+        case fee
+        case feePecipient
+        case fromAccount
+        case subject
+        case state
+        case destination
+        case paid
+        case amountSent
+        case fixedFee
+        case percentFee
+        case sent
+        case warning
+        case received
+        case price
+        case invest
+        case toAccount
+        case toPay
+        case toPayAmount
+        case toPayFee
+        case toReceive
+        case toReceivePrice
+        case lowerBound
+        case upperBound
+        case subtype
+        case fixed
+        case percent
+        case lowercased
+        case startTime
+        case closeTime
+        case baseAsset
+        case softCap
+        case hardCap
+        case available
+        case issued
+        case max
+        case effect
+        case reference
+        case total
+    }
     
     enum Model {}
     enum Event {}

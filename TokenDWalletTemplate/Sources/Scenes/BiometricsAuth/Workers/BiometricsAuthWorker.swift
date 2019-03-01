@@ -52,7 +52,7 @@ extension BiometricsAuth {
             
             context.evaluatePolicy(
                 .deviceOwnerAuthenticationWithBiometrics,
-                localizedReason: "Signing In"
+                localizedReason: Localized(.signing_in)
             ) { [weak self] (success, error) in
                 
                 DispatchQueue.main.async {

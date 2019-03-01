@@ -6,12 +6,13 @@ extension SendPayment {
         static func configure(
             viewController: ViewController,
             senderAccountId: String,
+            selectedBalanceId: String?,
             balanceDetailsLoader: BalanceDetailsLoader,
             amountFormatter: AmountFormatterProtocol,
             recipientAddressResolver: RecipientAddressResolver,
             feeLoader: FeeLoaderProtocol,
-            feeType: SendPayment.Model.FeeType,
-            operation: SendPayment.Model.Operation,
+            feeType: Model.FeeType,
+            operation: Model.Operation,
             viewConfig: Model.ViewConfig,
             routing: Routing?
             ) {
@@ -31,6 +32,7 @@ extension SendPayment {
                 queue: queue,
                 sceneModel: Model.SceneModel(feeType: feeType, operation: operation),
                 senderAccountId: senderAccountId,
+                selectedBalanceId: selectedBalanceId,
                 balanceDetailsLoader: balanceDetailsLoader,
                 recipientAddressResolver: recipientAddressResolver,
                 feeLoader: feeLoader

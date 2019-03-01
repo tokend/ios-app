@@ -13,9 +13,11 @@ protocol SalesSectionsProviderProtocol {
     
     func observeSections() -> Observable<[Sales.Model.SectionModel]>
     func observeLoadingStatus() -> Observable<LoadingStatus>
+    func observeLoadingMoreStatus() -> Observable<LoadingStatus>
     func observeErrorStatus() -> Observable<Swift.Error>
     
     func refreshSales()
+    func loadMoreSales()
 }
 
 extension Sales {
@@ -54,12 +56,22 @@ extension Sales {
             })
         }
         
+        func observeLoadingMoreStatus() -> Observable<SalesSectionsProviderProtocol.LoadingStatus> {
+            return self.salesRepo.observeLoadingMoreStatus().map({ (status) -> SectionsProvider.LoadingStatus in
+                return status.saleSectionsProviderLoadingStatus
+            })
+        }
+        
         func observeErrorStatus() -> Observable<Swift.Error> {
             return self.salesRepo.observeErrorStatus()
         }
         
         func refreshSales() {
             self.salesRepo.reloadSales()
+        }
+        
+        func loadMoreSales() {
+            self.salesRepo.loadMoreSales()
         }
         
         // MARK: - Private

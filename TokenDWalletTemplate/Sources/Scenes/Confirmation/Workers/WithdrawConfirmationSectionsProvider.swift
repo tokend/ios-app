@@ -21,7 +21,6 @@ extension ConfirmationScene {
         private let amountFormatter: AmountFormatterProtocol
         private let percentFormatter: PercentFormatterProtocol
         private let amountConverter: AmountConverterProtocol
-        private let amountPrecision: Int
         private let sectionsRelay: BehaviorRelay<[ConfirmationScene.Model.SectionModel]> = BehaviorRelay(value: [])
         
         // MARK: -
@@ -33,8 +32,7 @@ extension ConfirmationScene {
             amountFormatter: AmountFormatterProtocol,
             userDataProvider: UserDataProviderProtocol,
             amountConverter: AmountConverterProtocol,
-            percentFormatter: PercentFormatterProtocol,
-            amountPrecision: Int
+            percentFormatter: PercentFormatterProtocol
             ) {
             
             self.withdrawModel = withdrawModel
@@ -43,7 +41,6 @@ extension ConfirmationScene {
             self.userDataProvider = userDataProvider
             self.amountFormatter = amountFormatter
             self.amountConverter = amountConverter
-            self.amountPrecision = amountPrecision
             self.percentFormatter = percentFormatter
         }
         
@@ -65,13 +62,7 @@ extension ConfirmationScene {
             
             let xdrAmount: Uint64 = self.amountConverter.convertDecimalToUInt64(
                 value: self.withdrawModel.amount,
-                precision: self.amountPrecision
-            )
-            
-            let conversion = AutoConversionWithdrawalDetails(
-                destAsset: self.withdrawModel.asset,
-                expectedAmount: xdrAmount,
-                ext: .emptyVersion()
+                precision: networkInfo.precision
             )
             
             let fee = Fee(
@@ -80,13 +71,11 @@ extension ConfirmationScene {
                 ext: .emptyVersion()
             )
             
-            let details = WithdrawalRequest.WithdrawalRequestDetails.autoConversion(conversion)
-            
             guard let balance = BalanceID(
                 base32EncodedString: self.withdrawModel.senderBalanceId,
                 expectedVersion: .balanceIdEd25519
                 ) else {
-                    completion(.failed(.failedToDecodeBalanceId(self.withdrawModel.senderBalanceId)))
+                    completion(.failed(.failedToDecodeBalanceId(.senderBalanceId)))
                     return
             }
             
@@ -95,14 +84,13 @@ extension ConfirmationScene {
                 amount: xdrAmount,
                 universalAmount: 0,
                 fee: fee,
-                externalDetails: destAddress,
-                preConfirmationDetails: "",
-                details: details,
+                creatorDetails: destAddress,
                 ext: .emptyVersion()
             )
             
             let operation = CreateWithdrawalRequestOp(
                 request: request,
+                allTasks: nil,
                 ext: .emptyVersion()
             )
             
@@ -147,37 +135,37 @@ extension ConfirmationScene.WithdrawConfirmationSectionsProvider: ConfirmationSc
     
     func loadConfirmationSections() {
         let destinationCell = ConfirmationScene.Model.CellModel(
-            title: "Destination address",
+            title: Localized(.destination_address),
             cellType: .text(value: self.withdrawModel.recipientAddress),
-            identifier: "destinationCell"
+            identifier: .destination
         )
         let destinationSection = ConfirmationScene.Model.SectionModel(cells: [destinationCell])
         
         let withdrawAmount = self.amountFormatter.assetAmountToString(self.withdrawModel.amount)
         let amountCell = ConfirmationScene.Model.CellModel(
-            title: "Amount",
+            title: Localized(.amount),
             cellType: .text(
                 value: withdrawAmount + " " + self.withdrawModel.asset
             ),
-            identifier: "amountCell"
+            identifier: .amount
         )
         
         let senderFeeFixed = self.amountFormatter.assetAmountToString(self.withdrawModel.senderFee.fixed)
         let fixedFeeCell = ConfirmationScene.Model.CellModel(
-            title: "Fixed Fee",
+            title: Localized(.fixed_fee),
             cellType: .text(
                 value: senderFeeFixed + " " + self.withdrawModel.asset
             ),
-            identifier: "fixedFeeCell"
+            identifier: .fixedFee
         )
         
         let senderFeePercent = self.percentFormatter.percentToString(value: self.withdrawModel.senderFee.percent)
         let percentFeeCell = ConfirmationScene.Model.CellModel(
-            title: "Percent Fee",
+            title: Localized(.percent_fee),
             cellType: .text(
                 value: senderFeePercent + " " + self.withdrawModel.asset
             ),
-            identifier: "percentFeeCell"
+            identifier: .percentFee
         )
         let toPaySection = ConfirmationScene.Model.SectionModel(cells: [amountCell, fixedFeeCell, percentFeeCell])
         
