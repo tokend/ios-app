@@ -6,8 +6,6 @@
 	<string>https://api.testnet.tokend.org</string>
 	<key>storage_endpoint</key>
 	<string>https://storage.testnet.tokend.org/api</string>
-	<key>amount_precision</key>
-	<integer>6</integer>
 	<key>terms_address</key>
 	<string>demo.tokend.io/terms</string>
 </dict>

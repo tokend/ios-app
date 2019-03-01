@@ -133,7 +133,7 @@ class AppController {
             let apiConfigurationModel = APIConfigurationModel(
                 storageEndpoint: walletData.network.storageUrl,
                 apiEndpoint: walletData.network.rootUrl,
-                termsAddress: nil,
+                termsAddress: self.flowControllerStack.apiConfigurationModel.termsAddress,
                 webClient: nil,
                 downloadUrl: nil
             )
