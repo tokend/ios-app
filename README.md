@@ -1,5 +1,5 @@
 # TokenD iOS wallet
-This is a template wallet app that provides access to any TokenD-based system. Read more about TokenD platform on <a href="http://tokend.org/" target="_blank">tokend.org</a>.
+This is a template wallet app that provides access to any TokenD-based system. Read more about TokenD platform on <a href="http://tokend.io/" target="_blank">tokend.io</a>.
 
 <a href="https://demo.tokend.io/downloads" target="_blank">Download app</a>
 
@@ -18,7 +18,7 @@ App appearance can be customized in file `Theme.swift`. Various colors and fonts
 
 ### Network config
 The api configuration file `APIConfiguration.plist` contains 4 fields that represent network params of a specific TokenD-based system:
-`api_endpoint`, `storage_endpoint`, `amount_precision` and `terms_address`.
+`api_endpoint`, `storage_endpoint` and `terms_address`.
 
 The app allows user to specify a TokenD-based system to work with by scanning a QR code with network params. In this case, network params from the configuration will be used and displayed by default.
 
