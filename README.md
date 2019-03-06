@@ -30,4 +30,4 @@ In order to change the application branding you have to update following resourc
 * `Bundle identifier` in target settings
 
 ## Credits
-⛏ <a href="https://distributedlab.com/" target="_blank">Distributed Lab</a>, 2018
+<a href="https://distributedlab.com/" target="_blank">Distributed Lab</a>, 2019
