@@ -3,10 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>api_endpoint</key>
-	<string>https://api.testnet.tokend.org</string>
+	<string>https://api.demo.tokend.io</string>
 	<key>storage_endpoint</key>
-	<string>https://storage.testnet.tokend.org/api</string>
+	<string>https://s3.eu-west-1.amazonaws.com/demo-identity-storage-festive-colden</string>
 	<key>terms_address</key>
-	<string>demo.tokend.io/terms</string>
+	<string>https://demo.tokend.io/terms</string>
+	<key>kyc</key>
+	<string>https://demo.tokend.io/verification</string>
 </dict>
 </plist>
