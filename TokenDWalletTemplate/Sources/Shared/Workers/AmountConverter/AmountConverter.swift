@@ -7,12 +7,12 @@ protocol AmountConverterProtocol {
 
 public class AmountConverter: AmountConverterProtocol {
     func convertDecimalToUInt64(value: Decimal, precision: Int64) -> UInt64 {
-        let amount = NSDecimalNumber(decimal: value * Decimal(precision))
+        let amount = NSDecimalNumber(decimal: value * Decimal(precision)).rounding(accordingToBehavior: nil)
         return UInt64(exactly: amount) ?? 0
     }
     
     func convertDecimalToInt64(value: Decimal, precision: Int64) -> Int64 {
-        let amount = NSDecimalNumber(decimal: value * Decimal(precision))
+        let amount = NSDecimalNumber(decimal: value * Decimal(precision)).rounding(accordingToBehavior: nil)
         return Int64(exactly: amount) ?? 0
     }
 }
