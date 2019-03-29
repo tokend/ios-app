@@ -15,12 +15,12 @@ extension SaleDetails {
             
             let youtubeVideoUrl: URL?
             
-            let investedAmountText: String
+            let investedAmountText: NSAttributedString
             let investedPercentage: Float
             let investedPercentageText: String
-            let investorsText: String
+            let investorsText: NSAttributedString
             
-            let timeText: String
+            let timeText: NSAttributedString
             
             let identifier: CellIdentifier
             
@@ -86,18 +86,9 @@ extension SaleDetails {
                 set { self.shortDescriptionLabel.text = newValue }
             }
             
-            public var investedAmountText: String? {
-                get { return self.investedAmountLabel.text }
-                set {
-                    if let string = newValue {
-                        let attriutedText = NSMutableAttributedString(string: string)
-                        attriutedText.setColor(
-                            color: Theme.Colors.textOnContentBackgroundColor,
-                            forText: Localized(.invested_colored)
-                        )
-                        self.investedAmountLabel.attributedText = attriutedText
-                    }
-                }
+            public var investedAmountText: NSAttributedString? {
+                get { return self.investedAmountLabel.attributedText }
+                set { self.investedAmountLabel.attributedText = newValue }
             }
             
             public var investedPercent: Float {
@@ -110,32 +101,14 @@ extension SaleDetails {
                 set { self.percentLabel.text = newValue }
             }
             
-            public var investorsAmountText: String? {
-                get { return self.investorsAmountLabel.text }
-                set {
-                    if let string = newValue {
-                        let attriutedText = NSMutableAttributedString(string: string)
-                        attriutedText.setColor(
-                            color: Theme.Colors.textOnContentBackgroundColor,
-                            forText: Localized(.investors_colored)
-                        )
-                        self.investorsAmountLabel.attributedText = attriutedText
-                    }
-                }
+            public var investorsAmountText: NSAttributedString? {
+                get { return self.investorsAmountLabel.attributedText }
+                set { self.investorsAmountLabel.attributedText = newValue }
             }
             
-            public var timeText: String? {
-                get { return self.timeLabel.text }
-                set {
-                    if let string = newValue {
-                        let attriutedText = NSMutableAttributedString(string: string)
-                        attriutedText.setColor(
-                            color: Theme.Colors.textOnContentBackgroundColor,
-                            forText: Localized(.days_left)
-                        )
-                        self.timeLabel.attributedText = attriutedText
-                    }
-                }
+            public var timeText: NSAttributedString? {
+                get { return self.timeLabel.attributedText }
+                set { self.timeLabel.attributedText = newValue }
             }
             
             public var identifier: CellIdentifier = .empty
