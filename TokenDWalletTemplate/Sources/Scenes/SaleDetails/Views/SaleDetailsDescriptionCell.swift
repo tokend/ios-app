@@ -15,12 +15,12 @@ extension SaleDetails {
             
             let youtubeVideoUrl: URL?
             
-            let investedAmountText: String
+            let investedAmountText: NSAttributedString
             let investedPercentage: Float
             let investedPercentageText: String
-            let investorsText: String
+            let investorsText: NSAttributedString
             
-            let timeText: String
+            let timeText: NSAttributedString
             
             let identifier: CellIdentifier
             
@@ -86,9 +86,9 @@ extension SaleDetails {
                 set { self.shortDescriptionLabel.text = newValue }
             }
             
-            public var investedAmountText: String? {
-                get { return self.investedAmountLabel.text }
-                set { self.investedAmountLabel.text = newValue }
+            public var investedAmountText: NSAttributedString? {
+                get { return self.investedAmountLabel.attributedText }
+                set { self.investedAmountLabel.attributedText = newValue }
             }
             
             public var investedPercent: Float {
@@ -101,14 +101,14 @@ extension SaleDetails {
                 set { self.percentLabel.text = newValue }
             }
             
-            public var investorsAmountText: String? {
-                get { return self.investorsAmountLabel.text }
-                set { self.investorsAmountLabel.text = newValue }
+            public var investorsAmountText: NSAttributedString? {
+                get { return self.investorsAmountLabel.attributedText }
+                set { self.investorsAmountLabel.attributedText = newValue }
             }
             
-            public var timeText: String? {
-                get { return self.timeLabel.text }
-                set { self.timeLabel.text = newValue }
+            public var timeText: NSAttributedString? {
+                get { return self.timeLabel.attributedText }
+                set { self.timeLabel.attributedText = newValue }
             }
             
             public var identifier: CellIdentifier = .empty
@@ -205,7 +205,7 @@ extension SaleDetails {
             
             private func setupInvestedAmountLabel() {
                 self.investedAmountLabel.font = Theme.Fonts.smallTextFont
-                self.investedAmountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+                self.investedAmountLabel.textColor = Theme.Colors.accentColor
                 self.investedAmountLabel.textAlignment = .left
             }
             
@@ -216,18 +216,18 @@ extension SaleDetails {
             }
             
             private func setupProgressView() {
-                self.progressView.tintColor = Theme.Colors.mainColor
+                self.progressView.tintColor = Theme.Colors.accentColor
             }
             
             private func setupInvestorsAmountLabel() {
                 self.investorsAmountLabel.font = Theme.Fonts.smallTextFont
-                self.investorsAmountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+                self.investorsAmountLabel.textColor = Theme.Colors.accentColor
                 self.investorsAmountLabel.textAlignment = .left
             }
             
             private func setupTimeLabel() {
                 self.timeLabel.font = Theme.Fonts.smallTextFont
-                self.timeLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+                self.timeLabel.textColor = Theme.Colors.accentColor
                 self.timeLabel.textAlignment = .right
             }
             

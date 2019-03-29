@@ -206,7 +206,7 @@ extension DepositScene {
         }
         
         private func setupButton(_ button: UIButton) {
-            let buttonImage = UIImage.resizableImageWithColor(Theme.Colors.mainColor)
+            let buttonImage = UIImage.resizableImageWithColor(Theme.Colors.accentColor)
             button.setBackgroundImage(buttonImage, for: .normal)
             button.titleLabel?.font = Theme.Fonts.actionButtonFont
             button.setTitleColor(Theme.Colors.actionTitleButtonColor, for: .normal)

@@ -74,6 +74,7 @@ enum SettingsBoolCell {
         }
         
         private func setupSwitch() {
+            self.stateSwitch.onTintColor = Theme.Colors.accentColor
             self.stateSwitch
                 .rx
                 .isOn

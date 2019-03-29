@@ -108,7 +108,7 @@ extension SendPayment {
             self.selectAccountView.backgroundColor = Theme.Colors.contentBackgroundColor
             
             let selectButton = UIButton(type: .custom)
-            selectButton.setTitleColor(Theme.Colors.mainColor, for: .normal)
+            selectButton.setTitleColor(Theme.Colors.accentColor, for: .normal)
             selectButton.backgroundColor = UIColor.clear
             
             selectButton.setTitle(Localized(.select_contact), for: .normal)

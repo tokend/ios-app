@@ -25,9 +25,14 @@ extension Sales {
         
         // MARK: - Private
         
-        private func getTimeText(sale: Sales.Model.SaleModel) -> (timeText: String, isUpcomming: Bool) {
+        private func getTimeText(
+            sale: Sales.Model.SaleModel
+            ) -> (timeText: NSAttributedString, isUpcomming: Bool) {
+            
             let daysRemaining: String
             let isUpcomming: Bool
+            
+            let attributedDaysRemaining: NSMutableAttributedString
             
             if sale.startDate > Date() {
                 let components = Calendar.current.dateComponents(
@@ -47,6 +52,16 @@ extension Sales {
                 isUpcomming = true
                 
                 daysRemaining = [Localized(.starts_in), startsInString].joined()
+                attributedDaysRemaining = NSMutableAttributedString(
+                    string: daysRemaining,
+                    attributes: [
+                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                    ]
+                )
+                attributedDaysRemaining.setColor(
+                    color: Theme.Colors.accentColor,
+                    forText: "\(days)"
+                )
             } else {
                 isUpcomming = false
                 
@@ -65,12 +80,28 @@ extension Sales {
                         ]
                     )
                     daysRemaining = [daysRemainingString, Localized(.left_lowercased)].joined()
+                    attributedDaysRemaining = NSMutableAttributedString(
+                        string: daysRemaining,
+                        attributes: [
+                            .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                        ]
+                    )
+                    attributedDaysRemaining.setColor(
+                        color: Theme.Colors.accentColor,
+                        forText: "\(days)"
+                    )
                 } else {
                     daysRemaining = Localized(.ended)
+                    attributedDaysRemaining = NSMutableAttributedString(
+                        string: daysRemaining,
+                        attributes: [
+                            .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                        ]
+                    )
                 }
             }
             
-            return (daysRemaining, isUpcomming)
+            return (attributedDaysRemaining, isUpcomming)
         }
     }
 }
@@ -95,6 +126,17 @@ extension Sales.Presenter: Sales.PresentationLogic {
                     ]
                 )
 
+                let attributedInvetsedAmount = NSMutableAttributedString(
+                    string: investedAmount,
+                    attributes: [
+                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                    ]
+                )
+                attributedInvetsedAmount.setColor(
+                    color: Theme.Colors.accentColor,
+                    forText: investedAmountFormatted
+                )
+                
                 let investedPercentage = sale.investmentPercentage
                 let investedPercentageRounded = Int(roundf(investedPercentage * 100))
                 let investedPercentageText = "\(investedPercentageRounded)%"
@@ -104,6 +146,17 @@ extension Sales.Presenter: Sales.PresentationLogic {
                         .investors_replace_count: investorsCount
                     ]
                 )
+                
+                let attributedInvestorsText = NSMutableAttributedString(
+                    string: investorsText,
+                    attributes: [
+                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                    ]
+                )
+                attributedInvestorsText.setColor(
+                    color: Theme.Colors.accentColor,
+                    forText: "\(investorsCount)"
+                )
 
                 let timeText = self.getTimeText(sale: sale)
                 
@@ -111,10 +164,10 @@ extension Sales.Presenter: Sales.PresentationLogic {
                     imageUrl: sale.imageURL,
                     name: saleName,
                     description: sale.description,
-                    investedAmountText: investedAmount,
+                    investedAmountText: attributedInvetsedAmount,
                     investedPercentage: sale.investmentPercentage,
                     investedPercentageText: investedPercentageText,
-                    investorsText: investorsText,
+                    investorsText: attributedInvestorsText,
                     isUpcomming: timeText.isUpcomming,
                     timeText: timeText.timeText,
                     saleIdentifier: sale.saleIdentifier
