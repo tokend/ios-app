@@ -47,7 +47,7 @@ extension SaleDetails {
         
         private func getTimeText(
             sale: Model.DescriptionCellModel
-            ) -> (timeText: NSMutableAttributedString, isUpcomming: Bool) {
+            ) -> (timeText: NSAttributedString, isUpcomming: Bool) {
             
             let daysRemaining: String
             let isUpcomming: Bool
