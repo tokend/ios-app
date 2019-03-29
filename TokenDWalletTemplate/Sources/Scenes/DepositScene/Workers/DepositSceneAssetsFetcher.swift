@@ -133,7 +133,7 @@ extension DepositScene {
             let balances = self.balancesRepo.balancesDetailsValue
             
             let depositableBalances: [Model.Asset] = assets.compactMap { (asset) -> Model.Asset? in
-                guard let externalSystemType = asset.details.externalSystemType else {
+                guard let externalSystemType = asset.defaultDetails?.externalSystemType else {
                     return nil
                 }
                 let optionalExternalSystemAccount = account.externalSystemAccounts.first(where: { (account) -> Bool in

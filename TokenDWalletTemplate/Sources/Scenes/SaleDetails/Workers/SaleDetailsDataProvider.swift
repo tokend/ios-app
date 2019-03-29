@@ -129,8 +129,8 @@ extension SaleDetails {
                 }
                 
                 let logo = Logo(
-                    key: asset.details.logo?.key,
-                    url: asset.details.logo?.url
+                    key: asset.defaultDetails?.logo?.key,
+                    url: asset.defaultDetails?.logo?.url
                 )
                 let assetModel = Model.AssetModel(
                     logoUrl: self.logoUrl(logo)

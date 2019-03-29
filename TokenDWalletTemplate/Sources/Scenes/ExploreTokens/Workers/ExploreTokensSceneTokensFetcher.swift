@@ -117,7 +117,7 @@ extension ExploreTokensScene {
             
             let tokens = assets.map({ (asset) -> Token in
                 
-                let imageKey = asset.details.logo?.imageKey
+                let imageKey = asset.defaultDetails?.logo?.imageKey
                 let iconUrl = self.imagesUtility.getImageURL(imageKey)
                 
                 let balanceState = balances.first(where: { (state) -> Bool in
@@ -143,7 +143,7 @@ extension ExploreTokensScene {
                 identifier: asset.identifier,
                 iconUrl: iconUrl,
                 code: asset.code,
-                name: asset.details.name,
+                name: asset.defaultDetails?.name,
                 balanceState: balanceState
             )
         }

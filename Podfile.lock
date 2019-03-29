@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.8.1)
+  - Alamofire (4.8.2)
   - AlamofireNetworkActivityLogger (2.3.0):
     - Alamofire (~> 4.6)
   - Charts (3.0.4):
@@ -7,9 +7,9 @@ PODS:
   - Charts/Core (3.0.4)
   - DLCryptoKit (2.0.1):
     - DLOpenSSL
-  - DLJSONAPI (1.0.2):
-    - DLJSONAPI/Default (= 1.0.2)
-  - DLJSONAPI/Default (1.0.2)
+  - DLJSONAPI (1.0.3):
+    - DLJSONAPI/Default (= 1.0.3)
+  - DLJSONAPI/Default (1.0.3)
   - DLOpenSSL (1.0.2)
   - Down (0.6.2)
   - Nuke (7.5.2)
@@ -24,25 +24,25 @@ PODS:
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (3.0.1):
-    - TokenDSDK/API (= 3.0.1)
-    - TokenDSDK/JSONAPI (= 3.0.1)
-    - TokenDSDK/KeyServer (= 3.0.1)
+  - TokenDSDK (3.1.0-x.10):
+    - TokenDSDK/API (= 3.1.0-x.10)
+    - TokenDSDK/JSONAPI (= 3.1.0-x.10)
+    - TokenDSDK/KeyServer (= 3.1.0-x.10)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetwork (3.0.1):
+  - TokenDSDK/AlamofireNetwork (3.1.0-x.10):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (3.0.1):
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-x.10):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/API (3.0.1):
+  - TokenDSDK/API (3.1.0-x.10):
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/JSONAPI (3.0.1):
-    - DLJSONAPI (>= 1.0.2)
+  - TokenDSDK/JSONAPI (3.1.0-x.10):
+    - DLJSONAPI (>= 1.0.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/KeyServer (3.0.1):
+  - TokenDSDK/KeyServer (3.1.0-x.10):
     - TokenDWallet (>= 3.0.1)
   - TokenDWallet (3.0.1):
     - DLCryptoKit (>= 2.0.1)
@@ -59,7 +59,7 @@ DEPENDENCIES:
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (= 3.0.1)
+  - TokenDSDK (= 3.1.0-x.10)
   - TokenDSDK/AlamofireNetwork
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
@@ -101,11 +101,11 @@ CHECKOUT OPTIONS:
     :git: https://github.com/tokend/SideMenuController.git
 
 SPEC CHECKSUMS:
-  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlamofireNetworkActivityLogger: 6f3076652ab7fa6c819b59be08ea038d339e36d8
   Charts: c5f4491efc3a24de9213fe3e68484bfdff881cfb
   DLCryptoKit: 491c522583e92c90c09c06bf1192ef741022af33
-  DLJSONAPI: 898ebfa4a61c5ea6150f2a7ea9acf009a4b8828f
+  DLJSONAPI: 4d448f06fd412dae20c53ba1c71d601c4b422ce5
   DLOpenSSL: 78d928228cb6d95fcaa354f4f9aba041ccf95457
   Down: 8c59a03cb229ef28dfa774b2132da860f3dee0ac
   Nuke: 0350d346a688426e8f2331253ef28dc2fc4f6178
@@ -118,9 +118,9 @@ SPEC CHECKSUMS:
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: a2820b5514d1f83523b467c1b9b81b7c51b84235
+  TokenDSDK: 4157c106ec2c52428647f9caf4cf7b2f0360287a
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: df4ca214b23927da40d4ae53aa0f416c2eabab43
+PODFILE CHECKSUM: e2fa7dd4037470d27f3a5b893d4e7fe5dbda2654
 
 COCOAPODS: 1.6.1

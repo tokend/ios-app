@@ -61,7 +61,7 @@ extension TokenDetailsScene {
             let balances = self.balancesRepo.balancesDetailsValue
             
             let tokens = assets.map({ (asset) -> Token in
-                let imageKey: ImagesUtility.ImageKey? = asset.details.logo?.imageKey
+                let imageKey: ImagesUtility.ImageKey? = asset.defaultDetails?.logo?.imageKey
                 let iconUrl = self.imagesUtility.getImageURL(imageKey)
                 
                 let balanceState = balances.first(where: { (state) -> Bool in
@@ -91,7 +91,7 @@ extension TokenDetailsScene {
             
             typealias Document = TokenDetailsScene.Model.Token.Document
             let termsOfUse: Document? = {
-                if let termsDocument = asset.details.terms {
+                if let termsDocument = asset.defaultDetails?.terms {
                     guard termsDocument.key.isEmpty == false,
                         let termsDocumentUrl = self.documentURLBuilder.getURLForTerms(termsDocument),
                         UIApplication.shared.canOpenURL(termsDocumentUrl)
@@ -108,7 +108,7 @@ extension TokenDetailsScene {
                 identifier: asset.identifier,
                 iconUrl: iconUrl,
                 code: asset.code,
-                name: asset.details.name,
+                name: asset.defaultDetails?.name,
                 balanceState: balanceState,
                 availableForIssuance: asset.availableForIssuance,
                 issued: asset.issued,

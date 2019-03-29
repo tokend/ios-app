@@ -178,7 +178,7 @@ extension SaleInfo {
             case .success(let asset):
                 var iconUrl: URL?
                 
-                if let key = asset.details.logo?.key {
+                if let key = asset.defaultDetails?.logo?.key {
                     let imageKey = ImagesUtility.ImageKey.key(key)
                     iconUrl = imagesUtility.getImageURL(imageKey)
                 }
@@ -192,7 +192,7 @@ extension SaleInfo {
                 }
                 
                 let model = SaleInfo.TokenContent.Model(
-                    assetName: asset.details.name,
+                    assetName: asset.defaultDetails?.name,
                     assetCode: asset.code,
                     imageUrl: iconUrl,
                     balanceState: balanceState,
