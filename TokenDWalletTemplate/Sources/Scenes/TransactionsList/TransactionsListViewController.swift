@@ -181,7 +181,7 @@ extension TransactionsListScene {
         }
         
         private func setupActionButton() {
-            self.actionButton.backgroundColor = Theme.Colors.mainColor
+            self.actionButton.backgroundColor = Theme.Colors.accentColor
             self.actionButton.tintColor = Theme.Colors.textOnMainColor
             self.actionButton.layer.cornerRadius = self.iconSize / 2
             self.actionButton.setImage(#imageLiteral(resourceName: "Send"), for: .normal)

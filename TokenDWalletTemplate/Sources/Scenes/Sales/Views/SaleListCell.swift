@@ -78,7 +78,16 @@ extension Sales {
             
             public var investedAmountText: String? {
                 get { return self.investedAmountLabel.text }
-                set { self.investedAmountLabel.text = newValue }
+                set {
+                    if let string = newValue {
+                        let attriutedText = NSMutableAttributedString(string: string)
+                        attriutedText.setColor(
+                            color: Theme.Colors.textOnContentBackgroundColor,
+                            forText: Localized(.invested_colored)
+                        )
+                        self.investedAmountLabel.attributedText = attriutedText
+                    }
+                }
             }
             
             public var investedPercent: Float {
@@ -93,12 +102,30 @@ extension Sales {
             
             public var investorsAmountText: String? {
                 get { return self.investorsAmountLabel.text }
-                set { self.investorsAmountLabel.text = newValue }
+                set {
+                    if let string = newValue {
+                        let attriutedText = NSMutableAttributedString(string: string)
+                        attriutedText.setColor(
+                            color: Theme.Colors.textOnContentBackgroundColor,
+                            forText: Localized(.investors_colored)
+                        )
+                        self.investorsAmountLabel.attributedText = attriutedText
+                    }
+                }
             }
             
             public var timeText: String? {
                 get { return self.timeLabel.text }
-                set { self.timeLabel.text = newValue }
+                set {
+                    if let string = newValue {
+                        let attriutedText = NSMutableAttributedString(string: string)
+                        attriutedText.setColor(
+                            color: Theme.Colors.textOnContentBackgroundColor,
+                            forText: Localized(.days_left)
+                        )
+                        self.timeLabel.attributedText = attriutedText
+                    }
+                }
             }
             
             public var identifier: Sales.CellIdentifier = ""
@@ -186,7 +213,7 @@ extension Sales {
             
             private func setupInvestedAmountLabel() {
                 self.investedAmountLabel.font = Theme.Fonts.smallTextFont
-                self.investedAmountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+                self.investedAmountLabel.textColor = Theme.Colors.accentColor
                 self.investedAmountLabel.textAlignment = .left
             }
             
@@ -197,18 +224,18 @@ extension Sales {
             }
             
             private func setupProgressView() {
-                self.progressView.tintColor = Theme.Colors.mainColor
+                self.progressView.tintColor = Theme.Colors.accentColor
             }
             
             private func setupInvestorsAmountLabel() {
                 self.investorsAmountLabel.font = Theme.Fonts.smallTextFont
-                self.investorsAmountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+                self.investorsAmountLabel.textColor = Theme.Colors.accentColor
                 self.investorsAmountLabel.textAlignment = .left
             }
             
             private func setupTimeLabel() {
                 self.timeLabel.font = Theme.Fonts.smallTextFont
-                self.timeLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+                self.timeLabel.textColor = Theme.Colors.accentColor
                 self.timeLabel.textAlignment = .right
             }
             

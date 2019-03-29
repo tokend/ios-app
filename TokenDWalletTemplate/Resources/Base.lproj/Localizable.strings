@@ -56,8 +56,9 @@
 "dashboard" = "Dashboard";
 "date" = "Date";
 "day" = "Day";
-"days_days" = "$(days) days";
-"days_days_replace_days" = "days";
+"days_days" = "$(days) day(s)";
+"days_days_replace_days" = "day(s)";
+"days_left" = "day(s) left";
 "deployed" = "deployed";
 "deposit" = "Deposit";
 "description" = "Description";
@@ -151,12 +152,14 @@
 "invalid_account_id_or_email" = "Invalid account id or email";
 "invest" = "INVEST";
 "invested" = "$(amount) invested";
+"invested_colored" = "invested";
 "invested_replace_amount" = "amount";
 "investing" = "Investing";
 "investment" = "Investment";
 "investment_details" = "Investment details";
 "investments" = "Investments";
-"investors" = "$(count) investors";
+"investors" = "$(count) investor(s)";
+"investors_colored" = "investor(s)";
 "investors_replace_count" = "count";
 "issued" = "Issued";
 "keychaindataprovider_should_always_provide_key" = "KeychainDataProvider should always provide key";

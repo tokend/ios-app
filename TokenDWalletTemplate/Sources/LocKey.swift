@@ -61,6 +61,7 @@ enum LocKey: String {
     case day
     case days_days
     case days_days_replace_days
+    case days_left
     case deployed
     case deposit
     case description
@@ -154,12 +155,14 @@ enum LocKey: String {
     case invalid_account_id_or_email
     case invest
     case invested
+    case invested_colored
     case invested_replace_amount
     case investing
     case investment
     case investment_details
     case investments
     case investors
+    case investors_colored
     case investors_replace_count
     case issued
     case keychaindataprovider_should_always_provide_key

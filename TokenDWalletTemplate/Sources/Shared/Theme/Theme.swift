@@ -6,7 +6,9 @@ enum Theme {
         
         private static let disabledColorAlpha: CGFloat = 0.3
         
-        static let mainColor: UIColor = UIColor(red: 0.48, green: 0.43, blue: 1.0, alpha: 1.0)
+        static let mainColor: UIColor = UIColor(red: 0.28, green: 0.27, blue: 0.42, alpha: 1.0)
+        static let accentColor: UIColor = UIColor(red: 0.39, green: 0.33, blue: 0.93, alpha: 1.0)
+        
         static let textOnMainColor: UIColor = UIColor.white
         static let separatorOnMainColor: UIColor = UIColor.lightGray
         
@@ -33,7 +35,7 @@ enum Theme {
         static let textFieldForegroundDisabledColor: UIColor = UIColor.lightGray
         static let textFieldForegroundErrorColor: UIColor = negativeColor
         
-        static let actionButtonColor: UIColor = Theme.Colors.mainColor
+        static let actionButtonColor: UIColor = accentColor
         static let actionTitleButtonColor: UIColor = Theme.Colors.textOnMainColor
         static let disabledActionButtonColor: UIColor = Theme.Colors
             .actionButtonColor.withAlphaComponent(Theme.Colors.disabledColorAlpha)
