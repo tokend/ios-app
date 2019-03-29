@@ -8,6 +8,7 @@ enum TransactionsListTableViewCell {
         
         let balanceId: String
         let icon: UIImage
+        let iconTint: UIColor
         let title: String
         let amount: String
         let amountColor: UIColor
@@ -16,7 +17,8 @@ enum TransactionsListTableViewCell {
         
         func setup(cell: TransactionsListTableViewCell.View) {
             
-            cell.icon = self.icon
+            cell.icon = self.icon.withRenderingMode(.alwaysTemplate)
+            cell.iconTint = self.iconTint
             cell.title = self.title
             cell.amount = self.amount
             cell.amountColor = self.amountColor
@@ -45,6 +47,11 @@ enum TransactionsListTableViewCell {
         public var icon: UIImage? {
             get { return self.iconView.image }
             set { self.iconView.image = newValue }
+        }
+        
+        public var iconTint: UIColor? {
+            get { return self.iconView.tintColor }
+            set { self.iconView.tintColor = newValue }
         }
         
         public var title: String? {
