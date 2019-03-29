@@ -44,54 +44,14 @@ extension TransactionsListScene {
                         return self.dateFormatter.formatDateForTitle(date)
                     }()
                     let rows = section.transactions.map({ (transaction) -> TransactionsListTableViewCell.Model in
-                        let title: String
-                        let icon: UIImage
                         
-                        switch transaction.amountEffect {
-                            
-                        case .charged:
-                            title = Localized(.charged)
-                            icon = Assets.outcomeIcon.image
-                        case .charged_from_locked:
-                            title = Localized(.charged_from_lock)
-                            icon = Assets.outcomeIcon.image
-                        case .funded:
-                            title = Localized(.funded)
-                            icon = Assets.incomeIcon.image
-                        case .issued:
-                            title = Localized(.issued)
-                            icon = Assets.outcomeIcon.image
-                        case .locked:
-                            title = Localized(.locked)
-                            icon = Assets.lock.image
-                        case .matched:
-                            title = Localized(.matched)
-                            icon = Assets.match.image
-                        case .no_effect:
-                            title = ""
-                            icon = Assets.match.image
-                        case .unlocked:
-                            title = Localized(.unlocked)
-                            icon = Assets.unlock.image
-                        case .withdrawn:
-                            title = Localized(.withdrawn)
-                            icon = Assets.outcomeIcon.image
-                            
-                        case .pending:
-                            title = Localized(.pending_offer)
-                            icon = Assets.outcomeIcon.image
-                            
-                        case .sale:
-                            title = Localized(.sale)
-                            icon = Assets.outcomeIcon.image
-                        }
+                        let attributes = self.getTransactionAttributes(effect: transaction.amountEffect)
                         
                         let amount: String = self.amountFormatter.formatAmount(
                             transaction.amount,
                             isIncome: nil
                         )
                         
-                        let amountColor = Theme.Colors.neutralAmountColor
                         let counterparty: String? = transaction.counterparty
                         
                         var additionalInfo: String?
@@ -103,10 +63,11 @@ extension TransactionsListScene {
                         return TransactionsListTableViewCell.Model(
                             identifier: transaction.identifier,
                             balanceId: transaction.balanceId,
-                            icon: icon,
-                            title: title,
+                            icon: attributes.icon,
+                            iconTint: attributes.iconTint,
+                            title: attributes.title,
                             amount: amount,
-                            amountColor: amountColor,
+                            amountColor: attributes.amountColor,
                             counterparty: counterparty,
                             additionalInfo: additionalInfo
                         )
@@ -132,6 +93,89 @@ extension TransactionsListScene {
             self.presenterDispatch.display { (displayLogic) in
                 displayLogic.displayTransactionsDidUpdate(viewModel: viewModel)
             }
+        }
+        
+        private func getTransactionAttributes(effect: Model.Transaction.AmountEffect) -> Attributes {
+            let title: String
+            let icon: UIImage
+            let iconTint: UIColor
+            let amountColor: UIColor
+            
+            switch effect {
+                
+            case .charged:
+                title = Localized(.charged)
+                icon = Assets.outgoing.image
+                iconTint = Theme.Colors.negativeColor
+                amountColor = Theme.Colors.negativeAmountColor
+                
+            case .charged_from_locked:
+                title = Localized(.charged_from_lock)
+                icon = Assets.outgoing.image
+                iconTint = Theme.Colors.negativeColor
+                amountColor = Theme.Colors.negativeAmountColor
+                
+            case .funded:
+                title = Localized(.funded)
+                icon = Assets.incoming.image
+                iconTint = Theme.Colors.positiveColor
+                amountColor = Theme.Colors.positiveAmountColor
+                
+            case .issued:
+                title = Localized(.issued)
+                icon = Assets.incoming.image
+                iconTint = Theme.Colors.positiveColor
+                amountColor = Theme.Colors.positiveAmountColor
+                
+            case .locked:
+                title = Localized(.locked)
+                icon = Assets.lock.image
+                iconTint = Theme.Colors.neutralColor
+                amountColor = Theme.Colors.neutralAmountColor
+                
+            case .matched:
+                title = Localized(.matched)
+                icon = Assets.match.image
+                iconTint = Theme.Colors.neutralColor
+                amountColor = Theme.Colors.neutralAmountColor
+                
+            case .no_effect:
+                title = ""
+                icon = Assets.match.image
+                iconTint = Theme.Colors.neutralColor
+                amountColor = Theme.Colors.neutralAmountColor
+                
+            case .unlocked:
+                title = Localized(.unlocked)
+                icon = Assets.unlock.image
+                iconTint = Theme.Colors.neutralColor
+                amountColor = Theme.Colors.positiveAmountColor
+                
+            case .withdrawn:
+                title = Localized(.withdrawn)
+                icon = Assets.outgoing.image
+                iconTint = Theme.Colors.negativeColor
+                amountColor = Theme.Colors.negativeAmountColor
+                
+            case .pending:
+                title = Localized(.pending_offer)
+                icon = Assets.outgoing.image
+                iconTint = Theme.Colors.neutralColor
+                amountColor = Theme.Colors.neutralAmountColor
+                
+            case .sale:
+                title = Localized(.sale)
+                icon = Assets.outgoing.image
+                iconTint = Theme.Colors.negativeColor
+                amountColor = Theme.Colors.negativeAmountColor
+            }
+            
+            return Attributes(
+                title: title,
+                icon: icon,
+                iconTint: iconTint,
+                amountColor: amountColor
+            )
         }
     }
 }
@@ -187,5 +231,14 @@ extension TransactionsListScene.Presenter: TransactionsListScene.PresentationLog
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displaySendAction(viewModel: viewModel)
         }
+    }
+}
+
+extension TransactionsListScene.Presenter {
+    struct Attributes {
+        let title: String
+        let icon: UIImage
+        let iconTint: UIColor
+        let amountColor: UIColor
     }
 }

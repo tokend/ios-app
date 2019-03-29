@@ -12,7 +12,8 @@ enum Theme {
         
         static let negativeColor: UIColor = UIColor(red: 0.835, green: 0.0, blue: 0.0, alpha: 1.0)
         static let positiveColor: UIColor = UIColor(red: 0.0, green: 0.7, blue: 0.46, alpha: 1.0)
-        static let neutralColor: UIColor = UIColor.gray
+        static let warningColor: UIColor = UIColor(red: 0.94, green: 0.63, blue: 0.15, alpha: 1.0)
+        static let neutralColor: UIColor = warningColor
         
         static let containerBackgroundColor: UIColor = UIColor(white: 0.91, alpha: 1.0)
         static let textOnContainerBackgroundColor: UIColor = UIColor.black
@@ -48,7 +49,7 @@ enum Theme {
         
         static let negativeAmountColor: UIColor = negativeColor
         static let positiveAmountColor: UIColor = positiveColor
-        static let neutralAmountColor: UIColor = neutralColor
+        static let neutralAmountColor: UIColor = UIColor.gray
         
         static let stickyHeaderBackgroundColor: UIColor = UIColor.gray
         static let stickyHeaderTitleColor: UIColor = UIColor.white
