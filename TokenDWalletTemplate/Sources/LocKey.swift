@@ -10,6 +10,7 @@ enum LocKey: String {
     case account_id_or_email_colon
     case acknowledgements
     case already_have_an_account
+    case aml_alert_request
     case amount
     case amount_colon
     case amount_sent
@@ -17,6 +18,7 @@ enum LocKey: String {
     case amount_newline_replace_base
     case are_you_sure_you_want_to_sign_out
     case asset
+    case asset_pair
     case at_date
     case at_date_replace_date
     case authenticator
@@ -36,9 +38,11 @@ enum LocKey: String {
     case buy
     case buy_base
     case buy_base_replace_base
+    case can_be_traded_on_secondary_market
     case cancel
     case cancel_tfa
     case canceled
+    case cannot_be_traded_on_secondary_market
     case cannot_decode_original_account_id_data
     case cannot_derive_encoded_wallet_id
     case change_password
@@ -46,6 +50,7 @@ enum LocKey: String {
     case charged_from_lock
     case choose_email
     case close_time
+    case code
     case confirm
     case confirm_new_password
     case confirm_password
@@ -159,17 +164,24 @@ enum LocKey: String {
     case invested_replace_amount
     case investing
     case investment
+    case investment_cancellation
     case investment_details
     case investments
     case investors
     case investors_colored
     case investors_replace_count
+    case is_not_restricted_by_current_price
+    case is_not_restricted_by_physical_price
+    case is_restricted_by_current_price
+    case is_restricted_by_physical_price
+    case issuance
     case issued
     case keychaindataprovider_should_always_provide_key
     case left_lowercased
     case locked
     case lower_bound
     case main_title
+    case manage_asset_pair
     case matched
     case maximum
     case month
@@ -200,6 +212,10 @@ enum LocKey: String {
     case offer
     case old_password
     case old_password_lowercased
+    case one_equals
+    case one_equals_replace_quote_asset
+    case one_equals_replace_price
+    case one_equals_replace_base_asset
     case one_for
     case one_for_replace_base_asset
     case one_for_replace_quote_asset
@@ -213,7 +229,9 @@ enum LocKey: String {
     case passwords_dont_match
     case pay_recipients_fee
     case payment
+    case payout
     case pending
+    case pending_investment
     case pending_offer_details
     case pending_offer
     case pending_offers
@@ -221,6 +239,7 @@ enum LocKey: String {
     case percent_fee
     case permission_denied
     case permissions_denied
+    case physical_price
     case please_validate_this_seed
     case price
     case price_colon

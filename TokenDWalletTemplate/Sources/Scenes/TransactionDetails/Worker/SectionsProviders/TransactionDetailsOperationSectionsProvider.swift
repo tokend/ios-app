@@ -149,6 +149,13 @@ extension TransactionDetails {
             )
             sections.append(operationSection)
             
+            if let detailsSection = self.createDetailsSection(
+                details: details
+                ) {
+                
+                sections.append(detailsSection)
+            }
+            
             if let descriptionSection = self.createDescriptionSection(
                 details: details,
                 balanceChangeEffect: balanceChangeEffect
@@ -473,6 +480,114 @@ extension TransactionDetails {
                 description: ""
             )
         }
+        
+        private func createDetailsSection(
+            details: OperationDetailsResource
+            ) -> TransactionDetails.Model.SectionModel? {
+            
+            if let manageAssetPairsDetails = details as? OpManageAssetPairDetailsResource {
+                return self.createManageAssetPairDetailsSection(details: manageAssetPairsDetails)
+            }
+            
+            return nil
+        }
+        
+        private func createManageAssetPairDetailsSection(
+            details: OpManageAssetPairDetailsResource
+            ) -> TransactionDetails.Model.SectionModel? {
+            
+            guard let baseAssetResource = details.baseAsset,
+                let baseAsset = baseAssetResource.id,
+                let quoteAssetResource = details.quoteAsset,
+                let quoteAsset = quoteAssetResource.id else {
+                    return nil
+            }
+            
+            var cells: [TransactionDetails.Model.CellModel] = []
+            
+            let code = "\(quoteAsset)/\(baseAsset)"
+            let codeCell = TransactionDetails.Model.CellModel(
+                title: Localized(.code),
+                value: code,
+                identifier: .code
+            )
+            cells.append(codeCell)
+            
+            let physicalPrice = Localized(
+                .one_equals,
+                replace: [
+                    .one_equals_replace_quote_asset: quoteAsset,
+                    .one_equals_replace_price: details.physicalPrice,
+                    .one_equals_replace_base_asset: baseAsset
+                ])
+            
+            let physicalPriceCell = TransactionDetails.Model.CellModel(
+                title: Localized(.physical_price),
+                value: physicalPrice,
+                identifier: .physicalPrice
+            )
+            cells.append(physicalPriceCell)
+            
+            let tradable: String
+            let restrictedByPhysical: String
+            let restrictedByCurrent: String
+            
+            if let policy = details.policies {
+                tradable = self.meetsPolicy(
+                    policy: policy.value,
+                    policyToCheck: .tradeableSecondaryMarket
+                    ) ? Localized(.can_be_traded_on_secondary_market) :
+                    Localized(.cannot_be_traded_on_secondary_market)
+                
+                restrictedByPhysical = self.meetsPolicy(
+                    policy: policy.value,
+                    policyToCheck: .physicalPriceRestriction
+                    ) ? Localized(.is_restricted_by_physical_price) :
+                    Localized(.is_not_restricted_by_physical_price)
+                
+                restrictedByCurrent = self.meetsPolicy(
+                    policy: policy.value,
+                    policyToCheck: .currentPriceRestriction
+                    ) ? Localized(.is_restricted_by_current_price) :
+                    Localized(.is_not_restricted_by_current_price)
+            } else {
+                tradable = Localized(.is_not_restricted_by_physical_price)
+                restrictedByPhysical = Localized(.is_not_restricted_by_current_price)
+                restrictedByCurrent = Localized(.cannot_be_traded_on_secondary_market)
+            }
+            
+            let tradeMarketCell = TransactionDetails.Model.CellModel(
+                title: tradable,
+                value: "",
+                identifier: .tradable
+            )
+            
+            let physicalPriceRestrictionCell = TransactionDetails.Model.CellModel(
+                title: restrictedByPhysical,
+                value: "",
+                identifier: .physicalPrice
+            )
+            
+            let currentPriceRestrictionCell = TransactionDetails.Model.CellModel(
+                title: restrictedByCurrent,
+                value: "",
+                identifier: .currentPrice
+            )
+            
+            cells.append(tradeMarketCell)
+            cells.append(physicalPriceRestrictionCell)
+            cells.append(currentPriceRestrictionCell)
+            
+            return TransactionDetails.Model.SectionModel(
+                title: Localized(.asset_pair),
+                cells: cells,
+                description: ""
+            )
+        }
+        
+        private func meetsPolicy(policy: Int32, policyToCheck: AssetPairPolicy) -> Bool {
+            return (policy & policyToCheck.rawValue) == policyToCheck.rawValue
+        }
     }
 }
 
@@ -509,4 +624,12 @@ extension TransactionDetails.OperationSectionsProvider: TransactionDetails.Secti
         onHideLoading: @escaping () -> Void,
         onError: @escaping (String) -> Void
         ) { }
+}
+
+extension TransactionDetails.OperationSectionsProvider {
+    enum AssetPairPolicy: Int32 {
+        case tradeableSecondaryMarket = 1
+        case physicalPriceRestriction = 2
+        case currentPriceRestriction = 4
+    }
 }

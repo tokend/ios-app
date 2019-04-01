@@ -50,6 +50,10 @@ enum TransactionDetails {
         case effect
         case reference
         case total
+        case code
+        case tradable
+        case physicalPrice
+        case currentPrice
     }
     
     enum Model {}
