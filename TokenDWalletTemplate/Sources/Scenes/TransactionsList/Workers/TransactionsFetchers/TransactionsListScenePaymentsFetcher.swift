@@ -285,12 +285,15 @@ extension TransactionsListScene {
                 asset: self.rateAsset
             )
             
+            let counterparty = matchedEffect.orderBookId == 0 ?
+                Localized(.pending_offer) : Localized(.pending_investment)
+            
             let transaction = Transaction(
                 identifier: identifier,
                 balanceId: balanceId,
                 amount: amount,
                 amountEffect: .matched,
-                counterparty: nil,
+                counterparty: counterparty,
                 rate: rate,
                 date: operation.appliedAt
             )
@@ -328,29 +331,36 @@ extension TransactionsListScene {
         }
         
         private func getCounterparty(details: OperationDetailsResource) -> String? {
-            switch details.operationDetailsRelatedToBalance {
-                
-            case .opCreateWithdrawRequestDetails(let resource):
-                return resource.creatorDetails["address"] as? String
-                
-            case .opPaymentDetails(let resource):
-                guard let accountFrom = resource.accountFrom,
-                    let accountFromId = accountFrom.id,
-                    let accountTo = resource.accountTo,
-                    let accountToId = accountTo.id else {
-                        return nil
+            if let manageOfferDetails = details as? OpManageOfferDetailsResource {
+                return manageOfferDetails.orderBookId == 0 ?
+                    Localized(.pending_offer) : Localized(.pending_investment)
+            } else if details as? OpManageAssetPairDetailsResource != nil {
+                return Localized(.manage_asset_pair)
+            } else if details as? OpCheckSaleStateDetailsResource != nil {
+                return Localized(.investment_cancellation)
+            } else {
+                switch details.operationDetailsRelatedToBalance {
+                    
+                case .opCreateWithdrawRequestDetails:
+                    return Localized(.withdrawal)
+                    
+                case .opPaymentDetails:
+                    return Localized(.payment)
+                    
+                case .opCreateIssuanceRequestDetails:
+                    return Localized(.issuance)
+                    
+                case .opCreateAMLAlertRequestDetails:
+                    return Localized(.aml_alert_request)
+                    
+                case .opPayoutDetails:
+                    return Localized(.payout)
+                    
+                case .`self`,
+                     .opCreateAtomicSwapBidRequestDetails:
+                    
+                    return nil
                 }
-                
-                let wasSent: Bool = accountFromId == self.originalAccountId
-                return wasSent ? accountToId : accountFromId
-                
-            case .`self`,
-                 .opCreateAMLAlertRequestDetails,
-                 .opCreateAtomicSwapBidRequestDetails,
-                 .opCreateIssuanceRequestDetails,
-                 .opPayoutDetails:
-                
-                return nil
             }
         }
     }

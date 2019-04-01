@@ -195,6 +195,7 @@
 "invested_replace_amount" = "amount";
 "investing" = "Investing";
 "investment" = "Investment";
+"investment_cancellation" = "Investment cancellation";
 "investment_details" = "Investment details";
 "investments" = "Investments";
 "investors" = "$(count) investor(s)";

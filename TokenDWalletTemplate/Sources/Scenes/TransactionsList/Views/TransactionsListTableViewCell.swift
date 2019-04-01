@@ -16,7 +16,6 @@ enum TransactionsListTableViewCell {
         let additionalInfo: String?
         
         func setup(cell: TransactionsListTableViewCell.View) {
-            
             cell.icon = self.icon.withRenderingMode(.alwaysTemplate)
             cell.iconTint = self.iconTint
             cell.title = self.title
@@ -180,9 +179,9 @@ enum TransactionsListTableViewCell {
             self.additionalInfoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
             
             self.iconView.snp.makeConstraints { (make) in
-                make.width.height.equalTo(self.iconSize)
-                make.top.bottom.equalToSuperview().inset(20)
                 make.leading.equalToSuperview().inset(self.iconToSideSpace)
+                make.top.bottom.equalToSuperview().inset(20)
+                make.width.height.equalTo(self.iconSize)
             }
             
             self.labelsContainer.snp.makeConstraints { (make) in

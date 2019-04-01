@@ -1763,6 +1763,7 @@
 				E980D84D20CFF64400C53841 /* BehaviorRelay+EmitValue.swift */,
 				7F3D002C2181FD92002D7F53 /* Bundle+Version.swift */,
 				710D30A92114A3B1007BCCB0 /* Hashable+Iterate.swift */,
+				DBA1A769224E85CD00A52775 /* NSAttributedString+Color.swift */,
 				E9BA0BF620C8189000CE5708 /* NumberFormatter+Decimal.swift */,
 				7F2A7E1F20F627C9007F8CF8 /* SideMenuController+RootContent.swift */,
 				7FB9E47820BED04F005BFE0E /* SnapKit+Extension.swift */,
