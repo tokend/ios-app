@@ -454,6 +454,8 @@ extension TransactionDetails {
                 return nil
             }
             
+            let formattedPrice = "\(matchedEffect.price)"
+            
             let priceCell = TransactionDetails.Model.CellModel.init(
                 title: Localized(.price),
                 value: Localized(
@@ -461,7 +463,7 @@ extension TransactionDetails {
                     replace: [
                         .one_for_replace_base_asset: baseAsset,
                         .one_for_replace_quote_asset: quoteAsset,
-                        .one_for_replace_sale_invest_price_amount: matchedEffect.price
+                        .one_for_replace_sale_invest_price_amount: formattedPrice
                     ]
                 ),
                 identifier: .price

@@ -49,38 +49,34 @@ extension SaleDetails {
             sale: Model.DescriptionCellModel
             ) -> (timeText: NSAttributedString, isUpcomming: Bool) {
             
-            let daysRemaining: String
             let isUpcomming: Bool
-            
-            let attributedDaysRemaining: NSMutableAttributedString
+            let attributedDaysRemaining: NSAttributedString
             
             if sale.startDate > Date() {
+                isUpcomming = true
+                
                 let components = Calendar.current.dateComponents(
                     [Calendar.Component.day],
                     from: Date(),
                     to: sale.startDate
                 )
                 
-                let days = components.day ?? 0
-                let startsInString = Localized(
-                    .days_days,
-                    replace: [
-                        .days_days_replace_days: days
+                let days = "\(components.day ?? 0)"
+                let daysAttributed = NSAttributedString(
+                    string: days,
+                    attributes: [
+                        .foregroundColor: Theme.Colors.accentColor
                     ]
                 )
                 
-                isUpcomming = true
-                
-                daysRemaining = [Localized(.starts_in), startsInString].joined()
-                attributedDaysRemaining = NSMutableAttributedString(
-                    string: daysRemaining,
+                attributedDaysRemaining = LocalizedAtrributed(
+                    .starts_in_days,
                     attributes: [
                         .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                    ],
+                    replace: [
+                        LocKey.starts_in_days_replace_days: daysAttributed
                     ]
-                )
-                attributedDaysRemaining.setColor(
-                    color: Theme.Colors.accentColor,
-                    forText: "\(days)"
                 )
             } else {
                 isUpcomming = false
@@ -93,30 +89,31 @@ extension SaleDetails {
                 
                 if let days = components.day,
                     days >= 0 {
-                    let daysRemainingString = Localized(
-                        .days_days,
-                        replace: [
-                            .days_days_replace_days: days
+                    
+                    let daysFormatted = "\(days)"
+                    let daysAttributed = NSAttributedString(
+                        string: daysFormatted,
+                        attributes: [
+                            .foregroundColor: Theme.Colors.accentColor
                         ]
                     )
-                    daysRemaining = [daysRemainingString, Localized(.left_lowercased)].joined()
-                    attributedDaysRemaining = NSMutableAttributedString(
-                        string: daysRemaining,
+                    
+                    attributedDaysRemaining = LocalizedAtrributed(
+                        .days_left,
                         attributes: [
                             .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                        ],
+                        replace: [
+                            LocKey.days_left_replace_days: daysAttributed
                         ]
-                    )
-                    attributedDaysRemaining.setColor(
-                        color: Theme.Colors.accentColor,
-                        forText: "\(days)"
                     )
                 } else {
-                    daysRemaining = Localized(.ended)
-                    attributedDaysRemaining = NSMutableAttributedString(
-                        string: daysRemaining,
+                    attributedDaysRemaining = LocalizedAtrributed(
+                        .ended,
                         attributes: [
                             .foregroundColor: Theme.Colors.textOnContentBackgroundColor
-                        ]
+                        ],
+                        replace: [:]
                     )
                 }
             }
@@ -135,44 +132,45 @@ extension SaleDetails {
                 sale.investmentAmount,
                 currency: sale.investmentAsset
             )
-            let investedAmount = Localized(
-                .invested,
-                replace: [
-                    .invested_replace_amount: investedAmountFormatted
+            let investedAmountFormattedAttributed = NSAttributedString(
+                string: investedAmountFormatted,
+                attributes: [
+                    .foregroundColor: Theme.Colors.accentColor
                 ]
             )
-            let attributedInvetsedAmount = NSMutableAttributedString(
-                string: investedAmount,
+            
+            let attributedInvetsedAmount = LocalizedAtrributed(
+                .invested,
                 attributes: [
                     .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                ],
+                replace: [
+                    .invested_replace_amount: investedAmountFormattedAttributed
                 ]
             )
-            attributedInvetsedAmount.setColor(
-                color: Theme.Colors.accentColor,
-                forText: investedAmountFormatted
-            )
-
+            
             let investedPercentage = sale.investmentPercentage
             let investedPercentageRounded = Int(roundf(investedPercentage * 100))
             let investedPercentageText = "\(investedPercentageRounded)%"
             let investorsCount = sale.investorsCount
-            let investorsText = Localized(
-                .investors,
-                replace: [
-                    .investors_replace_count: investorsCount
+            let investorsCountFormatted = "\(investorsCount)"
+            let investorsCountFormattedAttributed = NSAttributedString(
+                string: investorsCountFormatted,
+                attributes: [
+                    .foregroundColor: Theme.Colors.accentColor
                 ]
             )
-            let attributedInvestorsText = NSMutableAttributedString(
-                string: investorsText,
+            
+            let attributedInvestorsText = LocalizedAtrributed(
+                .investors,
                 attributes: [
                     .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                ],
+                replace: [
+                    .investors_replace_count: investorsCountFormattedAttributed
                 ]
             )
-            attributedInvestorsText.setColor(
-                color: Theme.Colors.accentColor,
-                forText: "\(investorsCount)"
-            )
-
+            
             let timeText = self.getTimeText(sale: sale)
             
             return DescriptionCell.ViewModel(
