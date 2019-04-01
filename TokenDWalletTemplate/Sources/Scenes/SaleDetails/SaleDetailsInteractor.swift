@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import TokenDSDK
 import RxSwift
@@ -10,6 +11,7 @@ protocol SaleDetailsBusinessLogic {
     func onSelectBalance(request: Event.SelectBalance.Request)
     func onBalanceSelected(request: Event.BalanceSelected.Request)
     func onInvestAction(request: Event.InvestAction.Request)
+    func onCancelInvestAction(request: Event.CancelInvestAction.Request)
     func onEditAmount(request: Event.EditAmount.Request)
     func onDidSelectMoreInfoButton(request: Event.DidSelectMoreInfoButton.Request)
     func onSelectChartPeriod(request: Event.SelectChartPeriod.Request)
@@ -27,6 +29,7 @@ extension SaleDetails {
         private let presenter: PresentationLogic
         private let dataProvider: DataProvider
         private let feeLoader: FeeLoader
+        private let cancelInvestWorker: CancelInvestWorkerProtocol
         private let investorAccountId: String
         
         private let sceneModel: Model.SceneModel = Model.SceneModel()
@@ -87,18 +90,26 @@ extension SaleDetails {
             }
         }
         
+        private var offersDisposable: Disposable? {
+            willSet {
+                self.offersDisposable?.dispose()
+            }
+        }
+        
         private let disposeBag = DisposeBag()
         
         init(
             presenter: PresentationLogic,
             dataProvider: DataProvider,
             feeLoader: FeeLoader,
+            cancelInvestWorker: CancelInvestWorkerProtocol,
             investorAccountId: String
             ) {
             
             self.dataProvider = dataProvider
             self.presenter = presenter
             self.feeLoader = feeLoader
+            self.cancelInvestWorker = cancelInvestWorker
             self.investorAccountId = investorAccountId
         }
         
@@ -186,11 +197,13 @@ extension SaleDetails {
         
         private func getInvestingCellModel() -> Model.InvestingCellModel {
             let availableAmount = self.getAvailableInputAmount()
+            let isCancellable = self.sceneModel.inputAmount != 0.0
             
             let investingModel = Model.InvestingCellModel(
                 selectedBalance: self.sceneModel.selectedBalance,
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
+                isCancellable: isCancellable,
                 cellIdentifier: .investing
             )
             
@@ -272,6 +285,14 @@ extension SaleDetails {
                 })
         }
         
+        private func observeOffers() {
+            self.offersDisposable = self.dataProvider
+                .observeOffers()
+                .subscribe(onNext: { [weak self] (offers) in
+                    self?.offers = offers
+                })
+        }
+        
         private func getBalanceWith(balanceId: String) -> Model.BalanceDetails? {
             return self.balances.first(where: { (balanceDetails) in
                 return balanceDetails.balanceId == balanceId
@@ -312,8 +333,17 @@ extension SaleDetails {
             for balance in self.balances {
                 if let prevOffer = self.getPreviousOffer(selectedBalance: balance), prevOffer.amount > 0.0 {
                     self.sceneModel.selectedBalance = balance
+                    self.sceneModel.selectedBalance?.prevOfferId = prevOffer.id
                     shouldUpdateInputAmount = true
                     break
+                }
+            }
+            
+            if let selectedBalance = self.sceneModel.selectedBalance {
+                let prevOfferId = self.getPrevOfferId(selectedBalance: selectedBalance)
+                if prevOfferId != selectedBalance.prevOfferId {
+                    self.sceneModel.selectedBalance?.prevOfferId = prevOfferId
+                    shouldUpdateInputAmount = true
                 }
             }
             
@@ -447,6 +477,108 @@ extension SaleDetails {
             
             return chartModel
         }
+        
+        private func handleCancelInvestAction() {
+            guard let sale = self.sale else {
+                let response = Event.CancelInvestAction.Response.failed(.saleIsNotFound)
+                self.presenter.presentCancelInvestAction(response: response)
+                return
+            }
+            guard let selectedBalance = self.sceneModel.selectedBalance else {
+                let response = Event.CancelInvestAction.Response.failed(.quoteBalanceIsNotFound)
+                self.presenter.presentCancelInvestAction(response: response)
+                return
+            }
+            
+            guard let prevOfferId = self.sceneModel.selectedBalance?.prevOfferId else {
+                    let response = Event.CancelInvestAction.Response.failed(.previousOfferIsNotFound)
+                    self.presenter.presentCancelInvestAction(response: response)
+                    return
+            }
+            
+            guard let quoteAsset = sale.quoteAssets.first(where: { (quoteAsset) -> Bool in
+                return quoteAsset.asset == selectedBalance.asset
+            }) else {
+                let response = Event.CancelInvestAction.Response.failed(.quoteAssetIsNotFound)
+                self.presenter.presentCancelInvestAction(response: response)
+                return
+            }
+            
+            guard let baseBalance = self.saleBalance else {
+                let response = Event.CancelInvestAction.Response.failed(.baseBalanceIsNotFound(asset: sale.baseAsset))
+                self.presenter.presentCancelInvestAction(response: response)
+                return
+            }
+            
+            guard let orderBookId = UInt64(sale.id) else {
+                let response = Event.CancelInvestAction.Response.failed(.formatError)
+                self.presenter.presentCancelInvestAction(response: response)
+                return
+            }
+            
+            self.loadFee(
+                asset: quoteAsset,
+                investAmount: 0
+            ) { [weak self] (result) in
+                switch result {
+                    
+                case .failed(let error):
+                    let response = Event.CancelInvestAction.Response.failed(.feeError(error))
+                    self?.presenter.presentCancelInvestAction(response: response)
+                    
+                case .success(let fee):
+                    self?.performCancellation(
+                        baseBalance: baseBalance.balanceId,
+                        quoteBalance: quoteAsset.quoteBalanceId,
+                        price: quoteAsset.price,
+                        fee: fee.percent,
+                        prevOfferId: prevOfferId,
+                        orderBookId: orderBookId
+                    )
+                }
+            }
+        }
+        
+        private func performCancellation(
+            baseBalance: String,
+            quoteBalance: String,
+            price: Decimal,
+            fee: Decimal,
+            prevOfferId: UInt64,
+            orderBookId: UInt64
+            ) {
+            
+            let cancelModel = Model.CancelInvestModel(
+                baseBalance: baseBalance,
+                quoteBalance: quoteBalance,
+                price: price,
+                fee: fee,
+                prevOfferId: prevOfferId,
+                orderBookId: orderBookId
+            )
+            
+            self.cancelInvestWorker.cancelInvest(
+                model: cancelModel,
+                completion: { [weak self] (result) in
+                    
+                    let response = Event.CancelInvestAction.Response.loaded
+                    self?.presenter.presentCancelInvestAction(response: response)
+                    
+                    switch result {
+                        
+                    case .failure:
+                        let response = Event.CancelInvestAction.Response.failed(
+                            .failedToCancelInvestment
+                        )
+                        self?.presenter.presentCancelInvestAction(response: response)
+                        
+                    case .success:
+                        self?.observeAsset()
+                        self?.observeOffers()
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -493,18 +625,17 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             .disposed(by: self.disposeBag)
         
         self.dataProvider
-            .observeOffers()
-            .subscribe(onNext: { [weak self] (offers) in
-                self?.offers = offers
-            })
-            .disposed(by: self.disposeBag)
-        
-        self.dataProvider
             .observeCharts()
             .subscribe(onNext: { [weak self] (charts) in
                 self?.charts = charts
             })
             .disposed(by: self.disposeBag)
+        
+        self.offersDisposable = self.dataProvider
+            .observeOffers()
+            .subscribe(onNext: { [weak self] (offers) in
+                self?.offers = offers
+            })
     }
     
     func onSelectBalance(request: Event.SelectBalance.Request) {
@@ -572,6 +703,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
         self.loadFee(
             asset: quoteAsset,
             investAmount: investAmount) { [weak self] (result) in
+                
                 switch result {
                     
                 case .failed(let error):
@@ -601,6 +733,12 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
                     self?.presenter.presentInvestAction(response: response)
                 }
         }
+    }
+    
+    func onCancelInvestAction(request: Event.CancelInvestAction.Request) {
+        let response = Event.CancelInvestAction.Response.loading
+        self.presenter.presentCancelInvestAction(response: response)
+        self.handleCancelInvestAction()
     }
     
     func onEditAmount(request: Event.EditAmount.Request) {
@@ -698,3 +836,4 @@ extension SaleDetails.Interactor {
         case success(fee: FeeResponse)
     }
 }
+// swiftlint:enable file_length

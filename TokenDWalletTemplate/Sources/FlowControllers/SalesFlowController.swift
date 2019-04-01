@@ -187,6 +187,18 @@ class SalesFlowController: BaseSignedInFlowController {
         
         let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
         
+        let transactionSender = TransactionSender(
+            api: self.flowControllerStack.api.transactionsApi,
+            keychainDataProvider: self.keychainDataProvider
+        )
+        
+        let cancelInvestWorker = SaleDetails.CancelInvestWorker(
+            transactionSender: transactionSender,
+            amountConverter: AmountConverter(),
+            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
+            userDataProvider: self.userDataProvider
+        )
+        
         let routing = SaleDetails.Routing(
             onShowProgress: { [weak self] in
                 self?.navigationController.showProgress()
@@ -214,6 +226,19 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onSaleInvestAction: { [weak self] (investModel) in
                 self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
+            }, onSaleCancelInvestAction: { [weak self] (title, message, options, onSelected) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showDialog(
+                    title: title,
+                    message: message,
+                    style: .alert,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )
             },
             onSaleInfoAction: { [weak self] (infoModel) in
                 self?.showSaleInfoScreen(saleInfoModel: infoModel)
@@ -227,6 +252,7 @@ class SalesFlowController: BaseSignedInFlowController {
             chartDateFormatter: chartDateFormatter,
             investedAmountFormatter: investedAmountFormatter,
             feeLoader: feeLoader,
+            cancelInvestWorker: cancelInvestWorker,
             investorAccountId: self.userDataProvider.walletData.accountId,
             routing: routing
         )

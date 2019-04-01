@@ -17,6 +17,7 @@ enum LocKey: String {
     case amount_sent
     case annual_return
     case app_name
+    case are_you_sure_you_want_to_cancel_investment
     case are_you_sure_you_want_to_sign_out
     case asset
     case asset_balance_is_not_found
@@ -47,6 +48,7 @@ enum LocKey: String {
     case buy_base_replace_base
     case can_be_traded_on_secondary_market
     case cancel
+    case cancel_investment
     case cancel_tfa
     case canceled
     case cannot_be_traded_on_secondary_market
@@ -130,6 +132,8 @@ enum LocKey: String {
     case export_seed
     case failed
     case failed_to_build_kdf_params
+    case failed_to_build_transaction
+    case failed_to_cancel_investment
     case failed_to_create_balance_for
     case failed_to_create_balance_for_replace_asset
     case failed_to_decode_account_id
@@ -200,6 +204,7 @@ enum LocKey: String {
     case investment
     case investment_cancellation
     case investment_details
+    case investment_to_be_cancelled_is_not_found
     case investments
     case investors
     case investors_replace_count
@@ -431,6 +436,7 @@ enum LocKey: String {
     case wrong_old_password
     case wrong_password
     case year
+    case yes
     case you_can_grant_permissions
     case you_have_no_depositable_assets
     case your_account_is_approved

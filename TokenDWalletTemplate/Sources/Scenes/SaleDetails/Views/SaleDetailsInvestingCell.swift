@@ -13,6 +13,7 @@ extension SaleDetails {
             let inputAmount: Decimal
             let maxInputAmount: Decimal
             let selectedAsset: String?
+            let isCancellable: Bool
             let identifier: CellIdentifier
             
             func setup(cell: InvestingCell.View) {
@@ -20,6 +21,7 @@ extension SaleDetails {
                 cell.inputAmount = self.inputAmount
                 cell.maxInputAmount = self.maxInputAmount
                 cell.selectedAsset = self.selectedAsset
+                cell.isCancellable = self.isCancellable
                 cell.identifier = self.identifier
             }
         }
@@ -31,6 +33,7 @@ extension SaleDetails {
             // MARK: - Public properties
             
             public var onInvestAction: DidSelectButton?
+            public var onCancelInvestAction: DidSelectButton?
             public var onSelectBalance: DidSelectButton?
             public var onDidEnterAmount: ((_ value: Decimal?) -> Void)?
             
@@ -56,6 +59,11 @@ extension SaleDetails {
                 set { self.selectAssetButton.setTitle(newValue, for: .normal) }
             }
             
+            public var isCancellable: Bool {
+                get { return !self.cancelButton.isHidden }
+                set { self.cancelButton.isHidden = !newValue }
+            }
+            
             public var identifier: CellIdentifier?
             
             // MARK: - Private properties
@@ -65,6 +73,7 @@ extension SaleDetails {
             private let titleLabel: UILabel = UILabel()
             private let investContenView: UIView = UIView()
             private let investButton: UIButton = UIButton()
+            private let cancelButton: UIButton = UIButton()
             
             // Invest content views
             private var amountEditingContext: TextEditingContext<Decimal>?
@@ -98,6 +107,7 @@ extension SaleDetails {
                 self.setupAvailableAssetAmountLabel()
                 self.setupAmountTextField()
                 self.setupInvestButton()
+                self.setupCancelButton()
                 self.setupSelectAssetButton()
                 
                 self.setupLayout()
@@ -155,6 +165,31 @@ extension SaleDetails {
                 )
             }
             
+            private func setupCancelButton() {
+                self.cancelButton.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.cancelButton.titleLabel?.font = Theme.Fonts.plainTextFont
+                self.cancelButton.setTitle(
+                    Localized(.cancel_investment),
+                    for: .normal
+                )
+                self.cancelButton.setTitleColor(
+                    Theme.Colors.accentColor,
+                    for: .normal
+                )
+                
+                self.cancelButton
+                    .rx
+                    .controlEvent(.touchUpInside)
+                    .asDriver()
+                    .drive(onNext: { [weak self] in
+                        guard let identifier = self?.identifier else {
+                            return
+                        }
+                        self?.onCancelInvestAction?(identifier)
+                    })
+                    .disposed(by: self.disposeBag)
+            }
+            
             private func setupInvestButton() {
                 SharedViewsBuilder.configureActionButton(self.investButton, title: Localized(.invest))
                 self.investButton.contentEdgeInsets = UIEdgeInsets(
@@ -198,6 +233,7 @@ extension SaleDetails {
                 self.contentView.addSubview(self.titleLabel)
                 self.contentView.addSubview(self.investContenView)
                 self.contentView.addSubview(self.investButton)
+                self.contentView.addSubview(self.cancelButton)
                 
                 self.titleLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
@@ -213,6 +249,13 @@ extension SaleDetails {
                 
                 self.investButton.snp.makeConstraints { (make) in
                     make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalTo(self.investContenView.snp.bottom)
+                    make.bottom.equalToSuperview().inset(self.bottomInset)
+                    make.height.equalTo(44.0)
+                }
+                
+                self.cancelButton.snp.makeConstraints { (make) in
+                    make.leading.equalToSuperview().inset(self.sideInset)
                     make.top.equalTo(self.investContenView.snp.bottom)
                     make.bottom.equalToSuperview().inset(self.bottomInset)
                     make.height.equalTo(44.0)
