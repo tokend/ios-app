@@ -297,7 +297,6 @@
 		DB990C3621E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB990C3521E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift */; };
 		DB992AE521CD18E2003533FC /* AppController+OpenUrlSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB992AE421CD18E2003533FC /* AppController+OpenUrlSubscriber.swift */; };
 		DBA0EFB021C0041700A99325 /* UIResponder+First.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0EFAF21C0041700A99325 /* UIResponder+First.swift */; };
-		DBA1A76A224E85CD00A52775 /* NSAttributedString+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA1A769224E85CD00A52775 /* NSAttributedString+Color.swift */; };
 		DBAF878321EF8E9F005423A0 /* LocKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAF878221EF8E9F005423A0 /* LocKey.swift */; };
 		DBB565A121F771140066B5E5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DBB5659E21F771140066B5E5 /* Localizable.strings */; };
 		DBB565A321F789820066B5E5 /* String+Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB565A221F789820066B5E5 /* String+Index.swift */; };
@@ -771,7 +770,6 @@
 		DB990C3521E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePasswordRequestBuilderProtocol.swift; sourceTree = "<group>"; };
 		DB992AE421CD18E2003533FC /* AppController+OpenUrlSubscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppController+OpenUrlSubscriber.swift"; sourceTree = "<group>"; };
 		DBA0EFAF21C0041700A99325 /* UIResponder+First.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+First.swift"; sourceTree = "<group>"; };
-		DBA1A769224E85CD00A52775 /* NSAttributedString+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Color.swift"; sourceTree = "<group>"; };
 		DBAF878221EF8E9F005423A0 /* LocKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocKey.swift; sourceTree = "<group>"; };
 		DBB5659F21F771140066B5E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		DBB565A221F789820066B5E5 /* String+Index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Index.swift"; sourceTree = "<group>"; };
@@ -2713,7 +2711,6 @@
 				719AAFD32142AEEA00279B9D /* SalesViewController.swift in Sources */,
 				7F967FDF212DB69E005527EA /* BiometricsAuthWorker.swift in Sources */,
 				7F4F1198210B6F6100651554 /* ConfirmationTitleTextEditView.swift in Sources */,
-				DBA1A76A224E85CD00A52775 /* NSAttributedString+Color.swift in Sources */,
 				7F6A847D2108F34B00B7FE6B /* PermissionsManager.swift in Sources */,
 				7FF6761E20BDA10C0074E9A8 /* String+QueueLabel.swift in Sources */,
 				713D684920FF9552009FEBA3 /* SettingsInteractor.swift in Sources */,

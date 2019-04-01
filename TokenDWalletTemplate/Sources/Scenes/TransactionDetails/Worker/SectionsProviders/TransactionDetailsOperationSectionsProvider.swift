@@ -461,6 +461,8 @@ extension TransactionDetails {
                 return nil
             }
             
+            let formattedPrice = "\(matchedEffect.price)"
+            
             let priceCell = TransactionDetails.Model.CellModel.init(
                 title: Localized(.price),
                 value: Localized(
@@ -468,7 +470,7 @@ extension TransactionDetails {
                     replace: [
                         .one_for_replace_base_asset: baseAsset,
                         .one_for_replace_quote_asset: quoteAsset,
-                        .one_for_replace_sale_invest_price_amount: matchedEffect.price
+                        .one_for_replace_sale_invest_price_amount: formattedPrice
                     ]
                 ),
                 identifier: .price
@@ -513,13 +515,16 @@ extension TransactionDetails {
             )
             cells.append(codeCell)
             
+            let physicalPriceFormatted = "\(details.physicalPrice)"
+            
             let physicalPrice = Localized(
                 .one_equals,
                 replace: [
                     .one_equals_replace_quote_asset: quoteAsset,
-                    .one_equals_replace_price: details.physicalPrice,
+                    .one_equals_replace_price: physicalPriceFormatted,
                     .one_equals_replace_base_asset: baseAsset
-                ])
+                ]
+            )
             
             let physicalPriceCell = TransactionDetails.Model.CellModel(
                 title: Localized(.physical_price),
