@@ -75,7 +75,7 @@ extension SaleDetails {
                         .foregroundColor: Theme.Colors.textOnContentBackgroundColor
                     ],
                     replace: [
-                        LocKey.starts_in_days_replace_days: daysAttributed
+                        .starts_in_days_replace_days: daysAttributed
                     ]
                 )
             } else {
@@ -104,7 +104,7 @@ extension SaleDetails {
                             .foregroundColor: Theme.Colors.textOnContentBackgroundColor
                         ],
                         replace: [
-                            LocKey.days_left_replace_days: daysAttributed
+                            .days_left_replace_days: daysAttributed
                         ]
                     )
                 } else {

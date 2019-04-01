@@ -55,7 +55,7 @@ extension Sales {
                         .foregroundColor: Theme.Colors.textOnContentBackgroundColor
                     ],
                     replace: [
-                        LocKey.starts_in_days_replace_days: daysAttributed
+                        .starts_in_days_replace_days: daysAttributed
                     ]
                 )
             } else {
@@ -84,7 +84,7 @@ extension Sales {
                             .foregroundColor: Theme.Colors.textOnContentBackgroundColor
                         ],
                         replace: [
-                            LocKey.days_left_replace_days: daysAttributed
+                            .days_left_replace_days: daysAttributed
                         ]
                     )
                 } else {
@@ -152,7 +152,7 @@ extension Sales.Presenter: Sales.PresentationLogic {
                         .investors_replace_count: investorsCountFormattedAttributed
                     ]
                 )
-
+                
                 let timeText = self.getTimeText(sale: sale)
                 
                 return Sales.SaleListCell.ViewModel(

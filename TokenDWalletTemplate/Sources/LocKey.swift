@@ -3,7 +3,6 @@
 import Foundation
 
 enum LocKey: String {
-// swiftlint:disable identifier_name
     case access_revoked_sign_in_required
     case account
     case account_id
@@ -13,11 +12,14 @@ enum LocKey: String {
     case aml_alert_request
     case amount
     case amount_colon
-    case amount_sent
     case amount_newline
     case amount_newline_replace_base
+    case amount_sent
+    case annual_return
+    case app_name
     case are_you_sure_you_want_to_sign_out
     case asset
+    case asset_balance_is_not_found
     case asset_pair
     case at_date
     case at_date_replace_date
@@ -29,6 +31,11 @@ enum LocKey: String {
     case balance_colon
     case balance_is_not_created
     case balance_is_not_created_replace_asset
+    case bank_account
+    case bank_address
+    case bank_address_colon
+    case bank_name
+    case bank_name_colon
     case base_asset_for_hard_cap
     case base_for_price
     case base_for_price_replace_base_amount
@@ -45,9 +52,14 @@ enum LocKey: String {
     case cannot_be_traded_on_secondary_market
     case cannot_decode_original_account_id_data
     case cannot_derive_encoded_wallet_id
+    case card_holder
+    case card_number
+    case card_number_colon
+    case card_owner
     case change_password
     case charged
     case charged_from_lock
+    case check_sale_state
     case choose_email
     case close_time
     case code
@@ -61,17 +73,21 @@ enum LocKey: String {
     case corrupted_keychain_data
     case create_balance
     case create_offer
+    case credit_card
+    case cvv
     case dashboard
     case date
     case day
-    case days_days
-    case days_days_replace_days
     case days_left
+    case days_left_replace_days
     case deployed
     case deposit
+    case deposit_to
     case description
     case description_optional
     case destination_address
+    case document_max_size
+    case document_max_size_replace_file_size
     case done
     case dont_have_an_account
     case effect
@@ -83,20 +99,30 @@ enum LocKey: String {
     case empty_recipient_address
     case empty_signers_data
     case ended
+    case enter_account_holders_name
     case enter_account_id_or_email
     case enter_amount
+    case enter_bank_address
+    case enter_bank_name
+    case enter_card_holders_name
+    case enter_card_number
     case enter_destination_address
     case enter_email
     case enter_f
     case enter_f_replace_field_name
+    case enter_first_name
+    case enter_iban
+    case enter_last_name
     case enter_password
     case enter_password_confirmation
     case enter_recovery_seed
+    case enter_swift_bic
     case enter_t
     case enter_t_replace_title
     case erase_all_data_and
     case error
     case error_while_formatting_orderbookid
+    case expected_revenue
     case expires_at
     case expires_at_replace_date
     case explore_funds
@@ -108,11 +134,13 @@ enum LocKey: String {
     case failed_to_create_balance_for_replace_asset
     case failed_to_decode_account_id
     case failed_to_decode_account_id_replace_id
+    case failed_to_decode_asset_details
     case failed_to_decode_balance_id
     case failed_to_decode_balance_id_replace_id
     case failed_to_decode_base_balance_id
     case failed_to_decode_quote_balance_id
     case failed_to_encode_destination_address
+    case failed_to_encode_destination_data
     case failed_to_fetch_network_info
     case failed_to_generate_key_pair
     case failed_to_generate_new_key_pair
@@ -121,6 +149,7 @@ enum LocKey: String {
     case failed_to_get_wallet_data
     case failed_to_load_fees
     case failed_to_load_fees_replace_message
+    case failed_to_prepare_transaction
     case failed_to_resolve_recipient_address
     case failed_to_resolve_recipient_address_replace_message
     case failed_to_save_account_data
@@ -132,6 +161,7 @@ enum LocKey: String {
     case fee_error
     case fee_error_replace_message
     case fees
+    case first_name
     case fixed
     case fixed_fee
     case for_code
@@ -143,10 +173,15 @@ enum LocKey: String {
     case funded
     case general
     case get_address
+    case go_to_confirmation
     case hard_cap
+    case holders_name_colon
     case hour
     case i_agree_on_the
     case i_understand
+    case iban
+    case iban_colon
+    case id_document
     case incoming
     case incoming_outgoing
     case incorrect_or_corrupted_recovery_seed
@@ -160,7 +195,6 @@ enum LocKey: String {
     case invalid_account_id_or_email
     case invest
     case invested
-    case invested_colored
     case invested_replace_amount
     case investing
     case investment
@@ -168,7 +202,6 @@ enum LocKey: String {
     case investment_details
     case investments
     case investors
-    case investors_colored
     case investors_replace_count
     case is_not_restricted_by_current_price
     case is_not_restricted_by_physical_price
@@ -177,13 +210,15 @@ enum LocKey: String {
     case issuance
     case issued
     case keychaindataprovider_should_always_provide_key
-    case left_lowercased
+    case last_name
     case locked
     case lower_bound
     case main_title
     case manage_asset_pair
     case matched
+    case maturity_date
     case maximum
+    case mm_yy
     case month
     case more_info
     case network_info_error
@@ -200,6 +235,7 @@ enum LocKey: String {
     case no_growth
     case no_investments
     case no_open_funds
+    case no_opportunities
     case no_payments
     case no_pending_offers
     case no_personal_address
@@ -213,14 +249,18 @@ enum LocKey: String {
     case old_password
     case old_password_lowercased
     case one_equals
-    case one_equals_replace_quote_asset
-    case one_equals_replace_price
     case one_equals_replace_base_asset
+    case one_equals_replace_price
+    case one_equals_replace_quote_asset
     case one_for
     case one_for_replace_base_asset
     case one_for_replace_quote_asset
     case one_for_replace_sale_invest_price_amount
     case open_app
+    case operation
+    case opportunities
+    case opportunity_cancelation
+    case opportunity_details
     case order_price_cannot_be_less_than_or_equal_to_0
     case outgoing
     case overview
@@ -232,13 +272,15 @@ enum LocKey: String {
     case payout
     case pending
     case pending_investment
-    case pending_offer_details
     case pending_offer
+    case pending_offer_details
     case pending_offers
     case percent
     case percent_fee
     case permission_denied
     case permissions_denied
+    case personal_details
+    case photo_verification
     case physical_price
     case please_validate_this_seed
     case price
@@ -258,6 +300,7 @@ enum LocKey: String {
     case recovery_seed
     case recovery_seed_is_copied_to_pasteboard
     case recovery_seed_lowercased
+    case redeem
     case reference
     case register
     case register_now
@@ -279,20 +322,26 @@ enum LocKey: String {
     case search
     case secret_seed
     case security
+    case seems_like_some_fields_are_empty
     case select_asset
     case select_contact
+    case select_file
+    case selected_file
+    case selected_file_replace_file_name
+    case selfie_with_verification_code
     case sell
     case sell_base
     case sell_base_replace_base
     case send
-    case sender
     case send_transaction_error
     case send_transaction_error_replace_message
+    case sender
     case sent
     case server
     case set_placeholder
     case set_up_2fa
     case settings
+    case show_key
     case side_title
     case sign_in
     case sign_in_now
@@ -312,18 +361,23 @@ enum LocKey: String {
     case source
     case source_replace_source
     case start_time
-    case starts_in
+    case starts_in_days
+    case starts_in_days_replace_days
     case state
     case subject
+    case submit
     case subtype
     case success
     case success_parameter_is_missing_or_invalid
+    case swift_bic
+    case swift_bic_colon
     case terms_of_service
     case terms_of_service_not_agreed
     case terms_of_use
     case this_feature_will_be
     case this_seed_is_the_only_way
     case to_account
+    case to_be_sure_document_key
     case to_enable_twofactor_authentication
     case to_enable_twofactor_authentication_replace_secret
     case to_make_a_deposit_send_to_this_address
@@ -358,10 +412,13 @@ enum LocKey: String {
     case unsuitable_status
     case unsupported_version
     case unsupported_version_replace_function
+    case unverified_account
     case upper_bound
     case userdataprovider_should_always_provide_walletdata
     case verification
     case verification_link_is_sent
+    case verification_request_rejected
+    case verification_request_rejected_permanently
     case verify_email
     case view_history
     case view_more
@@ -375,5 +432,7 @@ enum LocKey: String {
     case wrong_password
     case year
     case you_can_grant_permissions
+    case you_have_no_depositable_assets
+    case your_account_is_approved
+    case your_verification_request_is_submitted
 }
-// swiftlint:enable identifier_name

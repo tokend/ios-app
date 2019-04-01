@@ -515,13 +515,16 @@ extension TransactionDetails {
             )
             cells.append(codeCell)
             
+            let physicalPriceFormatted = "\(details.physicalPrice)"
+            
             let physicalPrice = Localized(
                 .one_equals,
                 replace: [
                     .one_equals_replace_quote_asset: quoteAsset,
-                    .one_equals_replace_price: details.physicalPrice,
+                    .one_equals_replace_price: physicalPriceFormatted,
                     .one_equals_replace_base_asset: baseAsset
-                ])
+                ]
+            )
             
             let physicalPriceCell = TransactionDetails.Model.CellModel(
                 title: Localized(.physical_price),
