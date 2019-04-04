@@ -155,7 +155,8 @@ extension SaleDetails {
                     return Model.BalanceDetails(
                         asset: balance.asset,
                         balance: balance.balance,
-                        balanceId: balance.balanceId
+                        balanceId: balance.balanceId,
+                        prevOfferId: nil
                     )
                 })
             }
@@ -187,6 +188,8 @@ extension SaleDetails {
         }
         
         func observeOffers() -> Observable<[Model.InvestmentOffer]> {
+            self.loadPendingOffers(saleId: self.saleIdentifier)
+            
             return self.pendingOffers.map({ (offers) -> [Model.InvestmentOffer] in
                 return offers.map({ (offer) -> Model.InvestmentOffer in
                     return Model.InvestmentOffer(

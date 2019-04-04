@@ -7,6 +7,7 @@ protocol SaleDetailsPresentationLogic {
     func presentSelectBalance(response: Event.SelectBalance.Response)
     func presentBalanceSelected(response: Event.BalanceSelected.Response)
     func presentInvestAction(response: Event.InvestAction.Response)
+    func presentCancelInvestAction(response: Event.CancelInvestAction.Response)
     func presentDidSelectMoreInfoButton(response: Event.DidSelectMoreInfoButton.Response)
     func presentSelectChartPeriod(response: Event.SelectChartPeriod.Response)
     func presentSelectChartEntry(response: Event.SelectChartEntry.Response)
@@ -293,6 +294,7 @@ extension SaleDetails {
                 inputAmount: cellModel.amount,
                 maxInputAmount: cellModel.availableAmount,
                 selectedAsset: cellModel.selectedBalance?.asset,
+                isCancellable: cellModel.isCancellable,
                 identifier: cellModel.cellIdentifier
             )
         }
@@ -443,6 +445,25 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayInvestAction(viewModel: viewModel)
+        }
+    }
+    
+    func presentCancelInvestAction(response: Event.CancelInvestAction.Response) {
+        let viewModel: Event.CancelInvestAction.ViewModel
+        switch response {
+            
+        case .failed(let error):
+            viewModel = .failed(errorMessage: error.localizedDescription)
+            
+        case .succeeded:
+            viewModel = .succeeded
+            
+        case .loading:
+            viewModel = .loading
+        }
+        
+        self.presenterDispatch.display { displayLogic in
+            displayLogic.displayCancelInvestAction(viewModel: viewModel)
         }
     }
     

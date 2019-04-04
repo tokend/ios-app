@@ -11,6 +11,7 @@ extension SaleDetails {
             chartDateFormatter: ChartDateFormatterProtocol,
             investedAmountFormatter: InvestedAmountFormatter,
             feeLoader: FeeLoader,
+            cancelInvestWorker: CancelInvestWorkerProtocol,
             investorAccountId: String,
             routing: Routing?
             ) {
@@ -27,6 +28,7 @@ extension SaleDetails {
                 presenter: presenter,
                 dataProvider: dataProvider,
                 feeLoader: feeLoader,
+                cancelInvestWorker: cancelInvestWorker,
                 investorAccountId: investorAccountId
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)

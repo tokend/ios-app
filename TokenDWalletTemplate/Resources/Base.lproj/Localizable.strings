@@ -14,6 +14,7 @@
 "amount_sent" = "Amount sent";
 "annual_return" = "Annual return";
 "app_name" = "TokenD Real Estate";
+"are_you_sure_you_want_to_cancel_investment" = "Are you sure you want to cancel investment?";
 "are_you_sure_you_want_to_sign_out" = "Are you sure you want to Sign Out and Erase All Data from device?";
 "asset" = "Asset";
 "asset_balance_is_not_found" = "Asset balance is not found";
@@ -44,6 +45,7 @@
 "buy_base_replace_base" = "base";
 "can_be_traded_on_secondary_market" = " - Can be traded on secondary market";
 "cancel" = "Cancel";
+"cancel_investment" = "Cancel investment";
 "cancel_tfa" = "Cancel TFA";
 "canceled" = "Canceled";
 "cannot_be_traded_on_secondary_market" = " - Can't be traded on secondary market";
@@ -127,6 +129,8 @@
 "export_seed" = "Export seed";
 "failed" = "Failed";
 "failed_to_build_kdf_params" = "Failed to build kdf params";
+"failed_to_build_transaction" = "Failed to build transaction";
+"failed_to_cancel_investment" = "Failed to cancel investment";
 "failed_to_create_balance_for" = "Failed to create balance for asset $(asset)";
 "failed_to_create_balance_for_replace_asset" = "asset";
 "failed_to_decode_account_id" = "Failed to decode account id $(id)";
@@ -197,6 +201,7 @@
 "investment" = "Investment";
 "investment_cancellation" = "Investment cancellation";
 "investment_details" = "Investment details";
+"investment_to_be_cancelled_is_not_found" = "Investment to be cancelled is not found";
 "investments" = "Investments";
 "investors" = "$(count) investor(s)";
 "investors_replace_count" = "count";
@@ -428,6 +433,7 @@
 "wrong_old_password" = "Wrong old password";
 "wrong_password" = "Wrong password";
 "year" = "Year";
+"yes" = "Yes";
 "you_can_grant_permissions" = "You can grant permissions from app Settings in System Preferences. Would you like to open Settings?";
 "you_have_no_depositable_assets" = "You have no depositable assets";
 "your_account_is_approved" = "Your account is approved. All actions that requires verification are now available";

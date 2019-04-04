@@ -115,6 +115,7 @@ extension SaleDetails.Model {
         var selectedBalance: BalanceDetails?
         var amount: Decimal
         let availableAmount: Decimal
+        let isCancellable: Bool
         let cellIdentifier: SaleDetails.CellIdentifier
     }
     
@@ -152,6 +153,15 @@ extension SaleDetails.Model {
         let orderBookId: UInt64
     }
     
+    struct CancelInvestModel {
+        let baseBalance: String
+        let quoteBalance: String
+        let price: Decimal
+        let fee: Decimal
+        let prevOfferId: UInt64
+        let orderBookId: UInt64
+    }
+    
     struct SaleInfoModel {
         let saleId: String
         let blobId: String
@@ -166,6 +176,7 @@ extension SaleDetails.Model {
         let asset: String
         let balance: Decimal
         let balanceId: String
+        var prevOfferId: UInt64?
     }
     
     struct AccountModel {
@@ -304,6 +315,22 @@ extension SaleDetails.Event {
         }
     }
     
+    enum CancelInvestAction {
+        struct Request {}
+        
+        enum Response {
+            case loading
+            case succeeded
+            case failed(CancellationError)
+        }
+        
+        enum ViewModel {
+            case loading
+            case succeeded
+            case failed(errorMessage: String)
+        }
+    }
+    
     enum DidSelectMoreInfoButton {
         struct Request {}
         
@@ -416,6 +443,8 @@ extension SaleDetails.Event.InvestAction.Response {
         case quoteAssetIsNotFound
         case quoteBalanceIsNotFound
         case saleIsNotFound
+        case previousOfferIsNotFound
+        case failedToCancelInvestment
         
         // MARK: - LocalizedError
         
@@ -448,7 +477,18 @@ extension SaleDetails.Event.InvestAction.Response {
                 )
             case .insufficientFunds:
                 return Localized(.insufficient_funds)
+                
+            case .previousOfferIsNotFound:
+                return Localized(.investment_to_be_cancelled_is_not_found)
+                
+            case .failedToCancelInvestment:
+                return Localized(.failed_to_cancel_investment)
             }
         }
     }
+}
+
+extension SaleDetails.Event.CancelInvestAction.Response {
+    
+    typealias CancellationError = SaleDetails.Event.InvestAction.Response.InvestError
 }

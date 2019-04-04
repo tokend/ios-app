@@ -8,6 +8,7 @@ protocol SaleDetailsDisplayLogic: class {
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel)
     func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel)
     func displayInvestAction(viewModel: Event.InvestAction.ViewModel)
+    func displayCancelInvestAction(viewModel: Event.CancelInvestAction.ViewModel)
     func displayDidSelectMoreInfoButton(viewModel: Event.DidSelectMoreInfoButton.ViewModel)
     func displaySelectChartPeriod(viewModel: Event.SelectChartPeriod.ViewModel)
     func displaySelectChartEntry(viewModel: Event.SelectChartEntry.ViewModel)
@@ -205,6 +206,21 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
         }
     }
     
+    func displayCancelInvestAction(viewModel: Event.CancelInvestAction.ViewModel) {
+        switch viewModel {
+            
+        case .loading:
+            self.routing?.onShowProgress()
+            
+        case .succeeded:
+            self.routing?.onHideProgress()
+            
+        case .failed(let message):
+            self.routing?.onHideProgress()
+            self.routing?.onShowError(message)
+        }
+    }
+    
     func displayDidSelectMoreInfoButton(viewModel: SaleDetails.Event.DidSelectMoreInfoButton.ViewModel) {
         let saleInfoModel = SaleDetails.Model.SaleInfoModel(
             saleId: viewModel.saleId,
@@ -283,6 +299,20 @@ extension SaleDetails.ViewController: UITableViewDataSource {
                 self?.interactorDispatch?.sendRequest { businessLogic in
                     businessLogic.onInvestAction(request: request)
                 }
+            }
+            cell.onCancelInvestAction = { [weak self] (identifier) in
+                let onSelected: ((Int) -> Void) = { _ in
+                    let request = Event.CancelInvestAction.Request()
+                    self?.interactorDispatch?.sendRequest { businessLogic in
+                        businessLogic.onCancelInvestAction(request: request)
+                    }
+                }
+                self?.routing?.showDialog(
+                    Localized(.cancel_investment),
+                    Localized(.are_you_sure_you_want_to_cancel_investment),
+                    [Localized(.yes)],
+                    onSelected
+                )
             }
             cell.onDidEnterAmount = { [weak self] (amount) in
                 let request = Event.EditAmount.Request(amount: amount)
