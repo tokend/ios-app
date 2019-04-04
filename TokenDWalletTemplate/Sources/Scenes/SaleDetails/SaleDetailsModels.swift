@@ -320,13 +320,13 @@ extension SaleDetails.Event {
         
         enum Response {
             case loading
-            case loaded
+            case succeeded
             case failed(CancellationError)
         }
         
         enum ViewModel {
             case loading
-            case loaded
+            case succeeded
             case failed(errorMessage: String)
         }
     }

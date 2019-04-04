@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>api_endpoint</key>
-	<string>https://api.reit.tokend.io</string>
+	<string>https://api.demo.tokend.io</string>
 	<key>storage_endpoint</key>
 	<string>https://s3.eu-west-1.amazonaws.com/demo-identity-storage-festive-colden</string>
 	<key>terms_address</key>

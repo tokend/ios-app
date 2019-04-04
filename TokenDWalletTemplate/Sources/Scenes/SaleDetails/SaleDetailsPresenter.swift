@@ -455,8 +455,8 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         case .failed(let error):
             viewModel = .failed(errorMessage: error.localizedDescription)
             
-        case .loaded:
-            viewModel = .loaded
+        case .succeeded:
+            viewModel = .succeeded
             
         case .loading:
             viewModel = .loading

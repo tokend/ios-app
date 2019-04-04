@@ -479,6 +479,9 @@ extension SaleDetails {
         }
         
         private func handleCancelInvestAction() {
+            let response = Event.CancelInvestAction.Response.loading
+            self.presenter.presentCancelInvestAction(response: response)
+            
             guard let sale = self.sale else {
                 let response = Event.CancelInvestAction.Response.failed(.saleIsNotFound)
                 self.presenter.presentCancelInvestAction(response: response)
@@ -561,21 +564,17 @@ extension SaleDetails {
                 model: cancelModel,
                 completion: { [weak self] (result) in
                     
-                    let response = Event.CancelInvestAction.Response.loaded
-                    self?.presenter.presentCancelInvestAction(response: response)
-                    
+                    let response: Event.CancelInvestAction.Response
                     switch result {
                         
                     case .failure:
-                        let response = Event.CancelInvestAction.Response.failed(
-                            .failedToCancelInvestment
-                        )
-                        self?.presenter.presentCancelInvestAction(response: response)
+                        response = .failed(.failedToCancelInvestment)
                         
                     case .success:
-                        self?.observeAsset()
+                        response = .succeeded
                         self?.observeOffers()
                     }
+                    self?.presenter.presentCancelInvestAction(response: response)
                 }
             )
         }
@@ -736,8 +735,6 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
     }
     
     func onCancelInvestAction(request: Event.CancelInvestAction.Request) {
-        let response = Event.CancelInvestAction.Response.loading
-        self.presenter.presentCancelInvestAction(response: response)
         self.handleCancelInvestAction()
     }
     

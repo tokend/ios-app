@@ -226,7 +226,8 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onSaleInvestAction: { [weak self] (investModel) in
                 self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
-            }, onSaleCancelInvestAction: { [weak self] (title, message, options, onSelected) in
+            },
+            showDialog: { [weak self] (title, message, options, onSelected) in
                 guard let present = self?.navigationController.getPresentViewControllerClosure() else {
                     return
                 }

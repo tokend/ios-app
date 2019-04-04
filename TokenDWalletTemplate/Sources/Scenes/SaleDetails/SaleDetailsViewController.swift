@@ -212,10 +212,11 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
         case .loading:
             self.routing?.onShowProgress()
             
-        case .loaded:
+        case .succeeded:
             self.routing?.onHideProgress()
             
         case .failed(let message):
+            self.routing?.onHideProgress()
             self.routing?.onShowError(message)
         }
     }
@@ -306,7 +307,7 @@ extension SaleDetails.ViewController: UITableViewDataSource {
                         businessLogic.onCancelInvestAction(request: request)
                     }
                 }
-                self?.routing?.onSaleCancelInvestAction(
+                self?.routing?.showDialog(
                     Localized(.cancel_investment),
                     Localized(.are_you_sure_you_want_to_cancel_investment),
                     [Localized(.yes)],
