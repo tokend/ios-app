@@ -2,6 +2,9 @@ import UIKit
 
 enum SharedSceneBuilder {
     
+    typealias Identifier = TransactionsListScene.Identifier
+    typealias BalanceId = TransactionsListScene.BalanceId
+    
     public static func createTransactionDetailsScene(
         sectionsProvider: TransactionDetails.SectionsProviderProtocol,
         routing: TransactionDetails.Routing
@@ -47,15 +50,30 @@ enum SharedSceneBuilder {
     
     public static func createWalletScene(
         transactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol,
-        transactionsRouting: TransactionsListScene.Routing,
         headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol,
         balancesFetcher: BalanceHeaderWithPicker.BalancesFetcherProtocol,
+        onDidSelectItemWithIdentifier: @escaping (Identifier, BalanceId) -> Void,
+        showSendPayment: @escaping (_ balanceId: String?) -> Void,
         selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
         ) -> FlexibleHeaderContainerViewController {
         
         let container = FlexibleHeaderContainerViewController()
         
         let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: false)
+        
+        let headerView = BalanceHeaderWithPicker.View(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let headerSceneModel = BalanceHeaderWithPicker.Model.SceneModel(
+            balances: [],
+            selectedBalanceId: selectedBalanceId
+        )
+        let headerAmountFormatter = BalanceHeaderWithPicker.AmountFormatter()
+        
+        let transactionsRouting = TransactionsListScene.Routing(
+            onDidSelectItemWithIdentifier: onDidSelectItemWithIdentifier,
+            showSendPayment: showSendPayment,
+            updateBalancesRequest: {
+                headerView.requestUpdateBalances()
+        })
         
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
@@ -68,13 +86,6 @@ enum SharedSceneBuilder {
             viewController.balanceId = balanceId
             viewController.asset = asset
         }
-        
-        let headerView = BalanceHeaderWithPicker.View(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        let headerSceneModel = BalanceHeaderWithPicker.Model.SceneModel(
-            balances: [],
-            selectedBalanceId: selectedBalanceId
-        )
-        let headerAmountFormatter = BalanceHeaderWithPicker.AmountFormatter()
         
         BalanceHeaderWithPicker.Configurator.configure(
             view: headerView,

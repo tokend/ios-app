@@ -74,6 +74,15 @@ extension BalanceHeaderWithPicker {
             fatalError("init(coder:) has not been implemented")
         }
         
+        // MARK: - Public
+        
+        func requestUpdateBalances() {
+            let request = Event.UpdateBalances.Request()
+            self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                businessLogic.onUpdateBalancesRequest(request)
+            })
+        }
+        
         // MARK: - Private
         
         private func commonInit() {

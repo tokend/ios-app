@@ -7,6 +7,7 @@ protocol BalanceHeaderWithPickerBusinessLogic {
     
     func onDidInjectModules(_ request: Event.DidInjectModules.Request)
     func onSelectedBalanceDidChange(_ request: Event.SelectedBalanceDidChange.Request)
+    func onUpdateBalancesRequest(_ request: Event.UpdateBalances.Request)
 }
 
 extension BalanceHeaderWithPicker {
@@ -193,5 +194,9 @@ extension BalanceHeaderWithPicker.Interactor: BalanceHeaderWithPicker.BusinessLo
     func onSelectedBalanceDidChange(_ request: Event.SelectedBalanceDidChange.Request) {
         self.sceneModel.selectedBalanceId = request.id
         self.updateSelectedBalance()
+    }
+    
+    func onUpdateBalancesRequest(_ request: Event.UpdateBalances.Request) {
+        self.balancesFetcher.updateHeaderBalances()
     }
 }

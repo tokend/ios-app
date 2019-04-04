@@ -2,6 +2,9 @@ import UIKit
 
 class DashboardFlowController: BaseSignedInFlowController {
     
+    typealias Identifier = TransactionsListScene.Identifier
+    typealias BalanceId = TransactionsListScene.BalanceId
+    
     // MARK: - Private
     
     private let navigationController: NavigationControllerProtocol =
@@ -42,7 +45,8 @@ class DashboardFlowController: BaseSignedInFlowController {
             onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
                 self?.showPendingOfferDetailsScreen(offerId: identifier)
             },
-            showSendPayment: { _ in }
+            showSendPayment: { _ in },
+            updateBalancesRequest: { }
         )
         
         let pendingOffersPreviewList = SharedSceneBuilder.createTransactionsListScene(
@@ -64,7 +68,8 @@ class DashboardFlowController: BaseSignedInFlowController {
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
                 self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
             },
-            showSendPayment: { _ in }
+            showSendPayment: { _ in },
+            updateBalancesRequest: { }
         )
         
         let paymentsPreviewList = SharedSceneBuilder.createTransactionsListScene(
@@ -140,14 +145,13 @@ class DashboardFlowController: BaseSignedInFlowController {
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         
-        let transactionsRouting = TransactionsListScene.Routing(
-            onDidSelectItemWithIdentifier: { [weak self] (transactionId, balanceId) in
-                self?.showTransactionDetailsScreen(transactionId: transactionId, balanceId: balanceId)
-            },
-            showSendPayment: { [weak self] (balanceId) in
-                self?.runSendPaymentFlow(balanceId: balanceId)
-            }
-        )
+        let onDidSelectItemWithIdentifier: (Identifier, BalanceId) -> Void = { [weak self] (identifier, balanceId) in
+            self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+        }
+        
+        let showSendPayment:(_ balanceId: String?) -> Void = { [weak self] (balanceId) in
+            self?.runSendPaymentFlow(balanceId: balanceId)
+        }
         
         let balancesFetcher = BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo
@@ -158,9 +162,10 @@ class DashboardFlowController: BaseSignedInFlowController {
         
         let container = SharedSceneBuilder.createWalletScene(
             transactionsFetcher: transactionsFetcher,
-            transactionsRouting: transactionsRouting,
             headerRateProvider: headerRateProvider,
             balancesFetcher: balancesFetcher,
+            onDidSelectItemWithIdentifier: onDidSelectItemWithIdentifier,
+            showSendPayment: showSendPayment,
             selectedBalanceId: selectedBalanceId
         )
         
@@ -184,7 +189,8 @@ class DashboardFlowController: BaseSignedInFlowController {
             onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
                 self?.showPendingOfferDetailsScreen(offerId: identifier)
             },
-            showSendPayment: { _ in }
+            showSendPayment: { _ in },
+            updateBalancesRequest: { }
         )
         
         let viewController = SharedSceneBuilder.createTransactionsListScene(

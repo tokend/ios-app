@@ -93,7 +93,8 @@ class SalesFlowController: BaseSignedInFlowController {
                     navigationController: navigationController
                 )
             },
-            showSendPayment: { _ in }
+            showSendPayment: { _ in },
+            updateBalancesRequest: { }
         )
         
         let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)

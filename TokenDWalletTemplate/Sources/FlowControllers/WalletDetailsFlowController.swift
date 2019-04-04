@@ -2,6 +2,9 @@ import UIKit
 
 class WalletDetailsFlowController: BaseSignedInFlowController {
     
+    typealias Identifier = TransactionsListScene.Identifier
+    typealias BalanceId = TransactionsListScene.BalanceId
+    
     // MARK: - Private properties
     
     private let navigationController: NavigationControllerProtocol = NavigationController()
@@ -23,13 +26,14 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             rateProvider: transactionsListRateProvider,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
-        let transactionsRouting = TransactionsListScene.Routing (
-            onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
-                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
-            },
-            showSendPayment: { [weak self] (balanceId) in
-                self?.runSendPaymentFlow(balanceId: balanceId)
-        })
+        
+        let onDidSelectItemWithIdentifier: (Identifier, BalanceId) -> Void = { [weak self] (identifier, balanceId) in
+            self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+        }
+        
+        let showSendPayment:(_ balanceId: String?) -> Void = { [weak self] (balanceId) in
+            self?.runSendPaymentFlow(balanceId: balanceId)
+        }
         
         let balancesFetcher = BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo
@@ -40,9 +44,10 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
         
         let container = SharedSceneBuilder.createWalletScene(
             transactionsFetcher: transactionsFetcher,
-            transactionsRouting: transactionsRouting,
             headerRateProvider: headerRateProvider,
-            balancesFetcher: balancesFetcher
+            balancesFetcher: balancesFetcher,
+            onDidSelectItemWithIdentifier: onDidSelectItemWithIdentifier,
+            showSendPayment: showSendPayment
         )
         
         self.navigationController.setViewControllers([container], animated: false)

@@ -2,6 +2,9 @@ import UIKit
 
 class ExploreTokensFlowController: BaseSignedInFlowController {
     
+    typealias Identifier = TransactionsListScene.Identifier
+    typealias BalanceId = TransactionsListScene.BalanceId
+    
     // MARK: - Private properties
     
     private let navigationController: NavigationControllerProtocol = NavigationController()
@@ -116,10 +119,9 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             rateProvider: transactionsListRateProvider,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
-        let transactionsRouting = TransactionsListScene.Routing(
-            onDidSelectItemWithIdentifier: { (_, _) in },
-            showSendPayment: { _ in }
-        )
+        
+        let onDidSelectItemWithIdentifier: (Identifier, BalanceId) -> Void = { (_, _) in }
+        let showSendPayment:(_ balanceId: String?) -> Void = { (_) in }
         
         let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
@@ -130,9 +132,10 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         
         let container = SharedSceneBuilder.createWalletScene(
             transactionsFetcher: transactionsFetcher,
-            transactionsRouting: transactionsRouting,
             headerRateProvider: headerRateProvider,
             balancesFetcher: balancesFetcher,
+            onDidSelectItemWithIdentifier: onDidSelectItemWithIdentifier,
+            showSendPayment: showSendPayment,
             selectedBalanceId: selectedBalanceId
         )
         

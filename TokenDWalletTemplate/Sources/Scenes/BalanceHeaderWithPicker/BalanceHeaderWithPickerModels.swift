@@ -79,6 +79,10 @@ extension BalanceHeaderWithPicker.Event {
             let asset: String
         }
     }
+    
+    enum UpdateBalances {
+        struct Request {}
+    }
 }
 
 extension BalanceHeaderWithPicker.Model.Balance: Hashable {

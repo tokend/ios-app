@@ -4,6 +4,7 @@ import RxCocoa
 import TokenDSDK
 
 extension BalancesFetcher: BalanceHeaderWithPicker.BalancesFetcherProtocol {
+    
     var headerBalances: [HeaderBalance] {
         return self.convertBalancesToHeaderBalances(self.balancesBehaviorRelay.value)
     }
@@ -14,6 +15,10 @@ extension BalancesFetcher: BalanceHeaderWithPicker.BalancesFetcherProtocol {
             .map({ [weak self] (balances) -> [HeaderBalance] in
                 return self?.convertBalancesToHeaderBalances(balances) ?? []
             })
+    }
+    
+    func updateHeaderBalances() {
+        self.refreshBalances()
     }
     
     private func convertBalancesToHeaderBalances(_ balances: [Balance]) -> [HeaderBalance] {

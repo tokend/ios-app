@@ -8,6 +8,7 @@ protocol BalanceHeaderWithPickerBalancesFetcherProtocol {
     var headerBalances: [HeaderBalance] { get }
     
     func observeHeaderBalances() -> Observable<[HeaderBalance]>
+    func updateHeaderBalances()
 }
 
 extension BalanceHeaderWithPicker {

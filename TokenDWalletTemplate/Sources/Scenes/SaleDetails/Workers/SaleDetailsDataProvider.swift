@@ -18,6 +18,8 @@ protocol SaleDetailsDataProviderProtocol {
     func observeAccount() -> Observable<SaleDetails.Model.AccountModel>
     func observeOffers() -> Observable<[SaleDetails.Model.InvestmentOffer]>
     func observeCharts() -> Observable<[SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]]>
+    
+    func updateBalance()
 }
 
 extension SaleDetails {
@@ -199,6 +201,10 @@ extension SaleDetails {
                     )
                 })
             }).asObservable()
+        }
+        
+        func updateBalance() {
+            self.balancesRepo.reloadBalancesDetails()
         }
         
         // MARK: - Private
