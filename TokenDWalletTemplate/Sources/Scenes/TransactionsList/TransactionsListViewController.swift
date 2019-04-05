@@ -275,6 +275,7 @@ extension TransactionsListScene {
         // MARK: Refresh
         
         @objc private func refreshAction() {
+            self.routing?.updateBalancesRequest()
             self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                 let request = Event.DidInitiateRefresh.Request()
                 businessLogic.onDidInitiateRefresh(request: request)
