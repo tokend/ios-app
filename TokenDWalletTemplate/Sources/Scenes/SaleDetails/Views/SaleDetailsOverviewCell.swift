@@ -3,22 +3,22 @@ import UIKit
 import RxSwift
 import Down
 
-extension SaleInfo {
-    enum PlainTextContent {
-        
+extension SaleDetails {
+    
+    enum OverviewCell {
         struct Model {
             let contentText: String
         }
         
-        struct ViewModel {
+        struct ViewModel: CellViewModel {
             let contentText: String
             
-            func setup(_ view: PlainTextContent.View) {
-                view.saleDescription = self.contentText
+            func setup(cell: OverviewCell.View) {
+                cell.saleDescription = self.contentText
             }
         }
         
-        class View: UIView {
+        class View: UITableViewCell {
             
             public var saleDescription: String? {
                 get { return self.saleDescriptionLabel.text }
@@ -34,8 +34,8 @@ extension SaleInfo {
             
             // MARK: - Override
             
-            override init(frame: CGRect) {
-                super.init(frame: frame)
+            override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+                super.init(style: style, reuseIdentifier: reuseIdentifier)
                 self.commonInit()
             }
             
@@ -46,7 +46,6 @@ extension SaleInfo {
             private func commonInit() {
                 self.setupView()
                 self.setupSaleTokenNameLabel()
-                self.setupLayout()
             }
             
             private func setupView() {
@@ -62,28 +61,23 @@ extension SaleInfo {
                 self.saleDescriptionLabel.numberOfLines = 0
             }
             
-            private func setupLayout() {
-                self.addSubview(self.saleDescriptionLabel)
-                
-                self.saleDescriptionLabel.snp.makeConstraints { (make) in
-                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
-                    make.top.equalToSuperview().offset(self.sideInset)
-                }
-            }
-            
             private func handle(text: String?) {
                 guard let text = text else {
                     return
                 }
                 
                 if let view = self.getMarkdownView(text: text) {
-                    self.saleDescriptionLabel.isHidden = true
                     self.addSubview(view)
-
                     view.snp.makeConstraints { (make) in
-                        make.edges.equalToSuperview()
+                        make.leading.trailing.top.bottom.equalToSuperview()
+                        make.height.equalTo(450.0)
                     }
                 } else {
+                    self.addSubview(self.saleDescriptionLabel)
+                    self.saleDescriptionLabel.snp.makeConstraints { (make) in
+                        make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                        make.top.equalToSuperview().offset(self.sideInset)
+                    }
                     self.saleDescriptionLabel.text = self.saleDescription
                 }
             }

@@ -16,28 +16,16 @@ extension SaleInfo {
         private let presenterDispatch: PresenterDispatch
         private let dateFormatter: SaleInfo.DateFormatter
         private let amountFormatter: SaleInfo.AmountFormatter
-        private let textFormatter: SaleInfoTextFormatterProtocol
         
         init(
             presenterDispatch: PresenterDispatch,
             dateFormatter: DateFormatter,
-            amountFormatter: AmountFormatter,
-            textFormatter: SaleInfoTextFormatterProtocol
+            amountFormatter: AmountFormatter
             ) {
             
             self.presenterDispatch = presenterDispatch
             self.dateFormatter = dateFormatter
             self.amountFormatter = amountFormatter
-            self.textFormatter = textFormatter
-        }
-        
-        private func getPlainTextTabViewModel(
-            model: SaleInfo.PlainTextContent.Model
-            ) -> SaleInfo.PlainTextContent.ViewModel {
-            
-            let contentText = self.textFormatter.formatText(text: model.contentText)
-            let viewModel = SaleInfo.PlainTextContent.ViewModel(contentText: contentText)
-            return viewModel
         }
         
         private func getGeneralTabViewModel(model: GeneralContent.Model) -> GeneralContent.ViewModel {
@@ -154,9 +142,7 @@ extension SaleInfo {
         private func getContentViewModel(from contentModel: Any) -> Any {
             let viewModel: Any
             
-            if let model = contentModel as? SaleInfo.PlainTextContent.Model {
-                viewModel = self.getPlainTextTabViewModel(model: model)
-            } else if let model = contentModel as? SaleInfo.GeneralContent.Model {
+            if let model = contentModel as? SaleInfo.GeneralContent.Model {
                 viewModel = self.getGeneralTabViewModel(model: model)
             } else if let model = contentModel as? SaleInfo.TokenContent.Model {
                 viewModel = self.getTokenTabViewModel(model: model)

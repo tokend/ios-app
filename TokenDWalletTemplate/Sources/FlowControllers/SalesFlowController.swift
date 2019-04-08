@@ -174,6 +174,7 @@ class SalesFlowController: BaseSignedInFlowController {
             walletRepo: self.reposController.walletRepo,
             offersRepo: self.reposController.pendingOffersRepo,
             chartsApi: self.flowControllerStack.api.chartsApi,
+            blobsApi: self.flowControllerStack.api.blobsApi,
             imagesUtility: self.reposController.imagesUtility
         )
         
@@ -184,6 +185,7 @@ class SalesFlowController: BaseSignedInFlowController {
         let chartDateFormatter = SaleDetails.ChartDateFormatter()
         
         let investedAmountFormatter = SaleDetails.InvestAmountFormatter()
+        let overviewFormatter = SaleDetails.TextFormatter()
         
         let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
         
@@ -252,6 +254,7 @@ class SalesFlowController: BaseSignedInFlowController {
             dateFormatter: dateFormatter,
             chartDateFormatter: chartDateFormatter,
             investedAmountFormatter: investedAmountFormatter,
+            overviewFormatter: overviewFormatter,
             feeLoader: feeLoader,
             cancelInvestWorker: cancelInvestWorker,
             investorAccountId: self.userDataProvider.walletData.accountId,
@@ -341,10 +344,8 @@ class SalesFlowController: BaseSignedInFlowController {
         let dataProvider = SaleInfo.SaleInfoDataProvider(
             accountId: self.userDataProvider.walletData.accountId,
             saleId: saleInfoModel.saleId,
-            blobId: saleInfoModel.blobId,
             asset: saleInfoModel.asset,
             salesApi: self.flowControllerStack.api.salesApi,
-            blobsApi: self.flowControllerStack.api.blobsApi,
             assetsRepo: self.reposController.assetsRepo,
             imagesUtility: self.reposController.imagesUtility,
             balancesRepo: self.reposController.balancesRepo
@@ -354,7 +355,6 @@ class SalesFlowController: BaseSignedInFlowController {
         let sceneModel = SaleInfo.Model.SceneModel(tabs: [])
         let dateFormatter = SaleInfo.DateFormatter()
         let amountFormatter = SaleInfo.AmountFormatter()
-        let textFormatter = SaleInfo.SaleInfoTextFormatter()
         
         SaleInfo.Configurator.configure(
             viewController: vc,
@@ -362,7 +362,6 @@ class SalesFlowController: BaseSignedInFlowController {
             dataProvider: dataProvider,
             dateFormatter: dateFormatter,
             amountFormatter: amountFormatter,
-            textFormatter: textFormatter,
             routing: routing
         )
         return vc

@@ -63,7 +63,8 @@ extension SaleDetails {
             let cellClasses: [CellViewAnyModel.Type] = [
                 DescriptionCell.ViewModel.self,
                 InvestingCell.ViewModel.self,
-                ChartCell.ViewModel.self
+                ChartCell.ViewModel.self,
+                OverviewCell.ViewModel.self
             ]
             self.tableView.register(classes: cellClasses)
             self.tableView.dataSource = self
@@ -224,7 +225,6 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     func displayDidSelectMoreInfoButton(viewModel: SaleDetails.Event.DidSelectMoreInfoButton.ViewModel) {
         let saleInfoModel = SaleDetails.Model.SaleInfoModel(
             saleId: viewModel.saleId,
-            blobId: viewModel.blobId,
             asset: viewModel.asset
         )
         self.routing?.onSaleInfoAction(saleInfoModel)

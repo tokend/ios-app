@@ -10,6 +10,7 @@ extension SaleDetails {
             dateFormatter: DateFormatterProtocol,
             chartDateFormatter: ChartDateFormatterProtocol,
             investedAmountFormatter: InvestedAmountFormatter,
+            overviewFormatter: TextFormatter,
             feeLoader: FeeLoader,
             cancelInvestWorker: CancelInvestWorkerProtocol,
             investorAccountId: String,
@@ -22,7 +23,8 @@ extension SaleDetails {
                 amountFormatter: amountFormatter,
                 dateFormatter: dateFormatter,
                 chartDateFormatter: chartDateFormatter,
-                investedAmountFormatter: investedAmountFormatter
+                investedAmountFormatter: investedAmountFormatter,
+                overviewFormatter: overviewFormatter
             )
             let interactor = Interactor(
                 presenter: presenter,

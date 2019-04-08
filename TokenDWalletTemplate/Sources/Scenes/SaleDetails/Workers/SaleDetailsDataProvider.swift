@@ -14,6 +14,7 @@ protocol SaleDetailsDataProviderProtocol {
     
     func observeSale() -> Observable<SaleDetails.Model.SaleModel?>
     func observeAsset(assetCode: String) -> Observable<SaleDetails.Model.AssetModel?>
+    func observeOverview(blobId: String) -> Observable<SaleDetails.Model.SaleOverviewModel?>
     func observeBalances() -> Observable<[SaleDetails.Model.BalanceDetails]>
     func observeAccount() -> Observable<SaleDetails.Model.AccountModel>
     func observeOffers() -> Observable<[SaleDetails.Model.InvestmentOffer]>
@@ -38,9 +39,11 @@ extension SaleDetails {
         private let walletRepo: WalletRepo
         private let offersRepo: PendingOffersRepo
         private let chartsApi: ChartsApi
+        private let blobsApi: BlobsApi
         private let imagesUtility: ImagesUtility
         
         private let pendingOffers: BehaviorRelay<[PendingOffersRepo.Offer]> = BehaviorRelay(value: [])
+        private let saleOverview: BehaviorRelay<Model.SaleOverviewModel?> = BehaviorRelay(value: nil)
         private let charts: BehaviorRelay<TokenDSDK.ChartsResponse> = BehaviorRelay(value: [:])
         
         // MARK: -
@@ -53,6 +56,7 @@ extension SaleDetails {
             walletRepo: WalletRepo,
             offersRepo: PendingOffersRepo,
             chartsApi: ChartsApi,
+            blobsApi: BlobsApi,
             imagesUtility: ImagesUtility
             ) {
             
@@ -63,6 +67,7 @@ extension SaleDetails {
             self.walletRepo = walletRepo
             self.offersRepo = offersRepo
             self.chartsApi = chartsApi
+            self.blobsApi = blobsApi
             self.imagesUtility = imagesUtility
         }
         
@@ -138,6 +143,11 @@ extension SaleDetails {
                 
                 return assetModel
             })
+        }
+        
+        func observeOverview(blobId: String) -> Observable<SaleDetails.Model.SaleOverviewModel?> {
+            self.loadOverview(blobId: blobId)
+            return self.saleOverview.asObservable()
         }
         
         func observeBalances() -> Observable<[Model.BalanceDetails]> {
@@ -225,6 +235,25 @@ extension SaleDetails {
                         self?.pendingOffers.accept(offers)
                     }
             })
+        }
+        
+        private func loadOverview(blobId: String) {
+            self.blobsApi.requestBlob(
+                blobId: blobId,
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failure:
+                        break
+                        
+                    case .success(let blob):
+                        let model = Model.SaleOverviewModel(
+                            overview: blob.attributes.value
+                        )
+                        self?.saleOverview.accept(model)
+                    }
+                }
+            )
         }
         
         private func loadCharts(saleAsset: String) {
