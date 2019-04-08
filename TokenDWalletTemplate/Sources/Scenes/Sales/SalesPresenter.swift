@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol SalesPresentationLogic {
     func presentSectionsUpdated(response: Sales.Event.SectionsUpdated.Response)
@@ -13,6 +13,8 @@ extension Sales {
         
         private let presenterDispatch: PresenterDispatch
         private let investedAmountFormatter: InvestedAmountFormatter
+        
+        private let verticalSpacing: CGFloat = 5.0
         
         init(
             presenterDispatch: PresenterDispatch,
@@ -109,6 +111,16 @@ extension Sales.Presenter: Sales.PresentationLogic {
             return Sales.Model.SectionViewModel(cells: sectioModel.sales.map({ (sale) -> CellViewAnyModel in
                 let name = sale.name
                 let asset = sale.asset
+                
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = self.verticalSpacing
+                let attributedDescription = NSAttributedString(
+                    string: sale.description,
+                    attributes: [
+                        .paragraphStyle: paragraphStyle
+                    ]
+                )
+                
                 let saleName = "\(name) (\(asset))"
                 let investedAmountFormatted = self.investedAmountFormatter.formatAmount(
                     sale.investmentAmount,
@@ -134,35 +146,16 @@ extension Sales.Presenter: Sales.PresentationLogic {
                 let investedPercentage = sale.investmentPercentage
                 let investedPercentageRounded = Int(roundf(investedPercentage * 100))
                 let investedPercentageText = "\(investedPercentageRounded)%"
-                let investorsCount = sale.investorsCount
-                let investorsCountFormatted = "\(investorsCount)"
-                let investorsCountFormattedAttributed = NSAttributedString(
-                    string: investorsCountFormatted,
-                    attributes: [
-                        .foregroundColor: Theme.Colors.accentColor
-                    ]
-                )
-                
-                let attributedInvestorsText = LocalizedAtrributed(
-                    .investors,
-                    attributes: [
-                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor
-                    ],
-                    replace: [
-                        .investors_replace_count: investorsCountFormattedAttributed
-                    ]
-                )
                 
                 let timeText = self.getTimeText(sale: sale)
                 
                 return Sales.SaleListCell.ViewModel(
                     imageUrl: sale.imageURL,
                     name: saleName,
-                    description: sale.description,
+                    description: attributedDescription,
                     investedAmountText: attributedInvetsedAmount,
                     investedPercentage: sale.investmentPercentage,
                     investedPercentageText: investedPercentageText,
-                    investorsText: attributedInvestorsText,
                     isUpcomming: timeText.isUpcomming,
                     timeText: timeText.timeText,
                     saleIdentifier: sale.saleIdentifier

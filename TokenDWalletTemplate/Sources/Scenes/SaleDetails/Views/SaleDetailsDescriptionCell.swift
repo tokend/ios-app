@@ -11,14 +11,13 @@ extension SaleDetails {
             
             let imageUrl: URL?
             let name: String
-            let description: String
+            let description: NSAttributedString
             
             let youtubeVideoUrl: URL?
             
             let investedAmountText: NSAttributedString
             let investedPercentage: Float
             let investedPercentageText: String
-            let investorsText: NSAttributedString
             
             let timeText: NSAttributedString
             
@@ -34,7 +33,6 @@ extension SaleDetails {
                 cell.investedAmountText = self.investedAmountText
                 cell.investedPercentageText = self.investedPercentageText
                 cell.investedPercent = self.investedPercentage
-                cell.investorsAmountText = self.investorsText
                 
                 cell.timeText = self.timeText
                 
@@ -81,9 +79,9 @@ extension SaleDetails {
                 set { self.nameLabel.text = newValue }
             }
             
-            public var saleDescription: String? {
-                get { return self.shortDescriptionLabel.text }
-                set { self.shortDescriptionLabel.text = newValue }
+            public var saleDescription: NSAttributedString? {
+                get { return self.shortDescriptionLabel.attributedText }
+                set { self.shortDescriptionLabel.attributedText = newValue }
             }
             
             public var investedAmountText: NSAttributedString? {
@@ -99,11 +97,6 @@ extension SaleDetails {
             public var investedPercentageText: String? {
                 get { return self.percentLabel.text }
                 set { self.percentLabel.text = newValue }
-            }
-            
-            public var investorsAmountText: NSAttributedString? {
-                get { return self.investorsAmountLabel.attributedText }
-                set { self.investorsAmountLabel.attributedText = newValue }
             }
             
             public var timeText: NSAttributedString? {
@@ -132,7 +125,6 @@ extension SaleDetails {
             private let investedAmountLabel: UILabel = UILabel()
             private let percentLabel: UILabel = UILabel()
             private let progressView: UIProgressView = UIProgressView()
-            private let investorsAmountLabel: UILabel = UILabel()
             private let timeLabel: UILabel = UILabel()
             
             private let separatorView: UIView = UIView()
@@ -168,7 +160,6 @@ extension SaleDetails {
                 self.setupInvestedAmountLabel()
                 self.setupPercentLabel()
                 self.setupProgressView()
-                self.setupInvestorsAmountLabel()
                 self.setupTimeLabel()
                 self.setupVideoWebView()
                 self.setupSeparator()
@@ -183,7 +174,8 @@ extension SaleDetails {
             }
             
             private func setupAssetImageView() {
-                self.assetImageView.contentMode = .scaleAspectFit
+                self.assetImageView.contentMode = .scaleAspectFill
+                self.assetImageView.clipsToBounds = true
                 self.assetImageView.backgroundColor = UIColor.clear
             }
             
@@ -217,12 +209,6 @@ extension SaleDetails {
             
             private func setupProgressView() {
                 self.progressView.tintColor = Theme.Colors.accentColor
-            }
-            
-            private func setupInvestorsAmountLabel() {
-                self.investorsAmountLabel.font = Theme.Fonts.smallTextFont
-                self.investorsAmountLabel.textColor = Theme.Colors.accentColor
-                self.investorsAmountLabel.textAlignment = .left
             }
             
             private func setupTimeLabel() {
@@ -276,15 +262,13 @@ extension SaleDetails {
                 self.contentView.addSubview(self.moreInfoButton)
                 
                 self.assetImageView.snp.makeConstraints { (make) in
-                    make.leading.equalToSuperview().inset(self.sideInset)
-                    make.top.equalToSuperview().inset(self.topInset)
-                    make.width.height.equalTo(self.iconSize)
+                    make.top.leading.trailing.equalToSuperview()
+                    make.width.equalTo(self.assetImageView.snp.height).multipliedBy(16.0/9.0)
                 }
                 
                 self.nameLabel.snp.makeConstraints { (make) in
-                    make.leading.equalTo(self.assetImageView.snp.trailing).offset(self.sideInset)
-                    make.trailing.equalToSuperview().inset(self.sideInset)
-                    make.top.equalTo(self.assetImageView.snp.top)
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalTo(self.assetImageView.snp.bottom).offset(self.topInset)
                 }
                 
                 self.shortDescriptionLabel.snp.makeConstraints { (make) in
@@ -320,24 +304,15 @@ extension SaleDetails {
                 self.investContentView.addSubview(self.investedAmountLabel)
                 self.investContentView.addSubview(self.percentLabel)
                 self.investContentView.addSubview(self.progressView)
-                self.investContentView.addSubview(self.investorsAmountLabel)
                 self.investContentView.addSubview(self.timeLabel)
                 
                 let sideInset: CGFloat = 10
                 let topInset: CGFloat = 10
-                let bottomInset: CGFloat = 10
-                
                 self.investedAmountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                 self.investedAmountLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
                 
                 self.percentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                 self.percentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-                
-                self.investorsAmountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-                self.investorsAmountLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-                
-                self.timeLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-                self.timeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
                 
                 self.investedAmountLabel.snp.makeConstraints { (make) in
                     make.top.equalToSuperview()
@@ -352,20 +327,14 @@ extension SaleDetails {
                 
                 self.progressView.snp.makeConstraints { (make) in
                     make.top.equalTo(self.investedAmountLabel.snp.bottom).offset(topInset)
-                    make.leading.equalTo(self.investorsAmountLabel.snp.leading)
-                    make.trailing.equalTo(self.percentLabel.snp.trailing)
-                }
-                
-                self.investorsAmountLabel.snp.makeConstraints { (make) in
-                    make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
                     make.leading.equalToSuperview()
-                    make.bottom.equalToSuperview().inset(bottomInset)
+                    make.trailing.equalTo(self.percentLabel.snp.trailing)
                 }
                 
                 self.timeLabel.snp.makeConstraints { (make) in
                     make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
                     make.trailing.equalToSuperview()
-                    make.leading.equalTo(self.investorsAmountLabel.snp.trailing).offset(sideInset)
+                    make.bottom.lessThanOrEqualToSuperview()
                 }
             }
             

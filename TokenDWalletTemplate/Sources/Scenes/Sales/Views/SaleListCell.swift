@@ -10,12 +10,11 @@ extension Sales {
             
             let imageUrl: URL?
             let name: String
-            let description: String
+            let description: NSAttributedString
             
             let investedAmountText: NSAttributedString
             let investedPercentage: Float
             let investedPercentageText: String
-            let investorsText: NSAttributedString
             
             let isUpcomming: Bool
             let timeText: NSAttributedString
@@ -30,7 +29,6 @@ extension Sales {
                 cell.investedAmountText = self.investedAmountText
                 cell.investedPercentageText = self.investedPercentageText
                 cell.investedPercent = self.investedPercentage
-                cell.investorsAmountText = self.investorsText
                 
                 cell.isUpcoming = self.isUpcomming
                 cell.timeText = self.timeText
@@ -71,9 +69,9 @@ extension Sales {
                 set { self.nameLabel.text = newValue }
             }
             
-            public var saleDescription: String? {
-                get { return self.shortDescriptionLabel.text }
-                set { self.shortDescriptionLabel.text = newValue }
+            public var saleDescription: NSAttributedString? {
+                get { return self.shortDescriptionLabel.attributedText }
+                set { self.shortDescriptionLabel.attributedText = newValue }
             }
             
             public var investedAmountText: NSAttributedString? {
@@ -89,11 +87,6 @@ extension Sales {
             public var investedPercentageText: String? {
                 get { return self.percentLabel.text }
                 set { self.percentLabel.text = newValue }
-            }
-            
-            public var investorsAmountText: NSAttributedString? {
-                get { return self.investorsAmountLabel.attributedText }
-                set { self.investorsAmountLabel.attributedText = newValue }
             }
             
             public var timeText: NSAttributedString? {
@@ -151,7 +144,6 @@ extension Sales {
                 self.setupInvestedAmountLabel()
                 self.setupPercentLabel()
                 self.setupProgressView()
-                self.setupInvestorsAmountLabel()
                 self.setupTimeLabel()
                 
                 self.setupLayout()
@@ -198,12 +190,6 @@ extension Sales {
             
             private func setupProgressView() {
                 self.progressView.tintColor = Theme.Colors.accentColor
-            }
-            
-            private func setupInvestorsAmountLabel() {
-                self.investorsAmountLabel.font = Theme.Fonts.smallTextFont
-                self.investorsAmountLabel.textColor = Theme.Colors.accentColor
-                self.investorsAmountLabel.textAlignment = .left
             }
             
             private func setupTimeLabel() {
@@ -264,12 +250,6 @@ extension Sales {
                 self.percentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                 self.percentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
                 
-                self.investorsAmountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-                self.investorsAmountLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-                
-                self.timeLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-                self.timeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-                
                 self.investedAmountLabel.snp.makeConstraints { (make) in
                     make.top.equalToSuperview()
                     make.leading.equalToSuperview()
@@ -283,20 +263,13 @@ extension Sales {
                 
                 self.progressView.snp.makeConstraints { (make) in
                     make.top.equalTo(self.investedAmountLabel.snp.bottom).offset(topInset)
-                    make.leading.equalTo(self.investorsAmountLabel.snp.leading)
+                    make.leading.equalTo(self.investedAmountLabel.snp.leading)
                     make.trailing.equalTo(self.percentLabel.snp.trailing)
-                }
-                
-                self.investorsAmountLabel.snp.makeConstraints { (make) in
-                    make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-                    make.leading.equalToSuperview()
-                    make.bottom.lessThanOrEqualToSuperview()
                 }
                 
                 self.timeLabel.snp.makeConstraints { (make) in
                     make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
                     make.trailing.equalToSuperview()
-                    make.leading.equalTo(self.investorsAmountLabel.snp.trailing).offset(sideInset)
                     make.bottom.lessThanOrEqualToSuperview()
                 }
             }
