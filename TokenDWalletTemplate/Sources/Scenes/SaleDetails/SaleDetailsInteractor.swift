@@ -46,10 +46,16 @@ extension SaleDetails {
                 
                 self.observeAsset()
                 self.observeSaleBalance()
+                self.observeOverview()
             }
         }
         private var saleBalance: Model.BalanceDetails?
         private var assetModel: Model.AssetModel? {
+            didSet {
+                self.updateRelay.emitEvent()
+            }
+        }
+        private var overviewModel: Model.SaleOverviewModel? {
             didSet {
                 self.updateRelay.emitEvent()
             }
@@ -156,6 +162,19 @@ extension SaleDetails {
             let descCellModel = Model.CellModel(cellType: .description(descModel))
             let descSection = Model.SectionModel(cells: [descCellModel])
             sections.append(descSection)
+            
+            // Overview
+            
+            if let overviewModel = self.overviewModel {
+                let overviewCellModel = Model.OverviewCellModel(
+                    overview: overviewModel.overview
+                )
+                let overviewCell = Model.CellModel(
+                    cellType: .overview(overviewCellModel)
+                )
+                let overviewSection = Model.SectionModel(cells: [overviewCell])
+                sections.append(overviewSection)
+            }
             
             // Invest
             
@@ -265,6 +284,18 @@ extension SaleDetails {
                 .subscribe(onNext: { [weak self] (asset) in
                     self?.assetModel = asset
                 })
+        }
+        
+        private func observeOverview() {
+            guard let blobId = self.sale?.details.description else {
+                return
+            }
+            self.dataProvider
+                .observeOverview(blobId: blobId)
+                .subscribe(onNext: { [weak self] (model) in
+                    self?.overviewModel = model
+                })
+            .disposed(by: self.disposeBag)
         }
         
         private func observeSaleBalance() {

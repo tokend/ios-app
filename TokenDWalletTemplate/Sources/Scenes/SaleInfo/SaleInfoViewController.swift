@@ -87,12 +87,7 @@ extension SaleInfo {
         }
         
         private func getContentView(from contentViewModel: Any) -> UIView {
-            
-            if let plainTextViewModel = contentViewModel as? SaleInfo.PlainTextContent.ViewModel {
-                let view = SaleInfo.PlainTextContent.View()
-                plainTextViewModel.setup(view)
-                return view
-            } else if let sectionsViewModel = contentViewModel as? SaleInfo.GeneralContent.ViewModel {
+           if let sectionsViewModel = contentViewModel as? SaleInfo.GeneralContent.ViewModel {
                 let view = SaleInfo.GeneralContent.View()
                 sectionsViewModel.setup(view)
                 return view

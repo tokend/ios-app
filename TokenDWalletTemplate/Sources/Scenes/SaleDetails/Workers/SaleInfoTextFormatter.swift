@@ -1,12 +1,12 @@
 import Foundation
 
-protocol SaleInfoTextFormatterProtocol {
+protocol SaleDetailsTextFormatterProtocol {
     func formatText(text: String) -> String
 }
 
-extension SaleInfo {
+extension SaleDetails {
     
-    class SaleInfoTextFormatter: SaleInfoTextFormatterProtocol {
+    class TextFormatter: SaleDetailsTextFormatterProtocol {
         
         func formatText(text: String) -> String {
             guard let textData = text.data(using: .utf8),

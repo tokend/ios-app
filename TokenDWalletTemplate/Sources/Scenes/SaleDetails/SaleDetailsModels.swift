@@ -90,6 +90,7 @@ extension SaleDetails.Model {
         case description(DescriptionCellModel)
         case investing(InvestingCellModel)
         case chart(ChartCellModel)
+        case overview(OverviewCellModel)
     }
     
     struct DescriptionCellModel {
@@ -137,6 +138,10 @@ extension SaleDetails.Model {
         let cellIdentifier: SaleDetails.CellIdentifier
     }
     
+    struct OverviewCellModel {
+        let overview: String
+    }
+    
     struct SaleInvestModel {
         let baseAsset: String
         let quoteAsset: String
@@ -164,8 +169,11 @@ extension SaleDetails.Model {
     
     struct SaleInfoModel {
         let saleId: String
-        let blobId: String
         let asset: String
+    }
+    
+    struct SaleOverviewModel {
+        let overview: String
     }
     
     struct AssetModel {

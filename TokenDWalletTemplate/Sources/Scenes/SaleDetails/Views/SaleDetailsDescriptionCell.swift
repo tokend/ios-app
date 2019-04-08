@@ -272,8 +272,7 @@ extension SaleDetails {
                 }
                 
                 self.shortDescriptionLabel.snp.makeConstraints { (make) in
-                    make.top.greaterThanOrEqualTo(self.assetImageView.snp.bottom).offset(self.topInset)
-                    make.top.greaterThanOrEqualTo(self.nameLabel.snp.bottom).offset(self.topInset)
+                    make.top.equalTo(self.nameLabel.snp.bottom).offset(self.topInset)
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
                 }
                 

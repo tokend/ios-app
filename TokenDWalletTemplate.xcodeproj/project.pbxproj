@@ -254,10 +254,11 @@
 		DB0E51D52164E99F00DDA88C /* SaleInfoRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C92164E99E00DDA88C /* SaleInfoRouting.swift */; };
 		DB0E51D62164E99F00DDA88C /* SaleInfoLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51CB2164E99E00DDA88C /* SaleInfoLoadingView.swift */; };
 		DB0E51D72164E99F00DDA88C /* SaleInfoTitleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51CC2164E99E00DDA88C /* SaleInfoTitleTextView.swift */; };
-		DB0E51D82164E99F00DDA88C /* SaleInfoPlainTextContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51CD2164E99E00DDA88C /* SaleInfoPlainTextContent.swift */; };
 		DB0E51D92164E99F00DDA88C /* SaleInfoTokenContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51CE2164E99E00DDA88C /* SaleInfoTokenContent.swift */; };
 		DB0E51DA2164ED9400DDA88C /* SaleInfoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C22164E99E00DDA88C /* SaleInfoModels.swift */; };
 		DB10444B2167B4E000FD43BC /* SaleEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB10444A2167B4E000FD43BC /* SaleEmptyView.swift */; };
+		DB14989A225B86E600A9A74C /* SaleDetailsOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */; };
+		DB14989C225B896900A9A74C /* SaleInfoTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */; };
 		DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017C21F5DB0F00CD3DA4 /* Assets.swift */; };
 		DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */; };
 		DB19A7FD215BC4980043CD4A /* SaleInvestConfirmationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */; };
@@ -291,7 +292,6 @@
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB80461C21D3744500C60939 /* AuthKeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB80461B21D3744500C60939 /* AuthKeychainManager.swift */; };
 		DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */; };
-		DB8C4063222831D80018148E /* SaleInfoTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C4062222831D80018148E /* SaleInfoTextFormatter.swift */; };
 		DB8C4065222853060018148E /* DepositSceneErrorFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */; };
 		DB990C3221E4E86600D041BE /* RegisterSceneSignUpBuilderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB990C3121E4E86600D041BE /* RegisterSceneSignUpBuilderProtocol.swift */; };
 		DB990C3621E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB990C3521E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift */; };
@@ -729,9 +729,10 @@
 		DB0E51C92164E99E00DDA88C /* SaleInfoRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoRouting.swift; sourceTree = "<group>"; };
 		DB0E51CB2164E99E00DDA88C /* SaleInfoLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoLoadingView.swift; sourceTree = "<group>"; };
 		DB0E51CC2164E99E00DDA88C /* SaleInfoTitleTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTitleTextView.swift; sourceTree = "<group>"; };
-		DB0E51CD2164E99E00DDA88C /* SaleInfoPlainTextContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoPlainTextContent.swift; sourceTree = "<group>"; };
 		DB0E51CE2164E99E00DDA88C /* SaleInfoTokenContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTokenContent.swift; sourceTree = "<group>"; };
 		DB10444A2167B4E000FD43BC /* SaleEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleEmptyView.swift; sourceTree = "<group>"; };
+		DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsOverviewCell.swift; sourceTree = "<group>"; };
+		DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTextFormatter.swift; sourceTree = "<group>"; };
 		DB16017C21F5DB0F00CD3DA4 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInvestConfirmationProvider.swift; sourceTree = "<group>"; };
@@ -765,7 +766,6 @@
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB80461B21D3744500C60939 /* AuthKeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthKeychainManager.swift; sourceTree = "<group>"; };
 		DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsHistoryRepo.swift; sourceTree = "<group>"; };
-		DB8C4062222831D80018148E /* SaleInfoTextFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTextFormatter.swift; sourceTree = "<group>"; };
 		DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneErrorFormatter.swift; sourceTree = "<group>"; };
 		DB990C3121E4E86600D041BE /* RegisterSceneSignUpBuilderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneSignUpBuilderProtocol.swift; sourceTree = "<group>"; };
 		DB990C3521E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePasswordRequestBuilderProtocol.swift; sourceTree = "<group>"; };
@@ -1590,6 +1590,7 @@
 		7FEC94862148170500F41EE6 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */,
 				7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */,
 				7FC88B802164F09A00BED021 /* SaleDetailsChartDateFormatter.swift */,
 				7FC88B79215E8BAD00BED021 /* SaleDetailsChartsFetcher.swift */,
@@ -1609,6 +1610,7 @@
 				7FEC948C2148170500F41EE6 /* SaleDetailsChartCell.swift */,
 				7FEC948E2148170500F41EE6 /* SaleDetailsDescriptionCell.swift */,
 				7FEC948D2148170500F41EE6 /* SaleDetailsInvestingCell.swift */,
+				DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1851,7 +1853,6 @@
 		DB0E51C72164E99E00DDA88C /* Workers */ = {
 			isa = PBXGroup;
 			children = (
-				DB8C4062222831D80018148E /* SaleInfoTextFormatter.swift */,
 				DB0E51C82164E99E00DDA88C /* SaleInfoDataProvider.swift */,
 			);
 			path = Workers;
@@ -1862,7 +1863,6 @@
 			children = (
 				DB33ECA0216672D1006D220B /* SaleInfoEmptyView.swift */,
 				DB0E51CB2164E99E00DDA88C /* SaleInfoLoadingView.swift */,
-				DB0E51CD2164E99E00DDA88C /* SaleInfoPlainTextContent.swift */,
 				DB0E51CC2164E99E00DDA88C /* SaleInfoTitleTextView.swift */,
 				DB0E51CE2164E99E00DDA88C /* SaleInfoTokenContent.swift */,
 			);
@@ -2632,7 +2632,6 @@
 				E9063EA120F771CA00A5B343 /* BalanceHeaderWithPickerAmountFormatterProtocol.swift in Sources */,
 				7F6A848B210A00D700B7FE6B /* ConfirmationSceneViewController.swift in Sources */,
 				E91131E620C532AC00A8AC4D /* ExploreTokensRouting.swift in Sources */,
-				DB8C4063222831D80018148E /* SaleInfoTextFormatter.swift in Sources */,
 				7FABEA5E20FD088F0005E751 /* CreateOfferViewController.swift in Sources */,
 				7FEB45C420DD430A001CA31C /* SharedViewsBuilder.swift in Sources */,
 				E911320F20C6D0D800A8AC4D /* TokenDetailsModels.swift in Sources */,
@@ -2655,6 +2654,7 @@
 				E9A5CBC42119A64C009112CA /* PendingOffersRepo.swift in Sources */,
 				DB1AFBAE21C9338300D87D5D /* AuthenticatorAuthInteractor.swift in Sources */,
 				E9A5CBC22119A594009112CA /* TransactionsListScenePendingOffersFetcher.swift in Sources */,
+				DB14989C225B896900A9A74C /* SaleInfoTextFormatter.swift in Sources */,
 				E980D85020CFFBC700C53841 /* BalancesRepo.swift in Sources */,
 				E93F074F20D7C87F000C0991 /* TransactionsListPresenter.swift in Sources */,
 				7FEA09BC213446510037F25F /* ClientRedirectsModel.swift in Sources */,
@@ -3012,7 +3012,6 @@
 				E91131FA20C56FC700A8AC4D /* UIView+Loading.swift in Sources */,
 				7F967FA12125985A005527EA /* UpdatePasswordInteractor.swift in Sources */,
 				DB5A3BC221C1554600520604 /* FeesInteractor.swift in Sources */,
-				DB0E51D82164E99F00DDA88C /* SaleInfoPlainTextContent.swift in Sources */,
 				7F967FC3212C3FF8005527EA /* LocalAuthFlowController.swift in Sources */,
 				E92F1BFF2139B77D00D4695E /* TradeAssetsFetcherProtocol.swift in Sources */,
 				E92F1C142139B7FF00D4695E /* FeeLoader.swift in Sources */,
@@ -3026,6 +3025,7 @@
 				7FEB45C020DD4143001CA31C /* VerifyEmailInteractor.swift in Sources */,
 				E92F1C0E2139B77D00D4695E /* OrderBookTableViewBuyCell.swift in Sources */,
 				E980D84E20CFF64400C53841 /* BehaviorRelay+EmitValue.swift in Sources */,
+				DB14989A225B86E600A9A74C /* SaleDetailsOverviewCell.swift in Sources */,
 				DB33ECA1216672D1006D220B /* SaleInfoEmptyView.swift in Sources */,
 				E93F075420D7C87F000C0991 /* TransactionsListConfigurator.swift in Sources */,
 				719AAFD42142AEEA00279B9D /* SalesInteractor.swift in Sources */,

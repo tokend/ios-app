@@ -15,10 +15,8 @@ extension SaleInfo {
         private let accountId: String
         private let saleId: String
         private let asset: String
-        private let blobId: String
         
         private let salesApi: SalesApi
-        private let blobsApi: BlobsApi
         
         private let assetsRepo: AssetsRepo
         private let imagesUtility: ImagesUtility
@@ -51,20 +49,17 @@ extension SaleInfo {
         init(
             accountId: String,
             saleId: String,
-            blobId: String,
             asset: String,
             salesApi: SalesApi,
-            blobsApi: BlobsApi,
             assetsRepo: AssetsRepo,
             imagesUtility: ImagesUtility,
             balancesRepo: BalancesRepo
             ) {
+            
             self.accountId = accountId
             self.saleId = saleId
-            self.blobId = blobId
             self.asset = asset
             self.salesApi = salesApi
-            self.blobsApi = blobsApi
             self.assetsRepo = assetsRepo
             self.imagesUtility = imagesUtility
             self.balancesRepo = balancesRepo
@@ -74,13 +69,6 @@ extension SaleInfo {
             self.updateRelay
                 .subscribe(onNext: { [weak self] (_) in
                     var tabs: [Model.TabModel] = []
-                    
-                    if let blob = self?.blobStatus,
-                        let tab = self?.getPlainTextTab(blobStatus: blob) {
-                        tabs.append(tab)
-                    } else {
-                        self?.addLoadingTab(to: &tabs, title: Localized(.overview))
-                    }
                     
                     if let saleDetails = self?.saleDetailsStatus,
                         let tab = self?.getSaleDetailsTab(saleDetailsStatus: saleDetails) {
@@ -101,7 +89,6 @@ extension SaleInfo {
                 .disposed(by: self.disposeBag)
             
             self.downloadSaleDetails()
-            self.downloadBlob()
             self.observeAsset(assetCode: self.asset)
             
             return self.tabs.asObservable()
@@ -125,21 +112,6 @@ extension SaleInfo {
                 case .success(let saleDetails):
                     self?.saleDetailsStatus = .success(response: saleDetails)
                 }
-            }
-        }
-        
-        private func getPlainTextTab(blobStatus: BlobResponseStatus) -> Model.TabModel {
-            switch blobStatus {
-                
-            case .failure(let error):
-                let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: Localized(.overview), contentModel: model)
-                return tabModel
-                
-            case .success(let blob):
-                let model = SaleInfo.PlainTextContent.Model(contentText: blob.attributes.value)
-                let tabModel = Model.TabModel(title: Localized(.overview), contentModel: model)
-                return tabModel
             }
         }
         
@@ -214,23 +186,6 @@ extension SaleInfo {
                 contentModel: contentModel
             )
             tabs.append(tab)
-        }
-        
-        private func downloadBlob() {
-            self.blobsApi.requestBlob(
-                blobId: self.blobId,
-                completion: { [weak self] (result) in
-                    switch result {
-                        
-                    case .failure(let error):
-                        self?.tabsErrorStatus.accept(error)
-                        self?.blobStatus = .failure(error: error)
-                        
-                    case .success(let blob):
-                        self?.blobStatus = .success(response: blob)
-                    }
-                }
-            )
         }
         
         private func observeAsset(assetCode: String) {

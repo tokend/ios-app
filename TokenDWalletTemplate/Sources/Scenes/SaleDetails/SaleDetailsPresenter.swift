@@ -26,6 +26,7 @@ extension SaleDetails {
         private let dateFormatter: DateFormatterProtocol
         private let chartDateFormatter: ChartDateFormatterProtocol
         private let investedAmountFormatter: InvestedAmountFormatter
+        private let overviewFormatter: SaleDetails.TextFormatter
         
         private let verticalSpacing: CGFloat = 5.0
         
@@ -36,7 +37,8 @@ extension SaleDetails {
             amountFormatter: AmountFormatterProtocol,
             dateFormatter: DateFormatterProtocol,
             chartDateFormatter: ChartDateFormatterProtocol,
-            investedAmountFormatter: InvestedAmountFormatter
+            investedAmountFormatter: InvestedAmountFormatter,
+            overviewFormatter: SaleDetails.TextFormatter
             ) {
             
             self.presenterDispatch = presenterDispatch
@@ -44,6 +46,7 @@ extension SaleDetails {
             self.dateFormatter = dateFormatter
             self.chartDateFormatter = chartDateFormatter
             self.investedAmountFormatter = investedAmountFormatter
+            self.overviewFormatter = overviewFormatter
         }
         
         // MARK: - Private
@@ -238,6 +241,18 @@ extension SaleDetails {
             )
         }
         
+        private func createOverviewSectionModel(
+            overview: Model.OverviewCellModel
+            ) -> OverviewCell.ViewModel {
+            
+            let contentText = self.overviewFormatter.formatText(
+                text: overview.overview
+            )
+            return OverviewCell.ViewModel(
+                contentText: contentText
+            )
+        }
+        
         private func setupAxisFormatters(
             periods: [Model.Period],
             selectedPeriodIndex: Int?
@@ -389,6 +404,9 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
                     
                 case .chart(let chartCellModel):
                     return self.createChartSectionViewModel(cellModel: chartCellModel)
+                    
+                case .overview(let overviewCellModel):
+                    return self.createOverviewSectionModel(overview: overviewCellModel)
                 }
             }))
         }

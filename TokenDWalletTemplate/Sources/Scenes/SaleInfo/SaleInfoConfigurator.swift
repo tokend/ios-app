@@ -9,7 +9,6 @@ extension SaleInfo {
             dataProvider: DataProvider,
             dateFormatter: SaleInfo.DateFormatter,
             amountFormatter: SaleInfo.AmountFormatter,
-            textFormatter: SaleInfoTextFormatterProtocol,
             routing: Routing?
             ) {
             
@@ -17,8 +16,7 @@ extension SaleInfo {
             let presenter = Presenter(
                 presenterDispatch: presenterDispatch,
                 dateFormatter: dateFormatter,
-                amountFormatter: amountFormatter,
-                textFormatter: textFormatter
+                amountFormatter: amountFormatter
             )
             let interactor = Interactor(
                 sceneModel: sceneModel,
