@@ -19,8 +19,7 @@ extension TransactionsListScene {
         
         private let pendingOffersRepo: PendingOffersRepo
         private let balancesRepo: BalancesRepo
-        private let rateProvider: RateProviderProtocol
-        private let rateAsset: String = "USD"
+        private let decimalFormatter: DecimalFormatter
         
         private var balanceId: String?
         private let originalAccountId: String
@@ -54,17 +53,16 @@ extension TransactionsListScene {
         init(
             pendingOffersRepo: PendingOffersRepo,
             balancesRepo: BalancesRepo,
-            rateProvider: RateProviderProtocol,
+            decimalFormatter: DecimalFormatter,
             originalAccountId: String
             ) {
             
             self.pendingOffersRepo = pendingOffersRepo
             self.balancesRepo = balancesRepo
-            self.rateProvider = rateProvider
+            self.decimalFormatter = decimalFormatter
             self.originalAccountId = originalAccountId
             
             self.observeBalancesDetails()
-            self.observeRateChanges()
             self.observeRepoErrorStatus()
             self.setBalanceId("")
         }
@@ -157,15 +155,6 @@ extension TransactionsListScene {
                 .disposed(by: self.disposeBag)
         }
         
-        private func observeRateChanges() {
-            self.rateProvider
-                .rate
-                .subscribe(onNext: { [weak self] (_) in
-                    self?.transactionsDidChange()
-                })
-                .disposed(by: self.disposeBag)
-        }
-        
         // MARK: Helpers
         
         private func transactionsDidChange() {
@@ -196,24 +185,13 @@ extension TransactionsListScene {
                 asset: assetValue
             )
             
-            let rate: Amount? = {
-                guard let rate = self.rateProvider.rateForAmount(
-                    amountValue,
-                    ofAsset: assetValue,
-                    destinationAsset: self.rateAsset
-                    ) else {
-                        return nil
-                }
-                return Amount(
-                    value: rate,
-                    asset: self.rateAsset
-                )
-            }()
-            let quoteAssetCode = offer.quoteAssetCode
+            let price = self.decimalFormatter.stringFromValue(offer.price) ?? "0"
             let counterparty: String = Localized(
-                .for_code,
+                .one_equals,
                 replace: [
-                    .for_code_replace_code: quoteAssetCode
+                    .one_equals_replace_base_asset: offer.baseAssetCode,
+                    .one_equals_replace_quote_asset: offer.quoteAssetCode,
+                    .one_equals_replace_price: price
                 ]
             )
             
@@ -223,7 +201,6 @@ extension TransactionsListScene {
                 amount: amount,
                 amountEffect: .pending,
                 counterparty: counterparty,
-                rate: rate,
                 date: offer.createdAt
             )
         }

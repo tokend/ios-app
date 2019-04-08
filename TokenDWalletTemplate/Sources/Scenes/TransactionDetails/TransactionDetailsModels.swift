@@ -122,7 +122,7 @@ extension TransactionDetails.Event {
         struct Action {
             struct Item {
                 let id: String
-                let title: String
+                let icon: UIImage
             }
             
             let rightItems: [Item]

@@ -22,15 +22,13 @@ class DashboardFlowController: BaseSignedInFlowController {
         
         let previewMaxLength: Int = 3
         
-        let previewRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
+        let decimalFormatter = DecimalFormatter()
         
         let pendingOffersPreviewFetcher = TransactionsListScene.PreviewTransactionsFetcher(
             transactionsFetcher: TransactionsListScene.PendingOffersFetcher(
                 pendingOffersRepo: self.reposController.pendingOffersRepo,
                 balancesRepo: self.reposController.balancesRepo,
-                rateProvider: previewRateProvider,
+                decimalFormatter: decimalFormatter,
                 originalAccountId: self.userDataProvider.walletData.accountId
             ),
             previewMaxLength: previewMaxLength
@@ -55,7 +53,6 @@ class DashboardFlowController: BaseSignedInFlowController {
         let paymentsPreviewFetcher = TransactionsListScene.PreviewTransactionsFetcher(
             transactionsFetcher: TransactionsListScene.PaymentsFetcher(
                 reposController: self.reposController,
-                rateProvider: previewRateProvider,
                 originalAccountId: self.userDataProvider.walletData.accountId
             ),
             previewMaxLength: previewMaxLength
@@ -131,12 +128,8 @@ class DashboardFlowController: BaseSignedInFlowController {
     }
     
     private func showPaymentsFor(selectedBalanceId: String) {
-        let transactionsListRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
         let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
             reposController: self.reposController,
-            rateProvider: transactionsListRateProvider,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         
@@ -168,13 +161,11 @@ class DashboardFlowController: BaseSignedInFlowController {
     }
     
     private func showPendingOffers() {
-        let transactionsListRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
+        let decimalFormatter = DecimalFormatter()
         let transactionsFetcher = TransactionsListScene.PendingOffersFetcher(
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             balancesRepo: self.reposController.balancesRepo,
-            rateProvider: transactionsListRateProvider,
+            decimalFormatter: decimalFormatter,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         

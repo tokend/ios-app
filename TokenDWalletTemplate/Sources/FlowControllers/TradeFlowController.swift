@@ -128,14 +128,11 @@ class TradeFlowController: BaseSignedInFlowController {
     }
     
     private func showPendingOffers() {
-        
-        let transactionsListRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
+        let decimalFormatter = DecimalFormatter()
         let transactionsFetcher = TransactionsListScene.PendingOffersFetcher(
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             balancesRepo: self.reposController.balancesRepo,
-            rateProvider: transactionsListRateProvider,
+            decimalFormatter: decimalFormatter,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         

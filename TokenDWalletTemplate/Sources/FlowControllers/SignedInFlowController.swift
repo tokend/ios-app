@@ -146,9 +146,7 @@ class SignedInFlowController: BaseSignedInFlowController {
                     title: Localized(.wallet),
                     onSelected: { [weak self] in
                         self?.runWalletFlow()
-                })
-            ],
-            [
+                }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.depositIcon.image,
                     title: Localized(.deposit),
@@ -184,17 +182,13 @@ class SignedInFlowController: BaseSignedInFlowController {
                     title: Localized(.trades),
                     onSelected: { [weak self] in
                         self?.runTradeFlow()
-                })
-            ],
-            [
+                }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.fee.image,
                     title: Localized(.fees),
                     onSelected: { [weak self] in
                         self?.showFees()
-                })
-            ],
-            [
+                }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.settingsIcon.image,
                     title: Localized(.settings),

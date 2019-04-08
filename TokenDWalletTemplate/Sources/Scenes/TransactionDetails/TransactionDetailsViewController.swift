@@ -94,7 +94,7 @@ extension TransactionDetails.ViewController: TransactionDetails.DisplayLogic {
     func displayTransactionActionsDidUpdate(viewModel: TransactionDetails.Event.TransactionActionsDidUpdate.ViewModel) {
         self.navigationItem.rightBarButtonItems = viewModel.rightItems.map({ (item) -> UIBarButtonItem in
             let barItem = UIBarButtonItem(
-                title: item.title,
+                image: item.icon,
                 style: .plain,
                 target: nil,
                 action: nil

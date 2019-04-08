@@ -200,19 +200,7 @@ extension TransactionsListScene {
                 value: amountValue,
                 asset: assetValue
             )
-            let rate: Amount? = {
-                guard let rate = self.rateProvider.rateForAmount(
-                    amountValue,
-                    ofAsset: assetValue,
-                    destinationAsset: self.rateAsset
-                    ) else {
-                        return nil
-                }
-                return Amount(
-                    value: rate,
-                    asset: self.rateAsset
-                )
-            }()
+            
             let quoteassetcode = offer.quoteAssetCode
             let counterparty: String = Localized(
                 .for_code,
@@ -227,7 +215,6 @@ extension TransactionsListScene {
                 amount: amount,
                 amountEffect: .sale,
                 counterparty: counterparty,
-                rate: rate,
                 date: offer.createdAt
             )
         }

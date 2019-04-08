@@ -107,13 +107,8 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
     }
     
     private func showTokenTransactionsHistoryFor(selectedBalanceId: String) {
-        
-        let transactionsListRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
         let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
             reposController: self.reposController,
-            rateProvider: transactionsListRateProvider,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         let transactionsRouting = TransactionsListScene.Routing(

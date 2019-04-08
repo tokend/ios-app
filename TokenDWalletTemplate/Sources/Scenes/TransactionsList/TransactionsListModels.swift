@@ -34,7 +34,6 @@ extension TransactionsListScene.Model {
         let amount: Amount
         let amountEffect: AmountEffect
         let counterparty: String?
-        let rate: Amount?
         let date: Date
         
         enum TransactionType {

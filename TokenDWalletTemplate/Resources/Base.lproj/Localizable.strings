@@ -250,7 +250,7 @@
 "offer" = "Offer";
 "old_password" = "Old Password";
 "old_password_lowercased" = "old password";
-"one_equals" = "1 $(quote_asset) = $(price) $(base_asset)";
+"one_equals" = "1 $(base_asset) = $(price) $(quote_asset)";
 "one_equals_replace_base_asset" = "base_asset";
 "one_equals_replace_price" = "price";
 "one_equals_replace_quote_asset" = "quote_asset";
