@@ -19,8 +19,6 @@ extension TransactionsListScene {
         private let disposeBag: DisposeBag = DisposeBag()
         
         private let reposController: ReposController
-        private let rateProvider: RateProviderProtocol
-        private let rateAsset: String = "USD"
         
         private var balanceId: String?
         private let originalAccountId: String
@@ -47,15 +45,11 @@ extension TransactionsListScene {
         
         init(
             reposController: ReposController,
-            rateProvider: RateProviderProtocol,
             originalAccountId: String
             ) {
             
             self.reposController = reposController
-            self.rateProvider = rateProvider
             self.originalAccountId = originalAccountId
-            
-            self.observeRateChanges()
         }
         
         // MARK: - Public
@@ -106,15 +100,6 @@ extension TransactionsListScene {
         }
         
         // MARK: - Private
-        
-        private func observeRateChanges() {
-            self.rateProvider
-                .rate
-                .subscribe(onNext: { [weak self] (_) in
-                    self?.transactionsDidChange()
-                })
-                .disposed(by: self.disposeBag)
-        }
         
         private func observeHistoryChanges() {
             self.trHistoryRepoTransactionsDisposable?.dispose()
@@ -222,17 +207,6 @@ extension TransactionsListScene {
             
             let amountEffect = self.getAmountEffect(balanceChangeEffect)
             
-            let rateAmount = self.rateProvider.rateForAmount(
-                balanceChangeEffect.amount,
-                ofAsset: asset,
-                destinationAsset: self.rateAsset
-            )
-            
-            let rate = TransactionsListScene.Model.Amount(
-                value: rateAmount ?? 0,
-                asset: self.rateAsset
-            )
-            
             let counterparty = self.getCounterparty(details: details)
             
             let transaction = Transaction(
@@ -241,7 +215,6 @@ extension TransactionsListScene {
                 amount: amount,
                 amountEffect: amountEffect,
                 counterparty: counterparty,
-                rate: rate,
                 date: operation.appliedAt
             )
             return transaction
@@ -274,17 +247,6 @@ extension TransactionsListScene {
                 asset: amountAsset
             )
             
-            let rateValue = self.rateProvider.rateForAmount(
-                amountValue,
-                ofAsset: amountAsset,
-                destinationAsset: self.rateAsset
-            )
-            
-            let rate = TransactionsListScene.Model.Amount(
-                value: rateValue ?? 0,
-                asset: self.rateAsset
-            )
-            
             let counterparty = matchedEffect.orderBookId == 0 ?
                 Localized(.pending_offer) : Localized(.pending_investment)
             
@@ -294,7 +256,6 @@ extension TransactionsListScene {
                 amount: amount,
                 amountEffect: .matched,
                 counterparty: counterparty,
-                rate: rate,
                 date: operation.appliedAt
             )
             return transaction

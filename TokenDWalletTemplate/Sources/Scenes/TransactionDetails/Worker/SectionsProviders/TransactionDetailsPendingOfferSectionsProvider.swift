@@ -158,10 +158,10 @@ extension TransactionDetails.PendingOfferSectionsProvider: TransactionDetails.Se
     private enum PendingOfferAction: String {
         case cancel
         
-        var title: String {
+        var icon: UIImage {
             switch self {
             case .cancel:
-                return Localized(.cancel)
+                return Assets.delete.image
             }
         }
     }
@@ -172,7 +172,7 @@ extension TransactionDetails.PendingOfferSectionsProvider: TransactionDetails.Se
         return actions.map({ (action) -> TransactionDetailsProviderProtocol.Action in
             return TransactionDetailsProviderProtocol.Action(
                 id: action.rawValue,
-                title: action.title
+                icon: action.icon
             )
         })
     }

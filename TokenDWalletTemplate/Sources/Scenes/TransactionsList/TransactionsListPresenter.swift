@@ -55,11 +55,7 @@ extension TransactionsListScene {
                         let counterparty: String? = transaction.counterparty
                         
                         var additionalInfo: String?
-                        if let rate = transaction.rate {
-                            additionalInfo = self.amountFormatter.formatAmount(rate, isIncome: nil)
-                        } else {
-                            additionalInfo = self.dateFormatter.formatDateForTransaction(transaction.date)
-                        }
+                        
                         return TransactionsListTableViewCell.Model(
                             identifier: transaction.identifier,
                             balanceId: transaction.balanceId,

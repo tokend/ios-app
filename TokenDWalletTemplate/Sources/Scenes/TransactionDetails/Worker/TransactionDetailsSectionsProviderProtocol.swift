@@ -5,7 +5,7 @@ import TokenDSDK
 
 struct TransactionDetailsProviderAction {
     let id: String
-    let title: String
+    let icon: UIImage
 }
 
 protocol TransactionDetailsProviderProtocol {
