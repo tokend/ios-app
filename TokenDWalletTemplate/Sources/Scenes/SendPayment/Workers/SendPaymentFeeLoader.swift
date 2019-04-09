@@ -62,7 +62,7 @@ extension SendPayment {
                         
                     case .succeeded(let response):
                         let feeModel = Model.FeeModel(
-                            asset: response.feeAsset,
+                            asset: response.asset,
                             fixed: response.fixed,
                             percent: response.percent
                         )

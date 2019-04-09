@@ -150,24 +150,19 @@ extension ConfirmationScene.WithdrawConfirmationSectionsProvider: ConfirmationSc
             identifier: .amount
         )
         
-        let senderFeeFixed = self.amountFormatter.assetAmountToString(self.withdrawModel.senderFee.fixed)
-        let fixedFeeCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.fixed_fee),
+        let senderFee = self.amountFormatter.assetAmountToString(
+                self.withdrawModel.senderFee.fixed + self.withdrawModel.senderFee.percent
+        )
+        
+        let feeCell = ConfirmationScene.Model.CellModel(
+            title: Localized(.fee),
             cellType: .text(
-                value: senderFeeFixed + " " + self.withdrawModel.asset
+                value: senderFee + " " + self.withdrawModel.senderFee.asset
             ),
             identifier: .fixedFee
         )
         
-        let senderFeePercent = self.percentFormatter.percentToString(value: self.withdrawModel.senderFee.percent)
-        let percentFeeCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.percent_fee),
-            cellType: .text(
-                value: senderFeePercent + " " + self.withdrawModel.asset
-            ),
-            identifier: .percentFee
-        )
-        let toPaySection = ConfirmationScene.Model.SectionModel(cells: [amountCell, fixedFeeCell, percentFeeCell])
+        let toPaySection = ConfirmationScene.Model.SectionModel(cells: [amountCell, feeCell])
         
         self.sectionsRelay.accept([
             destinationSection,
