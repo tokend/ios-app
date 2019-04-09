@@ -120,31 +120,20 @@ extension TransactionDetails {
                 identifier: .amount
             )
             
-            let fixedFeeAmount = TransactionDetails.Model.Amount.init(
-                value: fee.fixed,
+            let feeAmount = TransactionDetails.Model.Amount.init(
+                value: fee.fixed + fee.calculatedPercent,
                 asset: asset
             )
             
-            let fixedFeeCell = TransactionDetails.Model.CellModel(
-                title: Localized(.fixed_fee),
-                value: self.amountFormatter.formatAmount(fixedFeeAmount),
-                identifier: .fee
-            )
-            
-            let percentFeeAmount = TransactionDetails.Model.Amount.init(
-                value: fee.calculatedPercent,
-                asset: asset
-            )
-            
-            let percentFeeCell = TransactionDetails.Model.CellModel(
-                title: Localized(.percent_fee),
-                value: self.amountFormatter.formatAmount(percentFeeAmount),
+            let feeCell = TransactionDetails.Model.CellModel(
+                title: Localized(.fee),
+                value: self.amountFormatter.formatAmount(feeAmount),
                 identifier: .fee
             )
             
             let operationSection = TransactionDetails.Model.SectionModel.init(
                 title: "",
-                cells: [totalCell, amountCell, fixedFeeCell, percentFeeCell],
+                cells: [totalCell, amountCell, feeCell],
                 description: ""
             )
             sections.append(operationSection)
