@@ -54,7 +54,7 @@ extension TransactionsListScene {
                         
                         let counterparty: String? = transaction.counterparty
                         
-                        var additionalInfo: String?
+                        let additionalInfo: String = self.dateFormatter.formatDateForTransaction(transaction.date)
                         
                         return TransactionsListTableViewCell.Model(
                             identifier: transaction.identifier,
