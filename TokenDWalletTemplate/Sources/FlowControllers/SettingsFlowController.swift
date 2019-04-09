@@ -276,7 +276,6 @@ class SettingsFlowController: BaseSignedInFlowController {
     }
     
     private func setupFees() -> UIViewController {
-        
         let vc = Fees.ViewController()
         let feesOverviewProvider = Fees.FeesProvider(
             generalApi: self.flowControllerStack.api.generalApi,
