@@ -151,7 +151,7 @@ extension ConfirmationScene.WithdrawConfirmationSectionsProvider: ConfirmationSc
         )
         
         let senderFee = self.amountFormatter.assetAmountToString(
-                self.withdrawModel.senderFee.fixed + self.withdrawModel.senderFee.percent
+            self.withdrawModel.senderFee.fixed + self.withdrawModel.senderFee.percent
         )
         
         let feeCell = ConfirmationScene.Model.CellModel(
