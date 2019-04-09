@@ -7,6 +7,32 @@ class SettingsFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
     
     private let navigationController: NavigationControllerProtocol = NavigationController()
+    private let onSignOut: () -> Void
+    
+    // MARK: -
+    
+    init(
+        appController: AppControllerProtocol,
+        flowControllerStack: FlowControllerStack,
+        reposController: ReposController,
+        managersController: ManagersController,
+        userDataProvider: UserDataProviderProtocol,
+        keychainDataProvider: KeychainDataProviderProtocol,
+        rootNavigation: RootNavigationProtocol,
+        onSignOut: @escaping () -> Void
+        ) {
+        
+        self.onSignOut = onSignOut
+        super.init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation
+        )
+    }
     
     // MARK: - Public
     
@@ -41,8 +67,14 @@ class SettingsFlowController: BaseSignedInFlowController {
             onCellSelected: { [weak self] (cellIdentifier) in
                 self?.switchToSetting(cellIdentifier)
             },
+            onShowFees: { [weak self] in
+                self?.showFees()
+            },
             onShowTerms: { [weak self] (url) in
                 self?.showTermsOfService(url: url)
+            },
+            onSignOut: { [weak self] in
+                self?.onSignOut()
         })
         
         let provider = TermsInfoProvider(apiConfigurationModel: self.flowControllerStack.apiConfigurationModel)
@@ -234,5 +266,48 @@ class SettingsFlowController: BaseSignedInFlowController {
         vc.navigationItem.title = Localized(.acknowledgements)
         
         self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func showFees() {
+        let vc = self.setupFees()
+        
+        vc.navigationItem.title = Localized(.fees)
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupFees() -> UIViewController {
+        let vc = Fees.ViewController()
+        let feesOverviewProvider = Fees.FeesProvider(
+            generalApi: self.flowControllerStack.api.generalApi,
+            accountId: self.userDataProvider.walletData.accountId
+        )
+        
+        let sceneModel = Fees.Model.SceneModel(
+            fees: [],
+            selectedAsset: nil
+        )
+        
+        let feeDataFormatter = Fees.FeeDataFormatter()
+        
+        let routing = Fees.Routing(
+            showProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            hideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+            },
+            showMessage: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(message, completion: nil)
+        })
+        
+        Fees.Configurator.configure(
+            viewController: vc,
+            feesOverviewProvider: feesOverviewProvider,
+            sceneModel: sceneModel,
+            feeDataFormatter: feeDataFormatter,
+            routing: routing
+        )
+        
+        return vc
     }
 }

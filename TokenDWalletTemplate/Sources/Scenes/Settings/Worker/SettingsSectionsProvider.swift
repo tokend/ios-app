@@ -155,9 +155,16 @@ extension Settings {
                 identifier: .seed
             )
             
+            let feesCell = Model.CellModel(
+                title: Localized(.fees),
+                icon: Assets.fee.image,
+                cellType: .disclosureCell,
+                identifier: .fees
+            )
+            
             let acountSection = Model.SectionModel(
                 title: Localized(.account),
-                cells: [accountIdCell, seedCell],
+                cells: [accountIdCell, seedCell, feesCell],
                 description: ""
             )
             
@@ -224,10 +231,24 @@ extension Settings {
                 description: ""
             )
             
+            let signOutCell = Model.CellModel(
+                title: Localized(.sign_out),
+                icon: Assets.signOutIcon.image,
+                cellType: .disclosureCell,
+                identifier: .signOut
+            )
+            
+            let signOutSection = Model.SectionModel(
+                title: "",
+                cells: [signOutCell],
+                description: ""
+            )
+            
             return [
                 acountSection,
                 securitySection,
-                termsSection
+                termsSection,
+                signOutSection
             ]
         }
         

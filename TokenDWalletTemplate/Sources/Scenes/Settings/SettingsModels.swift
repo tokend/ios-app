@@ -15,6 +15,8 @@ enum Settings {
         case changePassword
         case termsOfService
         case licenses
+        case fees
+        case signOut
     }
     
     enum Model {}
@@ -126,4 +128,11 @@ extension Settings.Event {
         
         typealias ViewModel = Response
     }
+    
+    enum ShowFees {
+        struct Response {}
+        typealias ViewModel = Response
+    }
+    
+    typealias SignOut = ShowFees
 }

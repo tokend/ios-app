@@ -184,22 +184,10 @@ class SignedInFlowController: BaseSignedInFlowController {
                         self?.runTradeFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: Assets.fee.image,
-                    title: Localized(.fees),
-                    onSelected: { [weak self] in
-                        self?.showFees()
-                }),
-                SideMenu.Model.MenuItem(
                     iconImage: Assets.settingsIcon.image,
                     title: Localized(.settings),
                     onSelected: { [weak self] in
                         self?.runSettingsFlow()
-                }),
-                SideMenu.Model.MenuItem(
-                    iconImage: Assets.signOutIcon.image,
-                    title: Localized(.sign_out),
-                    onSelected: { [weak self] in
-                        self?.onSignOut()
                 })
             ]
         ]
@@ -369,7 +357,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             managersController: self.managersController,
             userDataProvider: self.userDataProvider,
             keychainDataProvider: self.keychainDataProvider,
-            rootNavigation: self.rootNavigation
+            rootNavigation: self.rootNavigation,
+            onSignOut: self.onSignOut
         )
         self.currentFlowController = flow
         flow.run(showRootScreen: { [weak self] (vc) in
@@ -455,52 +444,6 @@ class SignedInFlowController: BaseSignedInFlowController {
         } else {
             self.rootNavigation.setRootContent(navigationController, transition: .fade, animated: false)
         }
-    }
-    
-    private func showFees() {
-        let navigationController = NavigationController()
-        let vc = self.setupFees(navigationController: navigationController)
-        navigationController.setViewControllers([vc], animated: false)
-        
-        vc.navigationItem.title = Localized(.fees)
-        self.sideNavigationController.embed(centerViewController: navigationController.getViewController())
-    }
-    
-    private func setupFees(navigationController: NavigationController) -> UIViewController {
-        
-        let vc = Fees.ViewController()
-        let feesOverviewProvider = Fees.FeesProvider(
-            generalApi: self.flowControllerStack.api.generalApi,
-            accountId: self.userDataProvider.walletData.accountId
-        )
-        
-        let sceneModel = Fees.Model.SceneModel(
-            fees: [],
-            selectedAsset: nil
-        )
-        
-        let feeDataFormatter = Fees.FeeDataFormatter()
-        
-        let routing = Fees.Routing(
-            showProgress: {
-                navigationController.showProgress()
-        },
-            hideProgress: {
-                navigationController.hideProgress()
-        },
-            showMessage: { (message) in
-                navigationController.showErrorMessage(message, completion: nil)
-        })
-        
-        Fees.Configurator.configure(
-            viewController: vc,
-            feesOverviewProvider: feesOverviewProvider,
-            sceneModel: sceneModel,
-            feeDataFormatter: feeDataFormatter,
-            routing: routing
-        )
-        
-        return vc
     }
     
     // MARK: - Sign Out

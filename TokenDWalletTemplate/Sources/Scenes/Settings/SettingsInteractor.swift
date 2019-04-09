@@ -53,18 +53,36 @@ extension Settings.Interactor: Settings.BusinessLogic {
     }
     
     func onDidSelectCell(request: Event.DidSelectCell.Request) {
-        if self.sectionsProvider.isTermsCell(cellIdentifier: request.cellIdentifier) {
-            if let termsUrl = self.sceneModel.termsUrl {
-                let response = Event.ShowTerms.Response(url: termsUrl)
-                self.presenter.presentShowTerms(response: response)
+        switch request.cellIdentifier {
+            
+        case .fees:
+            let response = Event.ShowFees.Response()
+            self.presenter.presentShowFees(response: response)
+            
+        case .signOut:
+            let response = Event.SignOut.Response()
+            self.presenter.presentSignOut(response: response)
+            
+        case .termsOfService:
+            guard let termsUrl = self.sceneModel.termsUrl else {
+                return
             }
-            return
+            let response = Event.ShowTerms.Response(url: termsUrl)
+            self.presenter.presentShowTerms(response: response)
+            
+        case .accountId,
+             .seed,
+             .tfa,
+             .biometrics,
+             .verification,
+             .changePassword,
+             .licenses:
+            
+            let response = Event.DidSelectCell.Response(
+                cellIdentifier: request.cellIdentifier
+            )
+            self.presenter.presentDidSelectCell(response: response)
         }
-        
-        let response = Event.DidSelectCell.Response(
-            cellIdentifier: request.cellIdentifier
-        )
-        self.presenter.presentDidSelectCell(response: response)
     }
     
     func onDidSelectSwitch(request: Event.DidSelectSwitch.Request) {
