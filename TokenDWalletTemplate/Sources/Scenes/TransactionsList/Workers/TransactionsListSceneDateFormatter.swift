@@ -1,4 +1,5 @@
 import Foundation
+import AFDateHelper
 
 extension TransactionsListScene {
     class DateFormatter: DateFormatterProtocol {
@@ -10,7 +11,17 @@ extension TransactionsListScene {
         }()
         private lazy var transactionDateFormatter: Foundation.DateFormatter = {
             let formatter = Foundation.DateFormatter()
-            formatter.dateFormat = "dd MMM"
+            formatter.dateFormat = "dd MMMM"
+            return formatter
+        }()
+        private lazy var transactionDateFormatterForHours: Foundation.DateFormatter = {
+            let formatter = Foundation.DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            return formatter
+        }()
+        private lazy var transactionDateFormatterForYears: Foundation.DateFormatter = {
+            let formatter = Foundation.DateFormatter()
+            formatter.dateFormat = "dd MMMM, YYYY"
             return formatter
         }()
         
@@ -19,7 +30,21 @@ extension TransactionsListScene {
         }
         
         func formatDateForTransaction(_ date: Date) -> String {
-            return self.transactionDateFormatter.string(from: date)
+            if date.compare(.isToday) {
+                return self.transactionDateFormatterForHours.string(from: date)
+            } else if date.compare(.isYesterday) {
+                let hours = self.transactionDateFormatterForHours.string(from: date)
+                return Localized(
+                    .yesterday_at,
+                    replace: [
+                        .yesterday_at_replace_hours: hours
+                    ]
+                )
+            } else if date.compare(.isThisYear) {
+                return self.transactionDateFormatter.string(from: date)
+            } else {
+                return self.transactionDateFormatterForYears.string(from: date)
+            }
         }
     }
 }

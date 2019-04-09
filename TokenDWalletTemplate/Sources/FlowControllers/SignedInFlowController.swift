@@ -2,7 +2,6 @@ import UIKit
 import SideMenuController
 import TokenDWallet
 
-// swiftlint:disable type_body_length
 class SignedInFlowController: BaseSignedInFlowController {
     
     // MARK: - Public properties
@@ -551,4 +550,3 @@ class SignedInFlowController: BaseSignedInFlowController {
         self.startUserActivityTimer()
     }
 }
-// swiftlint:enable type_body_length

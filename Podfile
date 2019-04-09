@@ -23,6 +23,7 @@ def main_app_pods
   pod 'PullToRefresher', '~> 3.0'
   pod 'Nuke'
   pod 'Down'
+  pod 'AFDateHelper', '~> 4.2.2'
 
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'
