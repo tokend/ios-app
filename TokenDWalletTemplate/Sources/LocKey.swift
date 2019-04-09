@@ -80,8 +80,10 @@ enum LocKey: String {
     case dashboard
     case date
     case day
-    case days_left
-    case days_left_replace_days
+    case days_to_go
+    case days_to_go_replace_days
+    case days_to_start
+    case days_to_start_replace_days
     case deployed
     case deposit
     case deposit_to
@@ -282,6 +284,8 @@ enum LocKey: String {
     case pending_offers
     case percent
     case percent_fee
+    case percent_funded
+    case percent_funded_replace_percent
     case permission_denied
     case permissions_denied
     case personal_details

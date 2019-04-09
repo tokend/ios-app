@@ -77,8 +77,10 @@
 "dashboard" = "Dashboard";
 "date" = "Date";
 "day" = "Day";
-"days_left" = "$(days) day(s) left";
-"days_left_replace_days" = "days";
+"days_to_go" = "$(days)\nday(s) to go";
+"days_to_go_replace_days" = "days";
+"days_to_start" = "$(days)\nday(s) to start";
+"days_to_start_replace_days" = "days";
 "deployed" = "deployed";
 "deposit" = "Deposit";
 "deposit_to" = "Deposit to";
@@ -195,7 +197,7 @@
 "invalid_account_id" = "Invalid account id";
 "invalid_account_id_or_email" = "Invalid account id or email";
 "invest" = "INVEST";
-"invested" = "$(amount) invested";
+"invested" = "$(amount)\ninvested";
 "invested_replace_amount" = "amount";
 "investing" = "Investing";
 "investment" = "Investment";
@@ -279,6 +281,8 @@
 "pending_offers" = "Pending offers";
 "percent" = "Percent";
 "percent_fee" = "Percent Fee";
+"percent_funded" = "$(percent)\nfunded";
+"percent_funded_replace_percent" = "percent";
 "permission_denied" = "Permission denied";
 "permissions_denied" = "Permissions Denied";
 "personal_details" = "Personal details";
