@@ -8,7 +8,7 @@ class LocalizationManager {
     
     static func localizedAttributedString(
         key: LocKey,
-        attributes: [NSAttributedStringKey: Any]?,
+        attributes: [NSAttributedString.Key: Any]?,
         replace: [LocKey: NSAttributedString]
         ) -> NSAttributedString {
         
@@ -89,7 +89,7 @@ func Localized(_ key: LocKey, replace: [LocKey: String]) -> String {
 
 func LocalizedAtrributed(
     _ key: LocKey,
-    attributes: [NSAttributedStringKey: Any]?,
+    attributes: [NSAttributedString.Key: Any]?,
     replace: [LocKey: NSAttributedString]
     ) -> NSAttributedString {
     

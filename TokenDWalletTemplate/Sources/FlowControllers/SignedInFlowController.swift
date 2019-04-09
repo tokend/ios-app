@@ -23,7 +23,7 @@ class SignedInFlowController: BaseSignedInFlowController {
     private var localAuthFlow: LocalAuthFlowController?
     private var timeoutSubscribeToken: TimerUIApplication.SubscribeToken = TimerUIApplication.SubscribeTokenInvalid
     private var backgroundTimer: Timer?
-    private var backgroundToken: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var backgroundToken: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
     
     // MARK: - Callbacks
     
@@ -506,7 +506,7 @@ class SignedInFlowController: BaseSignedInFlowController {
         self.backgroundTimer?.invalidate()
         self.backgroundTimer = nil
         UIApplication.shared.endBackgroundTask(self.backgroundToken)
-        self.backgroundToken = UIBackgroundTaskInvalid
+        self.backgroundToken = UIBackgroundTaskIdentifier.invalid
     }
     
     private func checkIsAuthorized() -> Bool {

@@ -200,6 +200,7 @@ extension TransactionsListScene {
                 balanceId: offer.baseBalanceId,
                 amount: amount,
                 amountEffect: .pending,
+                wasSent: false,
                 counterparty: counterparty,
                 date: offer.createdAt
             )

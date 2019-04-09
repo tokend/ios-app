@@ -13,6 +13,7 @@ PODS:
   - DLJSONAPI/Default (1.0.3)
   - DLOpenSSL (1.0.2)
   - Down (0.6.2)
+  - Floaty (4.1.0)
   - Nuke (7.5.2)
   - PullToRefresher (3.1)
   - QRCodeReader.swift (8.1.1)
@@ -52,6 +53,7 @@ DEPENDENCIES:
   - AFDateHelper (~> 4.2.2)
   - Charts (from `https://github.com/tokend/Charts.git`)
   - Down
+  - Floaty (~> 4.1.0)
   - Nuke
   - PullToRefresher (~> 3.0)
   - QRCodeReader.swift (= 8.1.1)
@@ -79,6 +81,7 @@ SPEC REPOS:
     - Alamofire
     - AlamofireNetworkActivityLogger
     - Down
+    - Floaty
     - Nuke
     - PullToRefresher
     - QRCodeReader.swift
@@ -97,7 +100,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Charts:
-    :commit: d8acd07e592e08ad4d3d717044080257f637a4f6
+    :commit: 90f818dfc9432b617bca971ea56b57f2fbc4ae09
     :git: https://github.com/tokend/Charts.git
   SideMenuController:
     :commit: a69b0c5704353ed5c35eb7df21d37f094e7582bf
@@ -112,6 +115,7 @@ SPEC CHECKSUMS:
   DLJSONAPI: 4d448f06fd412dae20c53ba1c71d601c4b422ce5
   DLOpenSSL: 78d928228cb6d95fcaa354f4f9aba041ccf95457
   Down: 8c59a03cb229ef28dfa774b2132da860f3dee0ac
+  Floaty: 1a4e213f3512cf3045ef9cb0c1ff456226d1f66a
   Nuke: 0350d346a688426e8f2331253ef28dc2fc4f6178
   PullToRefresher: ec8c1942bd61bb512ff520c49f9f00903cfa86c7
   QRCodeReader.swift: b164a681887de276d405ff02bce854d82cd6360b
@@ -125,6 +129,6 @@ SPEC CHECKSUMS:
   TokenDSDK: 4157c106ec2c52428647f9caf4cf7b2f0360287a
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: b2f92148160819fbafdd2549e1848c55509be171
+PODFILE CHECKSUM: 1679df5f7914b227bd487de9b7d00d35334aa5e5
 
 COCOAPODS: 1.6.1

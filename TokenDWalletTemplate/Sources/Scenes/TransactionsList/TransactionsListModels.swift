@@ -33,6 +33,7 @@ extension TransactionsListScene.Model {
         let balanceId: String
         let amount: Amount
         let amountEffect: AmountEffect
+        let wasSent: Bool
         let counterparty: String?
         let date: Date
         

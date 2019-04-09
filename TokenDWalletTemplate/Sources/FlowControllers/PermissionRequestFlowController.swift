@@ -91,7 +91,7 @@ class PermissionRequestFlowController: BaseFlowController {
                 self?.appSystemSettingsRequested = true
                 
                 guard
-                    let url = URL(string: UIApplicationOpenSettingsURLString),
+                    let url = URL(string: UIApplication.openSettingsURLString),
                     UIApplication.shared.canOpenURL(url)
                     else {
                         self?.onDenied()

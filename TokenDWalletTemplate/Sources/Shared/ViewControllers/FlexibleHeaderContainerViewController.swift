@@ -120,7 +120,7 @@ class FlexibleHeaderContainerViewController: UIViewController {
     private func setupContentViewController() {
         guard var contentViewController = self.contentViewController else { return }
         
-        self.addChildViewController(
+        self.addChild(
             contentViewController.viewController,
             to: self.view,
             layoutFulledge: true
@@ -155,10 +155,10 @@ class FlexibleHeaderContainerViewController: UIViewController {
     
     private func updateSubviews() {
         if let headerView = self.headerView?.view {
-            self.view.bringSubview(toFront: headerView)
+            self.view.bringSubviewToFront(headerView)
         }
         if let contentView = self.contentViewController?.viewController.view {
-            self.view.sendSubview(toBack: contentView)
+            self.view.sendSubviewToBack(contentView)
         }
         
         if let headerMaxHeight = self.headerView?.maximumHeight {

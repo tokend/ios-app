@@ -9,7 +9,7 @@ protocol AppControllerProtocol: class {
     func addUserAcivity(subscriber: UserActivitySubscriber)
     func removeUserAcivity(subscriber: UserActivitySubscriber)
     
-    func getLaunchOptions() -> [UIApplicationLaunchOptionsKey: Any]?
+    func getLaunchOptions() -> [UIApplication.LaunchOptionsKey: Any]?
     func launchOptionsUrlHandled(url: URL)
     func getLastUserActivityWebLink() -> URL?
     func lastUserActivityWebLinkHandled(url: URL)
@@ -35,7 +35,7 @@ class AppController {
     
     private var currentFlowController: FlowControllerProtocol?
     
-    private var launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+    private var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     internal var lastUserActivityURL: URL?
     internal var userActivitySubscribers = [UserActivitySubscriber]()
     internal var lastOpenURL: URL?
@@ -47,7 +47,7 @@ class AppController {
     init(
         rootNavigation: RootNavigationProtocol,
         apiConfigurationModel: APIConfigurationModel,
-        launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+        launchOptions: [UIApplication.LaunchOptionsKey: Any]?
         ) {
         
         self.rootNavigation = rootNavigation
@@ -104,7 +104,11 @@ class AppController {
         self.runLaunchFlow()
     }
     
-    func applicationContinue(userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+    func applicationContinue(
+        userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+        ) -> Bool {
+        
         return self.handle(userActivity: userActivity)
     }
     
@@ -386,7 +390,7 @@ extension AppController: AppControllerProtocol {
         self.reposControllerStack = self.setupReposControllerStack()
     }
     
-    func getLaunchOptions() -> [UIApplicationLaunchOptionsKey: Any]? {
+    func getLaunchOptions() -> [UIApplication.LaunchOptionsKey: Any]? {
         return self.launchOptions
     }
     

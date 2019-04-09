@@ -163,7 +163,7 @@ extension SaleInfo {
                 ]
                 self.tokenDetailsTableView.register(classes: cellClasses)
                 self.tokenDetailsTableView.dataSource = self
-                self.tokenDetailsTableView.rowHeight = UITableViewAutomaticDimension
+                self.tokenDetailsTableView.rowHeight = UITableView.automaticDimension
                 self.tokenDetailsTableView.estimatedRowHeight = 125
                 self.tokenDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
                 self.tokenDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor

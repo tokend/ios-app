@@ -234,7 +234,7 @@ class BaseFlowController {
     func showDialog(
         title: String?,
         message: String?,
-        style: UIAlertControllerStyle,
+        style: UIAlertController.Style,
         options: [String],
         onSelected: @escaping (_ selectedIndex: Int) -> Void,
         onCanceled: (() -> Void)?,
