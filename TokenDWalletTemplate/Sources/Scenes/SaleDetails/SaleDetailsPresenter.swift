@@ -76,12 +76,12 @@ extension SaleDetails {
                 )
                 
                 attributedDaysRemaining = LocalizedAtrributed(
-                    .starts_in_days,
+                    .days_to_start,
                     attributes: [
                         .foregroundColor: Theme.Colors.textOnContentBackgroundColor
                     ],
                     replace: [
-                        .starts_in_days_replace_days: daysAttributed
+                        .days_to_start_replace_days: daysAttributed
                     ]
                 )
             } else {
@@ -105,12 +105,12 @@ extension SaleDetails {
                     )
                     
                     attributedDaysRemaining = LocalizedAtrributed(
-                        .days_left,
+                        .days_to_go,
                         attributes: [
                             .foregroundColor: Theme.Colors.textOnContentBackgroundColor
                         ],
                         replace: [
-                            .days_left_replace_days: daysAttributed
+                            .days_to_go_replace_days: daysAttributed
                         ]
                     )
                 } else {
@@ -168,6 +168,22 @@ extension SaleDetails {
             let investedPercentage = sale.investmentPercentage
             let investedPercentageRounded = Int(roundf(investedPercentage * 100))
             let investedPercentageText = "\(investedPercentageRounded)%"
+            let attributedInvestedPercentageText = NSAttributedString(
+                string: investedPercentageText,
+                attributes: [
+                    .foregroundColor: Theme.Colors.accentColor
+                ]
+            )
+
+            let attributedInvestedPercentage = LocalizedAtrributed(
+                .percent_funded,
+                attributes: [
+                    .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                ],
+                replace: [
+                    .percent_funded_replace_percent: attributedInvestedPercentageText
+                ]
+            )
             
             let timeText = self.getTimeText(sale: sale)
             
@@ -178,7 +194,7 @@ extension SaleDetails {
                 youtubeVideoUrl: sale.youtubeVideoUrl,
                 investedAmountText: attributedInvetsedAmount,
                 investedPercentage: sale.investmentPercentage,
-                investedPercentageText: investedPercentageText,
+                investedPercentageText: attributedInvestedPercentage,
                 timeText: timeText.timeText,
                 identifier: sale.cellIdentifier
             )

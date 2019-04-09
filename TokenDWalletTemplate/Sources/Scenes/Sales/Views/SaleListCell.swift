@@ -14,7 +14,7 @@ extension Sales {
             
             let investedAmountText: NSAttributedString
             let investedPercentage: Float
-            let investedPercentageText: String
+            let investedPercentageText: NSAttributedString
             
             let isUpcomming: Bool
             let timeText: NSAttributedString
@@ -84,9 +84,9 @@ extension Sales {
                 set { self.progressView.progress = newValue }
             }
             
-            public var investedPercentageText: String? {
-                get { return self.percentLabel.text }
-                set { self.percentLabel.text = newValue }
+            public var investedPercentageText: NSAttributedString? {
+                get { return self.percentLabel.attributedText }
+                set { self.percentLabel.attributedText = newValue }
             }
             
             public var timeText: NSAttributedString? {
@@ -180,12 +180,14 @@ extension Sales {
                 self.investedAmountLabel.font = Theme.Fonts.smallTextFont
                 self.investedAmountLabel.textColor = Theme.Colors.accentColor
                 self.investedAmountLabel.textAlignment = .left
+                self.investedAmountLabel.numberOfLines = 2
             }
             
             private func setupPercentLabel() {
                 self.percentLabel.font = Theme.Fonts.smallTextFont
                 self.percentLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-                self.percentLabel.textAlignment = .right
+                self.percentLabel.textAlignment = .left
+                self.percentLabel.numberOfLines = 2
             }
             
             private func setupProgressView() {
@@ -195,7 +197,8 @@ extension Sales {
             private func setupTimeLabel() {
                 self.timeLabel.font = Theme.Fonts.smallTextFont
                 self.timeLabel.textColor = Theme.Colors.accentColor
-                self.timeLabel.textAlignment = .right
+                self.timeLabel.textAlignment = .left
+                self.timeLabel.numberOfLines = 2
             }
             
             private func setupLayout() {
@@ -241,7 +244,7 @@ extension Sales {
                 self.investContenView.addSubview(self.investorsAmountLabel)
                 self.investContenView.addSubview(self.timeLabel)
                 
-                let sideInset: CGFloat = 10
+                let sideInset: CGFloat = 40
                 let topInset: CGFloat = 10
                 
                 self.investedAmountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
@@ -250,26 +253,25 @@ extension Sales {
                 self.percentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                 self.percentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
                 
+                self.progressView.snp.makeConstraints { (make) in
+                    make.leading.trailing.top.equalToSuperview()
+                }
+                
                 self.investedAmountLabel.snp.makeConstraints { (make) in
-                    make.top.equalToSuperview()
-                    make.leading.equalToSuperview()
+                    make.leading.equalTo(self.progressView.snp.leading)
+                    make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
+                    make.bottom.lessThanOrEqualToSuperview()
                 }
                 
                 self.percentLabel.snp.makeConstraints { (make) in
-                    make.top.equalToSuperview()
-                    make.trailing.equalToSuperview()
                     make.leading.equalTo(self.investedAmountLabel.snp.trailing).offset(sideInset)
-                }
-                
-                self.progressView.snp.makeConstraints { (make) in
-                    make.top.equalTo(self.investedAmountLabel.snp.bottom).offset(topInset)
-                    make.leading.equalTo(self.investedAmountLabel.snp.leading)
-                    make.trailing.equalTo(self.percentLabel.snp.trailing)
+                    make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
+                    make.bottom.lessThanOrEqualToSuperview()
                 }
                 
                 self.timeLabel.snp.makeConstraints { (make) in
                     make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-                    make.trailing.equalToSuperview()
+                    make.leading.equalTo(self.percentLabel.snp.trailing).offset(sideInset)
                     make.bottom.lessThanOrEqualToSuperview()
                 }
             }
