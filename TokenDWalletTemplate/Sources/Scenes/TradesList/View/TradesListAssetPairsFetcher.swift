@@ -3,34 +3,29 @@ import RxSwift
 import RxCocoa
 import TokenDSDK
 
-extension Trade {
+extension TradesList {
     
-    class AssetsFetcher {
+    public class AssetPairsFetcher {
+        
+        public typealias AssetPair = TradesList.Model.AssetPair
         
         // MARK: - Private properties
         
         private let assetPairsRepo: AssetPairsRepo
-        private let assetsBehaviorRelay = BehaviorRelay(value: [TradeableAssetsFetcherProtocol.Asset]())
+        private let assetsBehaviorRelay = BehaviorRelay(value: [AssetPair]())
         private let assetsLoadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
         private let assetsErrorStatus: PublishRelay<Swift.Error> = PublishRelay()
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
-        public init(
-            assetPairsRepo: AssetPairsRepo
-            ) {
-            
+        public init(assetPairsRepo: AssetPairsRepo) {
             self.assetPairsRepo = assetPairsRepo
-            
-            self.observeAssetPairs()
-            self.observeAssetPairsLoadingStatus()
-            self.observeAssetPairsErrorStatus()
         }
         
         // MARK: - Private
         
-        private func observeAssetPairs() {
+        private func observeRepoAssetPairs() {
             self.assetPairsRepo
                 .observeAssetPairs()
                 .asObservable()
@@ -48,24 +43,24 @@ extension Trade {
                         .filter({ (pair) -> Bool in
                             return pair.meetsPolicy(.tradeableSecondaryMarket)
                         })
-                        .map({ (pair) -> TradeableAssetsFetcherProtocol.Asset in
-                            return pair.asset
+                        .map({ (pair) -> TradesList.AssetPairsFetcherProtocol.AssetPair in
+                            return pair.assetPair
                         })
                     self?.assetsBehaviorRelay.accept(assets)
                 })
                 .disposed(by: self.disposeBag)
         }
         
-        private func observeAssetPairsLoadingStatus() {
+        private func observeRepoAssetPairsLoadingStatus() {
             self.assetPairsRepo
                 .observeLoadingStatus()
-                .subscribe ( onNext: { [weak self] (status) in
+                .subscribe(onNext: { [weak self] (status) in
                     self?.assetsLoadingStatus.accept(status.status)
                 })
                 .disposed(by: self.disposeBag)
         }
         
-        private func observeAssetPairsErrorStatus() {
+        private func observeRepoAssetPairsErrorStatus() {
             self.assetPairsRepo
                 .observeErrorStatus()
                 .subscribe(onNext: { [weak self] (error) in
@@ -76,41 +71,50 @@ extension Trade {
     }
 }
 
-extension Trade.AssetsFetcher: Trade.AssetsFetcherProtocol {
+extension TradesList.AssetPairsFetcher: TradesList.AssetPairsFetcherProtocol {
     
-    public var assets: [TradeableAssetsFetcherProtocol.Asset] {
+    public var assetsPairs: [AssetPair] {
         return self.assetsBehaviorRelay.value
     }
     
-    public func updateAssets() {
+    public func updateAssetPairs() {
         self.assetPairsRepo.updateAssetPairs()
     }
     
-    public func observeAssets() -> Observable<[TradeableAssetsFetcherProtocol.Asset]> {
+    public func observeAssetPairs() -> Observable<[AssetPair]> {
+        self.observeRepoAssetPairs()
+        
         return self.assetsBehaviorRelay.asObservable()
     }
     
-    public func observeAssetsLoadingStatus() -> Observable<LoadingStatus> {
+    public func observeAssetPairsLoadingStatus() -> Observable<LoadingStatus> {
+        self.observeRepoAssetPairsLoadingStatus()
+        
         return self.assetsLoadingStatus.asObservable()
     }
     
-    public func observeAssetsError() -> Observable<Error> {
+    public func observeAssetPairsError() -> Observable<Error> {
+        self.observeRepoAssetPairsErrorStatus()
+        
         return self.assetsErrorStatus.asObservable()
     }
 }
 
-extension AssetPair {
-    fileprivate var asset: TradeableAssetsFetcherProtocol.Asset {
-        return TradeableAssetsFetcherProtocol.Asset(
+extension TokenDSDK.AssetPair {
+    fileprivate var assetPair: TradesList.AssetPairsFetcherProtocol.AssetPair {
+        let id: TradesList.PairID = "\(self.base)_\(self.quote)_\(self.currentPrice)"
+        
+        return TradesList.AssetPairsFetcherProtocol.AssetPair(
             baseAsset: self.base,
             quoteAsset: self.quote,
-            currentPrice: self.currentPrice
+            currentPrice: self.currentPrice,
+            id: id
         )
     }
 }
 
 extension AssetPairsRepo.LoadingStatus {
-    fileprivate var status: TradeableAssetsFetcherLoadingStatus {
+    fileprivate var status: TradesList.AssetPairsFetcherProtocol.LoadingStatus {
         switch self {
         case .loaded:
             return .loaded

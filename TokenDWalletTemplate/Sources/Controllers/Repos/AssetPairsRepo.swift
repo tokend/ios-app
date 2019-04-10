@@ -3,11 +3,11 @@ import RxSwift
 import RxCocoa
 import TokenDSDK
 
-class AssetPairsRepo {
+public class AssetPairsRepo {
     
-    typealias AssetPair = TokenDSDK.AssetPair
+    public typealias AssetPair = TokenDSDK.AssetPair
     
-    enum LoadingStatus {
+    public enum LoadingStatus {
         case loading
         case loaded
     }
