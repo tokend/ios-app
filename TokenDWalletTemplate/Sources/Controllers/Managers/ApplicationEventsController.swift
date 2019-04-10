@@ -62,14 +62,14 @@ class ApplicationEventsController: ApplicationEventsControllerProtocol {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.applicationDidEnterBackground),
-            name: .UIApplicationDidEnterBackground,
+            name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.applicationWillEnterForeground),
-            name: .UIApplicationWillEnterForeground,
+            name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
     }

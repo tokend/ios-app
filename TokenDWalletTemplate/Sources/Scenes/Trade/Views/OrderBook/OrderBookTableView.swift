@@ -69,7 +69,7 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         self.tableView.separatorColor = Theme.Colors.separatorOnMainColor
         self.tableView.separatorInset = .zero
         self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         
         self.tableView.addObserver(

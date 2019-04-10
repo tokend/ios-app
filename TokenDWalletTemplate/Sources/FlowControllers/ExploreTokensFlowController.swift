@@ -111,9 +111,16 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             reposController: self.reposController,
             originalAccountId: self.userDataProvider.walletData.accountId
         )
+        let actionProvider = TransactionsListScene.ActionProvider(
+            assetsRepo: self.reposController.assetsRepo,
+            balancesRepo: self.reposController.balancesRepo
+        )
         let transactionsRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { (_, _) in },
-            showSendPayment: { _ in }
+            showSendPayment: { _ in },
+            showWithdraw: { _ in },
+            showDeposit: { _ in },
+            showReceive: { }
         )
         
         let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
@@ -125,6 +132,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         
         let container = SharedSceneBuilder.createWalletScene(
             transactionsFetcher: transactionsFetcher,
+            actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
             headerRateProvider: headerRateProvider,
             balancesFetcher: balancesFetcher,

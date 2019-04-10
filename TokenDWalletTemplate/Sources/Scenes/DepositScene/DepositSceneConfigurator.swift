@@ -5,6 +5,7 @@ extension DepositScene {
     enum Configurator {
         static func configure(
             viewController: ViewController,
+            sceneModel: Model.SceneModel,
             qrCodeGenerator: QRCodeGeneratorProtocol,
             dateFormatter: DateFormatterProtocol,
             assetsFetcher: AssetsFetcherProtocol,
@@ -23,7 +24,8 @@ extension DepositScene {
             let interactor = Interactor(
                 presenter: presenter,
                 assetsFetcher: assetsFetcher,
-                addressManager: addressManager
+                addressManager: addressManager,
+                sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(interactorDispatch: interactorDispatch, routing: routing)

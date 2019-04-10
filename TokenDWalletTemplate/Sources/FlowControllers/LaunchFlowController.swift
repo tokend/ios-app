@@ -51,11 +51,12 @@ class LaunchFlowController: BaseFlowController {
     // MARK: - Public
     
     class func canHandle(
-        launchOptions: [UIApplicationLaunchOptionsKey: Any],
+        launchOptions: [UIApplication.LaunchOptionsKey: Any],
         userDataManager: UserDataManagerProtocol
         ) -> URL? {
         
-        if let userActivityInfo = launchOptions[UIApplicationLaunchOptionsKey.userActivityDictionary] as? [String: Any],
+        let key = UIApplication.LaunchOptionsKey.userActivityDictionary
+        if let userActivityInfo = launchOptions[key] as? [String: Any],
             let activity = userActivityInfo["UIApplicationLaunchOptionsUserActivityKey"] as? NSUserActivity {
             
             if activity.activityType == NSUserActivityTypeBrowsingWeb, let url = activity.webpageURL {

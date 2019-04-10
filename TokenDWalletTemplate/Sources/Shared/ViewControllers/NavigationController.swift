@@ -33,7 +33,7 @@ class NavigationController: UINavigationController {
     // MARK: - Private properties
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let activity = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        let activity = UIActivityIndicatorView(style: .whiteLarge)
         return activity
     }()
     
@@ -100,8 +100,8 @@ class NavigationController: UINavigationController {
         self.navigationBar.tintColor = Theme.Colors.textOnMainColor
         
         self.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
+            NSAttributedString.Key.font: Theme.Fonts.navigationBarBoldFont,
+            NSAttributedString.Key.foregroundColor: Theme.Colors.textOnMainColor
         ]
         self.navigationBar.shadowImage = UIImage()
     }

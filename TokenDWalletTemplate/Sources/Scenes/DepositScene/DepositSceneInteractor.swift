@@ -47,18 +47,14 @@ extension DepositScene {
         init(
             presenter: PresentationLogic,
             assetsFetcher: AssetsFetcherProtocol,
-            addressManager: AddressManagerProtocol
+            addressManager: AddressManagerProtocol,
+            sceneModel: Model.SceneModel
             ) {
-            
-            self.sceneModel = Model.SceneModel(
-                selectedAssetId: "",
-                assets: [],
-                qrCodeSize: .zero
-            )
             
             self.presenter = presenter
             self.assetsFetcher = assetsFetcher
             self.addressManager = addressManager
+            self.sceneModel = sceneModel
             
             let scheduler = SerialDispatchQueueScheduler(
                 queue: self.queue,
@@ -184,7 +180,8 @@ extension DepositScene.Interactor: DepositScene.BusinessLogic {
             assets: self.sceneModel.assets,
             selectedAssetIndex: index
         )
-        if let id = self.sceneModel.assets.first?.id {
+        if  self.sceneModel.selectedAssetId == "",
+            let id = self.sceneModel.assets.first?.id {
             self.setSelectedAssetId(id)
         }
         self.presenter.presentViewDidLoadSync(response: response)

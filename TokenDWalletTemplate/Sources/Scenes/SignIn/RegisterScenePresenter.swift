@@ -175,7 +175,7 @@ extension RegisterScene {
                 attributes: [
                     NSAttributedString.Key.font: Theme.Fonts.plainTextFont,
                     NSAttributedString.Key.foregroundColor: Theme.Colors.actionButtonColor,
-                    NSAttributedString.Key.underlineStyle: NSUnderlineStyle.styleSingle.rawValue
+                    NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
                 ]
             ))
             

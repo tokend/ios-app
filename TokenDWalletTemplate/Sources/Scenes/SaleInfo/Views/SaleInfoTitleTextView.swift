@@ -71,7 +71,7 @@ extension SaleInfo {
                 ]
                 self.saleDetailsTableView.register(classes: cellClasses)
                 self.saleDetailsTableView.dataSource = self
-                self.saleDetailsTableView.rowHeight = UITableViewAutomaticDimension
+                self.saleDetailsTableView.rowHeight = UITableView.automaticDimension
                 self.saleDetailsTableView.estimatedRowHeight = 125
                 self.saleDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
                 self.saleDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor

@@ -299,6 +299,7 @@ enum LocKey: String {
     case query_parameters_are_missing
     case quote_asset_is_not_found
     case quote_balance_is_not_found
+    case receive
     case received
     case received_amount_may_be_lower_due_to_network_fees
     case received_amount_may_be_lower_due_to_network_fees_replace_destasset

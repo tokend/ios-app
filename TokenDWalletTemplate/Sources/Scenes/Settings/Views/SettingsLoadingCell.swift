@@ -29,7 +29,7 @@ enum SettingsLoadingCell {
         
         private let titleLabel: UILabel = UILabel()
         private let iconImageView: UIImageView = UIImageView()
-        private let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        private let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
         
         // MARK: - Public properties
         
@@ -44,7 +44,7 @@ enum SettingsLoadingCell {
         
         // MARK: - Initializers
         
-        override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             
             self.commonInit()

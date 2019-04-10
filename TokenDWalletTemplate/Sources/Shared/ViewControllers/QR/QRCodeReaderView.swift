@@ -103,7 +103,7 @@ final class QRCodeReaderView: UIView, QRCodeReaderDisplayable {
         
         label.attributedText = NSAttributedString(
             string: (text ?? ""),
-            attributes: [NSAttributedStringKey.paragraphStyle: paragraph]
+            attributes: [NSAttributedString.Key.paragraphStyle: paragraph]
         )
         
         return label
@@ -159,7 +159,7 @@ final class QRCodeReaderView: UIView, QRCodeReaderDisplayable {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(QRCodeReaderView.orientationDidChange),
-            name: .UIDeviceOrientationDidChange,
+            name: UIDevice.orientationDidChangeNotification,
             object: nil)
         
         self.addSubview(self.cameraView)

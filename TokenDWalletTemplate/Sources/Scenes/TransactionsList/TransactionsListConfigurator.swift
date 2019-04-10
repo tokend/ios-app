@@ -6,6 +6,7 @@ extension TransactionsListScene {
         static func configure(
             viewController: ViewController,
             transactionsFetcher: TransactionsFetcherProtocol,
+            actionProvider: ActionProviderProtocol,
             amountFormatter: AmountFormatterProtocol,
             dateFormatter: DateFormatterProtocol,
             emptyTitle: String,
@@ -22,7 +23,8 @@ extension TransactionsListScene {
             )
             let interactor = Interactor(
                 presenter: presenter,
-                transactionsFetcher: transactionsFetcher
+                transactionsFetcher: transactionsFetcher,
+                actionProvider: actionProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

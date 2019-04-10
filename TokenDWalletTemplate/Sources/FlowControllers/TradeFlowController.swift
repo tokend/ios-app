@@ -136,6 +136,11 @@ class TradeFlowController: BaseSignedInFlowController {
             originalAccountId: self.userDataProvider.walletData.accountId
         )
         
+        let actionProvider = TransactionsListScene.ActionProvider(
+            assetsRepo: self.reposController.assetsRepo,
+            balancesRepo: self.reposController.balancesRepo
+        )
+        
         let transactionsListRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
                 guard let navigationController = self?.navigationController else { return }
@@ -144,13 +149,17 @@ class TradeFlowController: BaseSignedInFlowController {
                     navigationController: navigationController
                 )
             },
-            showSendPayment: { _ in }
+            showSendPayment: { _ in },
+            showWithdraw: { _ in },
+            showDeposit: { _ in },
+            showReceive: { }
         )
         
         let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
         
         let vc = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
+            actionProvider: actionProvider,
             emptyTitle: Localized(.no_pending_offers),
             viewConfig: viewConfig,
             routing: transactionsListRouting
