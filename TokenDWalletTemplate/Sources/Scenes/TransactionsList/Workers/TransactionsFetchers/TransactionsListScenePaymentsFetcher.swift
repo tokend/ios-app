@@ -208,14 +208,12 @@ extension TransactionsListScene {
             let amountEffect = self.getAmountEffect(balanceChangeEffect)
             
             let counterparty = self.getCounterparty(details: details)
-            let wasSent = self.checkIfWasSent(balanceChangeEffect)
             
             let transaction = Transaction(
                 identifier: identifier,
                 balanceId: balanceId,
                 amount: amount,
                 amountEffect: amountEffect,
-                wasSent: wasSent,
                 counterparty: counterparty,
                 date: operation.appliedAt
             )
@@ -257,7 +255,6 @@ extension TransactionsListScene {
                 balanceId: balanceId,
                 amount: amount,
                 amountEffect: .matched,
-                wasSent: false,
                 counterparty: counterparty,
                 date: operation.appliedAt
             )
@@ -325,25 +322,6 @@ extension TransactionsListScene {
                     
                     return nil
                 }
-            }
-        }
-        
-        private func checkIfWasSent(_ effect: EffectBalanceChangeResource) -> Bool {
-            switch effect.effectBalanceChangeType {
-                
-            case .effectCharged,
-                 .effectChargedFromLocked,
-                 .effectWithdrawn:
-                
-                return true
-                
-            case .effectFunded,
-                 .effectIssued,
-                 .effectLocked,
-                 .effectUnlocked,
-                 .`self`:
-                
-                return false
             }
         }
     }

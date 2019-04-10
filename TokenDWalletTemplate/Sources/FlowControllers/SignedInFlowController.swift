@@ -336,7 +336,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             managersController: self.managersController,
             userDataProvider: self.userDataProvider,
             keychainDataProvider: self.keychainDataProvider,
-            rootNavigation: self.rootNavigation
+            rootNavigation: self.rootNavigation,
+            navigationController: nil
         )
         self.currentFlowController = flow
         flow.run(
@@ -390,6 +391,12 @@ class SignedInFlowController: BaseSignedInFlowController {
         
         let viewController = DepositScene.ViewController()
         
+        let sceneModel = DepositScene.Model.SceneModel(
+            selectedAssetId: "",
+            assets: [],
+            qrCodeSize: .zero
+        )
+        
         let qrCodeGenerator = QRCodeGenerator()
         let dateFormatter = DepositScene.DateFormatter()
         let assetsFetcher = DepositScene.AssetsFetcher(
@@ -426,6 +433,7 @@ class SignedInFlowController: BaseSignedInFlowController {
         
         DepositScene.Configurator.configure(
             viewController: viewController,
+            sceneModel: sceneModel,
             qrCodeGenerator: qrCodeGenerator,
             dateFormatter: dateFormatter,
             assetsFetcher: assetsFetcher,

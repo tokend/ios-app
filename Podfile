@@ -24,10 +24,10 @@ def main_app_pods
   pod 'Nuke'
   pod 'Down'
   pod 'AFDateHelper', '~> 4.2.2'
-  pod 'Floaty', '~> 4.1.0'
 
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'
+  pod 'Floaty', git: 'https://github.com/tokend/Floaty.git'
 end
 
 target 'TokenDWalletTemplate' do

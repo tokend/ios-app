@@ -53,7 +53,7 @@ DEPENDENCIES:
   - AFDateHelper (~> 4.2.2)
   - Charts (from `https://github.com/tokend/Charts.git`)
   - Down
-  - Floaty (~> 4.1.0)
+  - Floaty (from `https://github.com/tokend/Floaty.git`)
   - Nuke
   - PullToRefresher (~> 3.0)
   - QRCodeReader.swift (= 8.1.1)
@@ -81,7 +81,6 @@ SPEC REPOS:
     - Alamofire
     - AlamofireNetworkActivityLogger
     - Down
-    - Floaty
     - Nuke
     - PullToRefresher
     - QRCodeReader.swift
@@ -95,6 +94,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Charts:
     :git: https://github.com/tokend/Charts.git
+  Floaty:
+    :git: https://github.com/tokend/Floaty.git
   SideMenuController:
     :git: https://github.com/tokend/SideMenuController.git
 
@@ -102,6 +103,9 @@ CHECKOUT OPTIONS:
   Charts:
     :commit: 90f818dfc9432b617bca971ea56b57f2fbc4ae09
     :git: https://github.com/tokend/Charts.git
+  Floaty:
+    :commit: a96eb9b1aafccd419e4ba7005c778c099344dd17
+    :git: https://github.com/tokend/Floaty.git
   SideMenuController:
     :commit: a69b0c5704353ed5c35eb7df21d37f094e7582bf
     :git: https://github.com/tokend/SideMenuController.git
@@ -129,6 +133,6 @@ SPEC CHECKSUMS:
   TokenDSDK: 4157c106ec2c52428647f9caf4cf7b2f0360287a
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: 1679df5f7914b227bd487de9b7d00d35334aa5e5
+PODFILE CHECKSUM: 84d806b7fee063bfd4d932a0fcb6cc7f5153bd50
 
 COCOAPODS: 1.6.1

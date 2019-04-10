@@ -33,7 +33,6 @@ extension TransactionsListScene.Model {
         let balanceId: String
         let amount: Amount
         let amountEffect: AmountEffect
-        let wasSent: Bool
         let counterparty: String?
         let date: Date
         
@@ -75,6 +74,13 @@ extension TransactionsListScene.Model {
     
     struct ViewConfig {
         let actionButtonIsHidden: Bool
+    }
+    
+    enum ActionType {
+        case deposit(assetId: String)
+        case receive
+        case send(balanceId: String)
+        case withdraw(balanceId: String)
     }
 }
 
@@ -118,6 +124,13 @@ extension TransactionsListScene.Event {
         struct Request {
             let balanceId: String?
         }
+    }
+    
+    enum ActionsDidChange {
+        struct Response {
+            let actions: [TransactionsListScene.ActionModel]
+        }
+        typealias ViewModel = Response
     }
     
     enum ScrollViewDidScroll {

@@ -214,7 +214,6 @@ extension TransactionsListScene {
                 balanceId: offer.baseBalanceId,
                 amount: amount,
                 amountEffect: .sale,
-                wasSent: false,
                 counterparty: counterparty,
                 date: offer.createdAt
             )

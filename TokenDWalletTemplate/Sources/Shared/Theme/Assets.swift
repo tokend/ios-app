@@ -7,6 +7,7 @@ enum Assets: String {
     case copyright = "Copyright"
     case dashboardIcon = "Dashboard icon"
     case delete = "Delete"
+    case depositAction = "Deposit action"
     case depositIcon = "Deposit icon"
     case documentIcon = "Document icon"
     case exploreFundsIcon = "Explore funds icon"
@@ -23,9 +24,11 @@ enum Assets: String {
     case menuIcon = "Menu icon"
     case outgoing = "Outgoing"
     case passwordIcon = "Password icon"
+    case paymentAction = "Payment action"
     case pendingIcon = "Pending icon"
     case placeHolderIcon = "Place holder icon"
     case plusIcon = "Plus icon"
+    case receive = "Receive"
     case scanQrIcon = "Scan QR icon"
     case securityIcon = "Security icon"
     case seed = "Seed"
@@ -42,6 +45,7 @@ enum Assets: String {
     case upcomingImage = "Upcoming image"
     case verificationIcon = "Verification icon"
     case walletIcon = "Wallet icon"
+    case withdrawAction = "Withdraw action"
     case withdrawIcon = "Withdraw icon"
 }
 

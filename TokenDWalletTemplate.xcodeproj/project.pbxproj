@@ -2177,13 +2177,13 @@
 		E93F075620D7D85D000C0991 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */,
 				7FA02BD7215923C3005C1BE4 /* TransactionsListAmountFormatter.swift */,
 				E93F076120D7F730000C0991 /* TransactionsListSceneDateFormatter.swift */,
 				E93F075D20D7F2DC000C0991 /* TransactionsListSceneDateFormatterProtocol.swift */,
 				E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */,
 				E93F075920D7E8BA000C0991 /* TransactionsListSceneTransactionsFetcherProtocol.swift */,
 				E9A5CBC02119A4EF009112CA /* TransactionsFetchers */,
-				DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
