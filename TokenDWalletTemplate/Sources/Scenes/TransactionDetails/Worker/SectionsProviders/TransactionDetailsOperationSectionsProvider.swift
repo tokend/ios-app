@@ -161,7 +161,7 @@ extension TransactionDetails {
                     replace: [
                         .one_equals_replace_base_asset: baseAsset,
                         .one_equals_replace_quote_asset: quoteAsset,
-                        .one_equals_replace_price : replacePrice
+                        .one_equals_replace_price: replacePrice
                     ]
                 )
                 let priceCell = Model.CellModel(
