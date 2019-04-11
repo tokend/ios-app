@@ -25,7 +25,7 @@ enum TransactionDetailsCell {
         private let titleLabel: UILabel = UILabel()
         private let hintLabel: UILabel = UILabel()
         
-        private let iconSize: CGFloat = 30
+        private let iconSize: CGFloat = 24
         private let sideInset: CGFloat = 20
         private let topInset: CGFloat = 15
         
