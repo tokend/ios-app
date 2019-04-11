@@ -15,39 +15,23 @@ class TradeFlowController: BaseSignedInFlowController {
     // MARK: - Private
     
     private func showTradeScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let vc = Trade.ViewController()
+        let vc = TradesList.ViewController()
         
-        let assetsFetcher = Trade.AssetsFetcher(assetPairsRepo: self.reposController.assetPairsRepo)
+        let assetPairsFetcher = TradesList.AssetPairsFetcher(assetPairsRepo: self.reposController.assetPairsRepo)
         
-        let chartsFetcher = Trade.ChartsFetcher(
-            chartsApi: self.flowControllerStack.api.chartsApi
-        )
-        let amountFormatter = Trade.AmountFormatter()
-        let tradeOffersFetcher = Trade.OffersFetcher(
-            orderBookApi: self.flowControllerStack.api.orderBookApi
-        )
+        let amountFormatter = TradesList.AmountFormatter()
         
-        let routing = Trade.Routing(
+        let assetColoringProvider = TokenColoringProvider.shared
+        
+        let routing = TradesList.Routing(
+            onSelectAssetPair: { [weak self] (baseAsset, quoteAsset) in
+                
+            },
             onSelectPendingOffers: { [weak self] in
                 self?.showPendingOffers()
             },
-            onDidSelectOffer: { [weak self] (baseAmount, price) in
-                self?.showCreateOffer(
-                    baseAsset: baseAmount.currency,
-                    quoteAsset: price.currency,
-                    amount: baseAmount.value,
-                    price: price.value
-                )
-            },
-            onDidSelectNewOffer: { [weak self] (baseAsset, quoteAsset) in
-                self?.showCreateOffer(
-                    baseAsset: baseAsset,
-                    quoteAsset: quoteAsset,
-                    amount: nil,
-                    price: nil
-                )},
-            onShowError: { [weak self] (message) in
-                self?.navigationController.showErrorMessage(message, completion: nil)
+            onShowError: { [weak self] (errorMessage) in
+                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
             },
             onShowProgress: { [weak self] in
                 self?.navigationController.showProgress()
@@ -56,12 +40,11 @@ class TradeFlowController: BaseSignedInFlowController {
                 self?.navigationController.hideProgress()
         })
         
-        Trade.Configurator.configure(
+        TradesList.Configurator.configure(
             viewController: vc,
-            assetsFetcher: assetsFetcher,
-            chartsFetcher: chartsFetcher,
+            assetPairsFetcher: assetPairsFetcher,
             amountFormatter: amountFormatter,
-            tradeOffersFetcher: tradeOffersFetcher,
+            assetColoringProvider: assetColoringProvider,
             routing: routing
         )
         

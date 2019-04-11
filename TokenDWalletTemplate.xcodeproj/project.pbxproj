@@ -136,6 +136,8 @@
 		7F749603225E12A30065EE8E /* TradesListAssetPairListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749602225E12A30065EE8E /* TradesListAssetPairListView.swift */; };
 		7F749605225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749604225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift */; };
 		7F749607225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749606225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift */; };
+		7F74960A225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749609225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift */; };
+		7F74960C225F91440065EE8E /* TradesListAssetColoringProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74960B225F91440065EE8E /* TradesListAssetColoringProvider.swift */; };
 		7F8B55B1212ED4B8003AE5D7 /* TimerApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8B55B0212ED4B8003AE5D7 /* TimerApplication.swift */; };
 		7F8B55B3212EDAE4003AE5D7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8B55B2212EDAE4003AE5D7 /* main.swift */; };
 		7F967FA02125985A005527EA /* UpdatePasswordModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967F952125985A005527EA /* UpdatePasswordModels.swift */; };
@@ -614,6 +616,8 @@
 		7F749602225E12A30065EE8E /* TradesListAssetPairListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListAssetPairListView.swift; sourceTree = "<group>"; };
 		7F749604225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListAssetPairsFetcherProtocol.swift; sourceTree = "<group>"; };
 		7F749606225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradesListAssetPairsFetcher.swift; sourceTree = "<group>"; };
+		7F749609225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListAmountFormatterProtocol.swift; sourceTree = "<group>"; };
+		7F74960B225F91440065EE8E /* TradesListAssetColoringProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListAssetColoringProvider.swift; sourceTree = "<group>"; };
 		7F8B55B0212ED4B8003AE5D7 /* TimerApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerApplication.swift; sourceTree = "<group>"; };
 		7F8B55B2212EDAE4003AE5D7 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7F8B55B4212F05B9003AE5D7 /* TokenDWalletTemplate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TokenDWalletTemplate.entitlements; sourceTree = "<group>"; };
@@ -1346,6 +1350,7 @@
 				7F7495EF225CF9C00065EE8E /* TradesListRouting.swift */,
 				7F7495F1225CF9C00065EE8E /* TradesListViewController.swift */,
 				7F749601225E12930065EE8E /* View */,
+				7F749608225F56870065EE8E /* Workers */,
 			);
 			path = TradesList;
 			sourceTree = "<group>";
@@ -1364,10 +1369,19 @@
 			isa = PBXGroup;
 			children = (
 				7F749602225E12A30065EE8E /* TradesListAssetPairListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7F749608225F56870065EE8E /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				7F749609225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift */,
+				7F74960B225F91440065EE8E /* TradesListAssetColoringProvider.swift */,
 				7F749606225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift */,
 				7F749604225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift */,
 			);
-			path = View;
+			path = Workers;
 			sourceTree = "<group>";
 		};
 		7F8B55AF212ED490003AE5D7 /* TimerApplication */ = {
@@ -2784,6 +2798,7 @@
 				7F6A847D2108F34B00B7FE6B /* PermissionsManager.swift in Sources */,
 				7FF6761E20BDA10C0074E9A8 /* String+QueueLabel.swift in Sources */,
 				713D684920FF9552009FEBA3 /* SettingsInteractor.swift in Sources */,
+				7F74960A225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift in Sources */,
 				71136B0B2134433F00D83DD3 /* TransactionDetailsInteractor.swift in Sources */,
 				E980D86C20D1323000C53841 /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				E9063E8A20F63FEC00A5B343 /* UIColor+Interpolation.swift in Sources */,
@@ -2940,6 +2955,7 @@
 				7FF6762520BDBBF40074E9A8 /* RootNavigationViewController.swift in Sources */,
 				DB5A3BC921C1593800520604 /* FeeSectionProvider.swift in Sources */,
 				71136B162134433F00D83DD3 /* TransactionDetailsOperationSectionsProvider.swift in Sources */,
+				7F74960C225F91440065EE8E /* TradesListAssetColoringProvider.swift in Sources */,
 				DBA1A76E2252562800A52775 /* SaleDetailsCancellationWorker.swift in Sources */,
 				E9908ECC2108879B00A0EA1C /* TokenDetailsDocumentURLBuilderProtocol.swift in Sources */,
 				E92F1C092139B77D00D4695E /* TradeInteractor.swift in Sources */,

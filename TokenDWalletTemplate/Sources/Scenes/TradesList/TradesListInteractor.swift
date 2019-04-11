@@ -82,6 +82,20 @@ extension TradesList {
             self.presenter.presentQuoteAssetsUpdate(response: response)
         }
         
+        private func handleSelectedQuoteAsset(_ selectedQuoteAsset: Model.Asset) {
+            let allAssetPairs = self.sceneModel.assetPairs
+            
+            let selectedAssetPairs = self.filterAssetPairs(selectedQuoteAsset, allAssetPairs: allAssetPairs)
+            
+            self.sceneModel.selectedQuoteAsset = selectedQuoteAsset
+            self.sceneModel.selectedAssetPairs = selectedAssetPairs
+            
+            let response = Event.AssetPairsListUpdate.Response(
+                assetPairs: selectedAssetPairs
+            )
+            self.presenter.presentAssetPairsListUpdate(response: response)
+        }
+        
         private func filterAssetPairs(
             _ quoteAsset: Asset?,
             allAssetPairs: [Model.AssetPair]
@@ -122,6 +136,6 @@ extension TradesList.Interactor: TradesList.BusinessLogic {
     }
     
     public func onQuoteAssetSelected(request: Event.QuoteAssetSelected.Request) {
-        
+        self.handleSelectedQuoteAsset(request.quoteAsset)
     }
 }

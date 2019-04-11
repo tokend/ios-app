@@ -63,6 +63,7 @@ enum Theme {
     
     enum Fonts {
         
+        static let largeAssetFont: UIFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize + 10)
         static let largeTitleFont: UIFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize + 2)
         
         static let plainTextFont: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)

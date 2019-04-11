@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 public protocol TradesListDisplayLogic: class {
     typealias Event = TradesList.Event
@@ -20,10 +22,16 @@ extension TradesList {
         
         // MARK: - Private properties
         
-        private let pairPicker: HorizontalPicker = HorizontalPicker()
+        private let pairPicker: HorizontalPicker = HorizontalPicker(frame: CGRect.zero)
         private let tableView: DynamicTableView = DynamicTableView()
         
-        private var assetPairs: [Model.AssetPairViewModel] = []
+        private var assetPairs: [Model.AssetPairViewModel] = [] {
+            didSet {
+                self.tableView.reloadData()
+            }
+        }
+        
+        private let disposeBag = DisposeBag()
         
         // MARK: -
         
@@ -53,6 +61,8 @@ extension TradesList {
         public override func viewDidLoad() {
             super.viewDidLoad()
             
+            self.setupPendingOffersButton()
+            self.setupPairPicker()
             self.setupTableView()
             self.setupLayout()
             
@@ -64,7 +74,32 @@ extension TradesList {
         
         // MARK: - Private
         
+        private func setupPendingOffersButton() {
+            let button = UIBarButtonItem(
+                image: Assets.pendingIcon.image,
+                style: .plain,
+                target: nil,
+                action: nil
+            )
+            
+            button.rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.routing?.onSelectPendingOffers()
+                })
+                .disposed(by: self.disposeBag)
+            
+            self.navigationItem.rightBarButtonItem = button
+        }
+        
+        private func setupPairPicker() {
+            self.pairPicker.backgroundColor = Theme.Colors.mainColor
+            self.pairPicker.tintColor = Theme.Colors.textOnMainColor
+        }
+        
         private func setupTableView() {
+            self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
             self.tableView.dataSource = self
         }
         
@@ -108,31 +143,56 @@ extension TradesList.ViewController: DynamicTableViewDataSourceDelegate {
         assetPairListView.logoColoring = assetPair.logoColoring
         assetPairListView.title = assetPair.title
         assetPairListView.subTitle = assetPair.subTitle
-        assetPairListView.id = assetPair.id
         
         return assetPairListView
     }
     
     public func onSelectRowAt(indexPath: IndexPath) {
+        let assetPair = self.assetPairs[indexPath.row]
         
+        self.routing?.onSelectAssetPair(assetPair.baseAsset, assetPair.quoteAsset)
+    }
+    
+    public func showsCellSeparator() -> Bool {
+        return false
     }
 }
 
 extension TradesList.ViewController: TradesList.DisplayLogic {
     
     public func displayLoadingStatus(viewModel: Event.LoadingStatus.ViewModel) {
-        
+        switch viewModel {
+            
+        case .loaded:
+            self.routing?.onHideProgress()
+            
+        case .loading:
+            self.routing?.onShowProgress()
+        }
     }
     
     public func displayError(viewModel: Event.Error.ViewModel) {
-        
+        self.routing?.onShowError(viewModel.error)
     }
     
     public func displayQuoteAssetsUpdate(viewModel: Event.QuoteAssetsUpdate.ViewModel) {
+        self.pairPicker.items = viewModel.quoteAsset.map({ (asset) -> HorizontalPicker.Item in
+            return HorizontalPicker.Item(
+                title: asset,
+                enabled: true,
+                onSelect: { [weak self] in
+                    let request = Event.QuoteAssetSelected.Request(quoteAsset: asset)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onQuoteAssetSelected(request: request)
+                    })
+            })
+        })
+        self.pairPicker.setSelectedItemAtIndex(viewModel.selectedQuoteAssetIndex ?? 0, animated: false)
         
+        self.assetPairs = viewModel.assetPairs
     }
     
     public func displayAssetPairsListUpdate(viewModel: Event.AssetPairsListUpdate.ViewModel) {
-        
+        self.assetPairs = viewModel.assetPairs
     }
 }

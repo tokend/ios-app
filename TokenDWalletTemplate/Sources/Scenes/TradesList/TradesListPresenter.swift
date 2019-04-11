@@ -22,10 +22,20 @@ extension TradesList {
         
         private let presenterDispatch: PresenterDispatch
         
+        private let amountFormatter: AmountFormatterProtocol
+        private let assetColoringProvider: AssetColoringProvider
+        
         // MARK: -
         
-        public init(presenterDispatch: PresenterDispatch) {
+        public init(
+            presenterDispatch: PresenterDispatch,
+            amountFormatter: AmountFormatterProtocol,
+            assetColoringProvider: AssetColoringProvider
+            ) {
+            
             self.presenterDispatch = presenterDispatch
+            self.amountFormatter = amountFormatter
+            self.assetColoringProvider = assetColoringProvider
         }
         
         // MARK: - Private
@@ -34,21 +44,33 @@ extension TradesList {
             return assetPairs.map({ (assetPair) -> Model.AssetPairViewModel in
                 let defaultLogoLetter: Character = " "
                 let logoLetter = String(assetPair.baseAsset.first ?? defaultLogoLetter)
-                let logoColoring = UIColor.blue
+                let logoColoring = self.assetColoringProvider.coloringForCode(assetPair.baseAsset)
                 
                 let title = NSMutableAttributedString(
                     string: assetPair.baseAsset,
-                    attributes: [:]
+                    attributes: [
+                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor,
+                        .font: Theme.Fonts.largeTitleFont
+                    ]
                 )
+                let quoteAssetPart = NSAttributedString(
+                    string: " /\(assetPair.quoteAsset)",
+                    attributes: [
+                        .foregroundColor: Theme.Colors.sideTextOnContentBackgroundColor,
+                        .font: Theme.Fonts.plainTextFont
+                    ]
+                )
+                title.append(quoteAssetPart)
                 
-                let subTitle = "\(assetPair.currentPrice)"
+                let subTitle = self.amountFormatter.assetAmountToString(assetPair.currentPrice)
                 
                 return Model.AssetPairViewModel(
                     logoLetter: logoLetter,
                     logoColoring: logoColoring,
                     title: title,
                     subTitle: subTitle,
-                    id: assetPair.id
+                    baseAsset: assetPair.baseAsset,
+                    quoteAsset: assetPair.quoteAsset
                 )
             })
         }

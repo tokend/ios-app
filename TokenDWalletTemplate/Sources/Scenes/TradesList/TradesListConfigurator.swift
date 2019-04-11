@@ -7,12 +7,18 @@ extension TradesList {
         public static func configure(
             viewController: ViewController,
             assetPairsFetcher: AssetPairsFetcherProtocol,
+            amountFormatter: AmountFormatterProtocol,
+            assetColoringProvider: AssetColoringProvider,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
-            let presenter = Presenter(presenterDispatch: presenterDispatch)
+            let presenter = Presenter(
+                presenterDispatch: presenterDispatch,
+                amountFormatter: amountFormatter,
+                assetColoringProvider: assetColoringProvider
+            )
             let interactor = Interactor(
                 presenter: presenter,
                 assetPairsFetcher: assetPairsFetcher

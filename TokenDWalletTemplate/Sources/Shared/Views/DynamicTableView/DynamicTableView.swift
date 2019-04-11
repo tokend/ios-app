@@ -30,14 +30,22 @@ public class DynamicTableView: UIView {
     // MARK: - Public
     
     public func reloadData() {
+        let showsCellSeparator = self.dataSource?.showsCellSeparator() ?? true
+        if !showsCellSeparator {
+            self.tableView.separatorStyle = .none
+        }
+        
         self.tableView.reloadData()
     }
     
     // MARK: - Private
     
     private func setupTableView() {
+        self.tableView.backgroundColor = UIColor.clear
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 75.0
         
         self.tableView.register(
             DynamicContentTableViewCell.self,
@@ -92,6 +100,16 @@ extension DynamicTableView: UITableViewDataSource {
 extension DynamicTableView: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         self.dataSource?.onSelectRowAt(indexPath: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 }

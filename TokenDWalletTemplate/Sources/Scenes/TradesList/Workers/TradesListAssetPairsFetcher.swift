@@ -102,13 +102,10 @@ extension TradesList.AssetPairsFetcher: TradesList.AssetPairsFetcherProtocol {
 
 extension TokenDSDK.AssetPair {
     fileprivate var assetPair: TradesList.AssetPairsFetcherProtocol.AssetPair {
-        let id: TradesList.PairID = "\(self.base)_\(self.quote)_\(self.currentPrice)"
-        
         return TradesList.AssetPairsFetcherProtocol.AssetPair(
             baseAsset: self.base,
             quoteAsset: self.quote,
-            currentPrice: self.currentPrice,
-            id: id
+            currentPrice: self.currentPrice
         )
     }
 }

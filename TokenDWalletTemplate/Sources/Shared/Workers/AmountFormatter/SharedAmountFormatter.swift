@@ -1,6 +1,6 @@
 import UIKit
 
-class SharedAmountFormatter {
+public class SharedAmountFormatter: NSObject {
     
     // TODO: Refactor
     public static var precision: Int = 6
@@ -19,16 +19,16 @@ class SharedAmountFormatter {
     
     // MARK: - Public
     
-    func formatAmount(_ amount: Decimal, currency: String) -> String {
+    public func formatAmount(_ amount: Decimal, currency: String) -> String {
         return [self.suffixDecimal(amount, currency: currency), " ", currency].joined()
     }
     
-    func assetAmountToString(_ amount: Decimal) -> String {
+    public func assetAmountToString(_ amount: Decimal) -> String {
         self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
         return self.assetNumberFormatter.string(from: amount) ?? "\(amount)"
     }
     
-    func percentToString(value: Decimal) -> String {
+    public func percentToString(value: Decimal) -> String {
         self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
         return self.assetNumberFormatter.string(from: value) ?? "\(value)"
     }

@@ -21,4 +21,23 @@ public class DynamicContentTableViewCell: UITableViewCell {
             }
         }
     }
+    
+    // MARK: -
+    
+    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.customInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.customInit()
+    }
+    
+    private func customInit() {
+        self.backgroundColor = UIColor.clear
+        self.contentView.backgroundColor = UIColor.clear
+    }
 }

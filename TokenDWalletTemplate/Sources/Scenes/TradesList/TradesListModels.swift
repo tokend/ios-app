@@ -7,7 +7,6 @@ public enum TradesList {
     public typealias DeinitCompletion = ((_ vc: UIViewController) -> Void)?
     
     public typealias Asset = String
-    public typealias PairID = String
     
     // MARK: -
     
@@ -20,7 +19,6 @@ public enum TradesList {
 extension TradesList.Model {
     
     public typealias Asset = TradesList.Asset
-    public typealias PairID = TradesList.PairID
     
     public struct SceneModel {
         
@@ -55,19 +53,16 @@ extension TradesList.Model {
         public let baseAsset: String
         public let quoteAsset: String
         public let currentPrice: Decimal
-        public let id: PairID
         
         public init(
             baseAsset: String,
             quoteAsset: String,
-            currentPrice: Decimal,
-            id: PairID
+            currentPrice: Decimal
             ) {
             
             self.baseAsset = baseAsset
             self.quoteAsset = quoteAsset
             self.currentPrice = currentPrice
-            self.id = id
         }
     }
     
@@ -77,21 +72,24 @@ extension TradesList.Model {
         public let logoColoring: UIColor
         public let title: NSAttributedString
         public let subTitle: String
-        public let id: PairID
+        public let baseAsset: String
+        public let quoteAsset: String
         
         public init(
             logoLetter: String,
             logoColoring: UIColor,
             title: NSAttributedString,
             subTitle: String,
-            id: PairID
+            baseAsset: String,
+            quoteAsset: String
             ) {
             
             self.logoLetter = logoLetter
             self.logoColoring = logoColoring
             self.title = title
             self.subTitle = subTitle
-            self.id = id
+            self.baseAsset = baseAsset
+            self.quoteAsset = quoteAsset
         }
     }
 }
@@ -197,6 +195,7 @@ extension TradesList.Event {
 extension TradesList.Model.AssetPair: Equatable {
     
     public static func ==(left: TradesList.Model.AssetPair, right: TradesList.Model.AssetPair) -> Bool {
-        return left.id == right.id
+        return left.baseAsset == right.baseAsset
+            && left.quoteAsset == right.quoteAsset
     }
 }

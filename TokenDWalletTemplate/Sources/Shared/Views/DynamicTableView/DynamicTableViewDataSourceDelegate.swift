@@ -13,4 +13,8 @@ public protocol DynamicTableViewDataSourceDelegate: class {
     // MARK: - Delegate
     
     func onSelectRowAt(indexPath: IndexPath)
+    
+    // MARK: - Configs
+    
+    func showsCellSeparator() -> Bool
 }
