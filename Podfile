@@ -27,6 +27,7 @@ def main_app_pods
 
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'
+  pod 'Floaty', git: 'https://github.com/tokend/Floaty.git'
 end
 
 target 'TokenDWalletTemplate' do
@@ -50,6 +51,16 @@ target 'TokenDWalletTemplate' do
 
       target.build_configurations.each do |config|
         config.build_settings['SWIFT_VERSION'] = '3.2'
+      end
+    end
+    
+    swift4Targets = ['QRCodeReader.swift']
+    
+    installer.pods_project.targets.each do |target|
+      next unless swift4Targets.include? target.name
+      
+      target.build_configurations.each do |config|
+        config.build_settings['SWIFT_VERSION'] = '4'
       end
     end
 

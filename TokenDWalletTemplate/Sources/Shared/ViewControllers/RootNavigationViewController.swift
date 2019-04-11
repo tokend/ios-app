@@ -108,18 +108,18 @@ class RootNavigationViewController: UIViewController, RootNavigationProtocol {
         let previous = self.currentContent
         
         let contentViewController = content.getRootContentViewController()
-        self.addChildViewController(contentViewController)
+        self.addChild(contentViewController)
         self.contentContainer.addSubview(contentViewController.view)
         contentViewController.view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-        contentViewController.didMove(toParentViewController: self)
+        contentViewController.didMove(toParent: self)
         self.currentContent = content
         
         let previousContentViewController = previous?.getRootContentViewController()
-        previousContentViewController?.willMove(toParentViewController: nil)
+        previousContentViewController?.willMove(toParent: nil)
         previousContentViewController?.view.removeFromSuperview()
-        previousContentViewController?.removeFromParentViewController()
+        previousContentViewController?.removeFromParent()
     }
     
     private func fadeToNewContent(_ content: RootContentProtocol) {
@@ -130,12 +130,12 @@ class RootNavigationViewController: UIViewController, RootNavigationProtocol {
         
         let contentViewController = content.getRootContentViewController()
         contentViewController.view.alpha = 0.0
-        self.addChildViewController(contentViewController)
+        self.addChild(contentViewController)
         self.contentContainer.addSubview(contentViewController.view)
         contentViewController.view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-        contentViewController.didMove(toParentViewController: self)
+        contentViewController.didMove(toParent: self)
         self.currentContent = content
         
         var delay = halfDuration
@@ -149,9 +149,9 @@ class RootNavigationViewController: UIViewController, RootNavigationProtocol {
             },
                 completion: { _ in
                     let previousContentViewController = previous?.getRootContentViewController()
-                    previousContentViewController?.willMove(toParentViewController: nil)
+                    previousContentViewController?.willMove(toParent: nil)
                     previousContentViewController?.view.removeFromSuperview()
-                    previousContentViewController?.removeFromParentViewController()
+                    previousContentViewController?.removeFromParent()
             })
         } else {
             delay = 0.0
@@ -181,9 +181,9 @@ class RootNavigationViewController: UIViewController, RootNavigationProtocol {
         
         let launchScreen = UIStoryboard(name: "LaunchScreen", bundle: nil)
         if let launchVC = launchScreen.instantiateInitialViewController(), let launchView = launchVC.view {
-            self.addChildViewController(launchVC)
+            self.addChild(launchVC)
             self.backgroundCover.addSubview(launchView)
-            launchVC.didMove(toParentViewController: self)
+            launchVC.didMove(toParent: self)
             launchView.snp.makeConstraints({ (make) in
                 make.edges.equalToSuperview()
             })

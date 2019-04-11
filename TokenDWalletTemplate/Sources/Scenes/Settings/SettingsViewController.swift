@@ -67,7 +67,7 @@ extension Settings {
             self.tableView.register(classes: cellClasses)
             self.tableView.dataSource = self
             self.tableView.delegate = self
-            self.tableView.rowHeight = UITableViewAutomaticDimension
+            self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
         }
         
@@ -178,7 +178,7 @@ extension Settings.ViewController: UITableViewDataSource {
         let model = self.sections[indexPath.section].cells[indexPath.row]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         if model is SettingsPushCell.Model {
-            cell.selectionStyle = UITableViewCellSelectionStyle.blue
+            cell.selectionStyle = UITableViewCell.SelectionStyle.blue
         }
         
         if let cell = cell as? SettingsBoolCell.View {

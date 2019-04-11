@@ -86,7 +86,7 @@ extension SideMenu {
             self.tableView.backgroundColor = Theme.Colors.contentBackgroundColor
             self.tableView.sectionHeaderHeight = 0
             self.tableView.sectionFooterHeight = 0
-            self.tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+            self.tableView.sectionHeaderHeight = UITableView.automaticDimension
             
             let footerView = UIView()
             footerView.backgroundColor = Theme.Colors.contentBackgroundColor

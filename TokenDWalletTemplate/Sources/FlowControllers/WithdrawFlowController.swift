@@ -4,9 +4,37 @@ class WithdrawFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
     
-    private let navigationController: NavigationControllerProtocol = NavigationController()
+    private var navigationController: NavigationControllerProtocol?
+    private let selectedBalanceId: String?
     
     private var onShowWalletScreen: (() -> Void)?
+    
+    // MARK: -
+    
+    init(
+        appController: AppControllerProtocol,
+        flowControllerStack: FlowControllerStack,
+        reposController: ReposController,
+        managersController: ManagersController,
+        userDataProvider: UserDataProviderProtocol,
+        keychainDataProvider: KeychainDataProviderProtocol,
+        rootNavigation: RootNavigationProtocol,
+        navigationController: NavigationControllerProtocol?,
+        selectedBalanceId: String? = nil
+        ) {
+        
+        self.selectedBalanceId = selectedBalanceId
+        self.navigationController = navigationController
+        super.init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation
+        )
+    }
     
     // MARK: - Public
     
@@ -14,6 +42,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
         showRootScreen: ((_ vc: UIViewController) -> Void)?,
         onShowWalletScreen: @escaping () -> Void
         ) {
+        
         self.startFromWithdrawScreen(showRootScreen: showRootScreen)
         self.onShowWalletScreen = onShowWalletScreen
     }
@@ -24,13 +53,20 @@ class WithdrawFlowController: BaseSignedInFlowController {
         let viewController = self.setupWithdrawScreen()
         
         viewController.navigationItem.title = Localized(.withdraw)
-        
-        self.navigationController.setViewControllers([viewController], animated: false)
-        
-        if let showRoot = showRootScreen {
-            showRoot(self.navigationController.getViewController())
+        if self.navigationController == nil {
+            let navigationController = NavigationController()
+            self.navigationController = navigationController
+            self.navigationController?.setViewControllers([viewController], animated: false)
+            
+            if let showRoot = showRootScreen {
+                showRoot(navigationController.getViewController())
+            } else {
+                self.rootNavigation.setRootContent(navigationController, transition: .fade, animated: false)
+            }
         } else {
-            self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
+            if let showRoot = showRootScreen {
+                showRoot(viewController)
+            }
         }
     }
     
@@ -58,26 +94,26 @@ class WithdrawFlowController: BaseSignedInFlowController {
         
         let routing = SendPayment.Routing(
             onShowProgress: { [weak self] in
-                self?.navigationController.showProgress()
+                self?.navigationController?.showProgress()
             },
             onHideProgress: { [weak self] in
-                self?.navigationController.hideProgress()
+                self?.navigationController?.hideProgress()
             },
             onShowError: { [weak self] (errorMessage) in
-                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+                self?.navigationController?.showErrorMessage(errorMessage, completion: nil)
             },
             onSelectContactEmail: { [weak self] (completion) in
                 self?.presentContactEmailPicker(
                     completion: completion,
                     presentViewController: { [weak self] (vc, animated, completion) in
-                        self?.navigationController.present(vc, animated: animated, completion: completion)
+                        self?.navigationController?.present(vc, animated: animated, completion: completion)
                 })
             },
             onPresentQRCodeReader: { [weak self] (completion) in
                 self?.presentQRCodeReader(completion: completion)
             },
             onPresentPicker: { [weak self] (title, options, onSelected) in
-                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                guard let present = self?.navigationController?.getPresentViewControllerClosure() else {
                     return
                 }
                 
@@ -99,7 +135,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
         SendPayment.Configurator.configure(
             viewController: vc,
             senderAccountId: self.userDataProvider.walletData.accountId,
-            selectedBalanceId: nil,
+            selectedBalanceId: self.selectedBalanceId,
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
             recipientAddressResolver: recipientAddressResolver,
@@ -116,7 +152,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
     private func showWithdrawConfirmationScreen(sendWithdrawModel: SendPayment.Model.SendWithdrawModel) {
         let vc = self.setupWithdrawConfirmationScreen(sendWithdrawModel: sendWithdrawModel)
         
-        self.navigationController.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func setupWithdrawConfirmationScreen(
@@ -127,13 +163,13 @@ class WithdrawFlowController: BaseSignedInFlowController {
         
         let routing = ConfirmationScene.Routing(
             onShowProgress: { [weak self] in
-                self?.navigationController.showProgress()
+                self?.navigationController?.showProgress()
             },
             onHideProgress: { [weak self] in
-                self?.navigationController.hideProgress()
+                self?.navigationController?.hideProgress()
             },
             onShowError: { [weak self] (errorMessage) in
-                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+                self?.navigationController?.showErrorMessage(errorMessage, completion: nil)
             },
             onConfirmationSucceeded: { [weak self] in
                 self?.onShowWalletScreen?()
@@ -182,7 +218,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
     
     private func presentQRCodeReader(completion: @escaping SendPayment.QRCodeReaderCompletion) {
         self.runQRCodeReaderFlow(
-            presentingViewController: self.navigationController.getViewController(),
+            presentingViewController: self.navigationController?.getViewController() ?? UIViewController(),
             handler: { result in
                 switch result {
                     

@@ -104,9 +104,9 @@ extension DashboardScene.ViewController: DashboardScene.DisplayLogic {
             case .view(let view):
                 contentViews.append(view)
             case .viewController(let viewController):
-                self.addChildViewController(viewController)
+                self.addChild(viewController)
                 contentViews.append(viewController.view)
-                viewController.didMove(toParentViewController: self)
+                viewController.didMove(toParent: self)
             }
         }
         

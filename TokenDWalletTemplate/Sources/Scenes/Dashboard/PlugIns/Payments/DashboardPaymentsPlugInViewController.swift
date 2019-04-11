@@ -82,7 +82,7 @@ extension DashboardPaymentsPlugIn {
         }
         
         private func addNewTransactionsList(_ new: TransactionsListScene.ViewController) {
-            self.addChildViewController(
+            self.addChild(
                 new,
                 to: self.transactionsListContainerView,
                 layoutFulledge: true

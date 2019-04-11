@@ -81,13 +81,13 @@ class BXFInteractiveLabel: BXFLabelWithInsets {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.willShowMenu),
-            name: .UIMenuControllerWillShowMenu,
+            name: UIMenuController.willShowMenuNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.willHideMenu),
-            name: .UIMenuControllerWillHideMenu,
+            name: UIMenuController.willHideMenuNotification,
             object: nil
         )
     }

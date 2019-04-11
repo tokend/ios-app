@@ -3,6 +3,7 @@ import UIKit
 
 protocol TransactionsListScenePresentationLogic {
     func presentTransactionsDidUpdate(response: TransactionsListScene.Event.TransactionsDidUpdate.Response)
+    func presentActionsDidChange(response: TransactionsListScene.Event.ActionsDidChange.Response)
     func presentLoadingStatusDidChange(response: TransactionsListScene.Event.LoadingStatusDidChange.Response)
     func presentHeaderTitleDidChange(response: TransactionsListScene.Event.HeaderTitleDidChange.Response)
     func presentSendAction(response: TransactionsListScene.Event.SendAction.Response)
@@ -179,6 +180,13 @@ extension TransactionsListScene {
 extension TransactionsListScene.Presenter: TransactionsListScene.PresentationLogic {
     func presentTransactionsDidUpdate(response: TransactionsListScene.Event.TransactionsDidUpdate.Response) {
         self.transactionsDidUpdate(response)
+    }
+    
+    func presentActionsDidChange(response: TransactionsListScene.Event.ActionsDidChange.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayActionsDidChange(viewModel: viewModel)
+        }
     }
     
     func presentLoadingStatusDidChange(response: TransactionsListScene.Event.LoadingStatusDidChange.Response) {

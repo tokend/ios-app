@@ -304,6 +304,7 @@
 		DB71308721CAA23200234C12 /* AuthRequestKeyFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308621CAA23200234C12 /* AuthRequestKeyFetcher.swift */; };
 		DB71308921CAA71E00234C12 /* AuthRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
+		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB80461C21D3744500C60939 /* AuthKeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB80461B21D3744500C60939 /* AuthKeychainManager.swift */; };
 		DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */; };
 		DB8C4065222853060018148E /* DepositSceneErrorFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */; };
@@ -792,6 +793,7 @@
 		DB71308621CAA23200234C12 /* AuthRequestKeyFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestKeyFetcher.swift; sourceTree = "<group>"; };
 		DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestBuilder.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
+		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB80461B21D3744500C60939 /* AuthKeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthKeychainManager.swift; sourceTree = "<group>"; };
 		DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsHistoryRepo.swift; sourceTree = "<group>"; };
 		DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneErrorFormatter.swift; sourceTree = "<group>"; };
@@ -2248,6 +2250,7 @@
 		E93F075620D7D85D000C0991 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */,
 				7FA02BD7215923C3005C1BE4 /* TransactionsListAmountFormatter.swift */,
 				E93F076120D7F730000C0991 /* TransactionsListSceneDateFormatter.swift */,
 				E93F075D20D7F2DC000C0991 /* TransactionsListSceneDateFormatterProtocol.swift */,
@@ -3056,6 +3059,7 @@
 				710E86242105ECAD007204D4 /* BXFStaticTableViewSectionCell.swift in Sources */,
 				E980D86520D1289400C53841 /* QRCodeGenerationOperation.swift in Sources */,
 				7F967FB62127359D005527EA /* ConfirmationSceneModels.swift in Sources */,
+				DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */,
 				E9908EDF2108FA1C00A0EA1C /* NetworkInfoRepo.swift in Sources */,
 				E9908EE12109D6C900A0EA1C /* KeychainDataProvider.swift in Sources */,
 				7FB9E47920BED04F005BFE0E /* SnapKit+Extension.swift in Sources */,
@@ -3268,7 +3272,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dl.tokend.wallet.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -3292,7 +3296,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dl.tokend.wallet.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

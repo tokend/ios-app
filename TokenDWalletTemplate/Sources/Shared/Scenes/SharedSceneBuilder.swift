@@ -22,6 +22,7 @@ enum SharedSceneBuilder {
     
     public static func createTransactionsListScene(
         transactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol,
+        actionProvider: TransactionsListScene.ActionProviderProtocol,
         emptyTitle: String,
         viewConfig: TransactionsListScene.Model.ViewConfig,
         routing: TransactionsListScene.Routing
@@ -35,6 +36,7 @@ enum SharedSceneBuilder {
         TransactionsListScene.Configurator.configure(
             viewController: vc,
             transactionsFetcher: transactionsFetcher,
+            actionProvider: actionProvider,
             amountFormatter: transactionsListAmountFormatter,
             dateFormatter: transactionsListDateFormatter,
             emptyTitle: emptyTitle,
@@ -47,6 +49,7 @@ enum SharedSceneBuilder {
     
     public static func createWalletScene(
         transactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol,
+        actionProvider: TransactionsListScene.ActionProviderProtocol,
         transactionsRouting: TransactionsListScene.Routing,
         headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol,
         balancesFetcher: BalanceHeaderWithPicker.BalancesFetcherProtocol,
@@ -59,6 +62,7 @@ enum SharedSceneBuilder {
         
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
+            actionProvider: actionProvider,
             emptyTitle: Localized(.no_payments),
             viewConfig: viewConfig,
             routing: transactionsRouting

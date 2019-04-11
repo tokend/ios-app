@@ -19,6 +19,7 @@ extension TransactionsListScene {
         
         private let presenter: PresentationLogic
         private let transactionsFetcher: TransactionsFetcherProtocol
+        private let actionProvider: ActionProviderProtocol
         
         private var sceneModel: Model.SceneModel
         
@@ -26,7 +27,8 @@ extension TransactionsListScene {
         
         init(
             presenter: PresentationLogic,
-            transactionsFetcher: TransactionsFetcherProtocol
+            transactionsFetcher: TransactionsFetcherProtocol,
+            actionProvider: ActionProviderProtocol
             ) {
             
             self.sceneModel = Model.SceneModel(
@@ -40,6 +42,7 @@ extension TransactionsListScene {
             
             self.presenter = presenter
             self.transactionsFetcher = transactionsFetcher
+            self.actionProvider = actionProvider
         }
         
         private func observeTransactions() {
@@ -129,7 +132,14 @@ extension TransactionsListScene {
         }
         
         private func onAssetDidChange() {
+            self.updateActions()
             self.updateSectionTitle(0, animated: false)
+        }
+        
+        private func updateActions() {
+            let actions = self.actionProvider.getActions(asset: self.sceneModel.asset)
+            let response = Event.ActionsDidChange.Response(actions: actions)
+            self.presenter.presentActionsDidChange(response: response)
         }
         
         private func updateSectionTitle(_ newSection: Int, animated: Bool) {

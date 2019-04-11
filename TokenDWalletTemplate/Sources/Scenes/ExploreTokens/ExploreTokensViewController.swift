@@ -114,7 +114,7 @@ extension ExploreTokensScene {
             self.tableView.register(classes: [ExploreTokensTableViewCell.Model.self])
             self.tableView.dataSource = self
             self.tableView.delegate = self
-            self.tableView.rowHeight = UITableViewAutomaticDimension
+            self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
             
             if #available(iOS 11, *) { } else {
