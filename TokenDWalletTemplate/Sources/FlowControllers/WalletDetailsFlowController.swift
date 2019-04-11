@@ -5,6 +5,10 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
     
     private let navigationController: NavigationControllerProtocol = NavigationController()
+    private weak var walletScene: UIViewController?
+    private var operationCompletionScene: UIViewController {
+        return self.walletScene ?? UIViewController()
+    }
     
     // MARK: - Public
     
@@ -13,6 +17,13 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     }
     
     // MARK: - Private
+    
+    private func goBackToWalletScene() {
+        _ = self.navigationController.popToViewController(
+            self.operationCompletionScene,
+            animated: true
+        )
+    }
     
     private func showWalletScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
@@ -55,6 +66,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             balancesFetcher: balancesFetcher
         )
         
+        self.walletScene = container
         self.navigationController.setViewControllers([container], animated: false)
         
         if let showRoot = showRootScreen {
@@ -129,7 +141,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             },
             onShowWalletScreen: { [weak self] in
                 self?.currentFlowController = nil
-                self?.navigationController.popViewController(true)
+                self?.goBackToWalletScene()
         })
     }
     
@@ -197,7 +209,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             },
             onShowWalletScreen: { [weak self] in
                 self?.currentFlowController = nil
-                self?.navigationController.popViewController(true)
+                self?.goBackToWalletScene()
         })
     }
     

@@ -6,6 +6,10 @@ class DashboardFlowController: BaseSignedInFlowController {
     
     private let navigationController: NavigationControllerProtocol =
         NavigationController()
+    private weak var walletScene: UIViewController?
+    private var operationCompletionScene: UIViewController {
+        return self.walletScene ?? UIViewController()
+    }
     
     // MARK: - Public
     
@@ -14,6 +18,13 @@ class DashboardFlowController: BaseSignedInFlowController {
     }
     
     // MARK: - Private
+    
+    private func goBackToWalletScene() {
+        _ = self.navigationController.popToViewController(
+            self.operationCompletionScene,
+            animated: true
+        )
+    }
     
     private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let viewController = DashboardScene.ViewController()
@@ -183,7 +194,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             balancesFetcher: balancesFetcher,
             selectedBalanceId: selectedBalanceId
         )
-        
+        self.walletScene = container
         self.navigationController.pushViewController(container, animated: true)
     }
     
@@ -311,7 +322,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             },
             onShowWalletScreen: { [weak self] in
                 self?.currentFlowController = nil
-                self?.navigationController.popViewController(true)
+                self?.goBackToWalletScene()
         })
     }
     
@@ -379,7 +390,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             },
             onShowWalletScreen: { [weak self] in
                 self?.currentFlowController = nil
-                self?.navigationController.popViewController(true)
+                self?.goBackToWalletScene()
         })
     }
     
