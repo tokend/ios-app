@@ -40,7 +40,7 @@ extension TransactionDetails {
             
             let stateCell = TransactionDetails.Model.CellModel(
                 title: Localized(.state),
-                value: Localized(.investment),
+                hint: Localized(.investment),
                 identifier: .state
             )
             let stateSection = TransactionDetails.Model.SectionModel(
@@ -55,7 +55,7 @@ extension TransactionDetails {
             )
             let toPayCell = TransactionDetails.Model.CellModel(
                 title: Localized(.paid),
-                value: amountFormatter.formatAmount(toPay),
+                hint: amountFormatter.formatAmount(toPay),
                 identifier: .toPay
             )
             let toPayAmount: Model.Amount = Model.Amount(
@@ -64,7 +64,7 @@ extension TransactionDetails {
             )
             let toPayAmountCell = TransactionDetails.Model.CellModel(
                 title: Localized(.amount),
-                value: amountFormatter.formatAmount(toPayAmount),
+                hint: amountFormatter.formatAmount(toPayAmount),
                 identifier: .toPayAmount
             )
             let toPayFee: Model.Amount = Model.Amount(
@@ -73,7 +73,7 @@ extension TransactionDetails {
             )
             let toPayFeeCell = TransactionDetails.Model.CellModel(
                 title: Localized(.fee),
-                value: amountFormatter.formatAmount(toPayFee),
+                hint: amountFormatter.formatAmount(toPayFee),
                 identifier: .toPayFee
             )
             let toPaySection = TransactionDetails.Model.SectionModel(
@@ -88,7 +88,7 @@ extension TransactionDetails {
             )
             let toReceiveCell = TransactionDetails.Model.CellModel(
                 title: Localized(.received),
-                value: amountFormatter.formatAmount(toReceive),
+                hint: amountFormatter.formatAmount(toReceive),
                 identifier: .toReceive
             )
             let toReceivePrice: Model.Amount = Model.Amount(
@@ -110,7 +110,7 @@ extension TransactionDetails {
             )
             let toReceivePriceCell = TransactionDetails.Model.CellModel(
                 title: Localized(.price),
-                value: toReceivePriceCellValue,
+                hint: toReceivePriceCellValue,
                 identifier: .toReceivePrice
             )
             let toReceivedSection = TransactionDetails.Model.SectionModel(
@@ -121,7 +121,7 @@ extension TransactionDetails {
             
             let dateCell = TransactionDetails.Model.CellModel(
                 title: Localized(.date),
-                value: dateFormatter.dateToString(date: offer.createdAt),
+                hint: dateFormatter.dateToString(date: offer.createdAt),
                 identifier: .date
             )
             let dateSection = TransactionDetails.Model.SectionModel(

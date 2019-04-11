@@ -1,6 +1,6 @@
 import Foundation
 
 extension Fees {
-    typealias TitleValueViewModel = TransactionDetailsCell.Model
-    typealias TitleValueCell = TransactionDetailsCell.View
+    typealias TitleValueViewModel = TitleValueTableViewCell.Model
+    typealias TitleValueCell = TitleValueTableViewCell.View
 }

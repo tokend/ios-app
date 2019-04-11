@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol TransactionDetailsPresentationLogic {
     func presentViewDidLoad(response: TransactionDetails.Event.ViewDidLoad.Response)
@@ -27,8 +27,44 @@ extension TransactionDetails {
                     var arrayCellModels = [CellViewAnyModel]()
                     
                     for cellData in section.cells {
+                        
+                        let icon: UIImage
+                        
+                        switch cellData.identifier {
+                        case .amount:
+                            icon = Assets.amount.image
+                        case .charged:
+                            icon = Assets.outgoing.image
+                        case .date:
+                            icon = Assets.date.image
+                        case .destination:
+                            icon = Assets.destination.image
+                        case .locked:
+                            icon = Assets.lock.image
+                        case .matched:
+                            icon = Assets.match.image
+                        case .price:
+                            icon = Assets.price.image
+                        case .received:
+                            icon = Assets.incoming.image
+                        case .recipient:
+                            icon = Assets.recipient.image
+                        case .reference:
+                            icon = Assets.reference.image
+                        case .sender:
+                            icon = Assets.recipient.image
+                        case .token:
+                            icon = Assets.token.image
+                            
+                        default:
+                            icon = UIImage()
+                        }
+                        
                         let cellModel = TransactionDetailsCell.Model(
-                            title: cellData.title, identifier: cellData.identifier, value: cellData.value
+                            identifier: cellData.identifier,
+                            icon: icon,
+                            title: cellData.title,
+                            hint: cellData.hint
                         )
                         arrayCellModels.append(cellModel)
                     }
