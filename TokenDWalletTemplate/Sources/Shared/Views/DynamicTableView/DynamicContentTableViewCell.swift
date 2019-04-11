@@ -24,7 +24,7 @@ public class DynamicContentTableViewCell: UITableViewCell {
     
     // MARK: -
     
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.customInit()

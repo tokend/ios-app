@@ -44,7 +44,7 @@ public class DynamicTableView: UIView {
         self.tableView.backgroundColor = UIColor.clear
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 75.0
         
         self.tableView.register(
@@ -110,6 +110,6 @@ extension DynamicTableView: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
 }

@@ -25,7 +25,7 @@ class TradeFlowController: BaseSignedInFlowController {
         
         let routing = TradesList.Routing(
             onSelectAssetPair: { [weak self] (baseAsset, quoteAsset) in
-                
+                self?.showOffersScreenFor(baseAsset: baseAsset, quoteAsset: quoteAsset)
             },
             onSelectPendingOffers: { [weak self] in
                 self?.showPendingOffers()
@@ -57,6 +57,16 @@ class TradeFlowController: BaseSignedInFlowController {
         } else {
             self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
         }
+    }
+    
+    private func showOffersScreenFor(baseAsset: String, quoteAsset: String) {
+        let vc = self.setupOffersScreenFor(baseAsset: baseAsset, quoteAsset: quoteAsset)
+        
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupOffersScreenFor(baseAsset: String, quoteAsset: String) -> UIViewController {
+        return UIViewController()
     }
     
     private func showCreateOffer(
