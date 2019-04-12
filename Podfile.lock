@@ -1,8 +1,8 @@
 PODS:
   - AFDateHelper (4.2.7)
   - Alamofire (4.8.2)
-  - AlamofireNetworkActivityLogger (2.3.0):
-    - Alamofire (~> 4.6)
+  - AlamofireNetworkActivityLogger (2.4.0):
+    - Alamofire (~> 4.8)
   - Charts (3.0.4):
     - Charts/Core (= 3.0.4)
   - Charts/Core (3.0.4)
@@ -26,25 +26,25 @@ PODS:
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (3.1.0-x.10):
-    - TokenDSDK/API (= 3.1.0-x.10)
-    - TokenDSDK/JSONAPI (= 3.1.0-x.10)
-    - TokenDSDK/KeyServer (= 3.1.0-x.10)
+  - TokenDSDK (3.1.0-x.11):
+    - TokenDSDK/API (= 3.1.0-x.11)
+    - TokenDSDK/JSONAPI (= 3.1.0-x.11)
+    - TokenDSDK/KeyServer (= 3.1.0-x.11)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetwork (3.1.0-x.10):
+  - TokenDSDK/AlamofireNetwork (3.1.0-x.11):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-x.10):
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-x.11):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/API (3.1.0-x.10):
+  - TokenDSDK/API (3.1.0-x.11):
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/JSONAPI (3.1.0-x.10):
+  - TokenDSDK/JSONAPI (3.1.0-x.11):
     - DLJSONAPI (>= 1.0.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/KeyServer (3.1.0-x.10):
+  - TokenDSDK/KeyServer (3.1.0-x.11):
     - TokenDWallet (>= 3.0.1)
   - TokenDWallet (3.0.1):
     - DLCryptoKit (>= 2.0.1)
@@ -63,7 +63,7 @@ DEPENDENCIES:
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (= 3.1.0-x.10)
+  - TokenDSDK (= 3.1.0-x.11)
   - TokenDSDK/AlamofireNetwork
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
@@ -113,7 +113,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFDateHelper: 4ad66fb19503041fbba8a3018cb7ef9c71b2ff88
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  AlamofireNetworkActivityLogger: 6f3076652ab7fa6c819b59be08ea038d339e36d8
+  AlamofireNetworkActivityLogger: 6d3398c692d2c5d83b0c58793537860aca1e383d
   Charts: c5f4491efc3a24de9213fe3e68484bfdff881cfb
   DLCryptoKit: 491c522583e92c90c09c06bf1192ef741022af33
   DLJSONAPI: 4d448f06fd412dae20c53ba1c71d601c4b422ce5
@@ -130,9 +130,9 @@ SPEC CHECKSUMS:
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: 4157c106ec2c52428647f9caf4cf7b2f0360287a
+  TokenDSDK: cfab59ae03fbbeb7687e796323595a607ff4110a
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: 84d806b7fee063bfd4d932a0fcb6cc7f5153bd50
+PODFILE CHECKSUM: 382ff3262ac78694810d31a8908bd71708afae32
 
 COCOAPODS: 1.6.1

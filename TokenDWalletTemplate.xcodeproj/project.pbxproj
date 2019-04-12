@@ -246,6 +246,7 @@
 		7FF896EA21ADAE8F001A5D48 /* TokenColoringProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF896E921ADAE8F001A5D48 /* TokenColoringProvider.swift */; };
 		7FF896EC21ADAF60001A5D48 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF896EB21ADAF60001A5D48 /* UIColor+Hex.swift */; };
 		7FF896EF21AEBCA7001A5D48 /* TermsInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF896EE21AEBCA7001A5D48 /* TermsInfoProvider.swift */; };
+		DB09402A2260F3C400A9992A /* TransactionDetailsEmailFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */; };
 		DB0E51D02164E99F00DDA88C /* SaleInfoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C32164E99E00DDA88C /* SaleInfoPresenter.swift */; };
 		DB0E51D12164E99F00DDA88C /* SaleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C42164E99E00DDA88C /* SaleInfoViewController.swift */; };
 		DB0E51D22164E99F00DDA88C /* SaleInfoConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C52164E99E00DDA88C /* SaleInfoConfigurator.swift */; };
@@ -722,6 +723,7 @@
 		7FF896EE21AEBCA7001A5D48 /* TermsInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsInfoProvider.swift; sourceTree = "<group>"; };
 		C691DC1C574FA17B9E6B5DAE /* Pods-TokenDWalletTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TokenDWalletTemplate.release.xcconfig"; path = "Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate.release.xcconfig"; sourceTree = "<group>"; };
 		CC520A204845775964452C95 /* libPods-TokenDWalletTemplate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TokenDWalletTemplate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsEmailFetcher.swift; sourceTree = "<group>"; };
 		DB0E51C22164E99E00DDA88C /* SaleInfoModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoModels.swift; sourceTree = "<group>"; };
 		DB0E51C32164E99E00DDA88C /* SaleInfoPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoPresenter.swift; sourceTree = "<group>"; };
 		DB0E51C42164E99E00DDA88C /* SaleInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoViewController.swift; sourceTree = "<group>"; };
@@ -1075,6 +1077,7 @@
 				71136B042134433E00D83DD3 /* TransactionDetailsAmountFormatterProtocol.swift */,
 				71136B032134433E00D83DD3 /* TransactionDetailsDateFormatter.swift */,
 				71136B022134433E00D83DD3 /* TransactionDetailsDateFormatterProtocol.swift */,
+				DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */,
 				71136B082134433E00D83DD3 /* TransactionDetailsSectionsProviderProtocol.swift */,
 				71136B052134433E00D83DD3 /* SectionsProviders */,
 			);
@@ -2776,6 +2779,7 @@
 				7F6A848C210A00D700B7FE6B /* ConfirmationSceneInteractor.swift in Sources */,
 				E91131EE20C5482C00A8AC4D /* CellViewModelProtocol.swift in Sources */,
 				710E86222105ECAD007204D4 /* BXFStaticTableViewInputSection.swift in Sources */,
+				DB09402A2260F3C400A9992A /* TransactionDetailsEmailFetcher.swift in Sources */,
 				7F967FDC212DB684005527EA /* BiometricsAuthConfigurator.swift in Sources */,
 				E93F074520D3F13D000C0991 /* DepositSceneDateFormatterProtocol.swift in Sources */,
 				710E86352105FA95007204D4 /* BXFScrollViewWithKeyboardResponder.swift in Sources */,

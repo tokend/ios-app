@@ -243,8 +243,12 @@ class DashboardFlowController: BaseSignedInFlowController {
         ) {
         
         let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
+        let emailFetcher = TransactionDetails.EmailFetcher(
+            generalApi: self.flowControllerStack.api.generalApi
+        )
         let sectionsProvider = TransactionDetails.OperationSectionsProvider(
             transactionsHistoryRepo: transactionsHistoryRepo,
+            emailFetcher: emailFetcher,
             identifier: transactionId,
             accountId: self.userDataProvider.walletData.accountId
         )

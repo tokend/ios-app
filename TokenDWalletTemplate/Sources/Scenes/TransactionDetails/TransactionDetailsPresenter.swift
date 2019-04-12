@@ -42,6 +42,8 @@ extension TransactionDetails {
                             icon = Assets.date.image
                         case .destination:
                             icon = Assets.destination.image
+                        case .email:
+                            icon = Assets.email.image
                         case .locked:
                             icon = Assets.lock.image
                         case .matched:

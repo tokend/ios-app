@@ -216,6 +216,7 @@
 "issued" = "Issued";
 "keychaindataprovider_should_always_provide_key" = "KeychainDataProvider should always provide key";
 "last_name" = "Last name";
+"loading" = "Loading...";
 "locked" = "Locked";
 "lower_bound" = "Lower bound";
 "main_title" = "Main title";
@@ -302,6 +303,7 @@
 "received_amount_may_be_lower_due_to_network_fees" = "Received amount may be lower due to $(destasset) network fees";
 "received_amount_may_be_lower_due_to_network_fees_replace_destasset" = "destasset";
 "recipient" = "Recipient";
+"recipients_email" = "Recipient's email";
 "recipients_fee" = "Recipient's fee";
 "recipients_fee_has_been_paid" = "Recipient's fee has been paid by the sender";
 "recover_it" = "Recover it";
@@ -345,6 +347,7 @@
 "send_transaction_error" = "Send transaction error: $(message)";
 "send_transaction_error_replace_message" = "message";
 "sender" = "Sender";
+"senders_email" = "Sender's email";
 "sent" = "Sent";
 "server" = "Server";
 "set_placeholder" = "Set placeholder";
