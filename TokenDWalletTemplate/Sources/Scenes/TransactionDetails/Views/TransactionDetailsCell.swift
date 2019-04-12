@@ -43,7 +43,13 @@ enum TransactionDetailsCell {
         
         public var hint: String? {
             get { return self.hintLabel.text }
-            set { self.hintLabel.text = newValue }
+            set {
+                self.hintLabel.text = newValue
+                if let hint = newValue,
+                    !hint.isEmpty {
+                    self.updateLayout()
+                }
+            }
         }
         
         // MARK: -
@@ -104,7 +110,6 @@ enum TransactionDetailsCell {
         private func setupLayout() {
             self.addSubview(self.iconView)
             self.addSubview(self.titleLabel)
-            self.addSubview(self.hintLabel)
             
             self.titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
             self.titleLabel.setContentHuggingPriority(.required, for: .horizontal)
@@ -118,6 +123,16 @@ enum TransactionDetailsCell {
             self.titleLabel.snp.makeConstraints { (make) in
                 make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
                 make.trailing.equalToSuperview().inset(self.sideInset)
+                make.centerY.equalToSuperview()
+            }
+        }
+        
+        private func updateLayout() {
+            self.addSubview(self.hintLabel)
+            
+            self.titleLabel.snp.remakeConstraints { (make) in
+                make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
+                make.trailing.equalToSuperview().inset(self.sideInset)
                 make.top.equalToSuperview().inset(self.topInset)
             }
             
@@ -127,6 +142,7 @@ enum TransactionDetailsCell {
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset/2)
                 make.bottom.equalToSuperview().inset(self.topInset)
             }
+            self.setNeedsLayout()
         }
     }
 }

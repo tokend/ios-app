@@ -522,6 +522,15 @@ extension TransactionDetails {
                     detailsCells.append(senderPaysCell)
                 }
                 
+                if !resource.subject.isEmpty {
+                    let subjectCell = TransactionDetails.Model.CellModel(
+                        title: resource.subject,
+                        hint: Localized(.description),
+                        identifier: .reference
+                    )
+                    detailsCells.append(subjectCell)
+                }
+                
             case .`self`,
                  .opCreateAMLAlertRequestDetails,
                  .opCreateAtomicSwapBidRequestDetails,
