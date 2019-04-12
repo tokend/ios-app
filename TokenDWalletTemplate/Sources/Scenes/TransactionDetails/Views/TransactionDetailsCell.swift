@@ -45,10 +45,7 @@ enum TransactionDetailsCell {
             get { return self.hintLabel.text }
             set {
                 self.hintLabel.text = newValue
-                if let hint = newValue,
-                    !hint.isEmpty {
-                    self.updateLayout()
-                }
+                self.updateLayout()
             }
         }
         
@@ -120,27 +117,32 @@ enum TransactionDetailsCell {
                 make.width.height.equalTo(self.iconSize)
             }
             
-            self.titleLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
-                make.trailing.equalToSuperview().inset(self.sideInset)
-                make.centerY.equalToSuperview()
-            }
+            self.updateLayout()
         }
         
         private func updateLayout() {
-            self.addSubview(self.hintLabel)
-            
-            self.titleLabel.snp.remakeConstraints { (make) in
-                make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
-                make.trailing.equalToSuperview().inset(self.sideInset)
-                make.top.equalToSuperview().inset(self.topInset)
-            }
-            
-            self.hintLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.titleLabel.snp.leading)
-                make.trailing.equalToSuperview().inset(self.sideInset)
-                make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset/2)
-                make.bottom.equalToSuperview().inset(self.topInset)
+            if let hint = self.hint,
+                !hint.isEmpty {
+                
+                self.addSubview(self.hintLabel)
+                self.titleLabel.snp.remakeConstraints { (make) in
+                    make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalToSuperview().inset(self.topInset)
+                }
+                
+                self.hintLabel.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalTo(self.titleLabel)
+                    make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset/2)
+                    make.bottom.equalToSuperview().inset(self.topInset)
+                }
+            } else {
+                self.hintLabel.removeFromSuperview()
+                self.titleLabel.snp.remakeConstraints { (make) in
+                    make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.bottom.equalToSuperview().inset(self.topInset)
+                }
             }
             self.setNeedsLayout()
         }

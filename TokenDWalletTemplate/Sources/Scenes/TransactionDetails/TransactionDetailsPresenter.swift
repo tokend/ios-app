@@ -27,7 +27,6 @@ extension TransactionDetails {
                     var arrayCellModels = [CellViewAnyModel]()
                     
                     for cellData in section.cells {
-                        
                         let icon: UIImage
                         
                         switch cellData.identifier {
@@ -61,7 +60,6 @@ extension TransactionDetails {
                             icon = Assets.token.image
                         case .unlocked:
                             icon = Assets.unlock.image
-                            
                         default:
                             icon = UIImage()
                         }
