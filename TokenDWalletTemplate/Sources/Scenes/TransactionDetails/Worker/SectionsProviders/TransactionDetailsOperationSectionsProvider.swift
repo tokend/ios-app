@@ -3,6 +3,7 @@ import RxCocoa
 import RxSwift
 import TokenDSDK
 
+// swiftlint:disable type_body_length
 extension TransactionDetails {
     class OperationSectionsProvider {
         
@@ -62,19 +63,27 @@ extension TransactionDetails {
             operation: OperationResource
             ) -> [TransactionDetails.Model.SectionModel] {
             
-            var sections: [TransactionDetails.Model.SectionModel] = []
-            
             guard let assetResource = participantEffect.asset,
                 let asset = assetResource.id,
                 let fee = balanceChangeEffect.fee,
                 let details = operation.details else {
-                    return sections
+                    return []
+            }
+            var sections: [Model.SectionModel] = []
+            
+            if let operationDetails = details as? OpManageOfferDetailsResource {
+                return self.sectionsForManageOfferOperation(
+                    participantEffect: participantEffect,
+                    operation: operation,
+                    details: operationDetails
+                )
             }
             
-            let effectSection = self.createTitleSection(balanceChangeEffect: balanceChangeEffect)
-            sections.append(effectSection)
+            var cells: [Model.CellModel] = []
+            let effectCell = self.createTitleCell(balanceChangeEffect: balanceChangeEffect)
+            cells.append(effectCell)
             
-            let totalAmount: TransactionDetails.Model.Amount
+            let amount: TransactionDetails.Model.Amount
             switch balanceChangeEffect.effectBalanceChangeType {
                 
             case .effectCharged,
@@ -83,7 +92,7 @@ extension TransactionDetails {
                  .effectChargedFromLocked,
                  .effectWithdrawn:
                 
-                totalAmount = TransactionDetails.Model.Amount.init(
+                amount = TransactionDetails.Model.Amount(
                     value: balanceChangeEffect.amount + fee.fixed + fee.calculatedPercent,
                     asset: asset
                 )
@@ -91,70 +100,143 @@ extension TransactionDetails {
             case .effectFunded,
                  .effectIssued:
                 
-                totalAmount = TransactionDetails.Model.Amount.init(
+                amount = TransactionDetails.Model.Amount(
                     value: balanceChangeEffect.amount - fee.fixed - fee.calculatedPercent,
                     asset: asset
                 )
                 
             case .`self`:
-                totalAmount = TransactionDetails.Model.Amount.init(
+                amount = TransactionDetails.Model.Amount(
                     value: 0,
                     asset: asset
                 )
             }
             
-            let totalCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.total),
-                value: self.amountFormatter.formatAmount(totalAmount),
-                identifier: .total
-            )
-            
-            let amount = TransactionDetails.Model.Amount.init(
-                value: balanceChangeEffect.amount,
-                asset: asset
-            )
-            
-            let amountCell = TransactionDetails.Model.CellModel(
-                title: Localized(.amount),
-                value: self.amountFormatter.formatAmount(amount),
-                identifier: .amount
-            )
-            
-            let feeAmount = TransactionDetails.Model.Amount.init(
-                value: fee.fixed + fee.calculatedPercent,
-                asset: asset
-            )
-            
-            let feeCell = TransactionDetails.Model.CellModel(
-                title: Localized(.fee),
-                value: self.amountFormatter.formatAmount(feeAmount),
-                identifier: .fee
-            )
-            
-            let operationSection = TransactionDetails.Model.SectionModel.init(
-                title: "",
-                cells: [totalCell, amountCell, feeCell],
-                description: ""
-            )
-            sections.append(operationSection)
-            
-            if let detailsSection = self.createDetailsSection(
-                details: details
-                ) {
-                
-                sections.append(detailsSection)
-            }
-            
-            if let descriptionSection = self.createDescriptionSection(
+            if let descriptionCell = self.createDescriptionCells(
                 details: details,
                 balanceChangeEffect: balanceChangeEffect
                 ) {
-                sections.append(descriptionSection)
+                cells.append(descriptionCell)
             }
             
-            let dateSection = self.createDateSection(date: operation.appliedAt)
-            sections.append(dateSection)
+            let amountCell = TransactionDetails.Model.CellModel(
+                title: self.amountFormatter.formatAmount(amount),
+                hint: Localized(.amount),
+                identifier: .amount
+            )
+            cells.append(amountCell)
             
+            let detailsCells = self.createDetailsCells(
+                details: details,
+                balanceChangeEffect: balanceChangeEffect
+            )
+            cells.append(contentsOf: detailsCells)
+            
+            let dateCell = self.createDateCell(date: operation.appliedAt)
+            cells.append(dateCell)
+            
+            let infoSection = TransactionDetails.Model.SectionModel(
+                title: "",
+                cells: cells,
+                description: ""
+            )
+            sections.append(infoSection)
+            if let manageAssetPairDetails = details as? OpManageAssetPairDetailsResource,
+                let assetPairsSection = self.createManageAssetPairDetailsSection(
+                    details: manageAssetPairDetails
+                ) {
+                
+                sections.append(assetPairsSection)
+            }
+            
+            return sections
+        }
+        
+        private func sectionsForManageOfferOperation(
+            participantEffect: ParticipantEffectResource,
+            operation: OperationResource,
+            details: OpManageOfferDetailsResource
+            ) -> [TransactionDetails.Model.SectionModel] {
+            
+            guard let baseAssetResource = details.baseAsset,
+                let baseAsset = baseAssetResource.id,
+                let quoteAssetResource = details.quoteAsset,
+                let quoteAsset = quoteAssetResource.id else {
+                    return []
+            }
+            
+            var sections: [Model.SectionModel] = []
+            if details.orderBookId == 0 {
+                let replacePrice = self.amountFormatter.assetAmountToString(details.price)
+                let price = Localized(
+                    .one_equals,
+                    replace: [
+                        .one_equals_replace_base_asset: baseAsset,
+                        .one_equals_replace_quote_asset: quoteAsset,
+                        .one_equals_replace_price: replacePrice
+                    ]
+                )
+                let priceCell = Model.CellModel(
+                    title: price,
+                    hint: Localized(.price),
+                    
+                    identifier: .price
+                )
+                let dateCell = self.createDateCell(date: operation.appliedAt)
+                let infoSection = Model.SectionModel(
+                    title: "",
+                    cells: [priceCell, dateCell],
+                    description: ""
+                )
+                sections.append(infoSection)
+                
+                let baseAmountTitle = self.amountFormatter.formatAmount(
+                    details.baseAmount,
+                    currency: baseAsset
+                )
+                let toReceiveCell = Model.CellModel(
+                    title: baseAmountTitle,
+                    hint: Localized(.amount),
+                    identifier: .amount
+                )
+                let toReceiveSection = Model.SectionModel(
+                    title: Localized(.to_receive),
+                    cells: [toReceiveCell],
+                    description: ""
+                )
+                sections.append(toReceiveSection)
+                
+            } else {
+                let tokenCell = Model.CellModel(
+                    title: baseAsset,
+                    hint: Localized(.token),
+                    identifier: .token
+                )
+                let dateCell = self.createDateCell(date: operation.appliedAt)
+                let infoSection = Model.SectionModel(
+                    title: "",
+                    cells: [tokenCell, dateCell],
+                    description: ""
+                )
+                sections.append(infoSection)
+            }
+            
+            let quoteAmount = details.baseAmount * details.price
+            let quoteAmountTitle = self.amountFormatter.formatAmount(
+                quoteAmount,
+                currency: quoteAsset
+            )
+            let toPayCell = Model.CellModel(
+                title: quoteAmountTitle,
+                hint: Localized(.amount),
+                identifier: .amount
+            )
+            let toPaySection = Model.SectionModel(
+                title: Localized(.to_pay),
+                cells: [toPayCell],
+                description: ""
+            )
+            sections.insert(toPaySection, at: 1)
             return sections
         }
         
@@ -171,142 +253,84 @@ extension TransactionDetails {
             }
             
             var sections: [TransactionDetails.Model.SectionModel] = []
-            
-            let effectCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.effect),
-                value: Localized(.matched),
-                identifier: .effect
+            var offerInfoCells: [TransactionDetails.Model.CellModel] = []
+            let effectCell = TransactionDetails.Model.CellModel(
+                title: Localized(.matched),
+                hint: Localized(.effect),
+                identifier: .matched
             )
+            offerInfoCells.append(effectCell)
             
-            let effectSection = TransactionDetails.Model.SectionModel.init(
-                title: "",
-                cells: [effectCell],
-                description: ""
-            )
-            sections.append(effectSection)
-            
-            let totalChargedAmount = TransactionDetails.Model.Amount.init(
-                value: charged.amount + charged.fee.fixed,
-                asset: charged.assetCode
-            )
-            
-            let totalChargedCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.charged),
-                value: self.amountFormatter.formatAmount(totalChargedAmount),
-                identifier: .paid
-            )
-            
-            let chargedAmount = TransactionDetails.Model.Amount.init(
-                value: charged.amount,
-                asset: charged.assetCode
-            )
-            
-            let chargedAmountCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.amount),
-                value: self.amountFormatter.formatAmount(chargedAmount),
-                identifier: .amount
-            )
-            
-            let chargedFee = TransactionDetails.Model.Amount.init(
-                value: charged.fee.fixed,
-                asset: charged.assetCode
-            )
-            
-            let chargedFeeCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.fee),
-                value: self.amountFormatter.formatAmount(chargedFee),
-                identifier: .fee
-            )
-            
-            let chargedSection = TransactionDetails.Model.SectionModel.init(
-                title: "",
-                cells: [
-                    totalChargedCell,
-                    chargedAmountCell,
-                    chargedFeeCell
-                ],
-                description: ""
-            )
-            sections.append(chargedSection)
-            
-            let totalFundedAmount = TransactionDetails.Model.Amount.init(
-                value: funded.amount - funded.fee.fixed,
-                asset: funded.assetCode
-            )
-            
-            let totalFundedCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.funded),
-                value: self.amountFormatter.formatAmount(totalFundedAmount),
-                identifier: .received
-            )
-            
-            let fundedAmount = TransactionDetails.Model.Amount.init(
-                value: funded.amount,
-                asset: funded.assetCode
-            )
-            
-            let fundedAmountCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.amount),
-                value: self.amountFormatter.formatAmount(fundedAmount),
-                identifier: .amount
-            )
-            
-            let fundedFee = TransactionDetails.Model.Amount.init(
-                value: funded.fee.fixed,
-                asset: funded.assetCode
-            )
-            
-            let fundedFeeCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.fee),
-                value: self.amountFormatter.formatAmount(fundedFee),
-                identifier: .fee
-            )
-            
-            let fundedSection = TransactionDetails.Model.SectionModel.init(
-                title: "",
-                cells: [
-                    totalFundedCell,
-                    fundedAmountCell,
-                    fundedFeeCell
-                ],
-                description: ""
-            )
-            sections.append(fundedSection)
-            
-            if let priceSection = self.createPriceSection(
+            if let priceCell = self.createPriceCell(
                 details: details,
                 matchedEffect: matchedEffect
                 ) {
                 
-                sections.append(priceSection)
+                offerInfoCells.append(priceCell)
             }
             
-            let dateSection = self.createDateSection(date: operation.appliedAt)
-            sections.append(dateSection)
+            let dateCell = self.createDateCell(date: operation.appliedAt)
+            offerInfoCells.append(dateCell)
+            
+            let offerInfoSection = TransactionDetails.Model.SectionModel(
+                title: "",
+                cells: offerInfoCells,
+                description: ""
+            )
+            sections.append(offerInfoSection)
+            
+            let chargedAmount = TransactionDetails.Model.Amount(
+                value: charged.amount + charged.fee.fixed,
+                asset: charged.assetCode
+            )
+            
+            let chargedCell = TransactionDetails.Model.CellModel(
+                title: self.amountFormatter.formatAmount(chargedAmount),
+                hint: Localized(.amount),
+                identifier: .amount
+            )
+            
+            let chargedSection = TransactionDetails.Model.SectionModel(
+                title: Localized(.charged),
+                cells: [chargedCell],
+                description: ""
+            )
+            sections.append(chargedSection)
+            
+            let fundedAmount = TransactionDetails.Model.Amount(
+                value: funded.amount - funded.fee.fixed,
+                asset: funded.assetCode
+            )
+            
+            let fundedCell = TransactionDetails.Model.CellModel(
+                title: self.amountFormatter.formatAmount(fundedAmount),
+                hint: Localized(.amount),
+                identifier: .amount
+            )
+            
+            let fundedSection = TransactionDetails.Model.SectionModel(
+                title: Localized(.funded),
+                cells: [fundedCell],
+                description: ""
+            )
+            sections.append(fundedSection)
             
             return sections
         }
         
-        private func createDateSection(date: Date) -> TransactionDetails.Model.SectionModel {
+        private func createDateCell(date: Date) -> TransactionDetails.Model.CellModel {
             let dateCell = TransactionDetails.Model.CellModel(
                 title: self.dateFormatter.dateToString(date: date),
-                value: "",
+                hint: Localized(.date),
                 identifier: .date
             )
-            let dateSection = TransactionDetails.Model.SectionModel(
-                title: Localized(.date),
-                cells: [dateCell],
-                description: ""
-            )
-            return dateSection
+            return dateCell
         }
         
-        private func createDescriptionSection(
+        private func createDescriptionCells(
             details: OperationDetailsResource,
             balanceChangeEffect: EffectBalanceChangeResource
-            ) -> TransactionDetails.Model.SectionModel? {
-            
-            var descriptionCells: [TransactionDetails.Model.CellModel] = []
+            ) -> TransactionDetails.Model.CellModel? {
             
             switch details.operationDetailsRelatedToBalance {
                 
@@ -315,40 +339,32 @@ extension TransactionDetails {
                     return nil
                 }
                 let addressCell = TransactionDetails.Model.CellModel(
-                    title: Localized(.destination_address),
-                    value: address,
-                    identifier: .description
+                    title: address,
+                    hint: Localized(.destination_address),
+                    identifier: .destination
                 )
-                descriptionCells.append(addressCell)
+                return addressCell
                 
             case .opPaymentDetails(let payment):
-                if !payment.subject.isEmpty {
-                    let subjectCell = TransactionDetails.Model.CellModel(
-                        title: Localized(.subject),
-                        value: payment.subject,
-                        identifier: .subject
-                    )
-                    descriptionCells.append(subjectCell)
-                }
                 
                 if balanceChangeEffect as? EffectChargedResource != nil,
                     let toAccount = payment.accountTo,
                     let toAccountId = toAccount.id {
                     let accountToCell = TransactionDetails.Model.CellModel(
-                        title: Localized(.to_account),
-                        value: toAccountId,
-                        identifier: .toAccount
+                        title: toAccountId,
+                        hint: Localized(.recipient),
+                        identifier: .recipient
                     )
-                    descriptionCells.append(accountToCell)
+                    return accountToCell
                 } else if balanceChangeEffect as? EffectFundedResource != nil,
                     let fromAccount = payment.accountFrom,
                     let fromAccountId = fromAccount.id {
                     let accountFromCell = TransactionDetails.Model.CellModel(
-                        title: Localized(.from_account),
-                        value: fromAccountId,
-                        identifier: .toAccount
+                        title: fromAccountId,
+                        hint: Localized(.sender),
+                        identifier: .sender
                     )
-                    descriptionCells.append(accountFromCell)
+                    return accountFromCell
                 }
                 
             case .opCreateAMLAlertRequestDetails,
@@ -359,70 +375,63 @@ extension TransactionDetails {
                 
                 return nil
             }
-            
-            guard !descriptionCells.isEmpty else {
-                return nil
-            }
-            
-            let descriptionSection = TransactionDetails.Model.SectionModel(
-                title: Localized(.description),
-                cells: descriptionCells,
-                description: ""
-            )
-            
-            return descriptionSection
+            return nil
         }
         
-        private func createTitleSection(
+        private func createTitleCell(
             balanceChangeEffect: EffectBalanceChangeResource
-            ) -> TransactionDetails.Model.SectionModel {
+            ) -> TransactionDetails.Model.CellModel {
             
             var effectCellValue: String?
+            var identifier: TransactionDetails.CellIdentifier?
             
             switch balanceChangeEffect.effectBalanceChangeType {
                 
             case .effectCharged:
                 effectCellValue = Localized(.charged)
+                identifier = .charged
                 
             case .effectChargedFromLocked:
                 effectCellValue = Localized(.charged_from_lock)
+                identifier = .charged
                 
             case .effectFunded:
                 effectCellValue = Localized(.funded)
+                identifier = .received
                 
             case .effectIssued:
                 effectCellValue = Localized(.issued)
+                identifier = .received
                 
             case .effectLocked:
                 effectCellValue = Localized(.locked)
+                identifier = .locked
                 
             case .effectUnlocked:
                 effectCellValue = Localized(.unlocked)
+                identifier = .unlocked
                 
             case .effectWithdrawn:
                 effectCellValue = Localized(.withdrawn)
+                identifier = .locked
                 
             case .`self`:
                 break
             }
             
             let effectCell = TransactionDetails.Model.CellModel(
-                title: Localized(.effect),
-                value: effectCellValue ?? Localized(.unknown),
-                identifier: .effect
+                title: effectCellValue ?? Localized(.unknown),
+                hint: Localized(.effect),
+                identifier: identifier ?? .unknown
             )
             
-            return TransactionDetails.Model.SectionModel(
-                title: "",
-                cells: [effectCell],
-                description: ""
-            )
+            return effectCell
         }
         
-        private func createPriceSection(
+        private func createPriceCell(
             details: OperationDetailsResource,
             matchedEffect: EffectMatchedResource
-            ) -> TransactionDetails.Model.SectionModel? {
+            ) -> TransactionDetails.Model.CellModel? {
             
             var baseAsset: String
             var quoteAsset: String
@@ -453,34 +462,85 @@ extension TransactionDetails {
             let formattedPrice = "\(matchedEffect.price)"
             
             let priceCell = TransactionDetails.Model.CellModel.init(
-                title: Localized(.price),
-                value: Localized(
-                    .one_for,
+                title: Localized(
+                    .one_equals,
                     replace: [
-                        .one_for_replace_base_asset: baseAsset,
-                        .one_for_replace_quote_asset: quoteAsset,
-                        .one_for_replace_sale_invest_price_amount: formattedPrice
+                        .one_equals_replace_base_asset: baseAsset,
+                        .one_equals_replace_quote_asset: quoteAsset,
+                        .one_equals_replace_price: formattedPrice
                     ]
                 ),
+                hint: Localized(.price),
                 identifier: .price
             )
             
-            return TransactionDetails.Model.SectionModel.init(
-                title: "",
-                cells: [priceCell],
-                description: ""
-            )
+            return priceCell
         }
         
-        private func createDetailsSection(
-            details: OperationDetailsResource
-            ) -> TransactionDetails.Model.SectionModel? {
+        private func createDetailsCells(
+            details: OperationDetailsResource,
+            balanceChangeEffect: EffectBalanceChangeResource
+            ) -> [TransactionDetails.Model.CellModel] {
             
-            if let manageAssetPairsDetails = details as? OpManageAssetPairDetailsResource {
-                return self.createManageAssetPairDetailsSection(details: manageAssetPairsDetails)
+            var detailsCells: [TransactionDetails.Model.CellModel] = []
+            
+            switch details.operationDetailsRelatedToBalance {
+                
+            case .opCreateIssuanceRequestDetails(let resource):
+                let referenceCell = TransactionDetails.Model.CellModel(
+                    title: resource.reference,
+                    hint: Localized(.reference),
+                    identifier: .reference
+                )
+                detailsCells.append(referenceCell)
+                
+            case .opPaymentDetails(let resource):
+                guard balanceChangeEffect as? EffectChargedResource != nil,
+                    let assetResource = resource.asset,
+                    let asset = assetResource.id,
+                    let fee = balanceChangeEffect.fee else {
+                        return []
+                }
+                let feeAmount = TransactionDetails.Model.Amount(
+                    value: fee.fixed + fee.calculatedPercent,
+                    asset: asset
+                )
+                
+                let feeCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(feeAmount),
+                    hint: Localized(.fee),
+                    identifier: .fee
+                )
+                detailsCells.append(feeCell)
+                
+                if resource.sourcePayForDestination {
+                    let senderPaysCell = TransactionDetails.Model.CellModel(
+                        title: Localized(.recipients_fee_has_been_paid),
+                        hint: "",
+                        identifier: .unknown
+                    )
+                    detailsCells.append(senderPaysCell)
+                }
+                
+                if !resource.subject.isEmpty {
+                    let subjectCell = TransactionDetails.Model.CellModel(
+                        title: resource.subject,
+                        hint: Localized(.description),
+                        identifier: .reference
+                    )
+                    detailsCells.append(subjectCell)
+                }
+                
+            case .`self`,
+                 .opCreateAMLAlertRequestDetails,
+                 .opCreateAtomicSwapBidRequestDetails,
+                 .opCreateWithdrawRequestDetails,
+                 .opPayoutDetails:
+                
+                break
             }
             
-            return nil
+            return detailsCells
         }
         
         private func createManageAssetPairDetailsSection(
@@ -498,8 +558,8 @@ extension TransactionDetails {
             
             let code = "\(quoteAsset)/\(baseAsset)"
             let codeCell = TransactionDetails.Model.CellModel(
-                title: Localized(.code),
-                value: code,
+                title: code,
+                hint: Localized(.code),
                 identifier: .code
             )
             cells.append(codeCell)
@@ -516,9 +576,9 @@ extension TransactionDetails {
             )
             
             let physicalPriceCell = TransactionDetails.Model.CellModel(
-                title: Localized(.physical_price),
-                value: physicalPrice,
-                identifier: .physicalPrice
+                title: physicalPrice,
+                hint: Localized(.physical_price),
+                identifier: .price
             )
             cells.append(physicalPriceCell)
             
@@ -552,19 +612,19 @@ extension TransactionDetails {
             
             let tradeMarketCell = TransactionDetails.Model.CellModel(
                 title: tradable,
-                value: "",
-                identifier: .tradable
+                hint: "",
+                identifier: .check
             )
             
             let physicalPriceRestrictionCell = TransactionDetails.Model.CellModel(
                 title: restrictedByPhysical,
-                value: "",
+                hint: "",
                 identifier: .physicalPrice
             )
             
             let currentPriceRestrictionCell = TransactionDetails.Model.CellModel(
                 title: restrictedByCurrent,
-                value: "",
+                hint: "",
                 identifier: .currentPrice
             )
             
@@ -572,11 +632,12 @@ extension TransactionDetails {
             cells.append(physicalPriceRestrictionCell)
             cells.append(currentPriceRestrictionCell)
             
-            return TransactionDetails.Model.SectionModel(
+            let section = Model.SectionModel(
                 title: Localized(.asset_pair),
                 cells: cells,
                 description: ""
             )
+            return section
         }
         
         private func meetsPolicy(policy: Int32, policyToCheck: AssetPairPolicy) -> Bool {
@@ -584,6 +645,7 @@ extension TransactionDetails {
         }
     }
 }
+// swiftlint:enable type_body_length
 
 extension TransactionDetails.OperationSectionsProvider: TransactionDetails.SectionsProviderProtocol {
     

@@ -34,7 +34,7 @@ extension TransactionDetails {
         // MARK: - Private
         
         private func setupView() {
-            self.view.backgroundColor = Theme.Colors.containerBackgroundColor
+            self.view.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
         private func setupTableView() {

@@ -38,98 +38,67 @@ extension TransactionDetails {
             let dateFormatter = TransactionDetails.DateFormatter()
             let amountFormatter = TransactionDetails.AmountFormatter()
             
-            let stateCell = TransactionDetails.Model.CellModel(
-                title: Localized(.state),
-                value: Localized(.pending),
-                identifier: .state
-            )
-            let stateSection = TransactionDetails.Model.SectionModel(
-                title: "",
-                cells: [stateCell],
-                description: ""
-            )
+            var sections: [Model.SectionModel] = []
             
-            let toPay: Model.Amount = Model.Amount(
-                value: offer.quoteAmount + offer.fee,
-                asset: offer.quoteAssetCode
-            )
-            let toPayCell = TransactionDetails.Model.CellModel(
-                title: Localized(.to_pay),
-                value: amountFormatter.formatAmount(toPay),
-                identifier: .toPay
-            )
-            let toPayAmount: Model.Amount = Model.Amount(
-                value: offer.quoteAmount,
-                asset: offer.quoteAssetCode
-            )
-            let toPayAmountCell = TransactionDetails.Model.CellModel(
-                title: Localized(.amount),
-                value: amountFormatter.formatAmount(toPayAmount),
-                identifier: .toPayAmount
-            )
-            let toPayFee: Model.Amount = Model.Amount(
-                value: offer.fee,
-                asset: offer.quoteAssetCode
-            )
-            let toPayFeeCell = TransactionDetails.Model.CellModel(
-                title: Localized(.fee),
-                value: amountFormatter.formatAmount(toPayFee),
-                identifier: .toPayFee
-            )
-            let toPaySection = TransactionDetails.Model.SectionModel(
-                title: "",
-                cells: [toPayCell, toPayAmountCell, toPayFeeCell],
-                description: ""
-            )
-            
-            let toReceive: Model.Amount = Model.Amount(
-                value: offer.baseAmount,
-                asset: offer.baseAssetCode
-            )
-            let toReceiveCell = TransactionDetails.Model.CellModel(
-                title: Localized(.to_receive),
-                value: amountFormatter.formatAmount(toReceive),
-                identifier: .toReceive
-            )
-            let toReceivePrice: Model.Amount = Model.Amount(
-                value: offer.quoteAmount / offer.baseAmount,
-                asset: offer.quoteAssetCode
-            )
-            let toReceiveBase: Model.Amount = Model.Amount(
-                value: 1,
-                asset: offer.baseAssetCode
-            )
-            let toReceiveBaseAmount = amountFormatter.formatAmount(toReceiveBase)
-            let toReceivePriceAmount = amountFormatter.formatAmount(toReceivePrice)
-            let toReceivePriceCellValue = Localized(
-                .base_for_price,
+            let replacePrice = amountFormatter.assetAmountToString(offer.price)
+            let price = Localized(
+                .one_equals,
                 replace: [
-                    .base_for_price_replace_base_amount: toReceiveBaseAmount,
-                    .base_for_price_replace_price_amount: toReceivePriceAmount
+                    .one_equals_replace_base_asset: offer.baseAssetCode,
+                    .one_equals_replace_quote_asset: offer.quoteAssetCode,
+                    .one_equals_replace_price: replacePrice
                 ]
             )
-            let toReceivePriceCell = TransactionDetails.Model.CellModel(
-                title: Localized(.price),
-                value: toReceivePriceCellValue,
-                identifier: .toReceivePrice
+            let priceCell = Model.CellModel(
+                title: price,
+                hint: Localized(.price),
+                identifier: .price
             )
-            let toReceivedSection = TransactionDetails.Model.SectionModel(
-                title: "",
-                cells: [toReceiveCell, toReceivePriceCell],
-                description: ""
-            )
-            
             let dateCell = TransactionDetails.Model.CellModel(
-                title: Localized(.date),
-                value: dateFormatter.dateToString(date: offer.createdAt),
+                title: dateFormatter.dateToString(date: offer.createdAt),
+                hint: Localized(.date),
                 identifier: .date
             )
-            let dateSection = TransactionDetails.Model.SectionModel(
+            let infoSection = Model.SectionModel(
                 title: "",
-                cells: [dateCell],
+                cells: [priceCell, dateCell],
                 description: ""
             )
-            return [stateSection, toPaySection, toReceivedSection, dateSection]
+            sections.append(infoSection)
+            
+            let quoteAmountTitle = amountFormatter.formatAmount(
+                offer.quoteAmount,
+                currency: offer.quoteAssetCode
+            )
+            let toPayCell = Model.CellModel(
+                title: quoteAmountTitle,
+                hint: Localized(.amount),
+                identifier: .amount
+            )
+            let toPaySection = Model.SectionModel(
+                title: Localized(.to_pay),
+                cells: [toPayCell],
+                description: ""
+            )
+            sections.append(toPaySection)
+            
+            let baseAmountTitle = amountFormatter.formatAmount(
+                offer.baseAmount,
+                currency: offer.baseAssetCode
+            )
+            let toReceiveCell = Model.CellModel(
+                title: baseAmountTitle,
+                hint: Localized(.amount),
+                identifier: .amount
+            )
+            let toReceiveSection = Model.SectionModel(
+                title: Localized(.to_receive),
+                cells: [toReceiveCell],
+                description: ""
+            )
+            sections.append(toReceiveSection)
+            
+            return sections
         }
     }
 }

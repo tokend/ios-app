@@ -86,7 +86,8 @@
 "deposit_to" = "Deposit to";
 "description" = "Description";
 "description_optional" = "Description(optional)";
-"destination_address" = "Destination address:";
+"destination_address" = "Destination address";
+"destination_address_colon" = "Destination address:";
 "document_max_size" = "image (Max $(file_size))";
 "document_max_size_replace_file_size" = "file_size";
 "done" = "Done";
@@ -302,6 +303,7 @@
 "received_amount_may_be_lower_due_to_network_fees_replace_destasset" = "destasset";
 "recipient" = "Recipient";
 "recipients_fee" = "Recipient's fee";
+"recipients_fee_has_been_paid" = "Recipient's fee has been paid by the sender";
 "recover_it" = "Recover it";
 "recovery" = "Recovery";
 "recovery_seed" = "Recovery Seed";

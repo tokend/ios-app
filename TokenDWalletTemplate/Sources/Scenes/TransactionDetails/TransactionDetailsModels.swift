@@ -54,6 +54,14 @@ enum TransactionDetails {
         case tradable
         case physicalPrice
         case currentPrice
+        case charged
+        case matched
+        case locked
+        case unlocked
+        case token
+        case sender
+        case unknown
+        case check
     }
     
     enum Model {}
@@ -80,7 +88,7 @@ extension TransactionDetails.Model {
     
     struct CellModel {
         let title: String
-        let value: String
+        let hint: String
         let identifier: TransactionDetails.CellIdentifier
     }
     
