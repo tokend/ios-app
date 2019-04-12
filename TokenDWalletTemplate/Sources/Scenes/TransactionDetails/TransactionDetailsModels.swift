@@ -57,9 +57,11 @@ enum TransactionDetails {
         case charged
         case matched
         case locked
+        case unlocked
         case token
         case sender
         case unknown
+        case check
     }
     
     enum Model {}

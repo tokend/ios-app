@@ -35,6 +35,10 @@ extension TransactionDetails {
                             icon = Assets.amount.image
                         case .charged:
                             icon = Assets.outgoing.image
+                        case .check:
+                            icon = Assets.check.image
+                        case .code:
+                            icon = Assets.code.image
                         case .date:
                             icon = Assets.date.image
                         case .destination:
@@ -55,6 +59,8 @@ extension TransactionDetails {
                             icon = Assets.recipient.image
                         case .token:
                             icon = Assets.token.image
+                        case .unlocked:
+                            icon = Assets.unlock.image
                             
                         default:
                             icon = UIImage()

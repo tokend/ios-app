@@ -3,6 +3,7 @@ import RxCocoa
 import RxSwift
 import TokenDSDK
 
+// swiftlint:disable type_body_length
 extension TransactionDetails {
     class OperationSectionsProvider {
         
@@ -68,12 +69,13 @@ extension TransactionDetails {
                 let details = operation.details else {
                     return []
             }
+            var sections: [Model.SectionModel] = []
             
-            if let manageOfferDetails = details as? OpManageOfferDetailsResource {
+            if let operationDetails = details as? OpManageOfferDetailsResource {
                 return self.sectionsForManageOfferOperation(
                     participantEffect: participantEffect,
                     operation: operation,
-                    details: manageOfferDetails
+                    details: operationDetails
                 )
             }
             
@@ -90,7 +92,7 @@ extension TransactionDetails {
                  .effectChargedFromLocked,
                  .effectWithdrawn:
                 
-                amount = TransactionDetails.Model.Amount.init(
+                amount = TransactionDetails.Model.Amount(
                     value: balanceChangeEffect.amount + fee.fixed + fee.calculatedPercent,
                     asset: asset
                 )
@@ -98,23 +100,24 @@ extension TransactionDetails {
             case .effectFunded,
                  .effectIssued:
                 
-                amount = TransactionDetails.Model.Amount.init(
+                amount = TransactionDetails.Model.Amount(
                     value: balanceChangeEffect.amount - fee.fixed - fee.calculatedPercent,
                     asset: asset
                 )
                 
             case .`self`:
-                amount = TransactionDetails.Model.Amount.init(
+                amount = TransactionDetails.Model.Amount(
                     value: 0,
                     asset: asset
                 )
             }
             
-            let descriptionCells = self.createDescriptionCells(
+            if let descriptionCell = self.createDescriptionCells(
                 details: details,
                 balanceChangeEffect: balanceChangeEffect
-            )
-            cells.append(contentsOf: descriptionCells)
+                ) {
+                cells.append(descriptionCell)
+            }
             
             let amountCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(amount),
@@ -132,12 +135,21 @@ extension TransactionDetails {
             let dateCell = self.createDateCell(date: operation.appliedAt)
             cells.append(dateCell)
             
-            let section = TransactionDetails.Model.SectionModel.init(
+            let infoSection = TransactionDetails.Model.SectionModel(
                 title: "",
                 cells: cells,
                 description: ""
             )
-            return [section]
+            sections.append(infoSection)
+            if let manageAssetPairDetails = details as? OpManageAssetPairDetailsResource,
+                let assetPairsSection = self.createManageAssetPairDetailsSection(
+                    details: manageAssetPairDetails
+                ) {
+                
+                sections.append(assetPairsSection)
+            }
+            
+            return sections
         }
         
         private func sectionsForManageOfferOperation(
@@ -167,6 +179,7 @@ extension TransactionDetails {
                 let priceCell = Model.CellModel(
                     title: price,
                     hint: Localized(.price),
+                    
                     identifier: .price
                 )
                 let dateCell = self.createDateCell(date: operation.appliedAt)
@@ -317,22 +330,20 @@ extension TransactionDetails {
         private func createDescriptionCells(
             details: OperationDetailsResource,
             balanceChangeEffect: EffectBalanceChangeResource
-            ) -> [TransactionDetails.Model.CellModel] {
-            
-            var descriptionCells: [TransactionDetails.Model.CellModel] = []
+            ) -> TransactionDetails.Model.CellModel? {
             
             switch details.operationDetailsRelatedToBalance {
                 
             case .opCreateWithdrawRequestDetails(let withdraw):
                 guard let address = withdraw.creatorDetails["address"] as? String else {
-                    return []
+                    return nil
                 }
                 let addressCell = TransactionDetails.Model.CellModel(
                     title: address,
                     hint: Localized(.destination_address),
                     identifier: .destination
                 )
-                descriptionCells.append(addressCell)
+                return addressCell
                 
             case .opPaymentDetails(let payment):
                 
@@ -344,7 +355,7 @@ extension TransactionDetails {
                         hint: Localized(.recipient),
                         identifier: .recipient
                     )
-                    descriptionCells.append(accountToCell)
+                    return accountToCell
                 } else if balanceChangeEffect as? EffectFundedResource != nil,
                     let fromAccount = payment.accountFrom,
                     let fromAccountId = fromAccount.id {
@@ -353,7 +364,7 @@ extension TransactionDetails {
                         hint: Localized(.sender),
                         identifier: .sender
                     )
-                    descriptionCells.append(accountFromCell)
+                    return accountFromCell
                 }
                 
             case .opCreateAMLAlertRequestDetails,
@@ -362,10 +373,9 @@ extension TransactionDetails {
                  .opCreateIssuanceRequestDetails,
                  .`self`:
                 
-                return []
+                return nil
             }
-            
-            return descriptionCells
+            return nil
         }
         
         private func createTitleCell(
@@ -397,10 +407,15 @@ extension TransactionDetails {
                 effectCellValue = Localized(.locked)
                 identifier = .locked
                 
-            case .effectUnlocked,
-                 .effectWithdrawn,
-                 .`self`:
+            case .effectUnlocked:
+                effectCellValue = Localized(.unlocked)
+                identifier = .unlocked
                 
+            case .effectWithdrawn:
+                effectCellValue = Localized(.withdrawn)
+                identifier = .locked
+                
+            case .`self`:
                 break
             }
             
@@ -448,11 +463,11 @@ extension TransactionDetails {
             
             let priceCell = TransactionDetails.Model.CellModel.init(
                 title: Localized(
-                    .one_for,
+                    .one_equals,
                     replace: [
-                        .one_for_replace_base_asset: baseAsset,
-                        .one_for_replace_quote_asset: quoteAsset,
-                        .one_for_replace_sale_invest_price_amount: formattedPrice
+                        .one_equals_replace_base_asset: baseAsset,
+                        .one_equals_replace_quote_asset: quoteAsset,
+                        .one_equals_replace_price: formattedPrice
                     ]
                 ),
                 hint: Localized(.price),
@@ -468,6 +483,7 @@ extension TransactionDetails {
             ) -> [TransactionDetails.Model.CellModel] {
             
             var detailsCells: [TransactionDetails.Model.CellModel] = []
+            
             switch details.operationDetailsRelatedToBalance {
                 
             case .opCreateIssuanceRequestDetails(let resource):
@@ -518,23 +534,23 @@ extension TransactionDetails {
             return detailsCells
         }
         
-        private func createManageAssetPairDetailsCells(
+        private func createManageAssetPairDetailsSection(
             details: OpManageAssetPairDetailsResource
-            ) -> [TransactionDetails.Model.CellModel] {
+            ) -> TransactionDetails.Model.SectionModel? {
             
             guard let baseAssetResource = details.baseAsset,
                 let baseAsset = baseAssetResource.id,
                 let quoteAssetResource = details.quoteAsset,
                 let quoteAsset = quoteAssetResource.id else {
-                    return []
+                    return nil
             }
             
             var cells: [TransactionDetails.Model.CellModel] = []
             
             let code = "\(quoteAsset)/\(baseAsset)"
             let codeCell = TransactionDetails.Model.CellModel(
-                title: Localized(.code),
-                hint: code,
+                title: code,
+                hint: Localized(.code),
                 identifier: .code
             )
             cells.append(codeCell)
@@ -551,8 +567,8 @@ extension TransactionDetails {
             )
             
             let physicalPriceCell = TransactionDetails.Model.CellModel(
-                title: Localized(.physical_price),
-                hint: physicalPrice,
+                title: physicalPrice,
+                hint: Localized(.physical_price),
                 identifier: .price
             )
             cells.append(physicalPriceCell)
@@ -588,7 +604,7 @@ extension TransactionDetails {
             let tradeMarketCell = TransactionDetails.Model.CellModel(
                 title: tradable,
                 hint: "",
-                identifier: .tradable
+                identifier: .check
             )
             
             let physicalPriceRestrictionCell = TransactionDetails.Model.CellModel(
@@ -607,7 +623,12 @@ extension TransactionDetails {
             cells.append(physicalPriceRestrictionCell)
             cells.append(currentPriceRestrictionCell)
             
-            return cells
+            let section = Model.SectionModel(
+                title: Localized(.asset_pair),
+                cells: cells,
+                description: ""
+            )
+            return section
         }
         
         private func meetsPolicy(policy: Int32, policyToCheck: AssetPairPolicy) -> Bool {
@@ -615,6 +636,7 @@ extension TransactionDetails {
         }
     }
 }
+// swiftlint:enable type_body_length
 
 extension TransactionDetails.OperationSectionsProvider: TransactionDetails.SectionsProviderProtocol {
     

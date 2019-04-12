@@ -13,7 +13,7 @@ enum TransactionDetailsCell {
         func setup(cell: TransactionDetailsCell.View) {
             cell.icon = self.icon.withRenderingMode(.alwaysTemplate)
             cell.title = self.title
-            cell.hint = hint
+            cell.hint = self.hint
         }
     }
     
