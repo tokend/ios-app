@@ -13,48 +13,60 @@ extension TransactionDetails {
         
         private let dateFormatter = TransactionDetails.DateFormatter()
         private let amountFormatter = TransactionDetails.AmountFormatter()
+        private let emailFetcher: TransactionDetails.EmailFetcherProtocol
+        
+        private let sectionsRelay: BehaviorRelay<[Model.SectionModel]> = BehaviorRelay(value: [])
+        private let disposeBag: DisposeBag = DisposeBag()
+        
+        private var effect: ParticipantEffectResource?
+        private var counterpartyEmail: String?
         
         init(
             transactionsHistoryRepo: TransactionsHistoryRepo,
+            emailFetcher: TransactionDetails.EmailFetcherProtocol,
             identifier: UInt64,
             accountId: String
             ) {
             
             self.transactionsHistoryRepo = transactionsHistoryRepo
+            self.emailFetcher = emailFetcher
             self.identifier = identifier
             self.accountId = accountId
         }
         
         // MARK: - Private
         
-        private func loadDataSections(
-            participantEffect: ParticipantEffectResource
-            ) -> [TransactionDetails.Model.SectionModel] {
-            
-            guard let operation = participantEffect.operation,
+        private func loadDataSections() {
+            guard let participantEffect = self.effect,
+                let operation = participantEffect.operation,
                 let effect = participantEffect.effect else {
-                    return []
+                    return
             }
             
+            var sections: [Model.SectionModel] = []
             switch effect.effectType {
                 
             case .effectBalanceChange(let balanceChangeEffect):
-                return self.sectionsForBalanceChangeEffect(
+                let balancesSections = self.sectionsForBalanceChangeEffect(
                     participantEffect: participantEffect,
                     balanceChangeEffect: balanceChangeEffect,
                     operation: operation
                 )
+                sections.append(contentsOf: balancesSections)
                 
             case .effectMatched(let matchedEffect):
-                return self.sectionsForMatchedEffect(
+                let macthedSections = self.sectionsForMatchedEffect(
                     participantEffect: participantEffect,
                     matchedEffect: matchedEffect,
                     operation: operation
                 )
+                sections.append(contentsOf: macthedSections)
                 
-            case .self:
-                return []
+            case .`self`:
+                break
             }
+            
+            self.sectionsRelay.accept(sections)
         }
         
         private func sectionsForBalanceChangeEffect(
@@ -112,12 +124,11 @@ extension TransactionDetails {
                 )
             }
             
-            if let descriptionCell = self.createDescriptionCells(
+            let descriptionCell = self.createDescriptionCells(
                 details: details,
                 balanceChangeEffect: balanceChangeEffect
-                ) {
-                cells.append(descriptionCell)
-            }
+            )
+            cells.append(contentsOf: descriptionCell)
             
             let amountCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(amount),
@@ -330,41 +341,66 @@ extension TransactionDetails {
         private func createDescriptionCells(
             details: OperationDetailsResource,
             balanceChangeEffect: EffectBalanceChangeResource
-            ) -> TransactionDetails.Model.CellModel? {
+            ) -> [TransactionDetails.Model.CellModel] {
             
+            var cells: [TransactionDetails.Model.CellModel] = []
             switch details.operationDetailsRelatedToBalance {
                 
             case .opCreateWithdrawRequestDetails(let withdraw):
                 guard let address = withdraw.creatorDetails["address"] as? String else {
-                    return nil
+                    return cells
                 }
                 let addressCell = TransactionDetails.Model.CellModel(
                     title: address,
                     hint: Localized(.destination_address),
                     identifier: .destination
                 )
-                return addressCell
+                cells.append(addressCell)
                 
             case .opPaymentDetails(let payment):
+                var emailCell: TransactionDetails.Model.CellModel?
                 
                 if balanceChangeEffect as? EffectChargedResource != nil,
                     let toAccount = payment.accountTo,
                     let toAccountId = toAccount.id {
+                    
+                    if self.counterpartyEmail == nil {
+                        self.fetchEmail(accountId: toAccountId)
+                    }
+                    
                     let accountToCell = TransactionDetails.Model.CellModel(
                         title: toAccountId,
                         hint: Localized(.recipient),
                         identifier: .recipient
                     )
-                    return accountToCell
+                    emailCell = TransactionDetails.Model.CellModel(
+                        title: self.counterpartyEmail ?? Localized(.loading),
+                        hint: Localized(.recipients_email),
+                        identifier: .email
+                    )
+                    cells.append(accountToCell)
                 } else if balanceChangeEffect as? EffectFundedResource != nil,
                     let fromAccount = payment.accountFrom,
                     let fromAccountId = fromAccount.id {
+                    
+                    if self.counterpartyEmail == nil {
+                        self.fetchEmail(accountId: fromAccountId)
+                    }
+                    
                     let accountFromCell = TransactionDetails.Model.CellModel(
                         title: fromAccountId,
                         hint: Localized(.sender),
                         identifier: .sender
                     )
-                    return accountFromCell
+                    emailCell = TransactionDetails.Model.CellModel(
+                        title: self.counterpartyEmail ?? Localized(.loading),
+                        hint: Localized(.senders_email),
+                        identifier: .email
+                    )
+                    cells.append(accountFromCell)
+                }
+                if let cell = emailCell {
+                    cells.append(cell)
                 }
                 
             case .opCreateAMLAlertRequestDetails,
@@ -373,9 +409,9 @@ extension TransactionDetails {
                  .opCreateIssuanceRequestDetails,
                  .`self`:
                 
-                return nil
+                return cells
             }
-            return nil
+            return cells
         }
         
         private func createTitleCell(
@@ -643,6 +679,22 @@ extension TransactionDetails {
         private func meetsPolicy(policy: Int32, policyToCheck: AssetPairPolicy) -> Bool {
             return (policy & policyToCheck.rawValue) == policyToCheck.rawValue
         }
+        
+        private func fetchEmail(accountId: String) {
+            self.emailFetcher.fetchEmail(
+                accountId: accountId,
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failed:
+                        return
+                        
+                    case .succeeded(let email):
+                        self?.counterpartyEmail = email
+                        self?.loadDataSections()
+                    }
+            })
+        }
     }
 }
 // swiftlint:enable type_body_length
@@ -650,23 +702,25 @@ extension TransactionDetails {
 extension TransactionDetails.OperationSectionsProvider: TransactionDetails.SectionsProviderProtocol {
     
     func observeTransaction() -> Observable<[TransactionDetails.Model.SectionModel]> {
-        return self.transactionsHistoryRepo
+        self.transactionsHistoryRepo
             .observeHistory()
-            .map { [weak self] (effects) -> [TransactionDetails.Model.SectionModel] in
+            .subscribe(onNext: { [weak self] (effects) in
                 guard let effect = effects.first(where: { (effect) -> Bool in
                     guard let effectId = effect.id,
                         let effectIdUInt64 = UInt64(effectId),
                         let identifier = self?.identifier else {
                             return false
                     }
-                    
                     return identifier == effectIdUInt64
                 }) else {
-                    return []
+                    return
                 }
-                
-                return self?.loadDataSections(participantEffect: effect) ?? []
-        }
+                self?.effect = effect
+                self?.loadDataSections()
+            })
+            .disposed(by: self.disposeBag)
+        
+        return self.sectionsRelay.asObservable()
     }
     
     func getActions() -> [TransactionDetailsProviderProtocol.Action] {

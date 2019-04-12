@@ -82,22 +82,24 @@ extension SendPayment {
                 return
             }
             
-            self.generalApi.requestAccountId(email: email, completion: { (result) in
-                switch result {
-                    
-                case .failed(let error):
-                    completion(.failed(.other(error)))
-                    
-                case .succeeded(let response):
-                    guard let identity = response.first(where: { (identity) -> Bool in
-                        return identity.attributes.email == email
-                    }) else {
-                        completion(.failed(.invalidAccountIdOrEmail))
-                        return
+            self.generalApi.requestIdentities(
+                filter: .email(email),
+                completion: { (result) in
+                    switch result {
+                        
+                    case .failed(let error):
+                        completion(.failed(.other(error)))
+                        
+                    case .succeeded(let response):
+                        guard let identity = response.first(where: { (identity) -> Bool in
+                            return identity.attributes.email == email
+                        }) else {
+                            completion(.failed(.invalidAccountIdOrEmail))
+                            return
+                        }
+                        
+                        completion(.succeeded(recipientAddress: identity.attributes.address))
                     }
-                    
-                    completion(.succeeded(recipientAddress: identity.attributes.address))
-                }
             })
         }
         

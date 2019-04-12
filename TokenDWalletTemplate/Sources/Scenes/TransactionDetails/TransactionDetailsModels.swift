@@ -62,6 +62,7 @@ enum TransactionDetails {
         case sender
         case unknown
         case check
+        case email
     }
     
     enum Model {}
