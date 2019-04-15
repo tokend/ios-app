@@ -1,6 +1,6 @@
 import UIKit
 
-class OrderBookTableViewBuyCell: UITableViewCell {
+public class OrderBookTableViewBuyCell: UITableViewCell {
     
     // MARK: - Private properties
     
@@ -9,7 +9,7 @@ class OrderBookTableViewBuyCell: UITableViewCell {
     
     // MARK: - Overridden methods
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.commonInit()
@@ -81,11 +81,12 @@ class OrderBookTableViewBuyCell: UITableViewCell {
 }
 
 extension OrderBookTableViewBuyCell: OrderBookTableViewCellProtocol {
-    func setPrice(_ price: String) {
+    
+    public func setPrice(_ price: String) {
         self.priceLabel.text = price
     }
     
-    func setAmount(_ amount: String) {
+    public func setAmount(_ amount: String) {
         self.amountLabel.text = amount
     }
 }

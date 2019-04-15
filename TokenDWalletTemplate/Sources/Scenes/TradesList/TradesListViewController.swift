@@ -150,7 +150,11 @@ extension TradesList.ViewController: DynamicTableViewDataSourceDelegate {
     public func onSelectRowAt(indexPath: IndexPath) {
         let assetPair = self.assetPairs[indexPath.row]
         
-        self.routing?.onSelectAssetPair(assetPair.baseAsset, assetPair.quoteAsset)
+        self.routing?.onSelectAssetPair(
+            assetPair.baseAsset,
+            assetPair.quoteAsset,
+            assetPair.currentPrice
+        )
     }
     
     public func showsCellSeparator() -> Bool {

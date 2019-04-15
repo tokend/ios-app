@@ -24,8 +24,12 @@ class TradeFlowController: BaseSignedInFlowController {
         let assetColoringProvider = TokenColoringProvider.shared
         
         let routing = TradesList.Routing(
-            onSelectAssetPair: { [weak self] (baseAsset, quoteAsset) in
-                self?.showOffersScreenFor(baseAsset: baseAsset, quoteAsset: quoteAsset)
+            onSelectAssetPair: { [weak self] (baseAsset, quoteAsset, currentPrice) in
+                self?.showOffersScreenFor(
+                    baseAsset: baseAsset,
+                    quoteAsset: quoteAsset,
+                    currentPrice: currentPrice
+                )
             },
             onSelectPendingOffers: { [weak self] in
                 self?.showPendingOffers()
@@ -59,14 +63,68 @@ class TradeFlowController: BaseSignedInFlowController {
         }
     }
     
-    private func showOffersScreenFor(baseAsset: String, quoteAsset: String) {
-        let vc = self.setupOffersScreenFor(baseAsset: baseAsset, quoteAsset: quoteAsset)
+    private func showOffersScreenFor(
+        baseAsset: String,
+        quoteAsset: String,
+        currentPrice: Decimal
+        ) {
+        
+        let vc = self.setupOffersScreenFor(
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset,
+            currentPrice: currentPrice
+        )
         
         self.navigationController.pushViewController(vc, animated: true)
     }
     
-    private func setupOffersScreenFor(baseAsset: String, quoteAsset: String) -> UIViewController {
-        return UIViewController()
+    private func setupOffersScreenFor(
+        baseAsset: String,
+        quoteAsset: String,
+        currentPrice: Decimal
+        ) -> UIViewController {
+        
+        let vc = TradeOffers.ViewController()
+        
+        let assetPair = TradeOffers.Model.AssetPair(
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset,
+            currentPrice: currentPrice
+        )
+        let sceneModel = TradeOffers.Model.SceneModel(assetPair: assetPair)
+        
+        let amountFormatter = TradeOffers.AmountFormatter()
+        
+        let dateFormatter = TradeOffers.TradeDateFormatter()
+        
+        let chartsFetcher = TradeOffers.ChartsFetcher(
+            chartsApi: self.flowControllerStack.api.chartsApi
+        )
+        
+        let offersFetcher = TradeOffers.OffersFetcher(
+            orderBookApi: self.flowControllerStack.api.orderBookApi
+        )
+        
+        let routing = TradeOffers.Routing(
+            onSelectPendingOffers: <#T##() -> Void#>,
+            onDidSelectOffer: <#T##(TradeOffers.Model.Amount, TradeOffers.Model.Amount) -> Void#>,
+            onDidSelectNewOffer: <#T##(String, String) -> Void#>,
+            onShowError: <#T##(String) -> Void#>,
+            onShowProgress: <#T##() -> Void#>,
+            onHideProgress: <#T##() -> Void#>
+        )
+        
+        TradeOffers.Configurator.configure(
+            viewController: vc,
+            sceneModel: sceneModel,
+            amountFormatter: amountFormatter,
+            dateFormatter: dateFormatter,
+            chartsFetcher: chartsFetcher,
+            offersFetcher: offersFetcher,
+            routing: routing
+        )
+        
+        return vc
     }
     
     private func showCreateOffer(

@@ -188,6 +188,15 @@ extension RegisterScene.Event {
         struct Request {
             let fieldPurpose: Model.Field.FieldPurpose
             let text: String?
+            
+            public init(
+                fieldPurpose: Model.Field.FieldPurpose,
+                text: String?
+                ) {
+                
+                self.fieldPurpose = fieldPurpose
+                self.text = text
+            }
         }
         typealias Response = ViewModel
         struct ViewModel {

@@ -74,6 +74,7 @@ extension TradesList.Model {
         public let subTitle: String
         public let baseAsset: String
         public let quoteAsset: String
+        public let currentPrice: Decimal
         
         public init(
             logoLetter: String,
@@ -81,7 +82,8 @@ extension TradesList.Model {
             title: NSAttributedString,
             subTitle: String,
             baseAsset: String,
-            quoteAsset: String
+            quoteAsset: String,
+            currentPrice: Decimal
             ) {
             
             self.logoLetter = logoLetter
@@ -90,6 +92,7 @@ extension TradesList.Model {
             self.subTitle = subTitle
             self.baseAsset = baseAsset
             self.quoteAsset = quoteAsset
+            self.currentPrice = currentPrice
         }
     }
 }

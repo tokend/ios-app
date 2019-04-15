@@ -1,13 +1,14 @@
 import Foundation
 import TokenDSDK
 
-extension Trade {
-    class OffersFetcher {
+extension TradeOffers {
+    
+    public class OffersFetcher {
         
         private let orderBookApi: TokenDSDK.OrderBookApi
         private var cancelables: [Cancelable] = []
         
-        init(
+        public init(
             orderBookApi: TokenDSDK.OrderBookApi
             ) {
             
@@ -16,12 +17,13 @@ extension Trade {
     }
 }
 
-extension Trade.OffersFetcher: Trade.OffersFetcherProtocol {
-    func getOffers(
+extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
+    
+    public func getOffers(
         forBuy: Bool,
         base: String,
         quote: String,
-        completion: @escaping (TradeOffersFetchResult) -> Void
+        completion: @escaping (OffersFetchResult) -> Void
         ) {
         
         let parameters = OrderBookRequestParameters(
@@ -36,7 +38,7 @@ extension Trade.OffersFetcher: Trade.OffersFetcherProtocol {
                 switch result {
                     
                 case .success(let offersResponse):
-                    let offers = offersResponse.map({ (offer) -> Trade.Model.Offer in
+                    let offers = offersResponse.map({ (offer) -> TradeOffers.Model.Offer in
                         return offer.offer
                     })
                     completion(.succeeded(offers))
@@ -49,7 +51,7 @@ extension Trade.OffersFetcher: Trade.OffersFetcherProtocol {
         self.cancelables.append(token)
     }
     
-    func cancelRequests() {
+    public func cancelRequests() {
         for token in self.cancelables {
             token.cancel()
         }
@@ -57,7 +59,7 @@ extension Trade.OffersFetcher: Trade.OffersFetcherProtocol {
 }
 
 extension OrderBookResponse {
-    fileprivate typealias Model = Trade.Model
+    fileprivate typealias Model = TradeOffers.Model
     fileprivate typealias Amount = Model.Amount
     fileprivate typealias Offer = Model.Offer
     
@@ -71,7 +73,7 @@ extension OrderBookResponse {
             currency: self.quoteAssetCode
         )
         
-        return Trade.Model.Offer(
+        return Model.Offer(
             amount: amount,
             price: price,
             isBuy: self.isBuy

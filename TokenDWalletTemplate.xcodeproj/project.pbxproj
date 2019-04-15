@@ -138,6 +138,21 @@
 		7F749607225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749606225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift */; };
 		7F74960A225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749609225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift */; };
 		7F74960C225F91440065EE8E /* TradesListAssetColoringProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74960B225F91440065EE8E /* TradesListAssetColoringProvider.swift */; };
+		7F749616226081E80065EE8E /* TradeOffersPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749610226081E80065EE8E /* TradeOffersPresenter.swift */; };
+		7F749617226081E80065EE8E /* TradeOffersRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749611226081E80065EE8E /* TradeOffersRouting.swift */; };
+		7F749618226081E80065EE8E /* TradeOffersModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749612226081E80065EE8E /* TradeOffersModels.swift */; };
+		7F749619226081E80065EE8E /* TradeOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749613226081E80065EE8E /* TradeOffersViewController.swift */; };
+		7F74961A226081E80065EE8E /* TradeOffersInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749614226081E80065EE8E /* TradeOffersInteractor.swift */; };
+		7F74961B226081E80065EE8E /* TradeOffersConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F749615226081E80065EE8E /* TradeOffersConfigurator.swift */; };
+		7F74961F2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74961E2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift */; };
+		7F7496272260A1D40065EE8E /* TradeOffersChartsFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496202260A1D40065EE8E /* TradeOffersChartsFetcherProtocol.swift */; };
+		7F7496282260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496212260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift */; };
+		7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496222260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift */; };
+		7F74962A2260A1D40065EE8E /* TradeOffersChartsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496232260A1D40065EE8E /* TradeOffersChartsFetcher.swift */; };
+		7F74962B2260A1D40065EE8E /* TradeOffersOffersFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496242260A1D40065EE8E /* TradeOffersOffersFetcher.swift */; };
+		7F74962C2260A1D40065EE8E /* TradeOffersDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496252260A1D40065EE8E /* TradeOffersDateFormatter.swift */; };
+		7F74962D2260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */; };
+		7F7496402260B5D60065EE8E /* TradeOffersTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74963F2260B5D60065EE8E /* TradeOffersTitleView.swift */; };
 		7F8B55B1212ED4B8003AE5D7 /* TimerApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8B55B0212ED4B8003AE5D7 /* TimerApplication.swift */; };
 		7F8B55B3212EDAE4003AE5D7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8B55B2212EDAE4003AE5D7 /* main.swift */; };
 		7F967FA02125985A005527EA /* UpdatePasswordModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967F952125985A005527EA /* UpdatePasswordModels.swift */; };
@@ -619,6 +634,21 @@
 		7F749606225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradesListAssetPairsFetcher.swift; sourceTree = "<group>"; };
 		7F749609225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListAmountFormatterProtocol.swift; sourceTree = "<group>"; };
 		7F74960B225F91440065EE8E /* TradesListAssetColoringProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListAssetColoringProvider.swift; sourceTree = "<group>"; };
+		7F749610226081E80065EE8E /* TradeOffersPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersPresenter.swift; sourceTree = "<group>"; };
+		7F749611226081E80065EE8E /* TradeOffersRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersRouting.swift; sourceTree = "<group>"; };
+		7F749612226081E80065EE8E /* TradeOffersModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersModels.swift; sourceTree = "<group>"; };
+		7F749613226081E80065EE8E /* TradeOffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersViewController.swift; sourceTree = "<group>"; };
+		7F749614226081E80065EE8E /* TradeOffersInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersInteractor.swift; sourceTree = "<group>"; };
+		7F749615226081E80065EE8E /* TradeOffersConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersConfigurator.swift; sourceTree = "<group>"; };
+		7F74961E2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersAmountFormatterProtocol.swift; sourceTree = "<group>"; };
+		7F7496202260A1D40065EE8E /* TradeOffersChartsFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersChartsFetcherProtocol.swift; sourceTree = "<group>"; };
+		7F7496212260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersChartCardValueFormatter.swift; sourceTree = "<group>"; };
+		7F7496222260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersDateFormatterProtocol.swift; sourceTree = "<group>"; };
+		7F7496232260A1D40065EE8E /* TradeOffersChartsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersChartsFetcher.swift; sourceTree = "<group>"; };
+		7F7496242260A1D40065EE8E /* TradeOffersOffersFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersOffersFetcher.swift; sourceTree = "<group>"; };
+		7F7496252260A1D40065EE8E /* TradeOffersDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersDateFormatter.swift; sourceTree = "<group>"; };
+		7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersOffersFetcherProtocol.swift; sourceTree = "<group>"; };
+		7F74963F2260B5D60065EE8E /* TradeOffersTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersTitleView.swift; sourceTree = "<group>"; };
 		7F8B55B0212ED4B8003AE5D7 /* TimerApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerApplication.swift; sourceTree = "<group>"; };
 		7F8B55B2212EDAE4003AE5D7 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7F8B55B4212F05B9003AE5D7 /* TokenDWalletTemplate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TokenDWalletTemplate.entitlements; sourceTree = "<group>"; };
@@ -1386,6 +1416,53 @@
 			path = Workers;
 			sourceTree = "<group>";
 		};
+		7F74960F226081C20065EE8E /* TradeOffers */ = {
+			isa = PBXGroup;
+			children = (
+				7F749615226081E80065EE8E /* TradeOffersConfigurator.swift */,
+				7F749614226081E80065EE8E /* TradeOffersInteractor.swift */,
+				7F749612226081E80065EE8E /* TradeOffersModels.swift */,
+				7F749610226081E80065EE8E /* TradeOffersPresenter.swift */,
+				7F749611226081E80065EE8E /* TradeOffersRouting.swift */,
+				7F749613226081E80065EE8E /* TradeOffersViewController.swift */,
+				7F74961C2260A08C0065EE8E /* Views */,
+				7F74961D2260A0930065EE8E /* Workers */,
+			);
+			path = TradeOffers;
+			sourceTree = "<group>";
+		};
+		7F74961C2260A08C0065EE8E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7F74963F2260B5D60065EE8E /* TradeOffersTitleView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7F74961D2260A0930065EE8E /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				7F74961E2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift */,
+				7F7496212260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift */,
+				7F7496232260A1D40065EE8E /* TradeOffersChartsFetcher.swift */,
+				7F7496202260A1D40065EE8E /* TradeOffersChartsFetcherProtocol.swift */,
+				7F7496252260A1D40065EE8E /* TradeOffersDateFormatter.swift */,
+				7F7496222260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift */,
+				7F7496242260A1D40065EE8E /* TradeOffersOffersFetcher.swift */,
+				7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		7F74963E2260A8E00065EE8E /* TradeViews */ = {
+			isa = PBXGroup;
+			children = (
+				E92F1BF12139B77C00D4695E /* Chart */,
+				E92F1BF42139B77C00D4695E /* OrderBook */,
+			);
+			path = TradeViews;
+			sourceTree = "<group>";
+		};
 		7F8B55AF212ED490003AE5D7 /* TimerApplication */ = {
 			isa = PBXGroup;
 			children = (
@@ -1786,6 +1863,7 @@
 				7FF6760220BD9B130074E9A8 /* SignIn */,
 				E911320620C6D0A300A8AC4D /* TokenDetails */,
 				E92F1BDD2139B77C00D4695E /* Trade */,
+				7F74960F226081C20065EE8E /* TradeOffers */,
 				7F7495ED225CF9740065EE8E /* TradesList */,
 				71136AF92134433E00D83DD3 /* TransactionDetails */,
 				E93F074820D7C866000C0991 /* TransactionsList */,
@@ -2171,7 +2249,6 @@
 				E92F1BDF2139B77C00D4695E /* TradePresenter.swift */,
 				E92F1BEF2139B77C00D4695E /* TradeRouting.swift */,
 				E92F1BDE2139B77C00D4695E /* TradeViewController.swift */,
-				E92F1BF02139B77C00D4695E /* Views */,
 				E92F1BE22139B77C00D4695E /* Workers */,
 			);
 			path = Trade;
@@ -2192,15 +2269,6 @@
 				7FC88B7E2162555A00BED021 /* TradeChartCardValueFormatter.swift */,
 			);
 			path = Workers;
-			sourceTree = "<group>";
-		};
-		E92F1BF02139B77C00D4695E /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				E92F1BF12139B77C00D4695E /* Chart */,
-				E92F1BF42139B77C00D4695E /* OrderBook */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		E92F1BF12139B77C00D4695E /* Chart */ = {
@@ -2330,13 +2398,14 @@
 		E980D86820D12F9D00C53841 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7F7495FA225E018F0065EE8E /* DynamicTableView */,
 				E980D86920D12FB100C53841 /* HorizontalPicker.swift */,
 				7FABEA832100D44E0005E751 /* ScrollableStackView.swift */,
 				7FEB45C320DD430A001CA31C /* SharedViewsBuilder.swift */,
 				E9EEA29320FF676300419ABA /* TableViewStickyHeader.swift */,
 				7F6A845E2105F92100B7FE6B /* TextFieldView.swift */,
 				710E86122105ECAD007204D4 /* BXFStaticTableView */,
+				7F7495FA225E018F0065EE8E /* DynamicTableView */,
+				7F74963E2260A8E00065EE8E /* TradeViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2671,9 +2740,11 @@
 				71C74EBD2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift in Sources */,
 				713363262122F98000B000C9 /* WithdrawConfirmationSectionsProvider.swift in Sources */,
 				E9A5CBA921188004009112CA /* TokenDWallet.PublicKey+base32EncodedString.swift in Sources */,
+				7F74962D2260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift in Sources */,
 				DB1AFBAC21C9338300D87D5D /* AuthenticatorAuthModels.swift in Sources */,
 				7F749607225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift in Sources */,
 				7F967FA62125985A005527EA /* UpdatePasswordSubmitWorkerProtocol.swift in Sources */,
+				7F7496272260A1D40065EE8E /* TradeOffersChartsFetcherProtocol.swift in Sources */,
 				7F967FA52125985A005527EA /* UpdatePasswordChangePasswordWorker.swift in Sources */,
 				7F967FAE2125B18A005527EA /* UpdatePasswordRecoverWalletWorker.swift in Sources */,
 				E92F1C122139B7DA00D4695E /* CreateOfferModels.swift in Sources */,
@@ -2703,6 +2774,7 @@
 				7187EBE42146994E0035D6D3 /* SalesFlowController.swift in Sources */,
 				E91131EA20C532AC00A8AC4D /* ExploreTokensConfigurator.swift in Sources */,
 				7F749605225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift in Sources */,
+				7F7496282260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift in Sources */,
 				E92F1BFD2139B77D00D4695E /* TradeModels.swift in Sources */,
 				E9908EC621079F4A00A0EA1C /* APIConfigurationModel.swift in Sources */,
 				7F967FDB212DB684005527EA /* BiometricsAuthInteractor.swift in Sources */,
@@ -2734,6 +2806,7 @@
 				7FEC94992148170500F41EE6 /* SaleDetailsInvestingCell.swift in Sources */,
 				710E86342105FA95007204D4 /* BXFGroupedHeaderFooterLabel.swift in Sources */,
 				E9A5CBC42119A64C009112CA /* PendingOffersRepo.swift in Sources */,
+				7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */,
 				DB1AFBAE21C9338300D87D5D /* AuthenticatorAuthInteractor.swift in Sources */,
 				E9A5CBC22119A594009112CA /* TransactionsListScenePendingOffersFetcher.swift in Sources */,
 				7F7495FC225E01D90065EE8E /* DynamicTableView.swift in Sources */,
@@ -2788,6 +2861,7 @@
 				E92F1C132139B7F100D4695E /* VerifyEmailWorker.swift in Sources */,
 				7FE9FF4E21400E27006ACFEA /* AppInfoUtils.swift in Sources */,
 				E911321A20C7009E00A8AC4D /* TokenDetailsFetcher.swift in Sources */,
+				7F749619226081E80065EE8E /* TradeOffersViewController.swift in Sources */,
 				71136B172134433F00D83DD3 /* TransactionDetailsSectionsProviderProtocol.swift in Sources */,
 				E9908EEB210F220200A0EA1C /* ManagersController.swift in Sources */,
 				E9063E8C20F640E600A5B343 /* UIViewController+ChildViewController.swift in Sources */,
@@ -2803,6 +2877,7 @@
 				713D684920FF9552009FEBA3 /* SettingsInteractor.swift in Sources */,
 				7F74960A225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift in Sources */,
 				71136B0B2134433F00D83DD3 /* TransactionDetailsInteractor.swift in Sources */,
+				7F749617226081E80065EE8E /* TradeOffersRouting.swift in Sources */,
 				E980D86C20D1323000C53841 /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				E9063E8A20F63FEC00A5B343 /* UIColor+Interpolation.swift in Sources */,
 				E9BA0BF720C8189000CE5708 /* NumberFormatter+Decimal.swift in Sources */,
@@ -2810,6 +2885,7 @@
 				7F2A7E1E20F60CDE007F8CF8 /* SignedInFlowController.swift in Sources */,
 				E980D87220D1785B00C53841 /* Array+IndexInBounds.swift in Sources */,
 				713D684F20FF9552009FEBA3 /* SettingsPushCell.swift in Sources */,
+				7F74962C2260A1D40065EE8E /* TradeOffersDateFormatter.swift in Sources */,
 				7FEC94902148170500F41EE6 /* SaleDetailsModels.swift in Sources */,
 				E92F1C022139B77D00D4695E /* TradeChartsFetcher.swift in Sources */,
 				7F6A84802109D82600B7FE6B /* SettingsFlowController.swift in Sources */,
@@ -2835,6 +2911,8 @@
 				7F2A7E2920F62B7D007F8CF8 /* SideMenuRouting.swift in Sources */,
 				710E86052105E1AB007204D4 /* ReceiveAddressViewController.swift in Sources */,
 				7FC88B85216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift in Sources */,
+				7F74961A226081E80065EE8E /* TradeOffersInteractor.swift in Sources */,
+				7F74962A2260A1D40065EE8E /* TradeOffersChartsFetcher.swift in Sources */,
 				E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */,
 				7FABEA6220FD088F0005E751 /* CreateOfferInteractor.swift in Sources */,
 				DB1AFBAB21C9338300D87D5D /* AuthenticatorAuthRouting.swift in Sources */,
@@ -2847,6 +2925,7 @@
 				E9908EE8210F176400A0EA1C /* TransactionSender.swift in Sources */,
 				DB5A3BC121C1554600520604 /* FeesViewController.swift in Sources */,
 				DB10444B2167B4E000FD43BC /* SaleEmptyView.swift in Sources */,
+				7F74962B2260A1D40065EE8E /* TradeOffersOffersFetcher.swift in Sources */,
 				E91131E920C532AC00A8AC4D /* ExploreTokensInteractor.swift in Sources */,
 				7F6A8461210630E700B7FE6B /* SendPaymentRecipientAddressResolver.swift in Sources */,
 				E9A5CC00211DE1D3009112CA /* BalancesFetcher.swift in Sources */,
@@ -2962,6 +3041,7 @@
 				DBA1A76E2252562800A52775 /* SaleDetailsCancellationWorker.swift in Sources */,
 				E9908ECC2108879B00A0EA1C /* TokenDetailsDocumentURLBuilderProtocol.swift in Sources */,
 				E92F1C092139B77D00D4695E /* TradeInteractor.swift in Sources */,
+				7F7496402260B5D60065EE8E /* TradeOffersTitleView.swift in Sources */,
 				E9063E9920F669D000A5B343 /* BalanceHeaderWithPickerConfigurator.swift in Sources */,
 				71136B132134433F00D83DD3 /* TransactionDetailsDateFormatter.swift in Sources */,
 				713D684A20FF9552009FEBA3 /* SettingsRouting.swift in Sources */,
@@ -2981,6 +3061,7 @@
 				E9A5CBF4211DBCCB009112CA /* DashboardPaymentsPlugInViewController.swift in Sources */,
 				710E86322105FA95007204D4 /* BXFLabelWithInsets.swift in Sources */,
 				E9908EE6210F0BEC00A0EA1C /* ExternalSystemBalancesManager.swift in Sources */,
+				7F749616226081E80065EE8E /* TradeOffersPresenter.swift in Sources */,
 				E980D86A20D12FB100C53841 /* HorizontalPicker.swift in Sources */,
 				7F6A848D210A00D700B7FE6B /* ConfirmationSceneConfigurator.swift in Sources */,
 				DB0E51D12164E99F00DDA88C /* SaleInfoViewController.swift in Sources */,
@@ -3006,6 +3087,7 @@
 				71C9F89521074F9900A59207 /* ReceiveAddressManager.swift in Sources */,
 				7FB9E47F20C06D7C005BFE0E /* RegisterSceneRegisterWorker.swift in Sources */,
 				7FEB45BC20DD4143001CA31C /* VerifyEmailPresenter.swift in Sources */,
+				7F74961B226081E80065EE8E /* TradeOffersConfigurator.swift in Sources */,
 				DB4512AB216E34FD00922DA7 /* TransactionDetailsInvestmentSectionsProvider.swift in Sources */,
 				E9A5CBF3211DBCCB009112CA /* DashboardPaymentsPlugInModels.swift in Sources */,
 				DB71308921CAA71E00234C12 /* AuthRequestBuilder.swift in Sources */,
@@ -3054,6 +3136,7 @@
 				DB6CFC6B21C410CD00160448 /* TitleValueView.swift in Sources */,
 				E9A5CBE8211C8D36009112CA /* DashboardPlugInsProvider.swift in Sources */,
 				DB0E51D72164E99F00DDA88C /* SaleInfoTitleTextView.swift in Sources */,
+				7F74961F2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift in Sources */,
 				7FF6761A20BDA0910074E9A8 /* RegisterSceneConfigurator.swift in Sources */,
 				710E860E2105E1AB007204D4 /* ReceiveAddressShareUtilProtocol.swift in Sources */,
 				710E86242105ECAD007204D4 /* BXFStaticTableViewSectionCell.swift in Sources */,
@@ -3066,6 +3149,7 @@
 				7F2A7E2B20F62B7D007F8CF8 /* SideMenuViewController.swift in Sources */,
 				710E86282105ECAD007204D4 /* BXFStaticTableViewButtonCellModel.swift in Sources */,
 				7FA0115121C9651F00CA5586 /* MarkdownViewerInteractor.swift in Sources */,
+				7F749618226081E80065EE8E /* TradeOffersModels.swift in Sources */,
 				E99D213720CB144E005023D7 /* AssetsRepo.swift in Sources */,
 				DB990C3221E4E86600D041BE /* RegisterSceneSignUpBuilderProtocol.swift in Sources */,
 				7FA02BD521590E16005C1BE4 /* SalesInvestedAmountFormatter.swift in Sources */,

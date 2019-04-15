@@ -58,6 +58,7 @@
 "change_password" = "Change Password";
 "charged" = "Charged";
 "charged_from_lock" = "Charged from lock";
+"chart_cap" = "CHART";
 "check_sale_state" = "Check sale state";
 "choose_email" = "Choose email";
 "close_time" = "Close time";
@@ -250,6 +251,7 @@
 "not_enough_money_on_balance" = "Not enough money on balance $(asset)";
 "not_enough_money_on_balance_replace_asset" = "asset";
 "offer" = "Offer";
+"offers_cap" = "OFFERS";
 "old_password" = "Old Password";
 "old_password_lowercased" = "old password";
 "one_equals" = "1 $(base_asset) = $(price) $(quote_asset)";
@@ -265,6 +267,7 @@
 "opportunities" = "Opportunities";
 "opportunity_cancelation" = "Opportunity cancellation";
 "opportunity_details" = "Opportunity details";
+"order_book_cap" = "ORDER BOOK";
 "order_price_cannot_be_less_than_or_equal_to_0" = "Order price cannot be less than or equal to 0";
 "outgoing" = "Outgoing";
 "overview" = "Overview";
@@ -400,6 +403,7 @@
 "total_colon" = "Total:";
 "trade" = "Trade";
 "trades" = "Trades";
+"trades_cap" = "TRADES";
 "transaction_details" = "Transaction details";
 "twofactor_authentication" = "Two-factor authentication";
 "twofactor_authentication_failed" = "Two-factor authentication failed";

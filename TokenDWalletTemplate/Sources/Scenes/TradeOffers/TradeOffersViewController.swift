@@ -1,0 +1,271 @@
+import UIKit
+import Charts
+
+public protocol TradeOffersDisplayLogic: class {
+    typealias Event = TradeOffers.Event
+    
+    func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel)
+    func displayScreenTitleUpdated(viewModel: Event.ScreenTitleUpdated.ViewModel)
+    func displayContentTabSelected(viewModel: Event.ContentTabSelected.ViewModel)
+    func displayPeriodsDidChange(viewModel: Event.PeriodsDidChange.ViewModel)
+    func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel)
+    func displaySellOffersDidUpdate(viewModel: Event.SellOffersDidUpdate.ViewModel)
+    func displayBuyOffersDidUpdate(viewModel: Event.BuyOffersDidUpdate.ViewModel)
+    func displayLoading(viewModel: Event.Loading.ViewModel)
+    func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel)
+    func displayError(viewModel: Event.Error.ViewModel)
+}
+
+extension TradeOffers {
+    public typealias DisplayLogic = TradeOffersDisplayLogic
+    
+    @objc(TradeOffersViewController)
+    public class ViewController: UIViewController {
+        
+        public typealias Event = TradeOffers.Event
+        public typealias Model = TradeOffers.Model
+        
+        // MARK: - Private
+        
+        private let picker: HorizontalPicker = HorizontalPicker(frame: CGRect.zero)
+        private let containerView: UIView = UIView()
+        
+        private let chartCardValueFormatter: ChartCardValueFormatter = ChartCardValueFormatter()
+        
+        private lazy var orderBookView: OrderBookCard = {
+            let view = OrderBookCard()
+            self.layoutContentView(view)
+            return view
+        }()
+        
+        private lazy var chartView: TradeChartCard = {
+            let view = TradeChartCard()
+            self.layoutContentView(view)
+            return view
+        }()
+        
+        private lazy var tradesView: UIView = {
+            let view = TradeChartCard()
+            self.layoutContentView(view)
+            return view
+        }()
+        
+        // MARK: -
+        
+        deinit {
+            self.onDeinit?(self)
+        }
+        
+        // MARK: - Injections
+        
+        private var interactorDispatch: InteractorDispatch?
+        private var routing: Routing?
+        private var onDeinit: DeinitCompletion = nil
+        
+        public func inject(
+            interactorDispatch: InteractorDispatch?,
+            routing: Routing?,
+            onDeinit: DeinitCompletion = nil
+            ) {
+            
+            self.interactorDispatch = interactorDispatch
+            self.routing = routing
+            self.onDeinit = onDeinit
+        }
+        
+        // MARK: - Overridden
+        
+        public override func viewDidLoad() {
+            super.viewDidLoad()
+            
+            self.setupPicker()
+            self.setupContainerView()
+            self.setupLayout()
+            
+            let request = Event.ViewDidLoad.Request()
+            self.interactorDispatch?.sendRequest { businessLogic in
+                businessLogic.onViewDidLoad(request: request)
+            }
+        }
+        
+        // MARK: - Private
+        
+        private func setupPicker() {
+            self.picker.backgroundColor = Theme.Colors.mainColor
+            self.picker.tintColor = Theme.Colors.textOnMainColor
+        }
+        
+        private func setupContainerView() {
+            self.containerView.backgroundColor = Theme.Colors.containerBackgroundColor
+        }
+        
+        private func layoutContentView(_ contentView: UIView) {
+            contentView.isHidden = true
+            self.containerView.addSubview(contentView)
+            self.containerView.sendSubviewToBack(contentView)
+            contentView.snp.makeConstraints({ (make) in
+                make.edges.equalToSuperview()
+            })
+        }
+        
+        private func setupLayout() {
+            self.view.addSubview(self.picker)
+            self.view.addSubview(self.containerView)
+            
+            self.picker.snp.makeConstraints { (make) in
+                make.leading.trailing.top.equalToSuperview()
+            }
+            
+            self.containerView.snp.makeConstraints { (make) in
+                make.top.equalTo(self.picker.snp.bottom)
+                make.leading.trailing.bottom.equalToSuperview()
+            }
+        }
+        
+        private func setContentTab(_ tab: Model.ContentTab) {
+            var hideOrderBookView = true
+            var hideChartView = true
+            var hideTradesView = true
+            
+            switch tab {
+            case .orderBook:
+                hideOrderBookView = false
+            case .chart:
+                hideChartView = false
+            case .trades:
+                hideTradesView = false
+            }
+            
+            self.orderBookView.isHidden = hideOrderBookView
+            self.chartView.isHidden = hideChartView
+            self.tradesView.isHidden = hideTradesView
+        }
+        
+        private func setPeriods(_ periods: [Model.PeriodViewModel]) {
+            self.chartView.periods = periods.map({ [weak self] (period) -> HorizontalPicker.Item in
+                return HorizontalPicker.Item(
+                    title: period.title,
+                    enabled: period.isEnabled,
+                    onSelect: { [weak self] in
+                        guard let period = period.period else { return }
+                        let request = Event.DidSelectPeriod.Request(
+                            period: period
+                        )
+                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                            businessLogic.onDidSelectPeriod(request: request)
+                        })
+                })
+            })
+        }
+        
+        private func setSelectedPeriodIndex(_ index: Int?) {
+            if let index = index {
+                self.chartView.selectPeriodAtIndex(index)
+            }
+        }
+        
+        private func setupCells<CellType: OrderBookTableViewCell>(
+            _ cells: [OrderBookTableViewCellModel<CellType>]
+            ) -> [OrderBookTableViewCellModel<CellType>] {
+            
+            var cells = cells
+            for cellIndex in 0..<cells.count {
+                let offer = cells[cellIndex].offer
+                cells[cellIndex].onClick = { [weak self] (_) in
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        let request = Event.CreateOffer.Request(
+                            amount: offer.amount.amount,
+                            price: offer.price.amount
+                        )
+                        businessLogic.onCreateOffer(request: request)
+                    })
+                }
+            }
+            return cells
+        }
+        
+        private func setAxisFormatters(axisFormatters: Model.AxisFormatters) {
+            self.chartCardValueFormatter.string = { (value, axis) in
+                if axis is XAxis {
+                    return axisFormatters.xAxisFormatter(value)
+                } else if axis is YAxis {
+                    return axisFormatters.yAxisFormatter(value)
+                }
+                return ""
+            }
+        }
+    }
+}
+
+extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
+    public func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel) {
+        self.picker.items = viewModel.tabs.map({ (title, tab) -> HorizontalPicker.Item in
+            return HorizontalPicker.Item(
+                title: title,
+                enabled: true,
+                onSelect: { [weak self] in
+                    let request = Event.ContentTabSelected.Request(selectedTab: tab)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onContentTabSelected(request: request)
+                    })
+            })
+        })
+        self.picker.setSelectedItemAtIndex(viewModel.selectedIndex, animated: false)
+    }
+    
+    public func displayScreenTitleUpdated(viewModel: Event.ScreenTitleUpdated.ViewModel) {
+        let titleView = TradeOffers.TitleView()
+        titleView.title = viewModel.screenTitle
+        titleView.subTitle = viewModel.screenSubTitle
+        self.navigationItem.titleView = titleView
+    }
+    
+    public func displayContentTabSelected(viewModel: Event.ContentTabSelected.ViewModel) {
+        self.setContentTab(viewModel.selectedTab)
+    }
+    
+    public func displayPeriodsDidChange(viewModel: Event.PeriodsDidChange.ViewModel) {
+        self.setPeriods(viewModel.periods)
+        self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)
+    }
+    
+    public func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel) {
+        self.chartView.chartEntries = viewModel.chartEntries
+    }
+    
+    public func displaySellOffersDidUpdate(viewModel: Event.SellOffersDidUpdate.ViewModel) {
+        switch viewModel {
+        case .empty:
+            self.orderBookView.showEmptySellTable(Localized(.no_asks))
+            self.orderBookView.sellCells = []
+        case .cells(let cells):
+            self.orderBookView.hideEmptySellTable()
+            self.orderBookView.sellCells = self.setupCells(cells)
+        }
+    }
+    
+    public func displayBuyOffersDidUpdate(viewModel: Event.BuyOffersDidUpdate.ViewModel) {
+        switch viewModel {
+        case .empty:
+            self.orderBookView.showEmptyBuyTable(Localized(.no_bids))
+            self.orderBookView.buyCells = []
+        case .cells(let cells):
+            self.orderBookView.hideEmptyBuyTable()
+            self.orderBookView.buyCells = self.setupCells(cells)
+        }
+    }
+    
+    public func displayLoading(viewModel: Event.Loading.ViewModel) {
+        if let show = viewModel.showForChart { self.chartView.showChartLoading(show) }
+        if let show = viewModel.showForBuyTable { self.orderBookView.showBuyTableLoading(show) }
+        if let show = viewModel.showForSellTable { self.orderBookView.showSellTableLoading(show) }
+    }
+    
+    public func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel) {
+        self.setAxisFormatters(axisFormatters: viewModel.axisFormatters)
+    }
+    
+    public func displayError(viewModel: Event.Error.ViewModel) {
+        self.routing?.onShowError(viewModel.message)
+    }
+}

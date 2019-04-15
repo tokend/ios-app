@@ -61,6 +61,7 @@ enum LocKey: String {
     case change_password
     case charged
     case charged_from_lock
+    case chart_cap
     case check_sale_state
     case choose_email
     case close_time
@@ -253,6 +254,7 @@ enum LocKey: String {
     case not_enough_money_on_balance
     case not_enough_money_on_balance_replace_asset
     case offer
+    case offers_cap
     case old_password
     case old_password_lowercased
     case one_equals
@@ -268,6 +270,7 @@ enum LocKey: String {
     case opportunities
     case opportunity_cancelation
     case opportunity_details
+    case order_book_cap
     case order_price_cannot_be_less_than_or_equal_to_0
     case outgoing
     case overview
@@ -403,6 +406,7 @@ enum LocKey: String {
     case total_colon
     case trade
     case trades
+    case trades_cap
     case transaction_details
     case twofactor_authentication
     case twofactor_authentication_failed

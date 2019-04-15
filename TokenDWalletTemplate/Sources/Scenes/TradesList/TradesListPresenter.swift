@@ -70,7 +70,8 @@ extension TradesList {
                     title: title,
                     subTitle: subTitle,
                     baseAsset: assetPair.baseAsset,
-                    quoteAsset: assetPair.quoteAsset
+                    quoteAsset: assetPair.quoteAsset,
+                    currentPrice: assetPair.currentPrice
                 )
             })
         }

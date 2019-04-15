@@ -320,7 +320,10 @@ extension Trade.ViewController: Trade.DisplayLogic {
             let offer = cells[cellIndex].offer
             cells[cellIndex].onClick = { [weak self] (_) in
                 self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    let request = Trade.Event.CreateOffer.Request(amount: offer.amount, price: offer.price)
+                    let request = Trade.Event.CreateOffer.Request(
+                        amount: offer.amount.amount,
+                        price: offer.price.amount
+                    )
                     businessLogic.onCreateOffer(request: request)
                 })
             }
@@ -348,5 +351,15 @@ extension Trade.ViewController: Trade.DisplayLogic {
     
     func displayError(viewModel: Trade.Event.Error.ViewModel) {
         self.routing?.onShowError(viewModel.message)
+    }
+}
+
+extension OrderBookTableViewCellModel.Amount {
+    
+    fileprivate var amount: Trade.Model.Amount {
+        return Trade.Model.Amount(
+            value: self.value,
+            currency: self.currency
+        )
     }
 }
