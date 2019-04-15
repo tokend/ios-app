@@ -137,8 +137,8 @@ extension ExploreTokensScene {
             
             self.emptyLabel.snp.makeConstraints { (make) in
                 make.center.equalToSuperview()
-                make.left.top.greaterThanOrEqualToSuperview().inset(15)
-                make.right.bottom.lessThanOrEqualToSuperview().inset(15)
+                make.leading.top.greaterThanOrEqualToSuperview().inset(15)
+                make.trailing.bottom.lessThanOrEqualToSuperview().inset(15)
             }
             
             self.tableView.snp.makeConstraints { (make) in

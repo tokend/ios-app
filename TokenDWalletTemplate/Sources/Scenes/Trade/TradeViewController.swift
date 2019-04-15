@@ -137,7 +137,7 @@ extension Trade {
             
             self.scrollView.snp.makeConstraints { (make) in
                 make.top.equalTo(self.pairPicker.snp.bottom)
-                make.left.bottom.right.equalToSuperview()
+                make.leading.bottom.trailing.equalToSuperview()
             }
             
             self.fillScrollView(withCards: [self.orderBookCard, self.chartCard])
@@ -150,8 +150,8 @@ extension Trade {
                 self.scrollView.addSubview(card)
                 
                 card.snp.makeConstraints { (make) in
-                    make.left.equalToSuperview().inset(self.sideMargin)
-                    make.right.equalToSuperview().inset(self.sideMargin)
+                    make.leading.equalToSuperview().inset(self.sideMargin)
+                    make.trailing.equalToSuperview().inset(self.sideMargin)
                     make.width.equalTo(self.scrollView.snp.width).inset(self.sideMargin)
                     
                     if let previous = previousCard {

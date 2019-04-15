@@ -8,12 +8,14 @@ public protocol TradeOffersPresentationLogic {
     func presentScreenTitleUpdated(response: Event.ScreenTitleUpdated.Response)
     func presentContentTabSelected(response: Event.ContentTabSelected.Response)
     func presentPeriodsDidChange(response: Event.PeriodsDidChange.Response)
+    func presentPairPriceDidChange(response: Event.PairPriceDidChange.Response)
     func presentChartDidUpdate(response: Event.ChartDidUpdate.Response)
     func presentSellOffersDidUpdate(response: Event.SellOffersDidUpdate.Response)
     func presentBuyOffersDidUpdate(response: Event.BuyOffersDidUpdate.Response)
     func presentLoading(response: Event.Loading.Response)
     func presentChartFormatterDidChange(response: Event.ChartFormatterDidChange.Response)
     func presentError(response: Event.Error.Response)
+    func presentCreateOffer(response: Event.CreateOffer.Response)
 }
 
 extension TradeOffers {
@@ -207,6 +209,37 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         }
     }
     
+    public func presentPairPriceDidChange(response: Event.PairPriceDidChange.Response) {
+        let viewModel: Event.PairPriceDidChange.ViewModel
+        if let price = response.price,
+            let per = response.per {
+            
+            let priceString = self.amountFormatter.formatToken(price)
+            var perString =  self.amountFormatter.formatToken(per)
+            
+            if let timestamp = response.timestamp {
+                let date = self.dateFormatter.dateToString(timestamp)
+                perString += Localized(
+                    .at_date,
+                    replace: [
+                        .at_date_replace_date: date
+                    ]
+                )
+            }
+            
+            viewModel = Event.PairPriceDidChange.ViewModel(
+                price: priceString,
+                per: perString
+            )
+        } else {
+            viewModel = Event.PairPriceDidChange.ViewModel(price: nil, per: nil)
+        }
+        
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayPairPriceDidChange(viewModel: viewModel)
+        }
+    }
+    
     public func presentChartDidUpdate(response: Event.ChartDidUpdate.Response) {
         let chartEntries = response.charts?.map({ (chart) -> ChartDataEntry in
             ChartDataEntry(
@@ -279,6 +312,18 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         let viewModel = Event.Error.ViewModel(message: response.error.localizedDescription)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayError(viewModel: viewModel)
+        }
+    }
+    
+    public func presentCreateOffer(response: Event.CreateOffer.Response) {
+        let viewModel = Event.CreateOffer.ViewModel(
+            amount: response.amount,
+            price: response.price,
+            baseAsset: response.baseAsset,
+            quoteAsset: response.quoteAsset
+        )
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayCreateOffer(viewModel: viewModel)
         }
     }
 }

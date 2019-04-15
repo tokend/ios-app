@@ -211,8 +211,8 @@ extension TransactionsListScene {
             
             self.emptyLabel.snp.makeConstraints { (make) in
                 make.center.equalToSuperview()
-                make.left.top.greaterThanOrEqualToSuperview().inset(15)
-                make.right.bottom.lessThanOrEqualToSuperview().inset(15)
+                make.leading.top.greaterThanOrEqualToSuperview().inset(15)
+                make.trailing.bottom.lessThanOrEqualToSuperview().inset(15)
             }
             
             self.tableView.snp.makeConstraints { (make) in
@@ -221,7 +221,7 @@ extension TransactionsListScene {
             
             self.stickyHeader.snp.makeConstraints { (make) in
                 make.top.equalToSuperview().inset(6)
-                make.left.right.equalToSuperview().inset(8)
+                make.leading.trailing.equalToSuperview().inset(8)
                 make.height.equalTo(32)
             }
         }

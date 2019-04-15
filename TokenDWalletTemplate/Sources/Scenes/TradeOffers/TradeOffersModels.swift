@@ -173,7 +173,7 @@ extension TradeOffers.Event {
     
     public enum ViewDidLoad {
         
-        public struct Request {}
+        public struct Request { public init() {} }
         
         public struct Response {
             
@@ -204,6 +204,11 @@ extension TradeOffers.Event {
                 self.selectedIndex = selectedIndex
             }
         }
+    }
+    
+    public enum ViewWillAppear {
+        
+        public struct Request { public init() {} }
     }
     
     public enum ScreenTitleUpdated {
@@ -265,6 +270,42 @@ extension TradeOffers.Event {
             
             public init(index: Int?) {
                 self.index = index
+            }
+        }
+    }
+    
+    public enum PairPriceDidChange {
+        
+        public struct Response {
+            
+            public let price: Model.Amount?
+            public let per: Model.Amount?
+            public let timestamp: Date?
+            
+            public init(
+                price: Model.Amount?,
+                per: Model.Amount?,
+                timestamp: Date?
+                ) {
+                
+                self.price = price
+                self.per = per
+                self.timestamp = timestamp
+            }
+        }
+        
+        public struct ViewModel {
+            
+            public let price: String?
+            public let per: String?
+            
+            public init(
+                price: String?,
+                per: String?
+                ) {
+                
+                self.price = price
+                self.per = per
             }
         }
     }

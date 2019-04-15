@@ -105,7 +105,7 @@ extension TradesList.Event {
     // MARK: -
     
     public enum ViewDidLoad {
-        public struct Request {}
+        public struct Request { public init() {} }
     }
     
     public enum LoadingStatus {

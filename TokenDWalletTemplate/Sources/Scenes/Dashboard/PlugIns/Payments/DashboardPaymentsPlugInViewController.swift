@@ -158,22 +158,22 @@ extension DashboardPaymentsPlugIn {
             self.labelsStackView.addArrangedSubview(self.rateLabel)
             
             self.balancePicker.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
                 make.top.equalToSuperview().inset(12)
             }
             
             self.labelsStackView.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.balancePicker.snp.bottom).offset(20)
             }
             
             self.transactionsListContainerView.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
                 make.top.equalTo(self.labelsStackView.snp.bottom).offset(15)
             }
             
             self.viewMoreButton.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.bottom.equalToSuperview().inset(12)
                 make.top.equalTo(self.transactionsListContainerView.snp.bottom).offset(12)
                 make.height.greaterThanOrEqualTo(44.0)

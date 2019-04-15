@@ -90,8 +90,8 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         }
         self.emptyLabel.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
-            make.top.left.greaterThanOrEqualToSuperview().inset(8)
-            make.right.bottom.lessThanOrEqualToSuperview().inset(8)
+            make.top.leading.greaterThanOrEqualToSuperview().inset(8)
+            make.trailing.bottom.lessThanOrEqualToSuperview().inset(8)
         }
     }
     

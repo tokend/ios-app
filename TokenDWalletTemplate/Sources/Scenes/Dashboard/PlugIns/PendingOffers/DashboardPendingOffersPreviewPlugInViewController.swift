@@ -109,17 +109,17 @@ extension DashboardPendingOffersPreviewPlugIn {
             contentView?.addSubview(self.viewMoreButton)
             
             self.titleLabel.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalToSuperview().inset(16)
             }
             
             self.transactionsListContainerView.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(12)
             }
             
             self.viewMoreButton.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.bottom.equalToSuperview().inset(12)
                 make.top.equalTo(self.transactionsListContainerView.snp.bottom).offset(12)
                 make.height.greaterThanOrEqualTo(44.0)

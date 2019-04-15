@@ -106,13 +106,34 @@ class TradeFlowController: BaseSignedInFlowController {
         )
         
         let routing = TradeOffers.Routing(
-            onSelectPendingOffers: <#T##() -> Void#>,
-            onDidSelectOffer: <#T##(TradeOffers.Model.Amount, TradeOffers.Model.Amount) -> Void#>,
-            onDidSelectNewOffer: <#T##(String, String) -> Void#>,
-            onShowError: <#T##(String) -> Void#>,
-            onShowProgress: <#T##() -> Void#>,
-            onHideProgress: <#T##() -> Void#>
-        )
+            onSelectPendingOffers: { [weak self] in
+                self?.showPendingOffers()
+            },
+            onDidSelectOffer: { [weak self] (baseAmount, price) in
+                self?.showCreateOffer(
+                    baseAsset: baseAmount.currency,
+                    quoteAsset: price.currency,
+                    amount: baseAmount.value,
+                    price: price.value
+                )
+            },
+            onDidSelectNewOffer: { [weak self] (baseAsset, quoteAsset) in
+                self?.showCreateOffer(
+                    baseAsset: baseAsset,
+                    quoteAsset: quoteAsset,
+                    amount: nil,
+                    price: nil
+                )
+            },
+            onShowError: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(message, completion: nil)
+            },
+            onShowProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            onHideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+        })
         
         TradeOffers.Configurator.configure(
             viewController: vc,
@@ -320,7 +341,7 @@ class TradeFlowController: BaseSignedInFlowController {
             },
             onConfirmationSucceeded: { [weak self] in
                 if let viewController = self?.navigationController.viewControllers.first(where: { (vc) -> Bool in
-                    return vc is Trade.ViewController
+                    return vc is TradeOffers.ViewController
                 }) {
                     self?.navigationController.popToViewController(viewController, animated: true)
                 }

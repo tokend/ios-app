@@ -79,17 +79,17 @@ enum TokenDetailsTokenDocumentCell {
             self.addSubview(self.titleLabel)
             
             self.iconView.snp.makeConstraints { (make) in
-                make.left.equalToSuperview().inset(15)
+                make.leading.equalToSuperview().inset(15)
                 make.height.equalTo(self.iconViewSize)
                 make.width.equalTo(self.iconViewSize)
                 make.top.equalToSuperview().inset(16)
                 make.bottom.equalToSuperview().inset(16)
             }
             self.titleLabel.snp.makeConstraints { (make) in
-                make.right.equalToSuperview().inset(15)
+                make.trailing.equalToSuperview().inset(15)
                 make.top.greaterThanOrEqualToSuperview().inset(11)
                 make.bottom.lessThanOrEqualToSuperview().inset(12)
-                make.left.equalTo(self.iconView.snp.right).offset(15)
+                make.leading.equalTo(self.iconView.snp.trailing).offset(15)
                 make.centerY.equalToSuperview().inset(-0.5)
             }
         }

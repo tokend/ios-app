@@ -1,12 +1,16 @@
 import Foundation
+import RxCocoa
+import RxSwift
 
 public protocol TradeOffersBusinessLogic {
     typealias Event = TradeOffers.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
+    func onViewWillAppear(request: Event.ViewWillAppear.Request)
     func onContentTabSelected(request: Event.ContentTabSelected.Request)
     func onDidHighlightChart(request: Event.DidHighlightChart.Request)
     func onDidSelectPeriod(request: Event.DidSelectPeriod.Request)
+    func onCreateOffer(request: Event.CreateOffer.Request)
 }
 
 extension TradeOffers {
@@ -29,6 +33,8 @@ extension TradeOffers {
             guard let selectedPeriod = self.sceneModel.selectedPeriod else { return nil }
             return self.sceneModel.periods.index(of: selectedPeriod)
         }
+        
+        private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
@@ -63,14 +69,27 @@ extension TradeOffers {
         private func updatedSelectedContent(_ tab: Model.ContentTab) {
             self.sceneModel.selectedTab = tab
             
-            // TODO: Fix
-            
             let response = Event.ContentTabSelected.Response(selectedTab: self.sceneModel.selectedTab)
             self.presenter.presentContentTabSelected(response: response)
+            
+            switch tab {
+            case .orderBook:
+                break
+            case .chart:
+                self.onChartsDidChange()
+            case .trades:
+                break
+            }
         }
         
         private func updateCharts() {
-            self.onLoading(showForChart: true, showForBuyTable: nil, showForSellTable: nil, showForAssets: nil)
+            self.onPriceDidChange()
+            
+            self.onLoading(
+                showForChart: true,
+                showForBuyTable: nil,
+                showForSellTable: nil
+            )
             self.chartsFetcher.cancelRequests()
             let selectedPair = self.sceneModel.assetPair
             
@@ -87,25 +106,42 @@ extension TradeOffers {
                     self?.onLoading(
                         showForChart: false,
                         showForBuyTable: nil,
-                        showForSellTable: nil,
-                        showForAssets: nil
+                        showForSellTable: nil
                     )
                     
                 case .failure:
                     self?.onLoading(
                         showForChart: false,
                         showForBuyTable: nil,
-                        showForSellTable: nil,
-                        showForAssets: nil
+                        showForSellTable: nil
                     )
                 }
             }
         }
         
+        private func onPriceDidChange(_ price: Decimal? = nil, forTimestamp timestamp: Date? = nil) {
+            let selectedAssetPair = self.sceneModel.assetPair
+            
+            let response = Event.PairPriceDidChange.Response(
+                price: Model.Amount(
+                    value: price ?? selectedAssetPair.currentPrice,
+                    currency: selectedAssetPair.quoteAsset
+                ),
+                per: Model.Amount(
+                    value: 1,
+                    currency: selectedAssetPair.baseAsset
+                ),
+                timestamp: timestamp
+            )
+            
+            self.presenter.presentPairPriceDidChange(response: response)
+        }
+        
         private func onChartsDidChange() {
-            self.sceneModel.periods = Array((self.sceneModel.charts ?? [:]).keys).sorted(by: { (left, right) -> Bool in
-                return left.weight < right.weight
-            })
+            self.sceneModel.periods = Array((self.sceneModel.charts ?? [:]).keys)
+                .sorted(by: { (left, right) -> Bool in
+                    return left.weight < right.weight
+                })
             self.onPeriodsDidChange()
             var periodCharts: [Model.Chart]?
             if let period = self.sceneModel.selectedPeriod {
@@ -138,7 +174,11 @@ extension TradeOffers {
         private func updateTrades() {
             self.sceneModel.buyOffers = nil
             self.sceneModel.sellOffers = nil
-            self.onLoading(showForChart: nil, showForBuyTable: true, showForSellTable: true, showForAssets: nil)
+            self.onLoading(
+                showForChart: nil,
+                showForBuyTable: true,
+                showForSellTable: true
+            )
             self.onBuyOffersDidChange()
             self.onSellOffersDidChange()
             self.offersFetcher.cancelRequests()
@@ -148,8 +188,7 @@ extension TradeOffers {
             self.onLoading(
                 showForChart: nil,
                 showForBuyTable: false,
-                showForSellTable: false,
-                showForAssets: nil
+                showForSellTable: false
             )
             
             self.offersFetcher.getOffers(
@@ -162,8 +201,7 @@ extension TradeOffers {
                         self?.onLoading(
                             showForChart: nil,
                             showForBuyTable: false,
-                            showForSellTable: nil,
-                            showForAssets: nil
+                            showForSellTable: nil
                         )
                         
                     case .succeeded(let offers):
@@ -171,8 +209,7 @@ extension TradeOffers {
                         self?.onLoading(
                             showForChart: nil,
                             showForBuyTable: false,
-                            showForSellTable: nil,
-                            showForAssets: nil
+                            showForSellTable: nil
                         )
                     }
                     
@@ -189,8 +226,7 @@ extension TradeOffers {
                         self?.onLoading(
                             showForChart: nil,
                             showForBuyTable: nil,
-                            showForSellTable: false,
-                            showForAssets: nil
+                            showForSellTable: false
                         )
                         
                     case .succeeded(let offers):
@@ -198,8 +234,7 @@ extension TradeOffers {
                         self?.onLoading(
                             showForChart: nil,
                             showForBuyTable: nil,
-                            showForSellTable: false,
-                            showForAssets: nil
+                            showForSellTable: false
                         )
                     }
                     
@@ -226,8 +261,7 @@ extension TradeOffers {
         private func onLoading(
             showForChart: Bool?,
             showForBuyTable: Bool?,
-            showForSellTable: Bool?,
-            showForAssets: Bool?
+            showForSellTable: Bool?
             ) {
             
             let response = Event.Loading.Response(
@@ -249,6 +283,7 @@ extension TradeOffers {
 }
 
 extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
+    
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         self.updateScreenTitle()
         
@@ -264,16 +299,48 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
         self.updatedSelectedContent(self.sceneModel.selectedTab)
     }
     
+    public func onViewWillAppear(request: Event.ViewWillAppear.Request) {
+//        self.updateCharts()
+//        self.updateTrades()
+    }
+    
     public func onContentTabSelected(request: Event.ContentTabSelected.Request) {
         self.updatedSelectedContent(request.selectedTab)
     }
     
     public func onDidHighlightChart(request: Event.DidHighlightChart.Request) {
+        guard let period = self.sceneModel.selectedPeriod,
+            let charts = self.sceneModel.charts?[period]
+            else {
+                return
+        }
         
+        if let index = request.index {
+            if index < charts.count {
+                let chart = charts[index]
+                self.onPriceDidChange(chart.value, forTimestamp: chart.date)
+            } else {
+                self.onPriceDidChange()
+            }
+        } else {
+            self.onPriceDidChange()
+        }
     }
     
     public func onDidSelectPeriod(request: Event.DidSelectPeriod.Request) {
+        self.selectPeriod(request.period)
+    }
+    
+    public func onCreateOffer(request: Event.CreateOffer.Request) {
+        let selectedPair = self.sceneModel.assetPair
         
+        let response = Event.CreateOffer.Response(
+            amount: request.amount,
+            price: request.price,
+            baseAsset: selectedPair.baseAsset,
+            quoteAsset: selectedPair.quoteAsset
+        )
+        self.presenter.presentCreateOffer(response: response)
     }
 }
 

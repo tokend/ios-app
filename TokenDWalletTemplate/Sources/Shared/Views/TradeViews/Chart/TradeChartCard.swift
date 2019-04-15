@@ -117,18 +117,24 @@ class TradeChartCard: UIView {
         self.titleStackView.addArrangedSubview(self.mainTitleLabel)
         self.titleStackView.addArrangedSubview(self.sideTitleLabel)
         
+        self.titleStackView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        self.periodPicker.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        self.chartView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        
         self.titleStackView.snp.makeConstraints { (make) in
+            make.leading.trailing.equalToSuperview().inset(24)
             make.top.equalToSuperview().inset(32)
-            make.left.right.equalToSuperview().inset(24)
         }
-        self.chartView.snp.makeConstraints { (make) in
-            make.left.right.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
+        
         self.periodPicker.snp.makeConstraints { (make) in
+            make.leading.trailing.equalToSuperview()
             make.top.equalTo(self.titleStackView.snp.bottom).offset(32)
-            make.bottom.equalTo(self.chartView.snp.top).offset(-16)
-            make.left.right.equalToSuperview()
+        }
+        
+        self.chartView.snp.makeConstraints { (make) in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(self.periodPicker.snp.bottom).offset(16.0)
+            make.bottom.equalToSuperview()
         }
     }
     

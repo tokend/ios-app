@@ -56,7 +56,7 @@ extension SaleInfo {
             self.view.addSubview(self.contentView)
             
             self.tabPicker.snp.makeConstraints { (make) in
-                make.top.left.trailing.equalToSuperview()
+                make.top.leading.trailing.equalToSuperview()
             }
             
             self.contentView.snp.makeConstraints { (make) in

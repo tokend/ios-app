@@ -68,14 +68,14 @@ public class OrderBookTableViewBuyCell: UITableViewCell {
         self.amountLabel.snp.makeConstraints { (make) in
             make.top.equalToSuperview().inset(topBottomInset)
             make.bottom.equalToSuperview().inset(topBottomInset + 1)
-            make.left.equalToSuperview().inset(sideInset)
+            make.leading.equalToSuperview().inset(sideInset)
         }
         
         self.priceLabel.snp.makeConstraints { (make) in
             make.top.equalToSuperview().inset(topBottomInset)
             make.bottom.equalToSuperview().inset(topBottomInset + 1)
-            make.right.equalToSuperview().inset(betweenDistance)
-            make.left.lessThanOrEqualTo(self.amountLabel.snp.right)
+            make.trailing.equalToSuperview().inset(betweenDistance)
+            make.leading.lessThanOrEqualTo(self.amountLabel.snp.trailing)
         }
     }
 }

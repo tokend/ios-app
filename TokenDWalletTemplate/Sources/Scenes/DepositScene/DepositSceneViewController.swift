@@ -230,12 +230,12 @@ extension DepositScene {
             self.emptyContentView.addSubview(self.emptyHintLabel)
             
             self.assetPicker.snp.makeConstraints { (make) in
-                make.left.right.top.equalToSuperview()
+                make.leading.trailing.top.equalToSuperview()
             }
             
             self.scrollContentView.snp.makeConstraints { (make) in
                 make.top.equalTo(self.assetPicker.snp.bottom)
-                make.left.right.bottom.equalToSuperview()
+                make.leading.trailing.bottom.equalToSuperview()
             }
             
             self.addressContentView.snp.makeConstraints { (make) in
@@ -245,18 +245,18 @@ extension DepositScene {
             
             self.addressQrCodeImageView.snp.makeConstraints { (make) in
                 make.width.equalTo(self.addressQrCodeImageView.snp.height)
-                make.left.equalToSuperview().inset(15)
-                make.right.equalToSuperview().inset(15)
+                make.leading.equalToSuperview().inset(15)
+                make.trailing.equalToSuperview().inset(15)
                 make.top.equalToSuperview().inset(32)
             }
             
             self.addressLabel.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.addressQrCodeImageView.snp.bottom).offset(24)
             }
             
             self.addressHintLabel.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.addressLabel.snp.bottom).offset(12)
             }
             
@@ -264,16 +264,16 @@ extension DepositScene {
             
             self.getAddressContentView.snp.makeConstraints { (make) in
                 make.top.equalTo(self.assetPicker.snp.bottom)
-                make.left.right.bottom.equalToSuperview()
+                make.leading.trailing.bottom.equalToSuperview()
             }
             
             self.getAddressHintLabel.snp.makeConstraints { (make) in
                 make.top.equalToSuperview().inset(32)
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
             }
             
             self.getAddressButton.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.getAddressHintLabel.snp.bottom).offset(32)
                 make.bottom.lessThanOrEqualToSuperview().inset(32)
                 make.height.equalTo(44.0)
@@ -281,11 +281,11 @@ extension DepositScene {
             
             self.emptyContentView.snp.makeConstraints { (make) in
                 make.top.equalTo(self.assetPicker.snp.bottom)
-                make.left.right.bottom.equalToSuperview()
+                make.leading.trailing.bottom.equalToSuperview()
             }
             
             self.emptyHintLabel.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalToSuperview().inset(32)
                 make.bottom.lessThanOrEqualToSuperview().inset(32)
             }
@@ -294,7 +294,7 @@ extension DepositScene {
         private func hideGetAddressButton() {
             self.getAddressButton.isHidden = true
             self.getAddressButton.snp.remakeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.getAddressHintLabel.snp.bottom)
                 make.bottom.lessThanOrEqualToSuperview().inset(32)
                 make.height.equalTo(0)
@@ -304,7 +304,7 @@ extension DepositScene {
         private func showGetAddressButton() {
             self.getAddressButton.isHidden = false
             self.getAddressButton.snp.remakeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.getAddressHintLabel.snp.bottom).offset(32)
                 make.bottom.lessThanOrEqualToSuperview().inset(32)
                 make.height.equalTo(44.0)
@@ -324,7 +324,7 @@ extension DepositScene {
         private func hideRenewButton() {
             self.renewAddressButton.isHidden = true
             self.renewAddressButton.snp.remakeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.addressHintLabel.snp.bottom)
                 make.bottom.equalToSuperview().inset(32)
                 make.height.equalTo(0)
@@ -334,7 +334,7 @@ extension DepositScene {
         private func showRenewButton() {
             self.renewAddressButton.isHidden = false
             self.renewAddressButton.snp.remakeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.addressHintLabel.snp.bottom).offset(24)
                 make.bottom.equalToSuperview().inset(32)
                 make.height.equalTo(44.0)

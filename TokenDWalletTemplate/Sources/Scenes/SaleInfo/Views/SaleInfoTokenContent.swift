@@ -185,7 +185,7 @@ extension SaleInfo {
                 self.addSubview(self.tokenDetailsTableView)
                 
                 self.tokenInfoView.snp.makeConstraints { (make) in
-                    make.left.right.equalToSuperview()
+                    make.leading.trailing.equalToSuperview()
                     make.top.equalToSuperview().inset(self.sideInset)
                     make.height.equalTo(100)
                 }
@@ -213,7 +213,7 @@ extension SaleInfo {
                 }
                 
                 self.tokenBalanceStateIcon.snp.makeConstraints { (make) in
-                    make.right.equalToSuperview().inset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
                     make.centerY.equalToSuperview()
                 }
                 

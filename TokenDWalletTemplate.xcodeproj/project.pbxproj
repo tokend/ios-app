@@ -226,7 +226,6 @@
 		7FB9E48220C06FD1005BFE0E /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E48120C06FD1005BFE0E /* KeychainManager.swift */; };
 		7FC88B7A215E8BAE00BED021 /* SaleDetailsChartsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC88B79215E8BAD00BED021 /* SaleDetailsChartsFetcher.swift */; };
 		7FC88B7C215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC88B7B215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift */; };
-		7FC88B7F2162555A00BED021 /* TradeChartCardValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC88B7E2162555A00BED021 /* TradeChartCardValueFormatter.swift */; };
 		7FC88B812164F09A00BED021 /* SaleDetailsChartDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC88B802164F09A00BED021 /* SaleDetailsChartDateFormatter.swift */; };
 		7FC88B832166097C00BED021 /* RegisterSceneFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC88B822166097C00BED021 /* RegisterSceneFieldView.swift */; };
 		7FC88B85216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC88B84216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift */; };
@@ -381,23 +380,8 @@
 		E92F1BD12138564700D4695E /* CreateOfferConfirmationSectionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BD02138564700D4695E /* CreateOfferConfirmationSectionsProvider.swift */; };
 		E92F1BD621386C8400D4695E /* CreateOfferFeeLoaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BD521386C8400D4695E /* CreateOfferFeeLoaderProtocol.swift */; };
 		E92F1BD821386D0600D4695E /* CreateOfferFeeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BD721386D0600D4695E /* CreateOfferFeeLoader.swift */; };
-		E92F1BFA2139B77D00D4695E /* TradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BDE2139B77C00D4695E /* TradeViewController.swift */; };
-		E92F1BFB2139B77D00D4695E /* TradePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BDF2139B77C00D4695E /* TradePresenter.swift */; };
-		E92F1BFC2139B77D00D4695E /* TradeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE02139B77C00D4695E /* TradeConfigurator.swift */; };
-		E92F1BFD2139B77D00D4695E /* TradeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE12139B77C00D4695E /* TradeModels.swift */; };
-		E92F1BFE2139B77D00D4695E /* TradeOffersFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE32139B77C00D4695E /* TradeOffersFetcher.swift */; };
-		E92F1BFF2139B77D00D4695E /* TradeAssetsFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE42139B77C00D4695E /* TradeAssetsFetcherProtocol.swift */; };
 		E92F1C002139B77D00D4695E /* ChartCardValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE52139B77C00D4695E /* ChartCardValueFormatter.swift */; };
-		E92F1C012139B77D00D4695E /* TradeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE62139B77C00D4695E /* TradeDateFormatter.swift */; };
-		E92F1C022139B77D00D4695E /* TradeChartsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE72139B77C00D4695E /* TradeChartsFetcher.swift */; };
-		E92F1C032139B77D00D4695E /* TradeAssetsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE82139B77C00D4695E /* TradeAssetsFetcher.swift */; };
 		E92F1C042139B77D00D4695E /* SharedAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BE92139B77C00D4695E /* SharedAmountFormatter.swift */; };
-		E92F1C052139B77D00D4695E /* TradeChartsFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BEA2139B77C00D4695E /* TradeChartsFetcherProtocol.swift */; };
-		E92F1C062139B77D00D4695E /* TradeOffersFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BEB2139B77C00D4695E /* TradeOffersFetcherProtocol.swift */; };
-		E92F1C072139B77D00D4695E /* TradeDateFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BEC2139B77C00D4695E /* TradeDateFormatterProtocol.swift */; };
-		E92F1C082139B77D00D4695E /* TradeAmountFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BED2139B77C00D4695E /* TradeAmountFormatterProtocol.swift */; };
-		E92F1C092139B77D00D4695E /* TradeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BEE2139B77C00D4695E /* TradeInteractor.swift */; };
-		E92F1C0A2139B77D00D4695E /* TradeRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BEF2139B77C00D4695E /* TradeRouting.swift */; };
 		E92F1C0B2139B77D00D4695E /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF22139B77C00D4695E /* ChartView.swift */; };
 		E92F1C0C2139B77D00D4695E /* TradeChartCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF32139B77C00D4695E /* TradeChartCard.swift */; };
 		E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF52139B77C00D4695E /* OrderBookCard.swift */; };
@@ -725,7 +709,6 @@
 		7FB9E48320C15290005BFE0E /* UserDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataManager.swift; sourceTree = "<group>"; };
 		7FC88B79215E8BAD00BED021 /* SaleDetailsChartsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartsFetcher.swift; sourceTree = "<group>"; };
 		7FC88B7B215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartsFetcherProtocol.swift; sourceTree = "<group>"; };
-		7FC88B7E2162555A00BED021 /* TradeChartCardValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeChartCardValueFormatter.swift; sourceTree = "<group>"; };
 		7FC88B802164F09A00BED021 /* SaleDetailsChartDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartDateFormatter.swift; sourceTree = "<group>"; };
 		7FC88B822166097C00BED021 /* RegisterSceneFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneFieldView.swift; sourceTree = "<group>"; };
 		7FC88B84216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneAggreeOnTermsView.swift; sourceTree = "<group>"; };
@@ -886,23 +869,8 @@
 		E92F1BD3213869D600D4695E /* FeeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeLoader.swift; sourceTree = "<group>"; };
 		E92F1BD521386C8400D4695E /* CreateOfferFeeLoaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOfferFeeLoaderProtocol.swift; sourceTree = "<group>"; };
 		E92F1BD721386D0600D4695E /* CreateOfferFeeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOfferFeeLoader.swift; sourceTree = "<group>"; };
-		E92F1BDE2139B77C00D4695E /* TradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeViewController.swift; sourceTree = "<group>"; };
-		E92F1BDF2139B77C00D4695E /* TradePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradePresenter.swift; sourceTree = "<group>"; };
-		E92F1BE02139B77C00D4695E /* TradeConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeConfigurator.swift; sourceTree = "<group>"; };
-		E92F1BE12139B77C00D4695E /* TradeModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeModels.swift; sourceTree = "<group>"; };
-		E92F1BE32139B77C00D4695E /* TradeOffersFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersFetcher.swift; sourceTree = "<group>"; };
-		E92F1BE42139B77C00D4695E /* TradeAssetsFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeAssetsFetcherProtocol.swift; sourceTree = "<group>"; };
 		E92F1BE52139B77C00D4695E /* ChartCardValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartCardValueFormatter.swift; sourceTree = "<group>"; };
-		E92F1BE62139B77C00D4695E /* TradeDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeDateFormatter.swift; sourceTree = "<group>"; };
-		E92F1BE72139B77C00D4695E /* TradeChartsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeChartsFetcher.swift; sourceTree = "<group>"; };
-		E92F1BE82139B77C00D4695E /* TradeAssetsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeAssetsFetcher.swift; sourceTree = "<group>"; };
 		E92F1BE92139B77C00D4695E /* SharedAmountFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedAmountFormatter.swift; sourceTree = "<group>"; };
-		E92F1BEA2139B77C00D4695E /* TradeChartsFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeChartsFetcherProtocol.swift; sourceTree = "<group>"; };
-		E92F1BEB2139B77C00D4695E /* TradeOffersFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersFetcherProtocol.swift; sourceTree = "<group>"; };
-		E92F1BEC2139B77C00D4695E /* TradeDateFormatterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeDateFormatterProtocol.swift; sourceTree = "<group>"; };
-		E92F1BED2139B77C00D4695E /* TradeAmountFormatterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeAmountFormatterProtocol.swift; sourceTree = "<group>"; };
-		E92F1BEE2139B77C00D4695E /* TradeInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeInteractor.swift; sourceTree = "<group>"; };
-		E92F1BEF2139B77C00D4695E /* TradeRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeRouting.swift; sourceTree = "<group>"; };
 		E92F1BF22139B77C00D4695E /* ChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		E92F1BF32139B77C00D4695E /* TradeChartCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeChartCard.swift; sourceTree = "<group>"; };
 		E92F1BF52139B77C00D4695E /* OrderBookCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookCard.swift; sourceTree = "<group>"; };
@@ -1862,7 +1830,6 @@
 				7F2A7E2120F62937007F8CF8 /* SideMenu */,
 				7FF6760220BD9B130074E9A8 /* SignIn */,
 				E911320620C6D0A300A8AC4D /* TokenDetails */,
-				E92F1BDD2139B77C00D4695E /* Trade */,
 				7F74960F226081C20065EE8E /* TradeOffers */,
 				7F7495ED225CF9740065EE8E /* TradesList */,
 				71136AF92134433E00D83DD3 /* TransactionDetails */,
@@ -2238,37 +2205,6 @@
 			children = (
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		E92F1BDD2139B77C00D4695E /* Trade */ = {
-			isa = PBXGroup;
-			children = (
-				E92F1BE02139B77C00D4695E /* TradeConfigurator.swift */,
-				E92F1BEE2139B77C00D4695E /* TradeInteractor.swift */,
-				E92F1BE12139B77C00D4695E /* TradeModels.swift */,
-				E92F1BDF2139B77C00D4695E /* TradePresenter.swift */,
-				E92F1BEF2139B77C00D4695E /* TradeRouting.swift */,
-				E92F1BDE2139B77C00D4695E /* TradeViewController.swift */,
-				E92F1BE22139B77C00D4695E /* Workers */,
-			);
-			path = Trade;
-			sourceTree = "<group>";
-		};
-		E92F1BE22139B77C00D4695E /* Workers */ = {
-			isa = PBXGroup;
-			children = (
-				E92F1BED2139B77C00D4695E /* TradeAmountFormatterProtocol.swift */,
-				E92F1BE82139B77C00D4695E /* TradeAssetsFetcher.swift */,
-				E92F1BE42139B77C00D4695E /* TradeAssetsFetcherProtocol.swift */,
-				E92F1BE72139B77C00D4695E /* TradeChartsFetcher.swift */,
-				E92F1BEA2139B77C00D4695E /* TradeChartsFetcherProtocol.swift */,
-				E92F1BE62139B77C00D4695E /* TradeDateFormatter.swift */,
-				E92F1BEC2139B77C00D4695E /* TradeDateFormatterProtocol.swift */,
-				E92F1BE32139B77C00D4695E /* TradeOffersFetcher.swift */,
-				E92F1BEB2139B77C00D4695E /* TradeOffersFetcherProtocol.swift */,
-				7FC88B7E2162555A00BED021 /* TradeChartCardValueFormatter.swift */,
-			);
-			path = Workers;
 			sourceTree = "<group>";
 		};
 		E92F1BF12139B77C00D4695E /* Chart */ = {
@@ -2731,7 +2667,6 @@
 				7F71871321383FF000F5C0BD /* ReceiveAddressShareUtil.swift in Sources */,
 				71136B152134433F00D83DD3 /* TransactionDetailsPendingOfferSectionsProvider.swift in Sources */,
 				7FF6761720BDA0910074E9A8 /* RegisterSceneModels.swift in Sources */,
-				E92F1C072139B77D00D4695E /* TradeDateFormatterProtocol.swift in Sources */,
 				DB0E51D42164E99F00DDA88C /* SaleInfoDataProvider.swift in Sources */,
 				7FF5AE51215BEA760066A2ED /* ValueValidator.swift in Sources */,
 				7FEC94982148170500F41EE6 /* SaleDetailsChartCell.swift in Sources */,
@@ -2758,13 +2693,11 @@
 				71EE11972126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift in Sources */,
 				719AAFD12142AEEA00279B9D /* SalesRouting.swift in Sources */,
 				7F2A7E2020F627C9007F8CF8 /* SideMenuController+RootContent.swift in Sources */,
-				E92F1BFC2139B77D00D4695E /* TradeConfigurator.swift in Sources */,
 				E9A5CBDB211B338C009112CA /* DashboardViewController.swift in Sources */,
 				7F967FD9212DB684005527EA /* BiometricsAuthModels.swift in Sources */,
 				E9A5CBC72119E01D009112CA /* SharedSceneBuilder.swift in Sources */,
 				71136B0C2134433F00D83DD3 /* TransactionDetailsModels.swift in Sources */,
 				7FABEA6320FD088F0005E751 /* CreateOfferPresenter.swift in Sources */,
-				E92F1C012139B77D00D4695E /* TradeDateFormatter.swift in Sources */,
 				7FF5AE4F215BCC450066A2ED /* WalletRepo.swift in Sources */,
 				E9A5CBFB211DD768009112CA /* DashboardPaymentsPlugInBalancesFetcherProtocol.swift in Sources */,
 				7F71871F2138471D00F5C0BD /* RecoverySeedInteractor.swift in Sources */,
@@ -2775,7 +2708,6 @@
 				E91131EA20C532AC00A8AC4D /* ExploreTokensConfigurator.swift in Sources */,
 				7F749605225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift in Sources */,
 				7F7496282260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift in Sources */,
-				E92F1BFD2139B77D00D4695E /* TradeModels.swift in Sources */,
 				E9908EC621079F4A00A0EA1C /* APIConfigurationModel.swift in Sources */,
 				7F967FDB212DB684005527EA /* BiometricsAuthInteractor.swift in Sources */,
 				E9908ED32108935E00A0EA1C /* TFADataProvider.swift in Sources */,
@@ -2795,7 +2727,6 @@
 				E92F1BC521381F3500D4695E /* UserDataManager.swift in Sources */,
 				DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */,
 				E980D84720CFF24500C53841 /* BalanceCreatorProtocol.swift in Sources */,
-				E92F1BFB2139B77D00D4695E /* TradePresenter.swift in Sources */,
 				7F967FDA212DB684005527EA /* BiometricsAuthViewController.swift in Sources */,
 				E9063E9520F669D000A5B343 /* BalanceHeaderWithPickerRouting.swift in Sources */,
 				7FC88B832166097C00BED021 /* RegisterSceneFieldView.swift in Sources */,
@@ -2818,14 +2749,11 @@
 				E9908EC92107A02300A0EA1C /* APIConfigurationFetcher.swift in Sources */,
 				710E86042105E1AB007204D4 /* ReceiveAddressModels.swift in Sources */,
 				7FA02BD32158F855005C1BE4 /* SalesRepo.swift in Sources */,
-				7FC88B7F2162555A00BED021 /* TradeChartCardValueFormatter.swift in Sources */,
 				7FABEA8A2102075C0005E751 /* SendPaymentBalanceView.swift in Sources */,
-				E92F1C0A2139B77D00D4695E /* TradeRouting.swift in Sources */,
 				E92F1BD12138564700D4695E /* CreateOfferConfirmationSectionsProvider.swift in Sources */,
 				E92F1C002139B77D00D4695E /* ChartCardValueFormatter.swift in Sources */,
 				E91131F020C5485900A8AC4D /* UIViewController+Nib.swift in Sources */,
 				7F2A7E2D20F62B7D007F8CF8 /* SideMenuConfigurator.swift in Sources */,
-				E92F1BFA2139B77D00D4695E /* TradeViewController.swift in Sources */,
 				710D30B62115D10F007BCCB0 /* TradeFlowController.swift in Sources */,
 				7F749603225E12A30065EE8E /* TradesListAssetPairListView.swift in Sources */,
 				E9063E9F20F767B200A5B343 /* BalanceHeaderWithPickerBalancesFetcher.swift in Sources */,
@@ -2844,7 +2772,6 @@
 				7FEC94962148170500F41EE6 /* SaleDetailsValueFormatter.swift in Sources */,
 				719AAFD02142AEEA00279B9D /* SalesPresenter.swift in Sources */,
 				7F967FC8212C4F84005527EA /* KeychainAccountsModel.swift in Sources */,
-				E92F1C032139B77D00D4695E /* TradeAssetsFetcher.swift in Sources */,
 				711930272107435A006A375C /* ReceiveAddressInvoiceFormatter.swift in Sources */,
 				7FA0114F21C9651F00CA5586 /* MarkdownViewerModels.swift in Sources */,
 				710E860F2105E1AB007204D4 /* ReceiveAddressManagerProtocol.swift in Sources */,
@@ -2887,7 +2814,6 @@
 				713D684F20FF9552009FEBA3 /* SettingsPushCell.swift in Sources */,
 				7F74962C2260A1D40065EE8E /* TradeOffersDateFormatter.swift in Sources */,
 				7FEC94902148170500F41EE6 /* SaleDetailsModels.swift in Sources */,
-				E92F1C022139B77D00D4695E /* TradeChartsFetcher.swift in Sources */,
 				7F6A84802109D82600B7FE6B /* SettingsFlowController.swift in Sources */,
 				7FA0115221C9651F00CA5586 /* MarkdownViewerConfigurator.swift in Sources */,
 				71136B182134433F00D83DD3 /* TransactionDetailsCell.swift in Sources */,
@@ -3040,7 +2966,6 @@
 				7F74960C225F91440065EE8E /* TradesListAssetColoringProvider.swift in Sources */,
 				DBA1A76E2252562800A52775 /* SaleDetailsCancellationWorker.swift in Sources */,
 				E9908ECC2108879B00A0EA1C /* TokenDetailsDocumentURLBuilderProtocol.swift in Sources */,
-				E92F1C092139B77D00D4695E /* TradeInteractor.swift in Sources */,
 				7F7496402260B5D60065EE8E /* TradeOffersTitleView.swift in Sources */,
 				E9063E9920F669D000A5B343 /* BalanceHeaderWithPickerConfigurator.swift in Sources */,
 				71136B132134433F00D83DD3 /* TransactionDetailsDateFormatter.swift in Sources */,
@@ -3077,12 +3002,10 @@
 				E9A5CBDF211B34A6009112CA /* DashboardFlowController.swift in Sources */,
 				E92F1C042139B77D00D4695E /* SharedAmountFormatter.swift in Sources */,
 				E9A5CBF5211DBCCB009112CA /* DashboardPaymentsPlugInInteractor.swift in Sources */,
-				E92F1C062139B77D00D4695E /* TradeOffersFetcherProtocol.swift in Sources */,
 				E9063E9D20F7679600A5B343 /* BalanceHeaderWithPickerBalancesFetcherProtocol.swift in Sources */,
 				7FF6760020BD98630074E9A8 /* AppDelegate.swift in Sources */,
 				DB0E51D32164E99F00DDA88C /* SaleInfoInteractor.swift in Sources */,
 				7F967FA72125985A005527EA /* UpdatePasswordConfigurator.swift in Sources */,
-				E92F1C082139B77D00D4695E /* TradeAmountFormatterProtocol.swift in Sources */,
 				E980D84B20CFF36600C53841 /* TokenDetailsSceneBalanceCreatorProtocol.swift in Sources */,
 				71C9F89521074F9900A59207 /* ReceiveAddressManager.swift in Sources */,
 				7FB9E47F20C06D7C005BFE0E /* RegisterSceneRegisterWorker.swift in Sources */,
@@ -3161,7 +3084,6 @@
 				71A9E0512108AAC20024A0FE /* QRCodeGenerator.swift in Sources */,
 				E9063E9820F669D000A5B343 /* BalanceHeaderWithPickerView.swift in Sources */,
 				DB5A3BBE21C1554600520604 /* FeesPresenter.swift in Sources */,
-				E92F1BFE2139B77D00D4695E /* TradeOffersFetcher.swift in Sources */,
 				DB5A3BC021C1554600520604 /* FeesModels.swift in Sources */,
 				E92F1C0C2139B77D00D4695E /* TradeChartCard.swift in Sources */,
 				716B27EE2111F2E000C4F515 /* WithdrawFlowController.swift in Sources */,
@@ -3173,7 +3095,6 @@
 				7FEC94942148170500F41EE6 /* SaleDetailsDateFormatter.swift in Sources */,
 				71136B0F2134433F00D83DD3 /* TransactionDetailsViewController.swift in Sources */,
 				71136B102134433F00D83DD3 /* TransactionDetailsConfigurator.swift in Sources */,
-				E92F1C052139B77D00D4695E /* TradeChartsFetcherProtocol.swift in Sources */,
 				7F0F36BA20E2696500E906D5 /* WalletRecoveryViewController.swift in Sources */,
 				7FEB45BD20DD4143001CA31C /* VerifyEmailRouting.swift in Sources */,
 				E9063EA520F7D38000A5B343 /* BalanceHeaderWithPickerRateProviderProtocol.swift in Sources */,
@@ -3189,7 +3110,6 @@
 				7F967FA12125985A005527EA /* UpdatePasswordInteractor.swift in Sources */,
 				DB5A3BC221C1554600520604 /* FeesInteractor.swift in Sources */,
 				7F967FC3212C3FF8005527EA /* LocalAuthFlowController.swift in Sources */,
-				E92F1BFF2139B77D00D4695E /* TradeAssetsFetcherProtocol.swift in Sources */,
 				E92F1C142139B7FF00D4695E /* FeeLoader.swift in Sources */,
 				E9BCDD542121D74700EB0DF2 /* DashboardPaymentsPlugInRateProviderProtocol.swift in Sources */,
 				7F967FCF212D79B5005527EA /* RegisterSceneLocalSignInWorker.swift in Sources */,

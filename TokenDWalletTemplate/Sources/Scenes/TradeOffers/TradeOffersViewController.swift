@@ -8,12 +8,14 @@ public protocol TradeOffersDisplayLogic: class {
     func displayScreenTitleUpdated(viewModel: Event.ScreenTitleUpdated.ViewModel)
     func displayContentTabSelected(viewModel: Event.ContentTabSelected.ViewModel)
     func displayPeriodsDidChange(viewModel: Event.PeriodsDidChange.ViewModel)
+    func displayPairPriceDidChange(viewModel: Event.PairPriceDidChange.ViewModel)
     func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel)
     func displaySellOffersDidUpdate(viewModel: Event.SellOffersDidUpdate.ViewModel)
     func displayBuyOffersDidUpdate(viewModel: Event.BuyOffersDidUpdate.ViewModel)
     func displayLoading(viewModel: Event.Loading.ViewModel)
     func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel)
     func displayError(viewModel: Event.Error.ViewModel)
+    func displayCreateOffer(viewModel: Event.CreateOffer.ViewModel)
 }
 
 extension TradeOffers {
@@ -39,13 +41,14 @@ extension TradeOffers {
         }()
         
         private lazy var chartView: TradeChartCard = {
-            let view = TradeChartCard()
-            self.layoutContentView(view)
+            let view = TradeChartCard(frame: CGRect.zero)
+            self.layoutContentView(view, maxHeight: 450.0)
             return view
         }()
         
         private lazy var tradesView: UIView = {
-            let view = TradeChartCard()
+            let view = UIView()
+            view.backgroundColor = Theme.Colors.contentBackgroundColor
             self.layoutContentView(view)
             return view
         }()
@@ -80,11 +83,22 @@ extension TradeOffers {
             
             self.setupPicker()
             self.setupContainerView()
+            self.setupOrderBookView()
+            self.setupChartView()
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
+            }
+        }
+        
+        public override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+            let request = Event.ViewWillAppear.Request()
+            self.interactorDispatch?.sendRequest { businessLogic in
+                businessLogic.onViewWillAppear(request: request)
             }
         }
         
@@ -96,15 +110,36 @@ extension TradeOffers {
         }
         
         private func setupContainerView() {
-            self.containerView.backgroundColor = Theme.Colors.containerBackgroundColor
+            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
-        private func layoutContentView(_ contentView: UIView) {
+        private func setupOrderBookView() {
+            
+        }
+        
+        private func setupChartView() {
+            self.chartView.yAxisValueFormatter = self.chartCardValueFormatter
+            self.chartView.xAxisValueFormatter = self.chartCardValueFormatter
+            self.chartView.didSelectItemAtIndex = { [weak self] (index, card) in
+                let request = Event.DidHighlightChart.Request(index: index)
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onDidHighlightChart(request: request)
+                })
+            }
+        }
+        
+        private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {
             contentView.isHidden = true
             self.containerView.addSubview(contentView)
             self.containerView.sendSubviewToBack(contentView)
             contentView.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
+                make.leading.trailing.top.equalToSuperview()
+                if let maxHeight = maxHeight {
+                    make.height.lessThanOrEqualTo(maxHeight)
+                    make.bottom.lessThanOrEqualToSuperview()
+                } else {
+                    make.bottom.equalToSuperview()
+                }
             })
         }
         
@@ -172,11 +207,11 @@ extension TradeOffers {
             for cellIndex in 0..<cells.count {
                 let offer = cells[cellIndex].offer
                 cells[cellIndex].onClick = { [weak self] (_) in
+                    let request = Event.CreateOffer.Request(
+                        amount: offer.amount.amount,
+                        price: offer.price.amount
+                    )
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        let request = Event.CreateOffer.Request(
-                            amount: offer.amount.amount,
-                            price: offer.price.amount
-                        )
                         businessLogic.onCreateOffer(request: request)
                     })
                 }
@@ -229,6 +264,11 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)
     }
     
+    public func displayPairPriceDidChange(viewModel: Event.PairPriceDidChange.ViewModel) {
+        self.chartView.title = viewModel.price
+        self.chartView.subtitle = viewModel.per
+    }
+    
     public func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel) {
         self.chartView.chartEntries = viewModel.chartEntries
     }
@@ -267,5 +307,24 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
     
     public func displayError(viewModel: Event.Error.ViewModel) {
         self.routing?.onShowError(viewModel.message)
+    }
+    
+    public func displayCreateOffer(viewModel: Event.CreateOffer.ViewModel) {
+        if let amount = viewModel.amount,
+            let price = viewModel.price {
+            self.routing?.onDidSelectOffer(amount, price)
+        } else {
+            self.routing?.onDidSelectNewOffer(viewModel.baseAsset, viewModel.quoteAsset)
+        }
+    }
+}
+
+extension OrderBookTableViewCellModel.Amount {
+    
+    fileprivate var amount: TradeOffers.Model.Amount {
+        return TradeOffers.Model.Amount(
+            value: self.value,
+            currency: self.currency
+        )
     }
 }

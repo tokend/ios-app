@@ -201,20 +201,20 @@ extension ReceiveAddress {
             self.addSubview(self.qrImageView)
             self.qrImageView.snp.makeConstraints { (make) in
                 make.top.equalToSuperview().inset(8)
-                make.left.right.equalToSuperview().inset(7)
+                make.leading.trailing.equalToSuperview().inset(7)
                 make.height.equalTo(self.qrImageView.snp.width)
             }
             
             self.addSubview(self.valueLabel)
             self.valueLabel.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.qrImageView.snp.bottom).offset(12)
                 make.bottom.equalToSuperview()
             }
             
             self.addSubview(self.statusLabel)
             self.statusLabel.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
                 make.center.equalTo(self.valueLabel.snp.center)
             }
         }
