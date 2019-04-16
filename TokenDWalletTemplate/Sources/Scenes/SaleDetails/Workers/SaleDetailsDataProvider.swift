@@ -20,6 +20,8 @@ protocol SaleDetailsDataProviderProtocol {
     func observeOffers() -> Observable<[SaleDetails.Model.InvestmentOffer]>
     func observeCharts() -> Observable<[SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]]>
     func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]>
+    
+    func refreshBalances()
 }
 
 extension SaleDetails {
@@ -222,6 +224,10 @@ extension SaleDetails {
         
         func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]> {
             return self.errors.asObservable()
+        }
+        
+        func refreshBalances() {
+            self.balancesRepo.reloadBalancesDetails()
         }
         
         // MARK: - Private

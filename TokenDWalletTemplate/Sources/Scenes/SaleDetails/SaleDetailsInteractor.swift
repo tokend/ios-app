@@ -695,6 +695,7 @@ extension SaleDetails {
                         
                     case .success:
                         response = .succeeded
+                        self?.dataProvider.refreshBalances()
                         self?.observeOffers()
                     }
                     self?.presenter.presentCancelInvestAction(response: response)
