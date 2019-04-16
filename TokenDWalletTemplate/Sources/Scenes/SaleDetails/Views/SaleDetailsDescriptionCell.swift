@@ -5,9 +5,9 @@ import WebKit
 
 extension SaleDetails {
     
-    enum DescriptionCell {
+    enum DescriptionTab {
         
-        struct ViewModel: CellViewModel {
+        struct ViewModel {
             
             let imageUrl: URL?
             let name: String
@@ -21,30 +21,30 @@ extension SaleDetails {
             
             let timeText: NSAttributedString
             
-            let identifier: CellIdentifier
+            let identifier: TabIdentifier
             
-            func setup(cell: DescriptionCell.View) {
-                cell.imageURL = self.imageUrl
-                cell.saleName = self.name
-                cell.saleDescription = self.description
+            func setup(tab: DescriptionTab.View) {
+                tab.imageURL = self.imageUrl
+                tab.saleName = self.name
+                tab.saleDescription = self.description
                 
-                cell.youtubeVideoURL = self.youtubeVideoUrl
+                tab.youtubeVideoURL = self.youtubeVideoUrl
                 
-                cell.investedAmountText = self.investedAmountText
-                cell.investedPercentageText = self.investedPercentageText
-                cell.investedPercent = self.investedPercentage
+                tab.investedAmountText = self.investedAmountText
+                tab.investedPercentageText = self.investedPercentageText
+                tab.investedPercent = self.investedPercentage
                 
-                cell.timeText = self.timeText
+                tab.timeText = self.timeText
                 
-                cell.identifier = self.identifier
+                tab.identifier = self.identifier
             }
         }
         
-        class View: UITableViewCell {
+        class View: UIView {
             
             // MARK: - Public property
             
-            typealias DidSelectButton = (_ cellIdentifier: CellIdentifier) -> Void
+            typealias DidSelectButton = (_ cellIdentifier: TabIdentifier) -> Void
             
             public var onDidSelectMoreInfoButton: DidSelectButton?
             
@@ -104,7 +104,7 @@ extension SaleDetails {
                 set { self.timeLabel.attributedText = newValue }
             }
             
-            public var identifier: CellIdentifier = .empty
+            public var identifier: TabIdentifier?
             
             // MARK: - Private properties
             
@@ -112,6 +112,8 @@ extension SaleDetails {
             
             private let iconSize: CGFloat = 45
             
+            private let containerView: UIView = UIView()
+            private let scrollView: UIScrollView = UIScrollView()
             private let assetImageView: UIImageView = UIImageView()
             private let nameLabel: UILabel = UILabel()
             private let shortDescriptionLabel: UILabel = UILabel()
@@ -136,8 +138,8 @@ extension SaleDetails {
             
             // MARK: -
             
-            override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-                super.init(style: style, reuseIdentifier: reuseIdentifier)
+            override init(frame: CGRect) {
+                super.init(frame: frame)
                 
                 self.commonInit()
             }
@@ -154,6 +156,8 @@ extension SaleDetails {
             
             private func commonInit() {
                 self.setupView()
+                self.setupContainerView()
+                self.setupScrollView()
                 self.setupAssetImageView()
                 self.setupNameLabel()
                 self.setupShortDescriptionLabel()
@@ -170,7 +174,14 @@ extension SaleDetails {
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.contentBackgroundColor
-                self.selectionStyle = .none
+            }
+            
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+            }
+            
+            private func setupScrollView() {
+                self.scrollView.backgroundColor = Theme.Colors.contentBackgroundColor
             }
             
             private func setupAssetImageView() {
@@ -256,17 +267,28 @@ extension SaleDetails {
             }
             
             private func setupLayout() {
-                self.contentView.addSubview(self.assetImageView)
-                self.contentView.addSubview(self.nameLabel)
-                self.contentView.addSubview(self.shortDescriptionLabel)
-                self.contentView.addSubview(self.investContentView)
-                self.contentView.addSubview(self.videoWebView)
-                self.contentView.addSubview(self.separatorView)
-                self.contentView.addSubview(self.moreInfoButton)
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.scrollView)
+                self.scrollView.addSubview(self.assetImageView)
+                self.scrollView.addSubview(self.nameLabel)
+                self.scrollView.addSubview(self.shortDescriptionLabel)
+                self.scrollView.addSubview(self.investContentView)
+                self.scrollView.addSubview(self.videoWebView)
+                self.scrollView.addSubview(self.separatorView)
+                self.scrollView.addSubview(self.moreInfoButton)
+                
+                self.containerView.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview()
+                }
+                
+                self.scrollView.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview()
+                }
                 
                 self.assetImageView.snp.makeConstraints { (make) in
                     make.top.leading.trailing.equalToSuperview()
                     make.width.equalTo(self.assetImageView.snp.height).multipliedBy(16.0/9.0)
+                    make.width.equalTo(self.containerView.snp.width)
                 }
                 
                 self.nameLabel.snp.makeConstraints { (make) in
@@ -381,7 +403,7 @@ extension SaleDetails {
     }
 }
 
-extension SaleDetails.DescriptionCell.View {
+extension SaleDetails.DescriptionTab.View {
     enum ImageState {
         case empty
         case loaded(UIImage)
@@ -389,8 +411,8 @@ extension SaleDetails.DescriptionCell.View {
     }
 }
 
-extension SaleDetails.Model.DescriptionCellModel.ImageState {
-    var saleCellImageState: SaleDetails.DescriptionCell.View.ImageState {
+extension SaleDetails.Model.DescriptionTabModel.ImageState {
+    var saleTabImageState: SaleDetails.DescriptionTab.View.ImageState {
         switch self {
             
         case .empty:

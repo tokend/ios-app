@@ -4,7 +4,7 @@ import Charts
 protocol SaleDetailsDisplayLogic: class {
     typealias Event = SaleDetails.Event
     
-    func displaySectionsUpdated(viewModel: Event.SectionsUpdated.ViewModel)
+    func displayTabsUpdated(viewModel: Event.TabsUpdated.ViewModel)
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel)
     func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel)
     func displayInvestAction(viewModel: Event.InvestAction.ViewModel)
@@ -12,6 +12,7 @@ protocol SaleDetailsDisplayLogic: class {
     func displayDidSelectMoreInfoButton(viewModel: Event.DidSelectMoreInfoButton.ViewModel)
     func displaySelectChartPeriod(viewModel: Event.SelectChartPeriod.ViewModel)
     func displaySelectChartEntry(viewModel: Event.SelectChartEntry.ViewModel)
+    func displayTabWasSelected(viewModel: Event.TabWasSelected.ViewModel)
 }
 
 extension SaleDetails {
@@ -23,8 +24,9 @@ extension SaleDetails {
         
         // MARK: - Private properties
         
-        private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
-        private var sections: [Model.SectionViewModel] = []
+        private let horizontalPicker: HorizontalPicker = HorizontalPicker()
+        private let containerView: UIView = UIView()
+        private var contentView: UIView?
         
         // MARK: - Injections
         
@@ -42,10 +44,9 @@ extension SaleDetails {
             super.viewDidLoad()
             
             self.setupView()
-            self.setupTableView()
+            self.setupHorizontalPicker()
+            self.setupContainerView()
             self.setupLayout()
-            
-            self.addKeyboardObserver()
             
             let request = Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
@@ -59,110 +60,134 @@ extension SaleDetails {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
         }
         
-        private func setupTableView() {
-            let cellClasses: [CellViewAnyModel.Type] = [
-                DescriptionCell.ViewModel.self,
-                InvestingCell.ViewModel.self,
-                ChartCell.ViewModel.self,
-                OverviewCell.ViewModel.self
-            ]
-            self.tableView.register(classes: cellClasses)
-            self.tableView.dataSource = self
-            self.tableView.delegate = self
+        private func setupHorizontalPicker() {
+            self.horizontalPicker.backgroundColor = Theme.Colors.mainColor
+            self.horizontalPicker.tintColor = Theme.Colors.textOnMainColor
+        }
+        
+        private func setupContainerView() {
+            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
         private func setupLayout() {
-            self.view.addSubview(self.tableView)
-            self.tableView.snp.makeConstraints { (make) in
+            self.view.addSubview(self.horizontalPicker)
+            self.view.addSubview(self.containerView)
+            self.horizontalPicker.snp.makeConstraints { (make) in
+                make.leading.trailing.top.equalToSuperview()
+            }
+            
+            self.containerView.snp.makeConstraints { (make) in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.top.equalTo(self.horizontalPicker.snp.bottom)
+            }
+        }
+        
+        private func updateInvestingTab(_ viewModel: InvestingTab.ViewModel) {
+            guard let contentView = self.contentView,
+                let investingTab = contentView as? SaleDetails.InvestingTab.View else {
+                    return
+            }
+            viewModel.setup(tab: investingTab)
+        }
+        
+        private func updateSelectedTabIfNeeded(index: Int?) {
+            guard let index = index,
+                self.horizontalPicker.selectedItemIndex != index else {
+                    return
+            }
+            self.horizontalPicker.setSelectedItemAtIndex(index, animated: true)
+        }
+        
+        private func setContentView(tabContent: Any) {
+            let contentView: UIView
+            
+            if let tabContent = tabContent as? SaleDetails.InvestingTab.ViewModel {
+                let investingTabView = SaleDetails.InvestingTab.View()
+                tabContent.setup(tab: investingTabView)
+                
+                investingTabView.onSelectBalance = { [weak self] (identifier) in
+                    let request = Event.SelectBalance.Request()
+                    self?.interactorDispatch?.sendRequest { businessLogic in
+                        businessLogic.onSelectBalance(request: request)
+                    }
+                }
+                investingTabView.onInvestAction = { [weak self] (identifier) in
+                    let request = Event.InvestAction.Request()
+                    self?.interactorDispatch?.sendRequest { businessLogic in
+                        businessLogic.onInvestAction(request: request)
+                    }
+                }
+                investingTabView.onCancelInvestAction = { [weak self] (identifier) in
+                    let onSelected: ((Int) -> Void) = { _ in
+                        let request = Event.CancelInvestAction.Request()
+                        self?.interactorDispatch?.sendRequest { businessLogic in
+                            businessLogic.onCancelInvestAction(request: request)
+                        }
+                    }
+                    self?.routing?.showDialog(
+                        Localized(.cancel_investment),
+                        Localized(.are_you_sure_you_want_to_cancel_investment),
+                        [Localized(.yes)],
+                        onSelected
+                    )
+                }
+                investingTabView.onDidEnterAmount = { [weak self] (amount) in
+                    let request = Event.EditAmount.Request(amount: amount)
+                    self?.interactorDispatch?.sendRequest { businessLogic in
+                        businessLogic.onEditAmount(request: request)
+                    }
+                }
+                contentView = investingTabView
+            } else if let tabContent = tabContent as? SaleDetails.DescriptionTab.ViewModel {
+                let descriptionTabView = SaleDetails.DescriptionTab.View()
+                tabContent.setup(tab: descriptionTabView)
+                
+                descriptionTabView.onDidSelectMoreInfoButton = { [weak self] (identifier) in
+                    let request = Event.DidSelectMoreInfoButton.Request()
+                    self?.interactorDispatch?.sendRequest { businessLogic in
+                        businessLogic.onDidSelectMoreInfoButton(request: request)
+                    }
+                }
+                contentView = descriptionTabView
+            } else if let tabContent = tabContent as? SaleDetails.ChartTab.ViewModel {
+                let chartTabView = SaleDetails.ChartTab.View()
+                tabContent.setup(tab: chartTabView)
+                
+                chartTabView.didSelectPickerItem = { [weak self] (period) in
+                    let request = Event.SelectChartPeriod.Request(period: period)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onSelectChartPeriod(request: request)
+                    })
+                }
+                
+                chartTabView.didSelectChartItem = { [weak self] (charItemIndex) in
+                    let request = Event.SelectChartEntry.Request(chartEntryIndex: charItemIndex)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onSelectChartEntry(request: request)
+                    })
+                }
+                contentView = chartTabView
+            } else if let tabContent = tabContent as? SaleDetails.OverviewTab.ViewModel {
+                let overviewTabView = SaleDetails.OverviewTab.View()
+                tabContent.setup(tab: overviewTabView)
+                contentView = overviewTabView
+            } else if let tabContent = tabContent as? SaleDetails.EmptyContent.ViewModel {
+                let emptyTabView = SaleDetails.EmptyContent.View()
+                tabContent.setup(emptyTabView)
+                contentView = emptyTabView
+            } else {
+                contentView = UIView()
+            }
+            
+            self.contentView = contentView
+            self.containerView.subviews.forEach { (view) in
+                view.removeFromSuperview()
+            }
+            
+            self.containerView.addSubview(contentView)
+            contentView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
-        }
-        
-        private func addKeyboardObserver() {
-            let keyboardObserver = KeyboardObserver(self) { [weak self] (attributes) in
-                self?.setBottomInsetWithKeyboardAttributes(attributes)
-            }
-            KeyboardController.shared.add(observer: keyboardObserver)
-        }
-        
-        private func setBottomInsetWithKeyboardAttributes(
-            _ attributes: KeyboardAttributes?
-            ) {
-            
-            let keyboardHeight: CGFloat = attributes?.heightInContainerView(self.view, view: self.tableView) ?? 0
-            var bottomInset: CGFloat = keyboardHeight
-            if attributes?.showingIn(view: self.view) != true {
-                if #available(iOS 11, *) {
-                    bottomInset += self.view.safeAreaInsets.bottom
-                } else {
-                    bottomInset += self.bottomLayoutGuide.length
-                }
-            }
-            self.tableView.contentInset.bottom = bottomInset
-        }
-        
-        private func updateCell(_ cell: CellViewAnyModel, indexPath: IndexPath) {
-            self.sections[indexPath.section].cells[indexPath.row] = cell
-        }
-        
-        private func updateSelectChartPeriod(viewModel: Event.SelectChartPeriod.ViewModel) {
-            guard let chartCell = self.findCell(
-                cellIdentifier: viewModel.updatedCell.identifier,
-                cellViewModelType: ChartCell.ViewModel.self,
-                cellType: ChartCell.View.self
-                ) else {
-                    return
-            }
-            
-            self.updateCell(viewModel.updatedCell, indexPath: chartCell.ip)
-            
-            if let cell = chartCell.cc {
-                viewModel.viewModel.setup(cell: cell)
-            }
-        }
-        
-        private func updateInvestingCell(_ viewModel: InvestingCell.ViewModel) {
-            guard let investingCell = self.findCell(
-                cellIdentifier: viewModel.identifier,
-                cellViewModelType: InvestingCell.ViewModel.self,
-                cellType: InvestingCell.View.self
-                ) else {
-                    return
-            }
-            
-            self.updateCell(viewModel, indexPath: investingCell.ip)
-            
-            if let cell = investingCell.cc {
-                viewModel.setup(cell: cell)
-            }
-        }
-        
-        private func findCell<CellViewModelType: CellViewAnyModel, CellType: UITableViewCell>(
-            cellIdentifier: CellIdentifier,
-            cellViewModelType: CellViewModelType.Type,
-            cellType: CellType.Type
-            ) -> (vm: CellViewModelType, ip: IndexPath, cc: CellType?)? {
-            
-            for (sectionIndex, section) in self.sections.enumerated() {
-                for (cellIndex, cell) in section.cells.enumerated() {
-                    guard let chartCellViewModel = cell as? CellViewModelType else {
-                        continue
-                    }
-                    
-                    let indexPath = IndexPath(row: cellIndex, section: sectionIndex)
-                    if let cell = self.tableView.cellForRow(at: indexPath) {
-                        if let chartCell = cell as? CellType {
-                            return (chartCellViewModel, indexPath, chartCell)
-                        } else {
-                            return nil
-                        }
-                    } else {
-                        return (chartCellViewModel, indexPath, nil)
-                    }
-                }
-            }
-            
-            return nil
         }
     }
 }
@@ -170,9 +195,22 @@ extension SaleDetails {
 // MARK: - DisplayLogic
 
 extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
-    func displaySectionsUpdated(viewModel: Event.SectionsUpdated.ViewModel) {
-        self.sections = viewModel.sections
-        self.tableView.reloadData()
+    func displayTabsUpdated(viewModel: Event.TabsUpdated.ViewModel) {
+        let items = viewModel.tabs.map { (tab) -> HorizontalPicker.Item in
+            return HorizontalPicker.Item(
+                title: tab.title,
+                enabled: true,
+                onSelect: { [weak self] in
+                    let request = Event.TabWasSelected.Request(identifier: tab.id)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onTabWasSelected(request: request)
+                    })
+                }
+            )
+        }
+        self.horizontalPicker.items = items
+        self.updateSelectedTabIfNeeded(index: viewModel.selectedTabIndex)
+        self.setContentView(tabContent: viewModel.selectedTabContent)
     }
     
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel) {
@@ -187,7 +225,7 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     }
     
     func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel) {
-        self.updateInvestingCell(viewModel.updatedCell)
+        self.updateInvestingTab(viewModel.updatedTab)
     }
     
     func displayInvestAction(viewModel: Event.InvestAction.ViewModel) {
@@ -231,118 +269,22 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     }
     
     func displaySelectChartPeriod(viewModel: Event.SelectChartPeriod.ViewModel) {
-        self.updateSelectChartPeriod(viewModel: viewModel)
+        guard let contentView = self.contentView,
+            let chartView = contentView as? SaleDetails.ChartTab.View else {
+                return
+        }
+        viewModel.viewModel.setup(tab: chartView)
     }
     
     func displaySelectChartEntry(viewModel: Event.SelectChartEntry.ViewModel) {
-        guard let chartCell = self.findCell(
-            cellIdentifier: viewModel.viewModel.identifier,
-            cellViewModelType: SaleDetails.ChartCell.ViewModel.self,
-            cellType: SaleDetails.ChartCell.View.self
-            ) else {
+        guard let contentView = self.contentView,
+            let chartView = contentView as? SaleDetails.ChartTab.View else {
                 return
         }
-        
-        if let cell = chartCell.cc {
-            viewModel.viewModel.setup(cell: cell)
-        }
-    }
-}
-
-// MARK: - UITableViewDelegate
-
-extension SaleDetails.ViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let model = self.sections[indexPath.section].cells[indexPath.row]
-        let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
-        
-        let estimatedHeight: CGFloat
-        
-        if cell is SaleDetails.InvestingCell.View {
-            estimatedHeight = 200.0
-        } else if cell is SaleDetails.DescriptionCell.View {
-            estimatedHeight = 260.0
-        } else if cell is SaleDetails.ChartCell.View {
-            estimatedHeight = 300.0
-        } else {
-            estimatedHeight = tableView.estimatedRowHeight
-        }
-        
-        return estimatedHeight
-    }
-}
-
-// MARK: - UITableViewDataSource
-
-extension SaleDetails.ViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sections.count
+        viewModel.viewModel.setup(tab: chartView)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sections[section].cells.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = self.sections[indexPath.section].cells[indexPath.row]
-        let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
-        
-        if let cell = cell as? SaleDetails.InvestingCell.View {
-            cell.onSelectBalance = { [weak self] (identifier) in
-                let request = Event.SelectBalance.Request()
-                self?.interactorDispatch?.sendRequest { businessLogic in
-                    businessLogic.onSelectBalance(request: request)
-                }
-            }
-            cell.onInvestAction = { [weak self] (identifier) in
-                let request = Event.InvestAction.Request()
-                self?.interactorDispatch?.sendRequest { businessLogic in
-                    businessLogic.onInvestAction(request: request)
-                }
-            }
-            cell.onCancelInvestAction = { [weak self] (identifier) in
-                let onSelected: ((Int) -> Void) = { _ in
-                    let request = Event.CancelInvestAction.Request()
-                    self?.interactorDispatch?.sendRequest { businessLogic in
-                        businessLogic.onCancelInvestAction(request: request)
-                    }
-                }
-                self?.routing?.showDialog(
-                    Localized(.cancel_investment),
-                    Localized(.are_you_sure_you_want_to_cancel_investment),
-                    [Localized(.yes)],
-                    onSelected
-                )
-            }
-            cell.onDidEnterAmount = { [weak self] (amount) in
-                let request = Event.EditAmount.Request(amount: amount)
-                self?.interactorDispatch?.sendRequest { businessLogic in
-                    businessLogic.onEditAmount(request: request)
-                }
-            }
-        } else if let cell = cell as? SaleDetails.DescriptionCell.View {
-            cell.onDidSelectMoreInfoButton = { [weak self] (identifier) in
-                let request = Event.DidSelectMoreInfoButton.Request()
-                self?.interactorDispatch?.sendRequest { businessLogic in
-                    businessLogic.onDidSelectMoreInfoButton(request: request)
-                }
-            }
-        } else if let cell = cell as? SaleDetails.ChartCell.View {
-            cell.didSelectPickerItem = { [weak self] (period) in
-                let request = Event.SelectChartPeriod.Request(period: period)
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onSelectChartPeriod(request: request)
-                })
-            }
-            
-            cell.didSelectChartItem = { [weak self] (charItemIndex) in
-                let request = Event.SelectChartEntry.Request(chartEntryIndex: charItemIndex)
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onSelectChartEntry(request: request)
-                })
-            }
-        }
-        
-        return cell
+    func displayTabWasSelected(viewModel: Event.TabWasSelected.ViewModel) {
+        self.setContentView(tabContent: viewModel.tabContent)
     }
 }

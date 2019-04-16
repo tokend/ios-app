@@ -3,7 +3,7 @@ import UIKit
 protocol SaleDetailsPresentationLogic {
     typealias Event = SaleDetails.Event
     
-    func presentSectionsUpdated(response: Event.SectionsUpdated.Response)
+    func presentTabsUpdated(response: Event.TabsUpdated.Response)
     func presentSelectBalance(response: Event.SelectBalance.Response)
     func presentBalanceSelected(response: Event.BalanceSelected.Response)
     func presentInvestAction(response: Event.InvestAction.Response)
@@ -11,6 +11,7 @@ protocol SaleDetailsPresentationLogic {
     func presentDidSelectMoreInfoButton(response: Event.DidSelectMoreInfoButton.Response)
     func presentSelectChartPeriod(response: Event.SelectChartPeriod.Response)
     func presentSelectChartEntry(response: Event.SelectChartEntry.Response)
+    func presentTabWasSelected(response: Event.TabWasSelected.Response)
 }
 
 extension SaleDetails {
@@ -52,7 +53,7 @@ extension SaleDetails {
         // MARK: - Private
         
         private func getTimeText(
-            sale: Model.DescriptionCellModel
+            sale: Model.DescriptionTabModel
             ) -> (timeText: NSAttributedString, isUpcomming: Bool) {
             
             let isUpcomming: Bool
@@ -127,9 +128,9 @@ extension SaleDetails {
             return (attributedDaysRemaining, isUpcomming)
         }
         
-        private func createDescriptionSectionViewModel(
-            sale: Model.DescriptionCellModel
-            ) -> DescriptionCell.ViewModel {
+        private func createDescriptionTabViewModel(
+            sale: Model.DescriptionTabModel
+            ) -> DescriptionTab.ViewModel {
             
             let name = sale.name
             let asset = sale.asset
@@ -174,7 +175,7 @@ extension SaleDetails {
                     .foregroundColor: Theme.Colors.accentColor
                 ]
             )
-
+            
             let attributedInvestedPercentage = LocalizedAtrributed(
                 .percent_funded,
                 attributes: [
@@ -187,7 +188,7 @@ extension SaleDetails {
             
             let timeText = self.getTimeText(sale: sale)
             
-            return DescriptionCell.ViewModel(
+            return DescriptionTab.ViewModel(
                 imageUrl: sale.imageUrl,
                 name: saleName,
                 description: attributedDescription,
@@ -200,21 +201,21 @@ extension SaleDetails {
             )
         }
         
-        private func createChartSectionViewModel(
-            cellModel: Model.ChartCellModel
-            ) -> ChartCell.ViewModel {
+        private func createChartTabViewModel(
+            tabModel: Model.ChartTabModel
+            ) -> ChartTab.ViewModel {
             
             let formattedAmount = self.amountFormatter.formatAmount(
-                cellModel.investedAmount,
-                currency: cellModel.asset
+                tabModel.investedAmount,
+                currency: tabModel.asset
             )
             var deployed = Localized(.deployed)
-            if let deployedDate = cellModel.investedDate {
+            if let deployedDate = tabModel.investedDate {
                 let formattedDate = self.dateFormatter.dateToString(deployedDate)
                 deployed.append(" \(formattedDate)")
             }
             
-            let datePickerItems = cellModel.datePickerItems.map { (period) -> Model.PeriodViewModel in
+            let datePickerItems = tabModel.datePickerItems.map { (period) -> Model.PeriodViewModel in
                 let title = self.titleForPeriod(period)
                 return Model.PeriodViewModel(
                     title: title,
@@ -224,11 +225,11 @@ extension SaleDetails {
             }
             
             let formattedGrowth = self.getFormattedGrowthAmount(
-                cellModel.growth,
-                asset: cellModel.asset
+                tabModel.growth,
+                asset: tabModel.asset
             )
             var formattedGrowthSinceDate = ""
-            if let selectedPeriod = cellModel.growthSincePeriod {
+            if let selectedPeriod = tabModel.growthSincePeriod {
                 let period = self.titleForPeriod(selectedPeriod).lowercased()
                 formattedGrowthSinceDate = Localized(
                     .since_last_period,
@@ -238,35 +239,45 @@ extension SaleDetails {
                 )
             }
             
-            let chartViewModel = self.getChartViewModel(cellModel.chartModel, asset: cellModel.asset)
+            let chartViewModel = self.getChartViewModel(tabModel.chartModel, asset: tabModel.asset)
             
-            return ChartCell.ViewModel(
+            return ChartTab.ViewModel(
                 title: formattedAmount,
                 subTitle: deployed,
                 datePickerItems: datePickerItems,
-                selectedDatePickerItemIndex: cellModel.selectedDatePickerItem ?? 0,
+                selectedDatePickerItemIndex: tabModel.selectedDatePickerItem ?? 0,
                 growth: formattedGrowth,
-                growthPositive: cellModel.growthPositive,
+                growthPositive: tabModel.growthPositive,
                 growthSinceDate: formattedGrowthSinceDate,
                 axisFormatters: self.setupAxisFormatters(
-                    periods: cellModel.datePickerItems,
-                    selectedPeriodIndex: cellModel.selectedDatePickerItem
+                    periods: tabModel.datePickerItems,
+                    selectedPeriodIndex: tabModel.selectedDatePickerItem
                 ),
                 chartViewModel: chartViewModel,
-                identifier: cellModel.cellIdentifier
+                identifier: tabModel.cellIdentifier
             )
         }
         
-        private func createOverviewSectionModel(
-            overview: Model.OverviewCellModel
-            ) -> OverviewCell.ViewModel {
+        private func createOverviewTabViewModel(
+            overview: Model.OverviewTabModel
+            ) -> OverviewTab.ViewModel {
             
             let contentText = self.overviewFormatter.formatText(
                 text: overview.overview
             )
-            return OverviewCell.ViewModel(
-                contentText: contentText
+            return OverviewTab.ViewModel(
+                contentText: contentText,
+                identifier: .overview
             )
+        }
+        
+        private func createEmptyTabViewModel(
+            model: Model.EmptyTabModel
+            ) -> EmptyContent.ViewModel {
+            
+            let message = model.message
+            
+            return EmptyContent.ViewModel(message: message)
         }
         
         private func setupAxisFormatters(
@@ -293,14 +304,14 @@ extension SaleDetails {
             })
         }
         
-        private func createInvestingSectionViewModel(
-            cellModel: Model.InvestingCellModel
-            ) -> InvestingCell.ViewModel {
+        private func createInvestingTabViewModel(
+            tabModel: Model.InvestingTabModel
+            ) -> InvestingTab.ViewModel {
             
             let availableAmount: String
-            if let selectedAsset = cellModel.selectedBalance {
+            if let selectedAsset = tabModel.selectedBalance {
                 let formatted = self.investedAmountFormatter.formatAmount(
-                    cellModel.availableAmount,
+                    tabModel.availableAmount,
                     currency: selectedAsset.asset
                 )
                 availableAmount = Localized(
@@ -313,13 +324,13 @@ extension SaleDetails {
                 availableAmount = ""
             }
             
-            return InvestingCell.ViewModel(
+            return InvestingTab.ViewModel(
                 availableAmount: availableAmount,
-                inputAmount: cellModel.amount,
-                maxInputAmount: cellModel.availableAmount,
-                selectedAsset: cellModel.selectedBalance?.asset,
-                isCancellable: cellModel.isCancellable,
-                identifier: cellModel.cellIdentifier
+                inputAmount: tabModel.amount,
+                maxInputAmount: tabModel.availableAmount,
+                selectedAsset: tabModel.selectedBalance?.asset,
+                isCancellable: tabModel.isCancellable,
+                identifier: tabModel.cellIdentifier
             )
         }
         
@@ -402,35 +413,41 @@ extension SaleDetails {
             
             return chartViewModel
         }
+        
+        private func getTabViewModel(tabType: Model.TabType) -> Any {
+            switch tabType {
+                
+            case .description(let descriptionTabModel):
+                return self.createDescriptionTabViewModel(sale: descriptionTabModel)
+                
+            case .investing(let investingTabModel):
+                return self.createInvestingTabViewModel(tabModel: investingTabModel)
+                
+            case .chart(let chartTabModel):
+                return self.createChartTabViewModel(tabModel: chartTabModel)
+                
+            case .overview(let overviewTabModel):
+                return self.createOverviewTabViewModel(overview: overviewTabModel)
+                
+            case .empty(let emptyTabModel):
+                return self.createEmptyTabViewModel(model: emptyTabModel)
+            }
+        }
     }
 }
 
 extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
-    func presentSectionsUpdated(response: Event.SectionsUpdated.Response) {
-        let sectionsViewModel = response.sections.map { (sectionModel) -> Model.SectionViewModel in
-            return Model.SectionViewModel(cells: sectionModel.cells.map({ (cellModel) -> CellViewAnyModel in
-                
-                switch cellModel.cellType {
-                    
-                case .description(let descriptionCellModel):
-                    return self.createDescriptionSectionViewModel(sale: descriptionCellModel)
-                    
-                case .investing(let investingCellModel):
-                    return self.createInvestingSectionViewModel(cellModel: investingCellModel)
-                    
-                case .chart(let chartCellModel):
-                    return self.createChartSectionViewModel(cellModel: chartCellModel)
-                    
-                case .overview(let overviewCellModel):
-                    return self.createOverviewSectionModel(overview: overviewCellModel)
-                }
-            }))
-        }
+    func presentTabsUpdated(response: Event.TabsUpdated.Response) {
+        let tabContent = self.getTabViewModel(tabType: response.selectedTabType)
         
-        let viewModel = Event.SectionsUpdated.ViewModel(sections: sectionsViewModel)
+        let viewModel = Event.TabsUpdated.ViewModel.init(
+            tabs: response.tabs,
+            selectedTabIndex: response.selectedTabIndex,
+            selectedTabContent: tabContent
+        )
         
         self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displaySectionsUpdated(viewModel: viewModel)
+            displayLogic.displayTabsUpdated(viewModel: viewModel)
         }
     }
     
@@ -446,8 +463,8 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
     }
     
     func presentBalanceSelected(response: Event.BalanceSelected.Response) {
-        let updatedCell = self.createInvestingSectionViewModel(cellModel: response.updatedCell)
-        let viewModel = Event.BalanceSelected.ViewModel(updatedCell: updatedCell)
+        let updatedTab = self.createInvestingTabViewModel(tabModel: response.updatedTab)
+        let viewModel = Event.BalanceSelected.ViewModel(updatedTab: updatedTab)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayBalanceSelected(viewModel: viewModel)
         }
@@ -522,8 +539,7 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         }
         
         let chartViewModel = self.getChartViewModel(response.chartModel, asset: response.asset)
-        
-        let chartUpdatedViewModel = SaleDetails.ChartCell.ChartUpdatedViewModel(
+        let chartUpdatedViewModel = SaleDetails.ChartTab.ChartUpdatedViewModel(
             selectedPeriodIndex: response.selectedPeriodIndex ?? 0,
             growth: formattedGrowth,
             growthPositive: response.growthPositive,
@@ -536,7 +552,7 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         )
         let viewModel = Event.SelectChartPeriod.ViewModel(
             viewModel: chartUpdatedViewModel,
-            updatedCell: self.createChartSectionViewModel(cellModel: response.updatedCell)
+            updatedTab: self.createChartTabViewModel(tabModel: response.updatedTab)
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displaySelectChartPeriod(viewModel: viewModel)
@@ -554,7 +570,7 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
             deployed.append(" \(formattedDate)")
         }
         
-        let chartEntrySelectedViewModel = SaleDetails.ChartCell.ChartEntrySelectedViewModel(
+        let chartEntrySelectedViewModel = SaleDetails.ChartTab.ChartEntrySelectedViewModel(
             title: formattedAmount,
             subTitle: deployed,
             identifier: response.identifier
@@ -562,6 +578,14 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         let viewModel = Event.SelectChartEntry.ViewModel(viewModel: chartEntrySelectedViewModel)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displaySelectChartEntry(viewModel: viewModel)
+        }
+    }
+    
+    func presentTabWasSelected(response: Event.TabWasSelected.Response) {
+        let tabContent = self.getTabViewModel(tabType: response.tabType)
+        let viewModel = Event.TabWasSelected.ViewModel(tabContent: tabContent)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayTabWasSelected(viewModel: viewModel)
         }
     }
 }

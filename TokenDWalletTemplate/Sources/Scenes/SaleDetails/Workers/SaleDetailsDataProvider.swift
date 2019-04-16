@@ -19,6 +19,7 @@ protocol SaleDetailsDataProviderProtocol {
     func observeAccount() -> Observable<SaleDetails.Model.AccountModel>
     func observeOffers() -> Observable<[SaleDetails.Model.InvestmentOffer]>
     func observeCharts() -> Observable<[SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]]>
+    func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]>
 }
 
 extension SaleDetails {
@@ -29,6 +30,7 @@ extension SaleDetails {
         
         private typealias ChartPeriod = SaleDetails.Model.Period
         private typealias ChartEntry = SaleDetails.Model.ChartEntry
+        private typealias TabIdentifier = SaleDetails.TabIdentifier
         
         // MARK: - Private properties
         
@@ -45,6 +47,13 @@ extension SaleDetails {
         private let pendingOffers: BehaviorRelay<[PendingOffersRepo.Offer]> = BehaviorRelay(value: [])
         private let saleOverview: BehaviorRelay<Model.SaleOverviewModel?> = BehaviorRelay(value: nil)
         private let charts: BehaviorRelay<TokenDSDK.ChartsResponse> = BehaviorRelay(value: [:])
+        private let errors: BehaviorRelay<[TabIdentifier: String]> = BehaviorRelay(value: [:])
+        
+        private var errorsValue: [TabIdentifier: String] = [:] {
+            didSet {
+                self.errors.accept(self.errorsValue)
+            }
+        }
         
         // MARK: -
         
@@ -211,6 +220,10 @@ extension SaleDetails {
             }).asObservable()
         }
         
+        func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]> {
+            return self.errors.asObservable()
+        }
+        
         // MARK: - Private
         
         private func loadPendingOffers(saleId: String) {
@@ -228,8 +241,8 @@ extension SaleDetails {
                 completion: { [weak self] (result) in
                     switch result {
                         
-                    case .failure:
-                        break
+                    case .failure(let error):
+                        self?.errorsValue[.investing] = error.localizedDescription
                         
                     case .success(let offers):
                         self?.pendingOffers.accept(offers)
@@ -243,8 +256,8 @@ extension SaleDetails {
                 completion: { [weak self] (result) in
                     switch result {
                         
-                    case .failure:
-                        break
+                    case .failure(let error):
+                        self?.errorsValue[.overview] = error.localizedDescription
                         
                     case .success(let blob):
                         let model = Model.SaleOverviewModel(
@@ -262,8 +275,8 @@ extension SaleDetails {
                 completion: { [weak self] (result) in
                     switch result {
                         
-                    case .failure:
-                        break
+                    case .failure(let error):
+                        self?.errorsValue[.chart] = error.localizedDescription
                         
                     case .success(let charts):
                         self?.charts.accept(charts)

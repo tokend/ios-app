@@ -3,9 +3,9 @@ import Charts
 
 extension SaleDetails {
     
-    enum ChartCell {
+    enum ChartTab {
         
-        struct ViewModel: CellViewModel {
+        struct ViewModel {
             
             let title: String
             let subTitle: String
@@ -20,36 +20,36 @@ extension SaleDetails {
             let axisFormatters: Model.AxisFormatters
             let chartViewModel: Model.ChartViewModel
             
-            let identifier: CellIdentifier
+            let identifier: TabIdentifier
             
             // MARK: -
             
-            func setup(cell: View) {
-                cell.title = self.title
-                cell.subTitle = self.subTitle
+            func setup(tab: ChartTab.View) {
+                tab.title = self.title
+                tab.subTitle = self.subTitle
                 
-                weak var weakCell = cell
-                cell.datePickerItems = self.datePickerItems.map({ (period) -> HorizontalPicker.Item in
+                weak var weakTab = tab
+                tab.datePickerItems = self.datePickerItems.map({ (period) -> HorizontalPicker.Item in
                     return HorizontalPicker.Item(
                         title: period.title,
                         enabled: period.isEnabled,
                         onSelect: {
-                            weakCell?.didSelectPickerItem?(period.period.rawValue)
+                            weakTab?.didSelectPickerItem?(period.period.rawValue)
                     })
                 })
-                cell.selectedDatePickerItemIndex = self.selectedDatePickerItemIndex
+                tab.selectedDatePickerItemIndex = self.selectedDatePickerItemIndex
                 
-                cell.growth = self.growth
-                cell.growthPositive = self.growthPositive
-                cell.growthSinceDate = self.growthSinceDate
-                cell.setAxisFormatters(axisFormatters: self.axisFormatters)
-                cell.chartEntries = self.chartViewModel.entries
-                cell.setYAxisLimitLine(
+                tab.growth = self.growth
+                tab.growthPositive = self.growthPositive
+                tab.growthSinceDate = self.growthSinceDate
+                tab.setAxisFormatters(axisFormatters: self.axisFormatters)
+                tab.chartEntries = self.chartViewModel.entries
+                tab.setYAxisLimitLine(
                     value: self.chartViewModel.maxValue,
                     label: self.chartViewModel.formattedMaxValue
                 )
                 
-                cell.identifier = self.identifier
+                tab.identifier = self.identifier
             }
         }
         
@@ -66,16 +66,16 @@ extension SaleDetails {
             
             // MARK: -
             
-            func setup(cell: View) {
-                cell.selectedDatePickerItemIndex = self.selectedPeriodIndex
+            func setup(tab: View) {
+                tab.selectedDatePickerItemIndex = self.selectedPeriodIndex
                 
-                cell.growth = self.growth
-                cell.growthPositive = self.growthPositive
-                cell.growthSinceDate = self.growthSinceDate
+                tab.growth = self.growth
+                tab.growthPositive = self.growthPositive
+                tab.growthSinceDate = self.growthSinceDate
                 
-                cell.setAxisFormatters(axisFormatters: self.axisFormatters)
-                cell.chartEntries = self.chartViewModel.entries
-                cell.setYAxisLimitLine(
+                tab.setAxisFormatters(axisFormatters: self.axisFormatters)
+                tab.chartEntries = self.chartViewModel.entries
+                tab.setYAxisLimitLine(
                     value: self.chartViewModel.maxValue,
                     label: self.chartViewModel.formattedMaxValue
                 )
@@ -86,17 +86,18 @@ extension SaleDetails {
             
             let title: String
             let subTitle: String
-            let identifier: CellIdentifier
+            let identifier: TabIdentifier
             
             // MARK: -
             
-            func setup(cell: View) {
-                cell.title = self.title
-                cell.subTitle = self.subTitle
+            func setup(tab: View) {
+                tab.title = self.title
+                tab.subTitle = self.subTitle
+                tab.identifier = self.identifier
             }
         }
         
-        class View: UITableViewCell {
+        class View: UIView {
             
             typealias DidSelectPickerItem = (_ item: Int) -> Void
             typealias DidSelectChartItem = (_ itemIndex: Int?) -> Void
@@ -106,7 +107,7 @@ extension SaleDetails {
             public var didSelectPickerItem: DidSelectPickerItem?
             public var didSelectChartItem: DidSelectChartItem?
             
-            public var identifier: CellIdentifier?
+            public var identifier: TabIdentifier?
             
             public var title: String? {
                 get { return self.titleLabel.text }
@@ -180,6 +181,8 @@ extension SaleDetails {
             
             // MARK: - Private properties
             
+            private let containerView: UIView = UIView()
+            
             private let titleLabel: UILabel = UILabel()
             private let subTitleLabel: UILabel = UILabel()
             private let datePicker: HorizontalPicker = HorizontalPicker()
@@ -193,8 +196,8 @@ extension SaleDetails {
             
             // MARK: - Initializers
             
-            override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-                super.init(style: style, reuseIdentifier: reuseIdentifier)
+            override init(frame: CGRect) {
+                super.init(frame: frame)
                 
                 self.commonInit()
             }
@@ -230,6 +233,7 @@ extension SaleDetails {
             
             private func commonInit() {
                 self.setupView()
+                self.setupContainerView()
                 self.setupTitleLabel()
                 self.setupSubTitleLabel()
                 self.setupDatePicker()
@@ -242,7 +246,10 @@ extension SaleDetails {
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.contentBackgroundColor
-                self.selectionStyle = .none
+            }
+            
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
             }
             
             private func setupSeparatorView(separator: UIView) {
@@ -295,12 +302,18 @@ extension SaleDetails {
             }
             
             private func setupLayout() {
-                self.contentView.addSubview(self.titleLabel)
-                self.contentView.addSubview(self.subTitleLabel)
-                self.contentView.addSubview(self.datePicker)
-                self.contentView.addSubview(self.growthLabel)
-                self.contentView.addSubview(self.growthSinceDateLabel)
-                self.contentView.addSubview(self.chartView)
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.titleLabel)
+                self.containerView.addSubview(self.subTitleLabel)
+                self.containerView.addSubview(self.datePicker)
+                self.containerView.addSubview(self.growthLabel)
+                self.containerView.addSubview(self.growthSinceDateLabel)
+                self.containerView.addSubview(self.chartView)
+                
+                self.containerView.snp.makeConstraints { (make) in
+                    make.leading.trailing.top.equalToSuperview()
+                    make.height.equalTo(475)
+                }
                 
                 self.titleLabel.snp.makeConstraints { (make) in
                     make.top.equalToSuperview().inset(self.topInset)

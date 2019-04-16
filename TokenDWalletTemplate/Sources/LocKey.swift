@@ -61,6 +61,7 @@ enum LocKey: String {
     case change_password
     case charged
     case charged_from_lock
+    case chart
     case check_sale_state
     case choose_email
     case close_time

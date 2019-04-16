@@ -16,11 +16,13 @@ protocol SaleDetailsBusinessLogic {
     func onDidSelectMoreInfoButton(request: Event.DidSelectMoreInfoButton.Request)
     func onSelectChartPeriod(request: Event.SelectChartPeriod.Request)
     func onSelectChartEntry(request: Event.SelectChartEntry.Request)
+    func onTabWasSelected(request: Event.TabWasSelected.Request)
 }
 
 extension SaleDetails {
     typealias BusinessLogic = SaleDetailsBusinessLogic
     
+    // swiftlint:disable type_body_length
     class Interactor {
         
         typealias Event = SaleDetails.Event
@@ -83,6 +85,11 @@ extension SaleDetails {
                 self.updateRelay.emitEvent()
             }
         }
+        private var errors: [SaleDetails.TabIdentifier: String] = [:] {
+            didSet {
+                self.updateRelay.emitEvent()
+            }
+        }
         
         private var assetDisposable: Disposable? {
             willSet {
@@ -121,18 +128,39 @@ extension SaleDetails {
         
         // MARK: - Private
         
-        private func updateSections() {
-            self.sceneModel.sections = self.createSections()
+        private func updateTabs() {
+            self.sceneModel.tabs = self.createTabs()
+            self.updateSelectedTabIfNeeded()
             
-            let response = Event.SectionsUpdated.Response(sections: self.sceneModel.sections)
-            self.presenter.presentSectionsUpdated(response: response)
+            guard let selectedTabId = self.sceneModel.selectedTabId,
+                let index = self.sceneModel.tabs.firstIndex(where: { (tab) -> Bool in
+                    tab.tabIdentifier == selectedTabId
+                }) else {
+                    return
+            }
+            
+            let tabs = self.sceneModel.tabs.map { (tab) -> Model.PickerTab in
+                return Model.PickerTab(
+                    title: tab.title,
+                    id: tab.tabIdentifier
+                )
+            }
+            
+            let selectedTabType = self.sceneModel.tabs[index].tabType
+            
+            let response = Event.TabsUpdated.Response(
+                tabs: tabs,
+                selectedTabIndex: index,
+                selectedTabType: selectedTabType
+            )
+            self.presenter.presentTabsUpdated(response: response)
         }
         
-        private func createSections() -> [Model.SectionModel] {
-            var sections: [Model.SectionModel] = []
+        private func createTabs() -> [Model.TabModel] {
+            var tabModels: [Model.TabModel] = []
             
             guard let sale = self.sale else {
-                return sections
+                return tabModels
             }
             
             // Description
@@ -144,7 +172,7 @@ extension SaleDetails {
                 investmentPercentage = 1.0
             }
             
-            let descModel = Model.DescriptionCellModel(
+            let descModel = Model.DescriptionTabModel(
                 imageUrl: sale.details.logoUrl,
                 name: sale.details.name,
                 description: sale.details.shortDescription,
@@ -159,22 +187,34 @@ extension SaleDetails {
                 cellIdentifier: .description
             )
             
-            let descCellModel = Model.CellModel(cellType: .description(descModel))
-            let descSection = Model.SectionModel(cells: [descCellModel])
-            sections.append(descSection)
+            let descTabModel = Model.TabModel(
+                title: Localized(.description),
+                tabType: .description(descModel),
+                tabIdentifier: .description
+            )
+            tabModels.append(descTabModel)
             
             // Overview
             
+            let overviewTab: Model.TabModel
             if let overviewModel = self.overviewModel {
-                let overviewCellModel = Model.OverviewCellModel(
+                let overviewTabModel = Model.OverviewTabModel(
                     overview: overviewModel.overview
                 )
-                let overviewCell = Model.CellModel(
-                    cellType: .overview(overviewCellModel)
+                overviewTab = Model.TabModel(
+                    title: Localized(.overview),
+                    tabType: .overview(overviewTabModel),
+                    tabIdentifier: .overview
                 )
-                let overviewSection = Model.SectionModel(cells: [overviewCell])
-                sections.append(overviewSection)
+            } else if let errorMessage = self.errors[.overview] {
+                overviewTab = self.getEmptyTab(
+                    title: Localized(.overview),
+                    message: errorMessage
+                )
+            } else {
+                overviewTab = self.getEmptyTab(title: Localized(.overview))
             }
+            tabModels.append(overviewTab)
             
             // Invest
             
@@ -186,39 +226,78 @@ extension SaleDetails {
             }
             
             if investingEnabled {
-                let investingModel = self.getInvestingCellModel()
+                let investingTabModel: Model.TabModel
                 
-                let investingCellModel = Model.CellModel(cellType: .investing(investingModel))
-                let investingSection = Model.SectionModel(cells: [investingCellModel])
-                sections.append(investingSection)
+                if let errorMessage = self.errors[.investing] {
+                    investingTabModel = self.getEmptyTab(
+                        title: Localized(.investing),
+                        message: errorMessage
+                    )
+                } else {
+                    let investingModel = self.getInvestingTabModel()
+                    investingTabModel = Model.TabModel(
+                        title: Localized(.investing),
+                        tabType: .investing(investingModel),
+                        tabIdentifier: .investing
+                    )
+                }
+                tabModels.append(investingTabModel)
             }
             
             // Chart
+            
+            let chartTab: Model.TabModel
             
             if let selected = self.sceneModel.selectedChartsPeriod,
                 let charts = self.getChartsForPeriod(selected),
                 let lastChart = charts.last {
                 
-                let chartCellModel = self.getChartCellModel(
+                let chartTabModel = self.getChartTabModel(
                     charts: charts,
                     chart: lastChart,
                     sale: sale
                 )
                 
-                let chartCell = Model.CellModel(cellType: .chart(chartCellModel))
-                
-                let chartSection = Model.SectionModel(cells: [chartCell])
-                sections.append(chartSection)
+                chartTab = Model.TabModel(
+                    title: Localized(.chart),
+                    tabType: .chart(chartTabModel),
+                    tabIdentifier: .chart
+                )
+            } else if let errorMessage = self.errors[.chart] {
+                chartTab = self.getEmptyTab(
+                    title: Localized(.chart),
+                    message: errorMessage
+                )
+            } else {
+                chartTab = self.getEmptyTab(title: Localized(.chart))
             }
+            tabModels.append(chartTab)
             
-            return sections
+            return tabModels
         }
         
-        private func getInvestingCellModel() -> Model.InvestingCellModel {
+        private func updateSelectedTabIfNeeded() {
+            guard let selectedTabId = self.sceneModel.selectedTabId,
+                self.sceneModel.tabs.contains(where: { (tab) -> Bool in
+                    tab.tabIdentifier == selectedTabId
+                }) else {
+                    self.setFirstTabSelected()
+                    return
+            }
+        }
+        
+        private func setFirstTabSelected() {
+            guard let first = self.sceneModel.tabs.first else {
+                return
+            }
+            self.sceneModel.selectedTabId = first.tabIdentifier
+        }
+        
+        private func getInvestingTabModel() -> Model.InvestingTabModel {
             let availableAmount = self.getAvailableInputAmount()
             let isCancellable = self.sceneModel.inputAmount != 0.0
             
-            let investingModel = Model.InvestingCellModel(
+            let investingModel = Model.InvestingTabModel(
                 selectedBalance: self.sceneModel.selectedBalance,
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
@@ -229,11 +308,11 @@ extension SaleDetails {
             return investingModel
         }
         
-        private func getChartCellModel(
+        private func getChartTabModel(
             charts: [Model.ChartEntry],
             chart: Model.ChartEntry,
             sale: Model.SaleModel
-            ) -> Model.ChartCellModel {
+            ) -> Model.ChartTabModel {
             
             let investedAmount = chart.value
             let investedDate: Date? = self.sceneModel.selectedChartEntryIndex == nil ? nil : chart.date
@@ -247,7 +326,7 @@ extension SaleDetails {
             }
             let chartModel = self.getChartModel(charts: charts)
             
-            let chartCellModel = Model.ChartCellModel(
+            let chartTabModel = Model.ChartTabModel(
                 asset: sale.defaultQuoteAsset,
                 investedAmount: investedAmount,
                 investedDate: investedDate,
@@ -260,7 +339,19 @@ extension SaleDetails {
                 cellIdentifier: .charts
             )
             
-            return chartCellModel
+            return chartTabModel
+        }
+        
+        private func getEmptyTab(title: String, message: String? = nil) -> Model.TabModel {
+            let emptyTabModel = Model.EmptyTabModel(
+                message: message ?? Localized(.loading)
+            )
+            let emptyTab = Model.TabModel(
+                title: title,
+                tabType: .empty(emptyTabModel),
+                tabIdentifier: .empty
+            )
+            return emptyTab
         }
         
         private func getChartGrowthForCharts(_ charts: [Model.ChartEntry]) -> Decimal {
@@ -295,7 +386,7 @@ extension SaleDetails {
                 .subscribe(onNext: { [weak self] (model) in
                     self?.overviewModel = model
                 })
-            .disposed(by: self.disposeBag)
+                .disposed(by: self.disposeBag)
         }
         
         private func observeSaleBalance() {
@@ -525,9 +616,9 @@ extension SaleDetails {
             }
             
             guard let prevOfferId = self.sceneModel.selectedBalance?.prevOfferId else {
-                    let response = Event.CancelInvestAction.Response.failed(.previousOfferIsNotFound)
-                    self.presenter.presentCancelInvestAction(response: response)
-                    return
+                let response = Event.CancelInvestAction.Response.failed(.previousOfferIsNotFound)
+                self.presenter.presentCancelInvestAction(response: response)
+                return
             }
             
             guard let quoteAsset = sale.quoteAssets.first(where: { (quoteAsset) -> Bool in
@@ -610,6 +701,7 @@ extension SaleDetails {
             )
         }
     }
+    // swiftlint:enable type_body_length
 }
 
 extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
@@ -623,7 +715,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             .asObservable()
             .throttle(0.2, scheduler: scheduler)
             .subscribe(onNext: { [weak self] _ in
-                self?.updateSections()
+                self?.updateTabs()
             }).disposed(by: self.disposeBag)
         
         self.dataProvider
@@ -661,6 +753,13 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             })
             .disposed(by: self.disposeBag)
         
+        self.dataProvider
+            .observeErrors()
+            .subscribe(onNext: { [weak self] (errors) in
+                self?.errors = errors
+            })
+            .disposed(by: self.disposeBag)
+        
         self.offersDisposable = self.dataProvider
             .observeOffers()
             .subscribe(onNext: { [weak self] (offers) in
@@ -679,8 +778,8 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
         self.sceneModel.selectedBalance = balance
         self.updateInputAmountFromSelectedBalance()
         
-        let investingCellModel = self.getInvestingCellModel()
-        let response = Event.BalanceSelected.Response(updatedCell: investingCellModel)
+        let investingTabModel = self.getInvestingTabModel()
+        let response = Event.BalanceSelected.Response(updatedTab: investingTabModel)
         self.presenter.presentBalanceSelected(response: response)
     }
     
@@ -803,7 +902,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
         let growth = self.getChartGrowthForCharts(charts)
         let growthPositive: Bool? = growth == 0.0 ? nil : growth > 0.0
         
-        let updatedCell = self.getChartCellModel(
+        let updatedTab = self.getChartTabModel(
             charts: charts,
             chart: lastChart,
             sale: sale
@@ -820,7 +919,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             growthPositive: growthPositive,
             growthSincePeriod: selectedPeriod,
             chartModel: chartModel,
-            updatedCell: updatedCell
+            updatedTab: updatedTab
         )
         self.presenter.presentSelectChartPeriod(response: response)
     }
@@ -855,6 +954,18 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             identifier: .charts
         )
         self.presenter.presentSelectChartEntry(response: response)
+    }
+    
+    func onTabWasSelected(request: Event.TabWasSelected.Request) {
+        guard let tab = self.sceneModel.tabs.first(where: { (tab) -> Bool in
+            return tab.tabIdentifier == request.identifier
+        }) else {
+            return
+        }
+        
+        self.sceneModel.selectedTabId = tab.tabIdentifier
+        let response = Event.TabWasSelected.Response(tabType: tab.tabType)
+        self.presenter.presentTabWasSelected(response: response)
     }
 }
 
