@@ -360,9 +360,16 @@ extension TransactionsListScene.ViewController: TransactionsListScene.DisplayLog
     }
     
     func displayActionsDidChange(viewModel: Event.ActionsDidChange.ViewModel) {
-        if self.floatActionButton.isHidden {
+        if let viewConfig = self.viewConfig,
+            viewConfig.actionButtonIsHidden {
             return
+        } else if viewModel.actions.isEmpty {
+            self.floatActionButton.isHidden = true
+            return
+        } else {
+            self.floatActionButton.isHidden = false
         }
+        
         let floatyItems = viewModel.actions.map { [weak self] (item) -> FloatyItem in
             let floatyItem = FloatyItem()
             floatyItem.title = item.title

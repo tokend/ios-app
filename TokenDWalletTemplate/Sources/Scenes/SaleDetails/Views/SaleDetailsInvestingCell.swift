@@ -5,30 +5,30 @@ import UIKit
 
 extension SaleDetails {
     
-    enum InvestingCell {
+    enum InvestingTab {
         
-        struct ViewModel: CellViewModel {
+        struct ViewModel {
             
             let availableAmount: String
             let inputAmount: Decimal
             let maxInputAmount: Decimal
             let selectedAsset: String?
             let isCancellable: Bool
-            let identifier: CellIdentifier
+            let identifier: TabIdentifier
             
-            func setup(cell: InvestingCell.View) {
-                cell.availableAmount = self.availableAmount
-                cell.inputAmount = self.inputAmount
-                cell.maxInputAmount = self.maxInputAmount
-                cell.selectedAsset = self.selectedAsset
-                cell.isCancellable = self.isCancellable
-                cell.identifier = self.identifier
+            func setup(tab: InvestingTab.View) {
+                tab.availableAmount = self.availableAmount
+                tab.inputAmount = self.inputAmount
+                tab.maxInputAmount = self.maxInputAmount
+                tab.selectedAsset = self.selectedAsset
+                tab.isCancellable = self.isCancellable
+                tab.identifier = self.identifier
             }
         }
         
-        class View: UITableViewCell {
+        class View: UIView {
             
-            typealias DidSelectButton = (_ cellIdentifier: CellIdentifier) -> Void
+            typealias DidSelectButton = (_ cellIdentifier: TabIdentifier) -> Void
             
             // MARK: - Public properties
             
@@ -64,11 +64,13 @@ extension SaleDetails {
                 set { self.cancelButton.isHidden = !newValue }
             }
             
-            public var identifier: CellIdentifier?
+            public var identifier: TabIdentifier?
             
             // MARK: - Private properties
             
             private let disposeBag = DisposeBag()
+            
+            private let containerView: UIView = UIView()
             
             private let titleLabel: UILabel = UILabel()
             private let investContenView: UIView = UIView()
@@ -88,8 +90,8 @@ extension SaleDetails {
             
             // MARK: - Initializers
             
-            override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-                super.init(style: style, reuseIdentifier: reuseIdentifier)
+            override init(frame: CGRect) {
+                super.init(frame: frame)
                 
                 self.commonInit()
             }
@@ -102,6 +104,7 @@ extension SaleDetails {
             
             private func commonInit() {
                 self.setupView()
+                self.setupContainerView()
                 self.setupTitleLabel()
                 self.setupInvestContenView()
                 self.setupAvailableAssetAmountLabel()
@@ -114,8 +117,11 @@ extension SaleDetails {
             }
             
             private func setupView() {
-                self.backgroundColor = Theme.Colors.contentBackgroundColor
-                self.selectionStyle = .none
+                self.backgroundColor = Theme.Colors.containerBackgroundColor
+            }
+            
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
             }
             
             private func setupSeparatorView(separator: UIView) {
@@ -230,10 +236,17 @@ extension SaleDetails {
             }
             
             private func setupLayout() {
-                self.contentView.addSubview(self.titleLabel)
-                self.contentView.addSubview(self.investContenView)
-                self.contentView.addSubview(self.investButton)
-                self.contentView.addSubview(self.cancelButton)
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.titleLabel)
+                self.containerView.addSubview(self.investContenView)
+                self.containerView.addSubview(self.investButton)
+                self.containerView.addSubview(self.cancelButton)
+                
+                self.containerView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview()
+                    make.top.equalToSuperview().inset(self.topInset)
+                    make.bottom.lessThanOrEqualToSuperview()
+                }
                 
                 self.titleLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)

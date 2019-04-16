@@ -9,15 +9,16 @@ enum SaleDetails {
     
     // MARK: -
     
-    enum CellIdentifier: String {
+    enum TabIdentifier: String {
         case empty
         case details
         case description
         case investing
         case charts
         case chart
+        case overview
     }
-
+    
     enum Model {}
     enum Event {}
 }
@@ -26,7 +27,8 @@ enum SaleDetails {
 
 extension SaleDetails.Model {
     class SceneModel {
-        var sections: [SectionModel]
+        var tabs: [TabModel]
+        var selectedTabId: SaleDetails.TabIdentifier?
         var inputAmount: Decimal
         var selectedBalance: BalanceDetails?
         var chartsPeriods: [Period]
@@ -34,7 +36,8 @@ extension SaleDetails.Model {
         var selectedChartEntryIndex: Int?
         
         init() {
-            self.sections = []
+            self.tabs = []
+            self.selectedTabId = nil
             self.inputAmount = 0.0
             self.selectedBalance = nil
             self.chartsPeriods = []
@@ -43,7 +46,8 @@ extension SaleDetails.Model {
         }
         
         init(
-            sections: [SectionModel],
+            tabs: [TabModel],
+            selectedTabId: SaleDetails.TabIdentifier?,
             inputAmount: Decimal,
             selectedBalance: BalanceDetails?,
             chartsPeriods: [Period],
@@ -51,7 +55,8 @@ extension SaleDetails.Model {
             selectedChartEntryIndex: Int?
             ) {
             
-            self.sections = sections
+            self.tabs = tabs
+            self.selectedTabId = selectedTabId
             self.inputAmount = inputAmount
             self.selectedBalance = selectedBalance
             self.chartsPeriods = chartsPeriods
@@ -74,26 +79,52 @@ extension SaleDetails.Model {
         let startTime: Date
     }
     
-    struct SectionModel {
-        let cells: [CellModel]
+    struct TabModel {
+        let title: String
+        let tabType: TabType
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
-    struct CellModel {
-        let cellType: CellType
+    struct TabViewModel {
+        let title: String
+        let tabContent: Any
+        let tabIdentifier: SaleDetails.TabIdentifier
+    }
+    
+    struct PickerTab {
+        let title: String
+        let id: SaleDetails.TabIdentifier
     }
     
     struct SectionViewModel {
-        var cells: [CellViewAnyModel]
+        var tabs: [TabViewModel]
     }
     
-    enum CellType {
-        case description(DescriptionCellModel)
-        case investing(InvestingCellModel)
-        case chart(ChartCellModel)
-        case overview(OverviewCellModel)
+    enum TabType {
+        case description(DescriptionTabModel)
+        case investing(InvestingTabModel)
+        case chart(ChartTabModel)
+        case overview(OverviewTabModel)
+        case empty(EmptyTabModel)
     }
     
-    struct DescriptionCellModel {
+    enum TabContentType {
+        case description(SaleDetails.DescriptionTab.ViewModel)
+        case investing(SaleDetails.InvestingTab.ViewModel)
+        case chart(SaleDetails.ChartTab.ViewModel)
+        case overview(SaleDetails.OverviewTab.ViewModel)
+        case empty(SaleDetails.EmptyContent.ViewModel)
+    }
+    
+    enum TabViewType {
+        case description(SaleDetails.DescriptionTab.View)
+        case investing(SaleDetails.InvestingTab.View)
+        case chart(SaleDetails.ChartTab.View)
+        case overview(SaleDetails.OverviewTab.View)
+        case empty(SaleDetails.EmptyContent.View)
+    }
+    
+    struct DescriptionTabModel {
         let imageUrl: URL?
         let name: String
         let description: String
@@ -109,18 +140,18 @@ extension SaleDetails.Model {
         
         let youtubeVideoUrl: URL?
         
-        let cellIdentifier: SaleDetails.CellIdentifier
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
-    struct InvestingCellModel {
+    struct InvestingTabModel {
         var selectedBalance: BalanceDetails?
         var amount: Decimal
         let availableAmount: Decimal
         let isCancellable: Bool
-        let cellIdentifier: SaleDetails.CellIdentifier
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
-    struct ChartCellModel {
+    struct ChartTabModel {
         let asset: String
         
         let investedAmount: Decimal
@@ -135,11 +166,17 @@ extension SaleDetails.Model {
         
         let chartModel: ChartModel
         
-        let cellIdentifier: SaleDetails.CellIdentifier
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
-    struct OverviewCellModel {
+    struct OverviewTabModel {
         let overview: String
+        let tabIdentifier: SaleDetails.TabIdentifier
+    }
+    
+    struct EmptyTabModel {
+        let message: String
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
     struct SaleInvestModel {
@@ -264,12 +301,28 @@ extension SaleDetails.Event {
         struct Request {}
     }
     
-    enum SectionsUpdated {
+    enum TabsUpdated {
         struct Response {
-            let sections: [Model.SectionModel]
+            let tabs: [Model.PickerTab]
+            let selectedTabIndex: Int?
+            let selectedTabType: Model.TabType
         }
         struct ViewModel {
-            let sections: [Model.SectionViewModel]
+            let tabs: [Model.PickerTab]
+            let selectedTabIndex: Int?
+            let selectedTabContent: Model.TabContentType
+        }
+    }
+    
+    enum TabWasSelected {
+        struct Request {
+            let identifier: SaleDetails.TabIdentifier
+        }
+        struct Response {
+            let tabType: Model.TabType
+        }
+        struct ViewModel {
+            let tabContent: Model.TabContentType
         }
     }
     
@@ -291,11 +344,11 @@ extension SaleDetails.Event {
         }
         
         struct Response {
-            let updatedCell: Model.InvestingCellModel
+            let updatedTab: Model.InvestingTabModel
         }
         
         struct ViewModel {
-            let updatedCell: SaleDetails.InvestingCell.ViewModel
+            let updatedTab: SaleDetails.InvestingTab.ViewModel
         }
     }
     
@@ -373,12 +426,12 @@ extension SaleDetails.Event {
             
             let chartModel: Model.ChartModel
             
-            let updatedCell: Model.ChartCellModel
+            let updatedTab: Model.ChartTabModel
         }
         
         struct ViewModel {
-            let viewModel: SaleDetails.ChartCell.ChartUpdatedViewModel
-            let updatedCell: SaleDetails.ChartCell.ViewModel
+            let viewModel: SaleDetails.ChartTab.ChartUpdatedViewModel
+            let updatedTab: SaleDetails.ChartTab.ViewModel
         }
     }
     
@@ -391,18 +444,18 @@ extension SaleDetails.Event {
             let asset: String
             let investedAmount: Decimal
             let investedDate: Date?
-            let identifier: SaleDetails.CellIdentifier
+            let identifier: SaleDetails.TabIdentifier
         }
         
         struct ViewModel {
-            let viewModel: SaleDetails.ChartCell.ChartEntrySelectedViewModel
+            let viewModel: SaleDetails.ChartTab.ChartEntrySelectedViewModel
         }
     }
 }
 
 // MARK: -
 
-extension SaleDetails.Model.DescriptionCellModel {
+extension SaleDetails.Model.DescriptionTabModel {
     enum ImageState {
         case empty
         case loaded(UIImage)
