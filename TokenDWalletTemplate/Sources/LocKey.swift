@@ -61,6 +61,7 @@ enum LocKey: String {
     case change_password
     case charged
     case charged_from_lock
+    case chart
     case chart_cap
     case check_sale_state
     case choose_email
@@ -91,6 +92,7 @@ enum LocKey: String {
     case description
     case description_optional
     case destination_address
+    case destination_address_colon
     case document_max_size
     case document_max_size_replace_file_size
     case done
@@ -219,6 +221,7 @@ enum LocKey: String {
     case issued
     case keychaindataprovider_should_always_provide_key
     case last_name
+    case loading
     case locked
     case lower_bound
     case main_title
@@ -307,7 +310,9 @@ enum LocKey: String {
     case received_amount_may_be_lower_due_to_network_fees
     case received_amount_may_be_lower_due_to_network_fees_replace_destasset
     case recipient
+    case recipients_email
     case recipients_fee
+    case recipients_fee_has_been_paid
     case recover_it
     case recovery
     case recovery_seed
@@ -349,6 +354,7 @@ enum LocKey: String {
     case send_transaction_error
     case send_transaction_error_replace_message
     case sender
+    case senders_email
     case sent
     case server
     case set_placeholder

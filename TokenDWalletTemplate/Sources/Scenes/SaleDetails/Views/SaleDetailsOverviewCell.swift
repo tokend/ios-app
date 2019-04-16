@@ -5,20 +5,22 @@ import Down
 
 extension SaleDetails {
     
-    enum OverviewCell {
+    enum OverviewTab {
         struct Model {
             let contentText: String
+            let identifier: TabIdentifier
         }
         
-        struct ViewModel: CellViewModel {
+        struct ViewModel {
             let contentText: String
+            let identifier: TabIdentifier
             
-            func setup(cell: OverviewCell.View) {
-                cell.saleDescription = self.contentText
+            func setup(tab: OverviewTab.View) {
+                tab.saleDescription = self.contentText
             }
         }
         
-        class View: UITableViewCell {
+        class View: UIView {
             
             public var saleDescription: String? {
                 get { return self.saleDescriptionLabel.text }
@@ -34,8 +36,9 @@ extension SaleDetails {
             
             // MARK: - Override
             
-            override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-                super.init(style: style, reuseIdentifier: reuseIdentifier)
+            override init(frame: CGRect) {
+                super.init(frame: frame)
+                
                 self.commonInit()
             }
             
@@ -69,8 +72,7 @@ extension SaleDetails {
                 if let view = self.getMarkdownView(text: text) {
                     self.addSubview(view)
                     view.snp.makeConstraints { (make) in
-                        make.leading.trailing.top.bottom.equalToSuperview()
-                        make.height.equalTo(450.0)
+                        make.edges.equalToSuperview()
                     }
                 } else {
                     self.addSubview(self.saleDescriptionLabel)
@@ -84,10 +86,10 @@ extension SaleDetails {
             
             private func getMarkdownView(text: String) -> DownView? {
                 return try? DownView(
-                        frame: self.bounds,
-                        markdownString: text,
-                        openLinksInBrowser: false
-                    )
+                    frame: self.bounds,
+                    markdownString: text,
+                    openLinksInBrowser: false
+                )
             }
         }
     }

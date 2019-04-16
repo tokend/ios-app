@@ -6,7 +6,7 @@ extension SaleInfo {
     enum GeneralContent {
         
         typealias SectionViewModel = TransactionDetails.Model.SectionViewModel
-        typealias TitleValueCellModel = TransactionDetailsCell.Model
+        typealias TitleValueCellModel = TitleValueTableViewCell.Model
         
         struct Model {
             let baseAsset: String

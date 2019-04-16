@@ -58,6 +58,7 @@
 "change_password" = "Change Password";
 "charged" = "Charged";
 "charged_from_lock" = "Charged from lock";
+"chart" = "Chart";
 "chart_cap" = "CHART";
 "check_sale_state" = "Check sale state";
 "choose_email" = "Choose email";
@@ -87,7 +88,8 @@
 "deposit_to" = "Deposit to";
 "description" = "Description";
 "description_optional" = "Description(optional)";
-"destination_address" = "Destination address:";
+"destination_address" = "Destination address";
+"destination_address_colon" = "Destination address:";
 "document_max_size" = "image (Max $(file_size))";
 "document_max_size_replace_file_size" = "file_size";
 "done" = "Done";
@@ -216,6 +218,7 @@
 "issued" = "Issued";
 "keychaindataprovider_should_always_provide_key" = "KeychainDataProvider should always provide key";
 "last_name" = "Last name";
+"loading" = "Loading...";
 "locked" = "Locked";
 "lower_bound" = "Lower bound";
 "main_title" = "Main title";
@@ -304,7 +307,9 @@
 "received_amount_may_be_lower_due_to_network_fees" = "Received amount may be lower due to $(destasset) network fees";
 "received_amount_may_be_lower_due_to_network_fees_replace_destasset" = "destasset";
 "recipient" = "Recipient";
+"recipients_email" = "Recipient's email";
 "recipients_fee" = "Recipient's fee";
+"recipients_fee_has_been_paid" = "Recipient's fee has been paid by the sender";
 "recover_it" = "Recover it";
 "recovery" = "Recovery";
 "recovery_seed" = "Recovery Seed";
@@ -346,6 +351,7 @@
 "send_transaction_error" = "Send transaction error: $(message)";
 "send_transaction_error_replace_message" = "message";
 "sender" = "Sender";
+"senders_email" = "Sender's email";
 "sent" = "Sent";
 "server" = "Server";
 "set_placeholder" = "Set placeholder";

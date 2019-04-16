@@ -5,7 +5,7 @@ import Nuke
 
 extension SaleInfo {
     
-    typealias TokenCellModel = TransactionDetailsCell.Model
+    typealias TokenCellModel = TitleValueTableViewCell.Model
     typealias SectionViewModel = TransactionDetails.Model.SectionViewModel
     typealias SectionModel = TransactionDetails.Model.SectionModel
     
