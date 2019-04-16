@@ -177,31 +177,52 @@ extension TradeOffers.Event {
         
         public struct Response {
             
+            public let assetPair: Model.AssetPair
             public let tabs: [Model.ContentTab]
             public let selectedIndex: Int
+            public let periods: [Model.Period]
+            public let selectedPeriodIndex: Int?
             
             public init(
+                assetPair: Model.AssetPair,
                 tabs: [Model.ContentTab],
-                selectedIndex: Int
+                selectedIndex: Int,
+                periods: [Model.Period],
+                selectedPeriodIndex: Int?
                 ) {
                 
+                self.assetPair = assetPair
                 self.tabs = tabs
                 self.selectedIndex = selectedIndex
+                self.periods = periods
+                self.selectedPeriodIndex = selectedPeriodIndex
             }
         }
         
         public struct ViewModel {
             
+            public let assetPair: Model.AssetPair
             public let tabs: [(title: String, tab: Model.ContentTab)]
             public let selectedIndex: Int
+            public let periods: [Model.PeriodViewModel]
+            public let selectedPeriodIndex: Int?
+            public let axisFomatters: Model.AxisFormatters
             
             public init(
+                assetPair: Model.AssetPair,
                 tabs: [(title: String, tab: Model.ContentTab)],
-                selectedIndex: Int
+                selectedIndex: Int,
+                periods: [Model.PeriodViewModel],
+                selectedPeriodIndex: Int?,
+                axisFomatters: Model.AxisFormatters
                 ) {
                 
+                self.assetPair = assetPair
                 self.tabs = tabs
                 self.selectedIndex = selectedIndex
+                self.periods = periods
+                self.selectedPeriodIndex = selectedPeriodIndex
+                self.axisFomatters = axisFomatters
             }
         }
     }

@@ -125,7 +125,7 @@ extension TradeOffers {
             }
         }
         
-        private func periodsToViewModels(
+        private func getPeriodViewModels(
             _ periods: [Model.Period]
             ) -> [Model.PeriodViewModel] {
             
@@ -161,9 +161,19 @@ extension TradeOffers {
 extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     public func presentViewDidLoad(response: Event.ViewDidLoad.Response) {
         let tabs = response.tabs.map { ($0.title, $0) }
+        let periods = self.getPeriodViewModels(response.periods)
+        let axisFomatters = self.setupAxisFormatters(
+            periods: response.periods,
+            selectedPeriodIndex: response.selectedPeriodIndex
+        )
+        
         let viewModel = Event.ViewDidLoad.ViewModel(
+            assetPair: response.assetPair,
             tabs: tabs,
-            selectedIndex: response.selectedIndex
+            selectedIndex: response.selectedIndex,
+            periods: periods,
+            selectedPeriodIndex: response.selectedPeriodIndex,
+            axisFomatters: axisFomatters
         )
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayViewDidLoad(viewModel: viewModel)
@@ -191,7 +201,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     }
     
     public func presentPeriodsDidChange(response: Event.PeriodsDidChange.Response) {
-        var periods = self.periodsToViewModels(response.periods)
+        var periods = self.getPeriodViewModels(response.periods)
         if periods.isEmpty {
             periods = [Model.PeriodViewModel(
                 title: Localized(.no_available_periods),

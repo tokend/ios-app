@@ -1,5 +1,7 @@
 import UIKit
 import Charts
+import RxCocoa
+import RxSwift
 
 public protocol TradeOffersDisplayLogic: class {
     typealias Event = TradeOffers.Event
@@ -53,6 +55,8 @@ extension TradeOffers {
             return view
         }()
         
+        private let disposeBag = DisposeBag()
+        
         // MARK: -
         
         deinit {
@@ -85,6 +89,7 @@ extension TradeOffers {
             self.setupContainerView()
             self.setupOrderBookView()
             self.setupChartView()
+            self.setupNavigationBar()
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request()
@@ -143,6 +148,42 @@ extension TradeOffers {
             })
         }
         
+        private func setupNavigationBar() {
+            var items: [UIBarButtonItem] = []
+            
+            let createOfferButton = UIBarButtonItem(
+                image: Assets.addIcon.image,
+                style: .plain,
+                target: nil,
+                action: nil
+            )
+            createOfferButton.rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.onCreateOffer()
+                })
+                .disposed(by: self.disposeBag)
+            items.append(createOfferButton)
+            
+            let showPendingButton = UIBarButtonItem(
+                image: Assets.pendingIcon.image,
+                style: .plain,
+                target: nil,
+                action: nil
+            )
+            showPendingButton.rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.showPendingTransactions()
+                })
+                .disposed(by: self.disposeBag)
+            items.append(showPendingButton)
+            
+            self.navigationItem.rightBarButtonItems = items
+        }
+        
         private func setupLayout() {
             self.view.addSubview(self.picker)
             self.view.addSubview(self.containerView)
@@ -174,6 +215,17 @@ extension TradeOffers {
             self.orderBookView.isHidden = hideOrderBookView
             self.chartView.isHidden = hideChartView
             self.tradesView.isHidden = hideTradesView
+        }
+        
+        private func onCreateOffer() {
+            let request = Event.CreateOffer.Request(amount: nil, price: nil)
+            self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                businessLogic.onCreateOffer(request: request)
+            })
+        }
+        
+        private func showPendingTransactions() {
+            self.routing?.onSelectPendingOffers()
         }
         
         private func setPeriods(_ periods: [Model.PeriodViewModel]) {
@@ -246,6 +298,14 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
             })
         })
         self.picker.setSelectedItemAtIndex(viewModel.selectedIndex, animated: false)
+        
+        self.orderBookView.baseCurrency = viewModel.assetPair.baseAsset
+        self.orderBookView.quoteCurrency = viewModel.assetPair.quoteAsset
+        
+        self.setPeriods(viewModel.periods)
+        self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)
+        
+        self.setAxisFormatters(axisFormatters: viewModel.axisFomatters)
     }
     
     public func displayScreenTitleUpdated(viewModel: Event.ScreenTitleUpdated.ViewModel) {

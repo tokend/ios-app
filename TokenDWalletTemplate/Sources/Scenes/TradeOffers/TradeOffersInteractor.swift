@@ -34,6 +34,12 @@ extension TradeOffers {
             return self.sceneModel.periods.index(of: selectedPeriod)
         }
         
+        private var updatingOrderBook: Bool = false
+        private var shouldUpdateOrderBook: Bool = true
+        
+        private var updatingCharts: Bool = false
+        private var shouldUpdateCharts: Bool = true
+        
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
@@ -74,15 +80,20 @@ extension TradeOffers {
             
             switch tab {
             case .orderBook:
-                break
+                self.updateOrderBook()
             case .chart:
                 self.onChartsDidChange()
+                self.updateCharts()
             case .trades:
                 break
             }
         }
         
         private func updateCharts() {
+            guard self.shouldUpdateCharts && !self.updatingCharts else {
+                return
+            }
+            
             self.onPriceDidChange()
             
             self.onLoading(
@@ -93,14 +104,17 @@ extension TradeOffers {
             self.chartsFetcher.cancelRequests()
             let selectedPair = self.sceneModel.assetPair
             
+            self.updatingCharts = true
             self.chartsFetcher.getChartsForBaseAsset(
                 selectedPair.baseAsset,
                 quoteAsset: selectedPair.quoteAsset
             ) { [weak self] (result) in
                 
+                self?.updatingCharts = false
                 switch result {
                     
                 case .success(let charts):
+                    self?.shouldUpdateCharts = false
                     self?.sceneModel.charts = charts
                     self?.onChartsDidChange()
                     self?.onLoading(
@@ -110,6 +124,7 @@ extension TradeOffers {
                     )
                     
                 case .failure:
+                    self?.shouldUpdateCharts = true
                     self?.onLoading(
                         showForChart: false,
                         showForBuyTable: nil,
@@ -171,7 +186,11 @@ extension TradeOffers {
             }
         }
         
-        private func updateTrades() {
+        private func updateOrderBook() {
+            guard self.shouldUpdateOrderBook && !self.updatingOrderBook else {
+                return
+            }
+            
             self.sceneModel.buyOffers = nil
             self.sceneModel.sellOffers = nil
             self.onLoading(
@@ -191,13 +210,17 @@ extension TradeOffers {
                 showForSellTable: false
             )
             
+            self.updatingOrderBook = true
             self.offersFetcher.getOffers(
                 forBuy: true,
                 base: selectedPair.baseAsset,
                 quote: selectedPair.quoteAsset) { [weak self] (result) in
+                    self?.updatingOrderBook = false
+                    
                     switch result {
                         
                     case .failed:
+                        self?.shouldUpdateOrderBook = true
                         self?.onLoading(
                             showForChart: nil,
                             showForBuyTable: false,
@@ -205,6 +228,7 @@ extension TradeOffers {
                         )
                         
                     case .succeeded(let offers):
+                        self?.shouldUpdateOrderBook = false
                         self?.sceneModel.buyOffers = offers
                         self?.onLoading(
                             showForChart: nil,
@@ -291,8 +315,11 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
         let selectedIndex = self.getSelectedTabIndex()
         
         let response = Event.ViewDidLoad.Response(
+            assetPair: self.sceneModel.assetPair,
             tabs: self.sceneModel.tabs,
-            selectedIndex: selectedIndex
+            selectedIndex: selectedIndex,
+            periods: self.sceneModel.periods,
+            selectedPeriodIndex: self.selectedPeriodIndex
         )
         self.presenter.presentViewDidLoad(response: response)
         
@@ -300,8 +327,7 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
     }
     
     public func onViewWillAppear(request: Event.ViewWillAppear.Request) {
-//        self.updateCharts()
-//        self.updateTrades()
+        
     }
     
     public func onContentTabSelected(request: Event.ContentTabSelected.Request) {
