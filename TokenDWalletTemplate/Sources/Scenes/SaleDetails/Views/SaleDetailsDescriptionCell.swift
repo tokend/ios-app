@@ -112,7 +112,6 @@ extension SaleDetails {
             
             private let iconSize: CGFloat = 45
             
-            private let containerView: UIView = UIView()
             private let scrollView: UIScrollView = UIScrollView()
             private let assetImageView: UIImageView = UIImageView()
             private let nameLabel: UILabel = UILabel()
@@ -156,7 +155,6 @@ extension SaleDetails {
             
             private func commonInit() {
                 self.setupView()
-                self.setupContainerView()
                 self.setupScrollView()
                 self.setupAssetImageView()
                 self.setupNameLabel()
@@ -174,10 +172,6 @@ extension SaleDetails {
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.contentBackgroundColor
-            }
-            
-            private func setupContainerView() {
-                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
             }
             
             private func setupScrollView() {
@@ -267,8 +261,7 @@ extension SaleDetails {
             }
             
             private func setupLayout() {
-                self.addSubview(self.containerView)
-                self.containerView.addSubview(self.scrollView)
+                self.addSubview(self.scrollView)
                 self.scrollView.addSubview(self.assetImageView)
                 self.scrollView.addSubview(self.nameLabel)
                 self.scrollView.addSubview(self.shortDescriptionLabel)
@@ -277,10 +270,6 @@ extension SaleDetails {
                 self.scrollView.addSubview(self.separatorView)
                 self.scrollView.addSubview(self.moreInfoButton)
                 
-                self.containerView.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
-                }
-                
                 self.scrollView.snp.makeConstraints { (make) in
                     make.edges.equalToSuperview()
                 }
@@ -288,7 +277,7 @@ extension SaleDetails {
                 self.assetImageView.snp.makeConstraints { (make) in
                     make.top.leading.trailing.equalToSuperview()
                     make.width.equalTo(self.assetImageView.snp.height).multipliedBy(16.0/9.0)
-                    make.width.equalTo(self.containerView.snp.width)
+                    make.width.equalTo(self.snp.width)
                 }
                 
                 self.nameLabel.snp.makeConstraints { (make) in

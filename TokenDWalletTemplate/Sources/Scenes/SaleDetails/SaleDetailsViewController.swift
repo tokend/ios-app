@@ -26,7 +26,7 @@ extension SaleDetails {
         
         private let horizontalPicker: HorizontalPicker = HorizontalPicker()
         private let containerView: UIView = UIView()
-        private var contentView: UIView?
+        private var contentType: Model.TabViewType?
         
         // MARK: - Injections
         
@@ -83,11 +83,17 @@ extension SaleDetails {
         }
         
         private func updateInvestingTab(_ viewModel: InvestingTab.ViewModel) {
-            guard let contentView = self.contentView,
-                let investingTab = contentView as? SaleDetails.InvestingTab.View else {
-                    return
+            guard let viewType = self.contentType else {
+                return
             }
-            viewModel.setup(tab: investingTab)
+            switch viewType {
+                
+            case .investing(let investingTab):
+                viewModel.setup(tab: investingTab)
+                
+            default:
+                break
+            }
         }
         
         private func updateSelectedTabIfNeeded(index: Int?) {
@@ -98,12 +104,48 @@ extension SaleDetails {
             self.horizontalPicker.setSelectedItemAtIndex(index, animated: true)
         }
         
-        private func setContentView(tabContent: Any) {
+        private func setContentView(tabContent: Model.TabContentType) {
+            let contentType: Model.TabViewType
             let contentView: UIView
             
-            if let tabContent = tabContent as? SaleDetails.InvestingTab.ViewModel {
+            switch tabContent {
+                
+            case .chart(let viewModel):
+                let chartTabView = SaleDetails.ChartTab.View()
+                viewModel.setup(tab: chartTabView)
+                
+                chartTabView.didSelectPickerItem = { [weak self] (period) in
+                    let request = Event.SelectChartPeriod.Request(period: period)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onSelectChartPeriod(request: request)
+                    })
+                }
+                
+                chartTabView.didSelectChartItem = { [weak self] (charItemIndex) in
+                    let request = Event.SelectChartEntry.Request(chartEntryIndex: charItemIndex)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onSelectChartEntry(request: request)
+                    })
+                }
+                contentType = .chart(chartTabView)
+                contentView = chartTabView
+                
+            case .description(let viewModel):
+                let descriptionTabView = SaleDetails.DescriptionTab.View()
+                viewModel.setup(tab: descriptionTabView)
+                
+                descriptionTabView.onDidSelectMoreInfoButton = { [weak self] (identifier) in
+                    let request = Event.DidSelectMoreInfoButton.Request()
+                    self?.interactorDispatch?.sendRequest { businessLogic in
+                        businessLogic.onDidSelectMoreInfoButton(request: request)
+                    }
+                }
+                contentType = .description(descriptionTabView)
+                contentView = descriptionTabView
+                
+            case .investing(let viewModel):
                 let investingTabView = SaleDetails.InvestingTab.View()
-                tabContent.setup(tab: investingTabView)
+                viewModel.setup(tab: investingTabView)
                 
                 investingTabView.onSelectBalance = { [weak self] (identifier) in
                     let request = Event.SelectBalance.Request()
@@ -137,57 +179,53 @@ extension SaleDetails {
                         businessLogic.onEditAmount(request: request)
                     }
                 }
+                contentType = .investing(investingTabView)
                 contentView = investingTabView
-            } else if let tabContent = tabContent as? SaleDetails.DescriptionTab.ViewModel {
-                let descriptionTabView = SaleDetails.DescriptionTab.View()
-                tabContent.setup(tab: descriptionTabView)
                 
-                descriptionTabView.onDidSelectMoreInfoButton = { [weak self] (identifier) in
-                    let request = Event.DidSelectMoreInfoButton.Request()
-                    self?.interactorDispatch?.sendRequest { businessLogic in
-                        businessLogic.onDidSelectMoreInfoButton(request: request)
-                    }
-                }
-                contentView = descriptionTabView
-            } else if let tabContent = tabContent as? SaleDetails.ChartTab.ViewModel {
-                let chartTabView = SaleDetails.ChartTab.View()
-                tabContent.setup(tab: chartTabView)
-                
-                chartTabView.didSelectPickerItem = { [weak self] (period) in
-                    let request = Event.SelectChartPeriod.Request(period: period)
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onSelectChartPeriod(request: request)
-                    })
-                }
-                
-                chartTabView.didSelectChartItem = { [weak self] (charItemIndex) in
-                    let request = Event.SelectChartEntry.Request(chartEntryIndex: charItemIndex)
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onSelectChartEntry(request: request)
-                    })
-                }
-                contentView = chartTabView
-            } else if let tabContent = tabContent as? SaleDetails.OverviewTab.ViewModel {
+            case .overview(let viewModel):
                 let overviewTabView = SaleDetails.OverviewTab.View()
-                tabContent.setup(tab: overviewTabView)
+                viewModel.setup(tab: overviewTabView)
+                
+                contentType = .overview(overviewTabView)
                 contentView = overviewTabView
-            } else if let tabContent = tabContent as? SaleDetails.EmptyContent.ViewModel {
+                
+            case .empty(let viewModel):
                 let emptyTabView = SaleDetails.EmptyContent.View()
-                tabContent.setup(emptyTabView)
+                viewModel.setup(emptyTabView)
+                
+                contentType = .empty(emptyTabView)
                 contentView = emptyTabView
-            } else {
-                contentView = UIView()
             }
             
-            self.contentView = contentView
-            self.containerView.subviews.forEach { (view) in
-                view.removeFromSuperview()
-            }
+            self.removeCurrentTabView()
+            self.contentType = contentType
             
             self.containerView.addSubview(contentView)
             contentView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
+        }
+        
+        private func removeCurrentTabView() {
+            guard let viewType = self.contentType else {
+                return
+            }
+            
+            let view: UIView
+            switch viewType {
+                
+            case .description(let descriptionView):
+                view = descriptionView
+            case .investing(let investingView):
+                view = investingView
+            case .chart(let chartView):
+                view = chartView
+            case .overview(let overviewView):
+                view = overviewView
+            case .empty(let emptyView):
+                view = emptyView
+            }
+            view.removeFromSuperview()
         }
     }
 }
@@ -269,19 +307,31 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     }
     
     func displaySelectChartPeriod(viewModel: Event.SelectChartPeriod.ViewModel) {
-        guard let contentView = self.contentView,
-            let chartView = contentView as? SaleDetails.ChartTab.View else {
-                return
+        guard let viewType = self.contentType else {
+            return
         }
-        viewModel.viewModel.setup(tab: chartView)
+        switch viewType {
+            
+        case .chart(let chartTab):
+            viewModel.viewModel.setup(tab: chartTab)
+            
+        default:
+            break
+        }
     }
     
     func displaySelectChartEntry(viewModel: Event.SelectChartEntry.ViewModel) {
-        guard let contentView = self.contentView,
-            let chartView = contentView as? SaleDetails.ChartTab.View else {
-                return
+        guard let viewType = self.contentType else {
+            return
         }
-        viewModel.viewModel.setup(tab: chartView)
+        switch viewType {
+            
+        case .chart(let chartTab):
+            viewModel.viewModel.setup(tab: chartTab)
+            
+        default:
+            break
+        }
     }
     
     func displayTabWasSelected(viewModel: Event.TabWasSelected.ViewModel) {

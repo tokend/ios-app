@@ -312,7 +312,8 @@ extension SaleDetails {
                 
                 self.containerView.snp.makeConstraints { (make) in
                     make.leading.trailing.top.equalToSuperview()
-                    make.height.equalTo(475)
+                    make.height.lessThanOrEqualTo(self.snp.height)
+                    make.bottom.lessThanOrEqualToSuperview()
                 }
                 
                 self.titleLabel.snp.makeConstraints { (make) in

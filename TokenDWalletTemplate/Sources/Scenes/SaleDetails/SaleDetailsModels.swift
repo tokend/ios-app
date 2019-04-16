@@ -108,6 +108,22 @@ extension SaleDetails.Model {
         case empty(EmptyTabModel)
     }
     
+    enum TabContentType {
+        case description(SaleDetails.DescriptionTab.ViewModel)
+        case investing(SaleDetails.InvestingTab.ViewModel)
+        case chart(SaleDetails.ChartTab.ViewModel)
+        case overview(SaleDetails.OverviewTab.ViewModel)
+        case empty(SaleDetails.EmptyContent.ViewModel)
+    }
+    
+    enum TabViewType {
+        case description(SaleDetails.DescriptionTab.View)
+        case investing(SaleDetails.InvestingTab.View)
+        case chart(SaleDetails.ChartTab.View)
+        case overview(SaleDetails.OverviewTab.View)
+        case empty(SaleDetails.EmptyContent.View)
+    }
+    
     struct DescriptionTabModel {
         let imageUrl: URL?
         let name: String
@@ -294,7 +310,7 @@ extension SaleDetails.Event {
         struct ViewModel {
             let tabs: [Model.PickerTab]
             let selectedTabIndex: Int?
-            let selectedTabContent: Any
+            let selectedTabContent: Model.TabContentType
         }
     }
     
@@ -306,7 +322,7 @@ extension SaleDetails.Event {
             let tabType: Model.TabType
         }
         struct ViewModel {
-            let tabContent: Any
+            let tabContent: Model.TabContentType
         }
     }
     

@@ -414,23 +414,28 @@ extension SaleDetails {
             return chartViewModel
         }
         
-        private func getTabViewModel(tabType: Model.TabType) -> Any {
+        private func getTabContentType(tabType: Model.TabType) -> Model.TabContentType {
             switch tabType {
                 
             case .description(let descriptionTabModel):
-                return self.createDescriptionTabViewModel(sale: descriptionTabModel)
+                let content = self.createDescriptionTabViewModel(sale: descriptionTabModel)
+                return .description(content)
                 
             case .investing(let investingTabModel):
-                return self.createInvestingTabViewModel(tabModel: investingTabModel)
+                let content = self.createInvestingTabViewModel(tabModel: investingTabModel)
+                return .investing(content)
                 
             case .chart(let chartTabModel):
-                return self.createChartTabViewModel(tabModel: chartTabModel)
+                let content = self.createChartTabViewModel(tabModel: chartTabModel)
+                return .chart(content)
                 
             case .overview(let overviewTabModel):
-                return self.createOverviewTabViewModel(overview: overviewTabModel)
+                let content = self.createOverviewTabViewModel(overview: overviewTabModel)
+                return .overview(content)
                 
             case .empty(let emptyTabModel):
-                return self.createEmptyTabViewModel(model: emptyTabModel)
+                let content = self.createEmptyTabViewModel(model: emptyTabModel)
+                return .empty(content)
             }
         }
     }
@@ -438,9 +443,9 @@ extension SaleDetails {
 
 extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
     func presentTabsUpdated(response: Event.TabsUpdated.Response) {
-        let tabContent = self.getTabViewModel(tabType: response.selectedTabType)
+        let tabContent = self.getTabContentType(tabType: response.selectedTabType)
         
-        let viewModel = Event.TabsUpdated.ViewModel.init(
+        let viewModel = Event.TabsUpdated.ViewModel(
             tabs: response.tabs,
             selectedTabIndex: response.selectedTabIndex,
             selectedTabContent: tabContent
@@ -582,7 +587,7 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
     }
     
     func presentTabWasSelected(response: Event.TabWasSelected.Response) {
-        let tabContent = self.getTabViewModel(tabType: response.tabType)
+        let tabContent = self.getTabContentType(tabType: response.tabType)
         let viewModel = Event.TabWasSelected.ViewModel(tabContent: tabContent)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayTabWasSelected(viewModel: viewModel)
