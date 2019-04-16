@@ -7,11 +7,11 @@ protocol AmountConverterProtocol {
 
 public class AmountConverter: AmountConverterProtocol {
     
-    // MARK:-  Private proverties
+    // MARK: - Private proverties
     
-    private let behavior: NSDecimalNumberBehaviors = NSDecimalFloorRoundingBehavior()
+    private let behavior: NSDecimalNumberBehaviors = DecimalFloorRoundingBehavior()
     
-    // MARK:- AmountConverterProtocol
+    // MARK: - AmountConverterProtocol
     
     func convertDecimalToUInt64(value: Decimal, precision: Int64) -> UInt64 {
         let amount = NSDecimalNumber(decimal: value * Decimal(precision)).rounding(accordingToBehavior: self.behavior)

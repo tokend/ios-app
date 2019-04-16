@@ -248,7 +248,7 @@
 		7FF896EF21AEBCA7001A5D48 /* TermsInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF896EE21AEBCA7001A5D48 /* TermsInfoProvider.swift */; };
 		DB09402A2260F3C400A9992A /* TransactionDetailsEmailFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */; };
 		DB09402C2264E4F500A9992A /* SaleDetailsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB09402B2264E4F500A9992A /* SaleDetailsEmptyView.swift */; };
-		DB09402F2266322A00A9992A /* NSDecimalFloorRoundingBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB09402E2266322A00A9992A /* NSDecimalFloorRoundingBehavior.swift */; };
+		DB09402F2266322A00A9992A /* DecimalFloorRoundingBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB09402E2266322A00A9992A /* DecimalFloorRoundingBehavior.swift */; };
 		DB0E51D02164E99F00DDA88C /* SaleInfoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C32164E99E00DDA88C /* SaleInfoPresenter.swift */; };
 		DB0E51D12164E99F00DDA88C /* SaleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C42164E99E00DDA88C /* SaleInfoViewController.swift */; };
 		DB0E51D22164E99F00DDA88C /* SaleInfoConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C52164E99E00DDA88C /* SaleInfoConfigurator.swift */; };
@@ -727,7 +727,7 @@
 		CC520A204845775964452C95 /* libPods-TokenDWalletTemplate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TokenDWalletTemplate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsEmailFetcher.swift; sourceTree = "<group>"; };
 		DB09402B2264E4F500A9992A /* SaleDetailsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsEmptyView.swift; sourceTree = "<group>"; };
-		DB09402E2266322A00A9992A /* NSDecimalFloorRoundingBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSDecimalFloorRoundingBehavior.swift; sourceTree = "<group>"; };
+		DB09402E2266322A00A9992A /* DecimalFloorRoundingBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalFloorRoundingBehavior.swift; sourceTree = "<group>"; };
 		DB0E51C22164E99E00DDA88C /* SaleInfoModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoModels.swift; sourceTree = "<group>"; };
 		DB0E51C32164E99E00DDA88C /* SaleInfoPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoPresenter.swift; sourceTree = "<group>"; };
 		DB0E51C42164E99E00DDA88C /* SaleInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoViewController.swift; sourceTree = "<group>"; };
@@ -2060,7 +2060,7 @@
 			isa = PBXGroup;
 			children = (
 				E91131ED20C5482C00A8AC4D /* CellViewModelProtocol.swift */,
-				DB09402E2266322A00A9992A /* NSDecimalFloorRoundingBehavior.swift */,
+				DB09402E2266322A00A9992A /* DecimalFloorRoundingBehavior.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -3029,7 +3029,7 @@
 				7FEC94972148170500F41EE6 /* SaleDetailsRouting.swift in Sources */,
 				E93F075820D7D885000C0991 /* TransactionsListTableViewCell.swift in Sources */,
 				E91131FA20C56FC700A8AC4D /* UIView+Loading.swift in Sources */,
-				DB09402F2266322A00A9992A /* NSDecimalFloorRoundingBehavior.swift in Sources */,
+				DB09402F2266322A00A9992A /* DecimalFloorRoundingBehavior.swift in Sources */,
 				7F967FA12125985A005527EA /* UpdatePasswordInteractor.swift in Sources */,
 				DB5A3BC221C1554600520604 /* FeesInteractor.swift in Sources */,
 				7F967FC3212C3FF8005527EA /* LocalAuthFlowController.swift in Sources */,
