@@ -47,18 +47,6 @@ extension RegisterScene {
             }
         }
         
-        override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            
-            self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                businessLogic.onFieldEditing(request: RegisterScene.Event.FieldEditing.Request.init(
-                    fieldPurpose: .password,
-                    text: "alice@mail.com"
-                ))
-                businessLogic.onSignAction(request: .init())
-            })
-        }
-        
         // MARK: - Private
         
         private func setupView() {
