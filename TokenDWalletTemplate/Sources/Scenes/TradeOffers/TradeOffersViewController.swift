@@ -14,6 +14,7 @@ public protocol TradeOffersDisplayLogic: class {
     func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel)
     func displaySellOffersDidUpdate(viewModel: Event.SellOffersDidUpdate.ViewModel)
     func displayBuyOffersDidUpdate(viewModel: Event.BuyOffersDidUpdate.ViewModel)
+    func displayTradesDidUpdate(viewModel: Event.TradesDidUpdate.ViewModel)
     func displayLoading(viewModel: Event.Loading.ViewModel)
     func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel)
     func displayError(viewModel: Event.Error.ViewModel)
@@ -353,6 +354,10 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
             self.orderBookView.hideEmptyBuyTable()
             self.orderBookView.buyCells = self.setupCells(cells)
         }
+    }
+    
+    public func displayTradesDidUpdate(viewModel: Event.TradesDidUpdate.ViewModel) {
+        
     }
     
     public func displayLoading(viewModel: Event.Loading.ViewModel) {

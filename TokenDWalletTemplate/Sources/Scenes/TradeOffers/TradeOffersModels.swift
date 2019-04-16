@@ -42,6 +42,24 @@ public enum TradeOffers {
                 self.isBuy = isBuy
             }
         }
+        
+        public struct Trade {
+            
+            public let amount: Decimal
+            public let price: Decimal
+            public let date: Date
+            
+            public init(
+                amount: Decimal,
+                price: Decimal,
+                date: Date
+                ) {
+                
+                self.amount = amount
+                self.price = price
+                self.date = date
+            }
+        }
     }
     public enum Event {}
 }
@@ -58,12 +76,13 @@ extension TradeOffers.Model {
         
         public let assetPair: AssetPair
         public let tabs: [ContentTab]
-        public var selectedTab: ContentTab
-        public var selectedPeriod: Period?
-        public var charts: Charts?
         public var buyOffers: [Offer]?
-        public var sellOffers: [Offer]?
+        public var charts: Charts?
         public var periods: [Period] = []
+        public var selectedPeriod: Period?
+        public var selectedTab: ContentTab
+        public var sellOffers: [Offer]?
+        public var trades: [Trade]?
         
         public init(
             assetPair: AssetPair,
@@ -431,24 +450,44 @@ extension TradeOffers.Event {
         }
     }
     
+    public enum TradesDidUpdate {
+        
+        public struct Response {
+            
+            public let trades: [Model.Trade]?
+            
+            public init(trades: [Model.Trade]?) {
+                self.trades = trades
+            }
+        }
+        
+        public enum ViewModel {
+            case empty
+            case cells([OrderBookTableViewCellModel<OrderBookTableViewBuyCell>])
+        }
+    }
+    
     public enum Loading {
         
         public struct Model {
             
             // nil if should not change current state
-            let showForChart: Bool?
-            let showForBuyTable: Bool?
-            let showForSellTable: Bool?
+            public let showForChart: Bool?
+            public let showForBuyTable: Bool?
+            public let showForSellTable: Bool?
+            public let showForTrades: Bool?
             
             public init(
                 showForChart: Bool?,
                 showForBuyTable: Bool?,
-                showForSellTable: Bool?
+                showForSellTable: Bool?,
+                showForTrades: Bool?
                 ) {
                 
                 self.showForChart = showForChart
                 self.showForBuyTable = showForBuyTable
                 self.showForSellTable = showForSellTable
+                self.showForTrades = showForTrades
             }
         }
         

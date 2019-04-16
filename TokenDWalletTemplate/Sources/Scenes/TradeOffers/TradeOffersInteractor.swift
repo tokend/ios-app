@@ -40,6 +40,9 @@ extension TradeOffers {
         private var updatingCharts: Bool = false
         private var shouldUpdateCharts: Bool = true
         
+        private var updatingTrades: Bool = false
+        private var shouldUpdateTrades: Bool = true
+        
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
@@ -96,11 +99,7 @@ extension TradeOffers {
             
             self.onPriceDidChange()
             
-            self.onLoading(
-                showForChart: true,
-                showForBuyTable: nil,
-                showForSellTable: nil
-            )
+            self.onLoading(showForChart: true)
             self.chartsFetcher.cancelRequests()
             let selectedPair = self.sceneModel.assetPair
             
@@ -117,19 +116,11 @@ extension TradeOffers {
                     self?.shouldUpdateCharts = false
                     self?.sceneModel.charts = charts
                     self?.onChartsDidChange()
-                    self?.onLoading(
-                        showForChart: false,
-                        showForBuyTable: nil,
-                        showForSellTable: nil
-                    )
+                    self?.onLoading(showForChart: false)
                     
                 case .failure:
                     self?.shouldUpdateCharts = true
-                    self?.onLoading(
-                        showForChart: false,
-                        showForBuyTable: nil,
-                        showForSellTable: nil
-                    )
+                    self?.onLoading(showForChart: false)
                 }
             }
         }
@@ -194,76 +185,81 @@ extension TradeOffers {
             self.sceneModel.buyOffers = nil
             self.sceneModel.sellOffers = nil
             self.onLoading(
-                showForChart: nil,
                 showForBuyTable: true,
                 showForSellTable: true
             )
             self.onBuyOffersDidChange()
             self.onSellOffersDidChange()
-            self.offersFetcher.cancelRequests()
+            self.offersFetcher.cancelOffersRequests()
             
             let selectedPair = self.sceneModel.assetPair
             
             self.onLoading(
-                showForChart: nil,
                 showForBuyTable: false,
                 showForSellTable: false
             )
             
+            var updatingForBuy = true
+            var updatedForBuy = false
+            var updatingForSale = true
+            var updatedForSale = false
+            
+            let checkUpdatingStates: () -> Void = { [weak self] in
+                self?.updatingOrderBook = updatingForBuy || updatingForSale
+                self?.shouldUpdateOrderBook = !(updatedForBuy && updatedForSale)
+            }
+            
             self.updatingOrderBook = true
+            
             self.offersFetcher.getOffers(
                 forBuy: true,
                 base: selectedPair.baseAsset,
-                quote: selectedPair.quoteAsset) { [weak self] (result) in
-                    self?.updatingOrderBook = false
+                quote: selectedPair.quoteAsset,
+                limit: 20,
+                cursor: nil,
+                completion: { [weak self] (result) in
+                    updatingForBuy = false
+                    self?.onLoading(showForBuyTable: false)
                     
                     switch result {
                         
                     case .failed:
-                        self?.shouldUpdateOrderBook = true
-                        self?.onLoading(
-                            showForChart: nil,
-                            showForBuyTable: false,
-                            showForSellTable: nil
-                        )
+                        updatedForBuy = false
                         
                     case .succeeded(let offers):
-                        self?.shouldUpdateOrderBook = false
+                        updatedForBuy = true
                         self?.sceneModel.buyOffers = offers
-                        self?.onLoading(
-                            showForChart: nil,
-                            showForBuyTable: false,
-                            showForSellTable: nil
-                        )
                     }
                     
+                    checkUpdatingStates()
+                    
                     self?.onBuyOffersDidChange()
-            }
+            })
             
             self.offersFetcher.getOffers(
                 forBuy: false,
                 base: selectedPair.baseAsset,
-                quote: selectedPair.quoteAsset) { [weak self] (result) in
+                quote: selectedPair.quoteAsset,
+                limit: 20,
+                cursor: nil,
+                completion: { [weak self] (result) in
+                    updatingForSale = false
+                    self?.onLoading(showForSellTable: false)
+                    
                     switch result {
                         
                     case .failed:
-                        self?.onLoading(
-                            showForChart: nil,
-                            showForBuyTable: nil,
-                            showForSellTable: false
-                        )
+                        updatedForSale = false
                         
                     case .succeeded(let offers):
+                        updatedForSale = true
                         self?.sceneModel.sellOffers = offers
-                        self?.onLoading(
-                            showForChart: nil,
-                            showForBuyTable: nil,
-                            showForSellTable: false
-                        )
                     }
                     
+                    checkUpdatingStates()
+                    
                     self?.onSellOffersDidChange()
-            }
+            })
         }
         
         @discardableResult
@@ -282,16 +278,56 @@ extension TradeOffers {
             return offers != nil
         }
         
+        private func updateTrades() {
+            guard self.shouldUpdateTrades && !self.updatingTrades else {
+                return
+            }
+            
+            let selectedPair = self.sceneModel.assetPair
+            
+            self.onLoading(showForTrades: true)
+            
+            self.updatingTrades = true
+            
+            self.offersFetcher.getTrades(
+                base: selectedPair.baseAsset,
+                quote: selectedPair.quoteAsset,
+                limit: 20,
+                cursor: nil,
+                completion: { [weak self] (result) in
+                    self?.updatingTrades = false
+                    self?.onLoading(showForTrades: false)
+                    
+                    switch result {
+                        
+                    case .failed:
+                        self?.shouldUpdateTrades = true
+                        
+                    case .succeeded(let trades):
+                        self?.shouldUpdateTrades = false
+                        self?.sceneModel.trades = trades
+                    }
+            })
+        }
+        
+        private func onTradesDidChange(){
+            let trades = self.sceneModel.trades
+            let response = Event.TradesDidUpdate.Response(trades: trades)
+            self.presenter.presentTradesDidUpdate(response: response)
+        }
+        
         private func onLoading(
-            showForChart: Bool?,
-            showForBuyTable: Bool?,
-            showForSellTable: Bool?
+            showForChart: Bool? = nil,
+            showForBuyTable: Bool? = nil,
+            showForSellTable: Bool? = nil,
+            showForTrades: Bool? = nil
             ) {
             
             let response = Event.Loading.Response(
                 showForChart: showForChart,
                 showForBuyTable: showForBuyTable,
-                showForSellTable: showForSellTable
+                showForSellTable: showForSellTable,
+                showForTrades: showForTrades
             )
             self.presenter.presentLoading(response: response)
         }

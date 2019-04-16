@@ -12,6 +12,7 @@ public protocol TradeOffersPresentationLogic {
     func presentChartDidUpdate(response: Event.ChartDidUpdate.Response)
     func presentSellOffersDidUpdate(response: Event.SellOffersDidUpdate.Response)
     func presentBuyOffersDidUpdate(response: Event.BuyOffersDidUpdate.Response)
+    func presentTradesDidUpdate(response: Event.TradesDidUpdate.Response)
     func presentLoading(response: Event.Loading.Response)
     func presentChartFormatterDidChange(response: Event.ChartFormatterDidChange.Response)
     func presentError(response: Event.Error.Response)
@@ -267,7 +268,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     
     public func presentSellOffersDidUpdate(response: Event.SellOffersDidUpdate.Response) {
         let cells = response.offers?.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
-            return cellModelFrom(offer)
+            return self.cellModelFrom(offer)
         }
         let viewModel: Event.SellOffersDidUpdate.ViewModel = {
             return self.createSellOffersDidUpdateViewModel(cells: cells)
@@ -279,7 +280,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     
     public func presentBuyOffersDidUpdate(response: Event.BuyOffersDidUpdate.Response) {
         let cells = response.offers?.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
-            return cellModelFrom(offer)
+            return self.cellModelFrom(offer)
         }
         let viewModel: Event.BuyOffersDidUpdate.ViewModel = {
             return self.createBuyOffersDidUpdateViewModel(cells: cells)
@@ -289,11 +290,16 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         }
     }
     
+    public func presentTradesDidUpdate(response: Event.TradesDidUpdate.Response) {
+        
+    }
+    
     public func presentLoading(response: Event.Loading.Response) {
         let viewModel = Event.Loading.ViewModel(
             showForChart: response.showForChart,
             showForBuyTable: response.showForBuyTable,
-            showForSellTable: response.showForSellTable
+            showForSellTable: response.showForSellTable,
+            showForTrades: response.showForTrades
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayLoading(viewModel: viewModel)

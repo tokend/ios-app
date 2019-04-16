@@ -6,7 +6,8 @@ extension TradeOffers {
     public class OffersFetcher {
         
         private let orderBookApi: TokenDSDK.OrderBookApi
-        private var cancelables: [Cancelable] = []
+        private var offersCancelables: [Cancelable] = []
+        private var tradesCancelables: [Cancelable] = []
         
         public init(
             orderBookApi: TokenDSDK.OrderBookApi
@@ -23,6 +24,8 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
         forBuy: Bool,
         base: String,
         quote: String,
+        limit: Int,
+        cursor: String?,
         completion: @escaping (OffersFetchResult) -> Void
         ) {
         
@@ -34,6 +37,8 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
         
         let token = self.orderBookApi.requestOrderBook(
             parameters: parameters,
+            limit: limit,
+            cursor: cursor,
             completion: { (result) in
                 switch result {
                     
@@ -48,11 +53,52 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
                 }
         })
         
-        self.cancelables.append(token)
+        self.offersCancelables.append(token)
     }
     
-    public func cancelRequests() {
-        for token in self.cancelables {
+    public func cancelOffersRequests() {
+        for token in self.offersCancelables {
+            token.cancel()
+        }
+    }
+    
+    public func getTrades(
+        base: String,
+        quote: String,
+        limit: Int,
+        cursor: String?,
+        completion: @escaping (TradesFetchResult) -> Void
+        ) {
+        
+        let parameters = TradesRequestParameters(
+            baseAsset: base,
+            quoteAsset: quote,
+            orderBookId: "0"
+        )
+        
+        let token = self.orderBookApi.requestTrades(
+            parameters: parameters,
+            limit: limit,
+            cursor: cursor,
+            completion: { (result) in
+                switch result {
+                    
+                case .success(let tradesResponse):
+                    let trades = tradesResponse.map({ (trade) -> TradeOffers.Model.Trade in
+                        return trade.trade
+                    })
+                    completion(.succeeded(trades))
+                    
+                case .failure:
+                    completion(.failed)
+                }
+        })
+        
+        self.offersCancelables.append(token)
+    }
+    
+    public func cancelTradesRequests() {
+        for token in self.tradesCancelables {
             token.cancel()
         }
     }
@@ -77,6 +123,19 @@ extension OrderBookResponse {
             amount: amount,
             price: price,
             isBuy: self.isBuy
+        )
+    }
+}
+
+extension TradeResponse {
+    fileprivate typealias Model = TradeOffers.Model
+    fileprivate typealias Trade = Model.Trade
+    
+    fileprivate var trade: Trade {
+        return Trade(
+            amount: self.baseAmount,
+            price: self.price,
+            date: self.createdAt
         )
     }
 }
