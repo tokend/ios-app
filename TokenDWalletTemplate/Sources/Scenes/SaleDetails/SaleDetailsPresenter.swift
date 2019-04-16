@@ -197,7 +197,7 @@ extension SaleDetails {
                 investedPercentage: sale.investmentPercentage,
                 investedPercentageText: attributedInvestedPercentage,
                 timeText: timeText.timeText,
-                identifier: sale.cellIdentifier
+                identifier: sale.tabIdentifier
             )
         }
         
@@ -254,7 +254,7 @@ extension SaleDetails {
                     selectedPeriodIndex: tabModel.selectedDatePickerItem
                 ),
                 chartViewModel: chartViewModel,
-                identifier: tabModel.cellIdentifier
+                identifier: tabModel.tabIdentifier
             )
         }
         
@@ -330,7 +330,7 @@ extension SaleDetails {
                 maxInputAmount: tabModel.availableAmount,
                 selectedAsset: tabModel.selectedBalance?.asset,
                 isCancellable: tabModel.isCancellable,
-                identifier: tabModel.cellIdentifier
+                identifier: tabModel.tabIdentifier
             )
         }
         

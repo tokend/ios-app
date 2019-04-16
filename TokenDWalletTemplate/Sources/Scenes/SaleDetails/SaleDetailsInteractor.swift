@@ -145,7 +145,6 @@ extension SaleDetails {
                     id: tab.tabIdentifier
                 )
             }
-            
             let selectedTabType = self.sceneModel.tabs[index].tabType
             
             let response = Event.TabsUpdated.Response(
@@ -184,7 +183,7 @@ extension SaleDetails {
                 startDate: sale.startTime,
                 endDate: sale.endTime,
                 youtubeVideoUrl: sale.details.youtubeVideoUrl,
-                cellIdentifier: .description
+                tabIdentifier: .description
             )
             
             let descTabModel = Model.TabModel(
@@ -199,7 +198,8 @@ extension SaleDetails {
             let overviewTab: Model.TabModel
             if let overviewModel = self.overviewModel {
                 let overviewTabModel = Model.OverviewTabModel(
-                    overview: overviewModel.overview
+                    overview: overviewModel.overview,
+                    tabIdentifier: .overview
                 )
                 overviewTab = Model.TabModel(
                     title: Localized(.overview),
@@ -302,7 +302,7 @@ extension SaleDetails {
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
                 isCancellable: isCancellable,
-                cellIdentifier: .investing
+                tabIdentifier: .investing
             )
             
             return investingModel
@@ -336,7 +336,7 @@ extension SaleDetails {
                 growthPositive: growthPositive,
                 growthSincePeriod: growthSincePeriod,
                 chartModel: chartModel,
-                cellIdentifier: .charts
+                tabIdentifier: .charts
             )
             
             return chartTabModel
@@ -344,12 +344,13 @@ extension SaleDetails {
         
         private func getEmptyTab(title: String, message: String? = nil) -> Model.TabModel {
             let emptyTabModel = Model.EmptyTabModel(
-                message: message ?? Localized(.loading)
+                message: message ?? Localized(.loading),
+                tabIdentifier: .empty
             )
             let emptyTab = Model.TabModel(
                 title: title,
                 tabType: .empty(emptyTabModel),
-                tabIdentifier: .empty
+                tabIdentifier: emptyTabModel.tabIdentifier
             )
             return emptyTab
         }
@@ -962,8 +963,8 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
         }) else {
             return
         }
-        
         self.sceneModel.selectedTabId = tab.tabIdentifier
+        
         let response = Event.TabWasSelected.Response(tabType: tab.tabType)
         self.presenter.presentTabWasSelected(response: response)
     }

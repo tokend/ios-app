@@ -124,7 +124,7 @@ extension SaleDetails.Model {
         
         let youtubeVideoUrl: URL?
         
-        let cellIdentifier: SaleDetails.TabIdentifier
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
     struct InvestingTabModel {
@@ -132,7 +132,7 @@ extension SaleDetails.Model {
         var amount: Decimal
         let availableAmount: Decimal
         let isCancellable: Bool
-        let cellIdentifier: SaleDetails.TabIdentifier
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
     struct ChartTabModel {
@@ -150,15 +150,17 @@ extension SaleDetails.Model {
         
         let chartModel: ChartModel
         
-        let cellIdentifier: SaleDetails.TabIdentifier
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
     struct OverviewTabModel {
         let overview: String
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
     struct EmptyTabModel {
         let message: String
+        let tabIdentifier: SaleDetails.TabIdentifier
     }
     
     struct SaleInvestModel {
