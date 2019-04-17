@@ -153,6 +153,8 @@
 		7F74962C2260A1D40065EE8E /* TradeOffersDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496252260A1D40065EE8E /* TradeOffersDateFormatter.swift */; };
 		7F74962D2260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */; };
 		7F7496402260B5D60065EE8E /* TradeOffersTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74963F2260B5D60065EE8E /* TradeOffersTitleView.swift */; };
+		7F74964B226727410065EE8E /* TradesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74964A226727410065EE8E /* TradesView.swift */; };
+		7F74964D22672B200065EE8E /* TradesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F74964C22672B200065EE8E /* TradesTableViewCell.swift */; };
 		7F8B55B1212ED4B8003AE5D7 /* TimerApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8B55B0212ED4B8003AE5D7 /* TimerApplication.swift */; };
 		7F8B55B3212EDAE4003AE5D7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8B55B2212EDAE4003AE5D7 /* main.swift */; };
 		7F967FA02125985A005527EA /* UpdatePasswordModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967F952125985A005527EA /* UpdatePasswordModels.swift */; };
@@ -637,6 +639,8 @@
 		7F7496252260A1D40065EE8E /* TradeOffersDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersDateFormatter.swift; sourceTree = "<group>"; };
 		7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersOffersFetcherProtocol.swift; sourceTree = "<group>"; };
 		7F74963F2260B5D60065EE8E /* TradeOffersTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersTitleView.swift; sourceTree = "<group>"; };
+		7F74964A226727410065EE8E /* TradesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesView.swift; sourceTree = "<group>"; };
+		7F74964C22672B200065EE8E /* TradesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesTableViewCell.swift; sourceTree = "<group>"; };
 		7F8B55B0212ED4B8003AE5D7 /* TimerApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerApplication.swift; sourceTree = "<group>"; };
 		7F8B55B2212EDAE4003AE5D7 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7F8B55B4212F05B9003AE5D7 /* TokenDWalletTemplate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TokenDWalletTemplate.entitlements; sourceTree = "<group>"; };
@@ -1436,8 +1440,18 @@
 			children = (
 				E92F1BF12139B77C00D4695E /* Chart */,
 				E92F1BF42139B77C00D4695E /* OrderBook */,
+				7F7496492267272C0065EE8E /* Trades */,
 			);
 			path = TradeViews;
+			sourceTree = "<group>";
+		};
+		7F7496492267272C0065EE8E /* Trades */ = {
+			isa = PBXGroup;
+			children = (
+				7F74964C22672B200065EE8E /* TradesTableViewCell.swift */,
+				7F74964A226727410065EE8E /* TradesView.swift */,
+			);
+			path = Trades;
 			sourceTree = "<group>";
 		};
 		7F8B55AF212ED490003AE5D7 /* TimerApplication */ = {
@@ -2854,6 +2868,7 @@
 				7F74962A2260A1D40065EE8E /* TradeOffersChartsFetcher.swift in Sources */,
 				E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */,
 				7FABEA6220FD088F0005E751 /* CreateOfferInteractor.swift in Sources */,
+				7F74964D22672B200065EE8E /* TradesTableViewCell.swift in Sources */,
 				DB1AFBAB21C9338300D87D5D /* AuthenticatorAuthRouting.swift in Sources */,
 				71136B0E2134433F00D83DD3 /* TransactionDetailsRouting.swift in Sources */,
 				7F71871C2138471D00F5C0BD /* RecoverySeedRouting.swift in Sources */,
@@ -3006,6 +3021,7 @@
 				DB0E51D12164E99F00DDA88C /* SaleInfoViewController.swift in Sources */,
 				DB09402C2264E4F500A9992A /* SaleDetailsEmptyView.swift in Sources */,
 				7F967FA32125985A005527EA /* UpdatePasswordPresenter.swift in Sources */,
+				7F74964B226727410065EE8E /* TradesView.swift in Sources */,
 				E92F1BD821386D0600D4695E /* CreateOfferFeeLoader.swift in Sources */,
 				7FF6761920BDA0910074E9A8 /* RegisterSceneInteractor.swift in Sources */,
 				E9A5CBF6211DBCCB009112CA /* DashboardPaymentsPlugInConfigurator.swift in Sources */,

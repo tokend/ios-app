@@ -156,6 +156,22 @@ extension TradeOffers {
                 onClick: nil
             )
         }
+        
+        private func getTradeViewModels(_ trades: [Model.Trade]) -> [Model.TradeViewModel] {
+            return trades.map({ (trade) -> Model.TradeViewModel in
+                let price = self.amountFormatter.assetAmountToString(trade.price)
+                let amount = self.amountFormatter.assetAmountToString(trade.amount)
+                let time = self.dateFormatter.dateToString(trade.date)
+                let priceGrowth = trade.priceGrows
+                
+                return Model.TradeViewModel(
+                    price: price,
+                    amount: amount,
+                    time: time,
+                    priceGrowth: priceGrowth
+                )
+            })
+        }
     }
 }
 
@@ -291,7 +307,20 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     }
     
     public func presentTradesDidUpdate(response: Event.TradesDidUpdate.Response) {
+        let viewModel: Event.TradesDidUpdate.ViewModel
         
+        switch response {
+            
+        case .error(let error):
+            viewModel = .error(error.localizedDescription)
+            
+        case .trades(let trades):
+            viewModel = .trades(self.getTradeViewModels(trades))
+        }
+        
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayTradesDidUpdate(viewModel: viewModel)
+        }
     }
     
     public func presentLoading(response: Event.Loading.Response) {

@@ -49,8 +49,8 @@ extension TradeOffers {
             return view
         }()
         
-        private lazy var tradesView: UIView = {
-            let view = UIView()
+        private lazy var tradesView: TradesView = {
+            let view = TradesView()
             view.backgroundColor = Theme.Colors.contentBackgroundColor
             self.layoutContentView(view)
             return view
@@ -90,6 +90,7 @@ extension TradeOffers {
             self.setupContainerView()
             self.setupOrderBookView()
             self.setupChartView()
+            self.setupTradesView()
             self.setupNavigationBar()
             self.setupLayout()
             
@@ -132,6 +133,10 @@ extension TradeOffers {
                     businessLogic.onDidHighlightChart(request: request)
                 })
             }
+        }
+        
+        private func setupTradesView() {
+            
         }
         
         private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {
@@ -307,6 +312,9 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)
         
         self.setAxisFormatters(axisFormatters: viewModel.axisFomatters)
+        
+        self.tradesView.baseAsset = viewModel.assetPair.baseAsset
+        self.tradesView.quoteAsset = viewModel.assetPair.quoteAsset
     }
     
     public func displayScreenTitleUpdated(viewModel: Event.ScreenTitleUpdated.ViewModel) {
@@ -357,7 +365,34 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
     }
     
     public func displayTradesDidUpdate(viewModel: Event.TradesDidUpdate.ViewModel) {
-        
+        switch viewModel {
+            
+        case .error(let error):
+            self.tradesView.emptyMessage = error
+            self.tradesView.trades = []
+            
+        case .trades(let trades):
+            let emptyMessage: String?
+            let tradesModels: [TradesView.Trade]
+            
+            if trades.count > 0 {
+                emptyMessage = nil
+                tradesModels = trades.map { (tradeViewMoedl) -> TradesView.Trade in
+                    return TradesView.Trade(
+                        amount: tradeViewMoedl.amount,
+                        price: tradeViewMoedl.price,
+                        time: tradeViewMoedl.time,
+                        priceGrowth: tradeViewMoedl.priceGrowth
+                    )
+                }
+            } else {
+                emptyMessage = "No trades"
+                tradesModels = []
+            }
+            
+            self.tradesView.emptyMessage = emptyMessage
+            self.tradesView.trades = tradesModels
+        }
     }
     
     public func displayLoading(viewModel: Event.Loading.ViewModel) {

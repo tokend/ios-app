@@ -84,13 +84,16 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
                 switch result {
                     
                 case .success(let tradesResponse):
+                    var previousPrice: Decimal = 0.0
                     let trades = tradesResponse.map({ (trade) -> TradeOffers.Model.Trade in
-                        return trade.trade
+                        let tradeModel = trade.getTrade(previousPrice: previousPrice)
+                        previousPrice = trade.price
+                        return tradeModel
                     })
                     completion(.succeeded(trades))
                     
-                case .failure:
-                    completion(.failed)
+                case .failure(let error):
+                    completion(.failed(error))
                 }
         })
         
@@ -131,11 +134,14 @@ extension TradeResponse {
     fileprivate typealias Model = TradeOffers.Model
     fileprivate typealias Trade = Model.Trade
     
-    fileprivate var trade: Trade {
+    fileprivate func getTrade(previousPrice: Decimal) -> Trade {
+        let priceGrows = self.price >= previousPrice
+        
         return Trade(
             amount: self.baseAmount,
             price: self.price,
-            date: self.createdAt
+            date: self.createdAt,
+            priceGrows: priceGrows
         )
     }
 }

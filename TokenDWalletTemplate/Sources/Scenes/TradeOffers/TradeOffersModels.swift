@@ -48,16 +48,19 @@ public enum TradeOffers {
             public let amount: Decimal
             public let price: Decimal
             public let date: Date
+            public let priceGrows: Bool
             
             public init(
                 amount: Decimal,
                 price: Decimal,
-                date: Date
+                date: Date,
+                priceGrows: Bool
                 ) {
                 
                 self.amount = amount
                 self.price = price
                 self.date = date
+                self.priceGrows = priceGrows
             }
         }
     }
@@ -164,6 +167,27 @@ extension TradeOffers.Model {
             self.title = title
             self.isEnabled = isEnabled
             self.period = period
+        }
+    }
+    
+    public struct TradeViewModel {
+        
+        public let price: String
+        public let amount: String
+        public let time: String
+        public let priceGrowth: Bool
+        
+        public init(
+            price: String,
+            amount: String,
+            time: String,
+            priceGrowth: Bool
+            ) {
+            
+            self.price = price
+            self.amount = amount
+            self.time = time
+            self.priceGrowth = priceGrowth
         }
     }
     
@@ -452,18 +476,14 @@ extension TradeOffers.Event {
     
     public enum TradesDidUpdate {
         
-        public struct Response {
-            
-            public let trades: [Model.Trade]?
-            
-            public init(trades: [Model.Trade]?) {
-                self.trades = trades
-            }
+        public enum Response {
+            case error(Swift.Error)
+            case trades([Model.Trade])
         }
         
         public enum ViewModel {
-            case empty
-            case cells([OrderBookTableViewCellModel<OrderBookTableViewBuyCell>])
+            case error(String)
+            case trades([Model.TradeViewModel])
         }
     }
     

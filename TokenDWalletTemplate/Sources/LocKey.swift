@@ -413,6 +413,11 @@ enum LocKey: String {
     case trade
     case trades
     case trades_cap
+    case trades_header_amount_base
+    case trades_header_amount_base_replace_asset
+    case trades_header_price_quote
+    case trades_header_price_quote_replace_asset
+    case trades_header_time
     case transaction_details
     case twofactor_authentication
     case twofactor_authentication_failed

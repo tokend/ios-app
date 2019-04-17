@@ -6,8 +6,8 @@ public enum TradeOffersOffersFetchResult {
 }
 
 public enum TradeOffersTradesFetchResult {
+    case failed(Swift.Error)
     case succeeded([TradeOffers.Model.Trade])
-    case failed
 }
 
 public protocol TradeOffersOffersFetcherProtocol {

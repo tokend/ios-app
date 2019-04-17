@@ -410,6 +410,11 @@
 "trade" = "Trade";
 "trades" = "Trades";
 "trades_cap" = "TRADES";
+"trades_header_amount_base" = "Amount ($(asset))";
+"trades_header_amount_base_replace_asset" = "asset";
+"trades_header_price_quote" = "Price ($(asset))";
+"trades_header_price_quote_replace_asset" = "asset";
+"trades_header_time" = "Time";
 "transaction_details" = "Transaction details";
 "twofactor_authentication" = "Two-factor authentication";
 "twofactor_authentication_failed" = "Two-factor authentication failed";

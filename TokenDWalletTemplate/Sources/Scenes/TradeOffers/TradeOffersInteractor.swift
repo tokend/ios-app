@@ -82,13 +82,16 @@ extension TradeOffers {
             self.presenter.presentContentTabSelected(response: response)
             
             switch tab {
+                
             case .orderBook:
                 self.updateOrderBook()
+                
             case .chart:
                 self.onChartsDidChange()
                 self.updateCharts()
+                
             case .trades:
-                break
+                self.updateTrades()
             }
         }
         
@@ -300,19 +303,19 @@ extension TradeOffers {
                     
                     switch result {
                         
-                    case .failed:
+                    case .failed(let error):
                         self?.shouldUpdateTrades = true
+                        self?.onTradesDidChange(.error(error))
                         
                     case .succeeded(let trades):
                         self?.shouldUpdateTrades = false
                         self?.sceneModel.trades = trades
+                        self?.onTradesDidChange(.trades(trades))
                     }
             })
         }
         
-        private func onTradesDidChange(){
-            let trades = self.sceneModel.trades
-            let response = Event.TradesDidUpdate.Response(trades: trades)
+        private func onTradesDidChange(_ response: Event.TradesDidUpdate.Response) {
             self.presenter.presentTradesDidUpdate(response: response)
         }
         
