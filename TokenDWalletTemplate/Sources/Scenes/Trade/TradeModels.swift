@@ -1,7 +1,7 @@
 import Foundation
 import Charts
 
-enum Trade {
+public enum Trade {
     
     // MARK: - Typealiases
     
@@ -10,12 +10,12 @@ enum Trade {
     
     // MARK: - Models
     
-    struct Model {}
+    public struct Model {}
     struct Event {}
 }
 
 extension Trade.Model {
-    struct Asset {
+    public struct Asset {
         let baseAsset: String
         let quoteAsset: String
         let currentPrice: Decimal

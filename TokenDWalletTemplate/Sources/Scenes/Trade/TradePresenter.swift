@@ -277,13 +277,15 @@ extension Trade.Presenter: Trade.PresentationLogic {
         _ offer: Trade.Model.Offer
         ) -> OrderBookTableViewCellModel<CellType> {
         
+        let anOffer = offer.getOffer(CellType.self)
+        
         return OrderBookTableViewCellModel<CellType>(
             price: self.amountFormatter.formatTradeOrderToken(value: offer.price.value),
             priceCurrency: offer.price.currency,
             amount: self.amountFormatter.formatTradeOrderToken(value: offer.amount.value),
             amountCurrency: offer.amount.currency,
             isBuy: offer.isBuy,
-            offer: offer,
+            offer: anOffer,
             onClick: nil
         )
     }
@@ -341,6 +343,25 @@ extension Trade.Model.Pair {
         return Trade.Model.PairViewModel(
             title: "\(base)/\(quote)",
             id: self.id
+        )
+    }
+}
+
+extension Trade.Model.Offer {
+    fileprivate func getOffer<CellType: OrderBookTableViewCell>(
+        _ cellType: CellType.Type
+        ) -> OrderBookTableViewCellModel<CellType>.Offer {
+        
+        return OrderBookTableViewCellModel<CellType>.Offer(
+            amount: .init(
+                value: self.amount.value,
+                currency: self.amount.currency
+            ),
+            price: .init(
+                value: self.price.value,
+                currency: self.price.currency
+            ),
+            isBuy: self.isBuy
         )
     }
 }

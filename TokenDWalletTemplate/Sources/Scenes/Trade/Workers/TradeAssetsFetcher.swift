@@ -7,13 +7,17 @@ extension Trade {
     
     class AssetsFetcher {
         
+        // MARK: - Private properties
+        
         private let assetPairsRepo: AssetPairsRepo
         private let assetsBehaviorRelay = BehaviorRelay(value: [TradeableAssetsFetcherProtocol.Asset]())
         private let assetsLoadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
         private let assetsErrorStatus: PublishRelay<Swift.Error> = PublishRelay()
         private let disposeBag: DisposeBag = DisposeBag()
         
-        init(
+        // MARK: -
+        
+        public init(
             assetPairsRepo: AssetPairsRepo
             ) {
             
@@ -23,6 +27,8 @@ extension Trade {
             self.observeAssetPairsLoadingStatus()
             self.observeAssetPairsErrorStatus()
         }
+        
+        // MARK: - Private
         
         private func observeAssetPairs() {
             self.assetPairsRepo
@@ -72,23 +78,23 @@ extension Trade {
 
 extension Trade.AssetsFetcher: Trade.AssetsFetcherProtocol {
     
-    var assets: [TradeableAssetsFetcherProtocol.Asset] {
+    public var assets: [TradeableAssetsFetcherProtocol.Asset] {
         return self.assetsBehaviorRelay.value
     }
     
-    func updateAssets() {
+    public func updateAssets() {
         self.assetPairsRepo.updateAssetPairs()
     }
     
-    func observeAssets() -> Observable<[TradeableAssetsFetcherProtocol.Asset]> {
+    public func observeAssets() -> Observable<[TradeableAssetsFetcherProtocol.Asset]> {
         return self.assetsBehaviorRelay.asObservable()
     }
     
-    func observeAssetsLoadingStatus() -> Observable<LoadingStatus> {
+    public func observeAssetsLoadingStatus() -> Observable<LoadingStatus> {
         return self.assetsLoadingStatus.asObservable()
     }
     
-    func observeAssetsError() -> Observable<Error> {
+    public func observeAssetsError() -> Observable<Error> {
         return self.assetsErrorStatus.asObservable()
     }
 }
@@ -104,7 +110,7 @@ extension AssetPair {
 }
 
 extension AssetPairsRepo.LoadingStatus {
-    var status: TradeableAssetsFetcherLoadingStatus {
+    fileprivate var status: TradeableAssetsFetcherLoadingStatus {
         switch self {
         case .loaded:
             return .loaded

@@ -86,16 +86,16 @@ enum TokenDetailsTokenSummaryCell {
             let bottomInset: CGFloat = 12
             
             self.titleLabel.snp.makeConstraints { (make) in
-                make.left.equalToSuperview().inset(sideInset)
+                make.leading.equalToSuperview().inset(sideInset)
                 make.top.equalToSuperview().inset(topInset)
                 make.bottom.equalToSuperview().inset(bottomInset)
             }
             
             self.valueLabel.snp.makeConstraints { (make) in
-                make.right.equalToSuperview().inset(sideInset)
+                make.trailing.equalToSuperview().inset(sideInset)
                 make.top.equalToSuperview().inset(topInset)
                 make.bottom.equalToSuperview().inset(bottomInset)
-                make.left.equalTo(self.titleLabel.snp.right).offset(sideInset)
+                make.leading.equalTo(self.titleLabel.snp.trailing).offset(sideInset)
             }
         }
     }

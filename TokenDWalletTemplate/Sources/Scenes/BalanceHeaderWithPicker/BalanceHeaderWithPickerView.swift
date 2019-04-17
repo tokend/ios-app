@@ -133,15 +133,15 @@ extension BalanceHeaderWithPicker {
             self.labelsStackView.addArrangedSubview(self.rateLabel)
             
             self.backgroundView.snp.remakeConstraints { (make) in
-                make.top.left.right.equalToSuperview()
+                make.top.leading.trailing.equalToSuperview()
             }
             self.balancePicker.snp.makeConstraints { (make) in
-                make.bottom.left.right.equalToSuperview()
+                make.bottom.leading.trailing.equalToSuperview()
                 make.top.equalTo(self.backgroundView.snp.bottom)
             }
             self.labelsStackView.snp.remakeConstraints { (make) in
                 make.centerY.equalToSuperview().multipliedBy(self.labelsStackViewCenterYMultiplier)
-                make.left.right.equalToSuperview().inset(15)
+                make.leading.trailing.equalToSuperview().inset(15)
             }
         }
         

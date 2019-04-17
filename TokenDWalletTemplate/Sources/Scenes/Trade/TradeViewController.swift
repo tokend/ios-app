@@ -137,7 +137,7 @@ extension Trade {
             
             self.scrollView.snp.makeConstraints { (make) in
                 make.top.equalTo(self.pairPicker.snp.bottom)
-                make.left.bottom.right.equalToSuperview()
+                make.leading.bottom.trailing.equalToSuperview()
             }
             
             self.fillScrollView(withCards: [self.orderBookCard, self.chartCard])
@@ -150,8 +150,8 @@ extension Trade {
                 self.scrollView.addSubview(card)
                 
                 card.snp.makeConstraints { (make) in
-                    make.left.equalToSuperview().inset(self.sideMargin)
-                    make.right.equalToSuperview().inset(self.sideMargin)
+                    make.leading.equalToSuperview().inset(self.sideMargin)
+                    make.trailing.equalToSuperview().inset(self.sideMargin)
                     make.width.equalTo(self.scrollView.snp.width).inset(self.sideMargin)
                     
                     if let previous = previousCard {
@@ -320,7 +320,10 @@ extension Trade.ViewController: Trade.DisplayLogic {
             let offer = cells[cellIndex].offer
             cells[cellIndex].onClick = { [weak self] (_) in
                 self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    let request = Trade.Event.CreateOffer.Request(amount: offer.amount, price: offer.price)
+                    let request = Trade.Event.CreateOffer.Request(
+                        amount: offer.amount.amount,
+                        price: offer.price.amount
+                    )
                     businessLogic.onCreateOffer(request: request)
                 })
             }
@@ -348,5 +351,15 @@ extension Trade.ViewController: Trade.DisplayLogic {
     
     func displayError(viewModel: Trade.Event.Error.ViewModel) {
         self.routing?.onShowError(viewModel.message)
+    }
+}
+
+extension OrderBookTableViewCellModel.Amount {
+    
+    fileprivate var amount: Trade.Model.Amount {
+        return Trade.Model.Amount(
+            value: self.value,
+            currency: self.currency
+        )
     }
 }

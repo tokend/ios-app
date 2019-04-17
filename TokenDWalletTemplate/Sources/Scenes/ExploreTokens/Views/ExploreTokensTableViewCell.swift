@@ -289,7 +289,7 @@ enum ExploreTokensTableViewCell {
             }
             
             self.labelsStackView.snp.makeConstraints { (make) in
-                make.top.bottom.right.equalToSuperview().inset(15)
+                make.top.bottom.trailing.equalToSuperview().inset(15)
                 make.leading.equalTo(self.iconView.snp.trailing).offset(15)
             }
             

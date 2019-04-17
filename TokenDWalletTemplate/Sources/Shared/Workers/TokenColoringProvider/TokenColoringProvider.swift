@@ -1,10 +1,10 @@
 import UIKit
 
-class TokenColoringProvider {
+public class TokenColoringProvider {
     
     // MARK: - Public properties
     
-    static let shared: TokenColoringProvider = TokenColoringProvider()
+    public static let shared: TokenColoringProvider = TokenColoringProvider()
     
     let colors: [UIColor]
     
@@ -44,7 +44,7 @@ class TokenColoringProvider {
     
     // MARK: - Public
     
-    func coloringForCode(_ code: String) -> UIColor {
+    public func coloringForCode(_ code: String) -> UIColor {
         let codeNumber = self.numberForCode(code)
         let color = self.colors[codeNumber]
         

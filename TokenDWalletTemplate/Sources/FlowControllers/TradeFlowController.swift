@@ -15,19 +15,97 @@ class TradeFlowController: BaseSignedInFlowController {
     // MARK: - Private
     
     private func showTradeScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let vc = Trade.ViewController()
+        let vc = TradesList.ViewController()
         
-        let assetsFetcher = Trade.AssetsFetcher(assetPairsRepo: self.reposController.assetPairsRepo)
+        let assetPairsFetcher = TradesList.AssetPairsFetcher(assetPairsRepo: self.reposController.assetPairsRepo)
         
-        let chartsFetcher = Trade.ChartsFetcher(
+        let amountFormatter = TradesList.AmountFormatter()
+        
+        let assetColoringProvider = TokenColoringProvider.shared
+        
+        let routing = TradesList.Routing(
+            onSelectAssetPair: { [weak self] (baseAsset, quoteAsset, currentPrice) in
+                self?.showOffersScreenFor(
+                    baseAsset: baseAsset,
+                    quoteAsset: quoteAsset,
+                    currentPrice: currentPrice
+                )
+            },
+            onSelectPendingOffers: { [weak self] in
+                self?.showPendingOffers()
+            },
+            onShowError: { [weak self] (errorMessage) in
+                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+            },
+            onShowProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            onHideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+        })
+        
+        TradesList.Configurator.configure(
+            viewController: vc,
+            assetPairsFetcher: assetPairsFetcher,
+            amountFormatter: amountFormatter,
+            assetColoringProvider: assetColoringProvider,
+            routing: routing
+        )
+        
+        vc.navigationItem.title = Localized(.trade)
+        
+        self.navigationController.setViewControllers([vc], animated: false)
+        
+        if let showRoot = showRootScreen {
+            showRoot(self.navigationController)
+        } else {
+            self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
+        }
+    }
+    
+    private func showOffersScreenFor(
+        baseAsset: String,
+        quoteAsset: String,
+        currentPrice: Decimal
+        ) {
+        
+        let vc = self.setupOffersScreenFor(
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset,
+            currentPrice: currentPrice
+        )
+        
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupOffersScreenFor(
+        baseAsset: String,
+        quoteAsset: String,
+        currentPrice: Decimal
+        ) -> UIViewController {
+        
+        let vc = TradeOffers.ViewController()
+        
+        let assetPair = TradeOffers.Model.AssetPair(
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset,
+            currentPrice: currentPrice
+        )
+        let sceneModel = TradeOffers.Model.SceneModel(assetPair: assetPair)
+        
+        let amountFormatter = TradeOffers.AmountFormatter()
+        
+        let dateFormatter = TradeOffers.TradeDateFormatter()
+        
+        let chartsFetcher = TradeOffers.ChartsFetcher(
             chartsApi: self.flowControllerStack.api.chartsApi
         )
-        let amountFormatter = Trade.AmountFormatter()
-        let tradeOffersFetcher = Trade.OffersFetcher(
+        
+        let offersFetcher = TradeOffers.OffersFetcher(
             orderBookApi: self.flowControllerStack.api.orderBookApi
         )
         
-        let routing = Trade.Routing(
+        let routing = TradeOffers.Routing(
             onSelectPendingOffers: { [weak self] in
                 self?.showPendingOffers()
             },
@@ -45,7 +123,8 @@ class TradeFlowController: BaseSignedInFlowController {
                     quoteAsset: quoteAsset,
                     amount: nil,
                     price: nil
-                )},
+                )
+            },
             onShowError: { [weak self] (message) in
                 self?.navigationController.showErrorMessage(message, completion: nil)
             },
@@ -56,24 +135,17 @@ class TradeFlowController: BaseSignedInFlowController {
                 self?.navigationController.hideProgress()
         })
         
-        Trade.Configurator.configure(
+        TradeOffers.Configurator.configure(
             viewController: vc,
-            assetsFetcher: assetsFetcher,
-            chartsFetcher: chartsFetcher,
+            sceneModel: sceneModel,
             amountFormatter: amountFormatter,
-            tradeOffersFetcher: tradeOffersFetcher,
+            dateFormatter: dateFormatter,
+            chartsFetcher: chartsFetcher,
+            offersFetcher: offersFetcher,
             routing: routing
         )
         
-        vc.navigationItem.title = Localized(.trade)
-        
-        self.navigationController.setViewControllers([vc], animated: false)
-        
-        if let showRoot = showRootScreen {
-            showRoot(self.navigationController)
-        } else {
-            self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
-        }
+        return vc
     }
     
     private func showCreateOffer(
@@ -269,7 +341,7 @@ class TradeFlowController: BaseSignedInFlowController {
             },
             onConfirmationSucceeded: { [weak self] in
                 if let viewController = self?.navigationController.viewControllers.first(where: { (vc) -> Bool in
-                    return vc is Trade.ViewController
+                    return vc is TradeOffers.ViewController
                 }) {
                     self?.navigationController.popToViewController(viewController, animated: true)
                 }

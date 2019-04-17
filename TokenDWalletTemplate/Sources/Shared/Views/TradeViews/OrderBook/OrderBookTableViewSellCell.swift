@@ -1,6 +1,6 @@
 import UIKit
 
-class OrderBookTableViewBuyCell: UITableViewCell {
+public class OrderBookTableViewSellCell: UITableViewCell {
     
     // MARK: - Private properties
     
@@ -9,7 +9,7 @@ class OrderBookTableViewBuyCell: UITableViewCell {
     
     // MARK: - Overridden methods
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.commonInit()
@@ -35,14 +35,14 @@ class OrderBookTableViewBuyCell: UITableViewCell {
         self.priceLabel.setContentHuggingPriority(.required, for: .vertical)
         self.priceLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         self.priceLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        self.priceLabel.textColor = Theme.Colors.positiveAmountColor
+        self.priceLabel.textColor = Theme.Colors.negativeAmountColor
         self.priceLabel.font = Theme.Fonts.smallTextFont
-        self.priceLabel.textAlignment = .right
+        self.priceLabel.textAlignment = .left
         self.priceLabel.backgroundColor = Theme.Colors.contentBackgroundColor
         self.priceLabel.layer.shadowColor = Theme.Colors.contentBackgroundColor.cgColor
         self.priceLabel.layer.shadowRadius = 2
         self.priceLabel.layer.shadowOpacity = 1
-        self.priceLabel.layer.shadowOffset = CGSize(width: -6, height: 0)
+        self.priceLabel.layer.shadowOffset = CGSize(width: 6, height: 0)
     }
     
     private func setupAmountLabel() {
@@ -53,7 +53,7 @@ class OrderBookTableViewBuyCell: UITableViewCell {
         self.amountLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         self.amountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
         self.amountLabel.font = Theme.Fonts.smallTextFont
-        self.amountLabel.textAlignment = .left
+        self.amountLabel.textAlignment = .right
         self.amountLabel.backgroundColor = Theme.Colors.contentBackgroundColor
     }
     
@@ -65,27 +65,28 @@ class OrderBookTableViewBuyCell: UITableViewCell {
         let betweenDistance: CGFloat = 12
         let topBottomInset: CGFloat = 8
         
-        self.amountLabel.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().inset(topBottomInset)
-            make.bottom.equalToSuperview().inset(topBottomInset + 1)
-            make.left.equalToSuperview().inset(sideInset)
-        }
-        
         self.priceLabel.snp.makeConstraints { (make) in
             make.top.equalToSuperview().inset(topBottomInset)
             make.bottom.equalToSuperview().inset(topBottomInset + 1)
-            make.right.equalToSuperview().inset(betweenDistance)
-            make.left.lessThanOrEqualTo(self.amountLabel.snp.right)
+            make.leading.equalToSuperview().inset(betweenDistance)
+            make.trailing.greaterThanOrEqualTo(self.amountLabel.snp.leading)
+        }
+        
+        self.amountLabel.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().inset(topBottomInset)
+            make.bottom.equalToSuperview().inset(topBottomInset + 1)
+            make.trailing.equalToSuperview().inset(sideInset)
         }
     }
 }
 
-extension OrderBookTableViewBuyCell: OrderBookTableViewCellProtocol {
-    func setPrice(_ price: String) {
+extension OrderBookTableViewSellCell: OrderBookTableViewCellProtocol {
+    
+    public func setPrice(_ price: String) {
         self.priceLabel.text = price
     }
     
-    func setAmount(_ amount: String) {
+    public func setAmount(_ amount: String) {
         self.amountLabel.text = amount
     }
 }

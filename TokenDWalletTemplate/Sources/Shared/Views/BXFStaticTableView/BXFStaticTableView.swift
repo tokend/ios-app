@@ -110,20 +110,20 @@ class BXFStaticTableView: UIView {
         
         section.header.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
         }
         
         section.cell.snp.makeConstraints { (make) in
             make.top.equalTo(section.header.snp.bottom)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.bottom.equalTo(section.footer.snp.top)
         }
         
         section.footer.snp.makeConstraints { (make) in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         
@@ -142,14 +142,14 @@ class BXFStaticTableView: UIView {
         
         section.header.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
         }
         
         section.footer.snp.makeConstraints { (make) in
             make.top.equalTo(section.header.snp.bottom).offset(6)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         

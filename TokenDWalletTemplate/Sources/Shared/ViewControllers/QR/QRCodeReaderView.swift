@@ -56,8 +56,8 @@ final class QRCodeReaderView: UIView, QRCodeReaderDisplayable {
         }
         
         overlayView.snp.makeConstraints({ (make) in
-            make.left.equalToSuperview().inset(16)
-            make.right.equalToSuperview().inset(16)
+            make.leading.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview().inset(16)
             make.top.equalToSuperview().inset(8)
             make.bottom.equalToSuperview().inset(108)
         })
@@ -175,8 +175,8 @@ final class QRCodeReaderView: UIView, QRCodeReaderDisplayable {
         
         stackView.snp.makeConstraints { (make) in
             make.bottom.equalToSuperview().inset(24)
-            make.left.equalToSuperview().inset(sideMargin)
-            make.right.equalToSuperview().inset(sideMargin)
+            make.leading.equalToSuperview().inset(sideMargin)
+            make.trailing.equalToSuperview().inset(sideMargin)
             make.height.equalTo(60)
         }
         

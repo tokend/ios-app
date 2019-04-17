@@ -114,7 +114,7 @@ extension DashboardScene.ViewController: DashboardScene.DisplayLogic {
         for view in contentViews {
             self.scrollView.addSubview(view)
             view.snp.makeConstraints { (make) in
-                make.left.right.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
                 make.width.equalToSuperview()
                 if let last = lastView {
                     make.top.equalTo(last.snp.bottom).offset(32)

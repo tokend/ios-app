@@ -57,9 +57,9 @@ extension Trade.OffersFetcher: Trade.OffersFetcherProtocol {
 }
 
 extension OrderBookResponse {
-    typealias Model = Trade.Model
-    typealias Amount = Model.Amount
-    typealias Offer = Model.Offer
+    fileprivate typealias Model = Trade.Model
+    fileprivate typealias Amount = Model.Amount
+    fileprivate typealias Offer = Model.Offer
     
     fileprivate var offer: Offer {
         let amount = Amount(

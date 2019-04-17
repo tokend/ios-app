@@ -76,8 +76,6 @@ class OrderBookCard: UIView {
     private let priceBuyTitleLabel: UILabel = UILabel()
     private let buyTable: OrderBookTableView = OrderBookTableView<OrderBookTableViewBuyCell>()
     
-    private let minimumTableHeight: CGFloat = 44
-    
     private let sellTitleLabel: UILabel = UILabel()
     private let amountSellTitleLabel: UILabel = UILabel()
     private let priceSellTitleLabel: UILabel = UILabel()
@@ -121,16 +119,7 @@ class OrderBookCard: UIView {
     }
     
     private func setupTables() {
-        self.buyTable.onContentSizeChanged = { [weak self] (newSize) in
-            self?.buyTable.snp.updateConstraints({ (make) in
-                make.height.equalTo(max(newSize.height, self?.minimumTableHeight ?? 0))
-            })
-        }
-        self.sellTable.onContentSizeChanged = { [weak self] (newSize) in
-            self?.sellTable.snp.updateConstraints({ (make) in
-                make.height.equalTo(max(newSize.height, self?.minimumTableHeight ?? 0))
-            })
-        }
+        
     }
     
     private func setupSeparators() {
@@ -211,23 +200,23 @@ class OrderBookCard: UIView {
         
         self.buyTitleLabel.snp.makeConstraints { (make) in
             make.top.equalToSuperview().inset(16)
-            make.left.equalToSuperview().inset(sideInset)
-            make.right.lessThanOrEqualTo(self.sellTitleLabel.snp.left).offset(betweenDistance)
+            make.leading.equalToSuperview().inset(sideInset)
+            make.trailing.lessThanOrEqualTo(self.sellTitleLabel.snp.leading).offset(betweenDistance)
         }
         
         self.sellTitleLabel.snp.makeConstraints { (make) in
             make.top.equalToSuperview().inset(16)
-            make.left.equalTo(self.snp.centerX).inset(12)
-            make.right.lessThanOrEqualToSuperview().inset(sideInset)
+            make.leading.equalTo(self.snp.centerX).inset(12)
+            make.trailing.lessThanOrEqualToSuperview().inset(sideInset)
         }
         
         self.orderBookTitleStackView.snp.makeConstraints { (make) in
-            make.left.right.equalToSuperview().inset(sideInset)
+            make.leading.trailing.equalToSuperview().inset(sideInset)
             make.top.equalTo(self.buyTitleLabel.snp.bottom).offset(24)
         }
         
         self.horizontalSeparator.snp.makeConstraints { (make) in
-            make.left.right.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
             make.top.equalTo(self.orderBookTitleStackView.snp.bottom).offset(8)
             make.height.equalTo(1.0 / UIScreen.main.scale)
         }
@@ -243,19 +232,17 @@ class OrderBookCard: UIView {
         let topBottomInset: CGFloat = 0
         
         self.buyTable.snp.makeConstraints { (make) in
-            make.left.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(self.snp.centerX)
             make.top.equalTo(self.horizontalSeparator.snp.bottom).offset(topBottomInset)
-            make.bottom.lessThanOrEqualToSuperview().inset(topBottomInset)
-            make.right.equalTo(self.snp.centerX)
-            make.height.equalTo(minimumTableHeight)
+            make.bottom.equalToSuperview().inset(topBottomInset)
         }
         
         self.sellTable.snp.makeConstraints { (make) in
-            make.right.equalToSuperview()
+            make.leading.equalTo(self.snp.centerX)
+            make.trailing.equalToSuperview()
             make.top.equalTo(self.horizontalSeparator.snp.bottom).offset(topBottomInset)
-            make.bottom.lessThanOrEqualToSuperview().inset(topBottomInset)
-            make.left.equalTo(self.snp.centerX)
-            make.height.equalTo(minimumTableHeight)
+            make.bottom.equalToSuperview().inset(topBottomInset)
         }
     }
     
