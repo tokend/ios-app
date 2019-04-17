@@ -26,25 +26,25 @@ PODS:
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (3.1.0-x.12):
-    - TokenDSDK/API (= 3.1.0-x.12)
-    - TokenDSDK/JSONAPI (= 3.1.0-x.12)
-    - TokenDSDK/KeyServer (= 3.1.0-x.12)
+  - TokenDSDK (3.1.0-rc.0):
+    - TokenDSDK/API (= 3.1.0-rc.0)
+    - TokenDSDK/JSONAPI (= 3.1.0-rc.0)
+    - TokenDSDK/KeyServer (= 3.1.0-rc.0)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetwork (3.1.0-x.12):
+  - TokenDSDK/AlamofireNetwork (3.1.0-rc.0):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-x.12):
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-rc.0):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/API (3.1.0-x.12):
+  - TokenDSDK/API (3.1.0-rc.0):
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/JSONAPI (3.1.0-x.12):
+  - TokenDSDK/JSONAPI (3.1.0-rc.0):
     - DLJSONAPI (>= 1.0.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/KeyServer (3.1.0-x.12):
+  - TokenDSDK/KeyServer (3.1.0-rc.0):
     - TokenDWallet (>= 3.0.1)
   - TokenDWallet (3.0.1):
     - DLCryptoKit (>= 2.0.1)
@@ -63,7 +63,7 @@ DEPENDENCIES:
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (= 3.1.0-x.12)
+  - TokenDSDK (= 3.1.0-rc.0)
   - TokenDSDK/AlamofireNetwork
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
@@ -130,9 +130,9 @@ SPEC CHECKSUMS:
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: 72b1d8160740129a46dcecf37e1f8f11ada18aed
+  TokenDSDK: 6ed9103cb9da3a54206d6af4eefb9cd8f48acafd
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: a4e333a354b15b7902955057862028508aafa478
+PODFILE CHECKSUM: 61ab34e211f159511f40522b96295b4f0ad201a5
 
 COCOAPODS: 1.6.1
