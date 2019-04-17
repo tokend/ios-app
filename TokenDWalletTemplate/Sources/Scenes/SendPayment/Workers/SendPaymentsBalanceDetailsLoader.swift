@@ -1,4 +1,5 @@
 import Foundation
+import TokenDWallet
 import RxSwift
 
 enum SendPaymentBalanceDetailsLoaderLoadingStatus {
@@ -35,11 +36,36 @@ extension SendPayment {
         // MARK: - Private properties
         
         private let balancesRepo: BalancesRepo
+        private let assetsRepo: AssetsRepo
+        private let operation: SendPayment.Model.Operation
         
         // MARK: -
         
-        init(balancesRepo: BalancesRepo) {
+        init(
+            balancesRepo: BalancesRepo,
+            assetsRepo: AssetsRepo,
+            operation: SendPayment.Model.Operation
+            ) {
+            
             self.balancesRepo = balancesRepo
+            self.assetsRepo = assetsRepo
+            self.operation = operation
+        }
+        
+        // MARK: - Private
+        
+        private func filterWithdrawable(
+            balances: [SendPayment.Model.BalanceDetails]
+            ) -> [SendPayment.Model.BalanceDetails] {
+            
+            return balances.filter { [weak self] (balance) -> Bool in
+                if let asset = self?.assetsRepo.assetsValue.first(where: { (asset) -> Bool in
+                    asset.code == balance.asset
+                }) {
+                    return Int32(asset.policy) & AssetPolicy.withdrawable.rawValue == AssetPolicy.withdrawable.rawValue
+                }
+                return false
+            }
         }
     }
 }
@@ -66,7 +92,17 @@ extension SendPayment.BalanceDetailsLoaderWorker: SendPayment.BalanceDetailsLoad
                     return nil
                 }
             })
-            return balances
+            
+            switch self.operation {
+                
+            case .handleSend:
+                return balances.filter({ (balance) -> Bool in
+                    return balance.balance > 0
+                })
+                
+            case .handleWithdraw:
+                return self.filterWithdrawable(balances: balances)
+            }
         }
     }
     
@@ -78,7 +114,7 @@ extension SendPayment.BalanceDetailsLoaderWorker: SendPayment.BalanceDetailsLoad
         }
     }
     
-    func observeErrors() -> Observable<Error> {
+    func observeErrors() -> Observable<Swift.Error> {
         return self.balancesRepo.observeErrorStatus()
     }
     
