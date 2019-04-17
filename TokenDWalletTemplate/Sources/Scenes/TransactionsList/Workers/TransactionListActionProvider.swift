@@ -1,4 +1,5 @@
 import UIKit
+import TokenDWallet
 
 protocol TransactionListSceneActionProviderProtocol {
     func getActions(asset: String) -> [TransactionsListScene.ActionModel]
@@ -36,6 +37,13 @@ extension TransactionsListScene.ActionProvider: TransactionsListScene.ActionProv
     
     func getActions(asset: String) -> [TransactionsListScene.ActionModel] {
         var actions: [TransactionsListScene.ActionModel] = []
+        guard let asset = self.assetsRepo.assetsValue
+            .first(where: { (storedAsset) -> Bool in
+                return storedAsset.code == asset
+            }) else {
+                return []
+        }
+        
         let receiveAction = TransactionsListScene.ActionModel(
             title: Localized(.receive),
             image: Assets.receive.image,
@@ -43,7 +51,7 @@ extension TransactionsListScene.ActionProvider: TransactionsListScene.ActionProv
         )
         if let state = balancesRepo.balancesDetailsValue
             .first(where: { (state) -> Bool in
-                return state.asset == asset
+                return state.asset == asset.code
             }) {
             
             switch state {
@@ -58,12 +66,14 @@ extension TransactionsListScene.ActionProvider: TransactionsListScene.ActionProv
                     actions.append(sendAction)
                     actions.append(receiveAction)
                     
-                    let withdrawAction = TransactionsListScene.ActionModel(
-                        title: Localized(.withdraw),
-                        image: Assets.withdrawAction.image,
-                        type: .withdraw(balanceId: details.balanceId)
-                    )
-                    actions.append(withdrawAction)
+                    if Int32(asset.policy) & AssetPolicy.withdrawable.rawValue == AssetPolicy.withdrawable.rawValue {
+                        let withdrawAction = TransactionsListScene.ActionModel(
+                            title: Localized(.withdraw),
+                            image: Assets.withdrawAction.image,
+                            type: .withdraw(balanceId: details.balanceId)
+                        )
+                        actions.append(withdrawAction)
+                    }
                 }
             case .creating:
                 break
@@ -72,16 +82,12 @@ extension TransactionsListScene.ActionProvider: TransactionsListScene.ActionProv
             actions.append(receiveAction)
         }
         
-        if let depositableAsset = self.assetsRepo.assetsValue
-            .first(where: { (storedAsset) -> Bool in
-                return storedAsset.code == asset
-            }),
-            let details = depositableAsset.defaultDetails,
+        if let details = asset.defaultDetails,
             details.externalSystemType != nil {
             let depositAction = TransactionsListScene.ActionModel(
                 title: Localized(.deposit),
                 image: Assets.depositAction.image,
-                type: .deposit(assetId: depositableAsset.identifier)
+                type: .deposit(assetId: asset.identifier)
             )
             actions.append(depositAction)
         }

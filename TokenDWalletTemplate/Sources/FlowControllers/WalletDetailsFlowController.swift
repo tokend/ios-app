@@ -12,8 +12,15 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     
     // MARK: - Public
     
-    public func run(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        self.showWalletScreen(showRootScreen: showRootScreen)
+    public func run(
+        showRootScreen: ((_ vc: UIViewController) -> Void)?,
+        selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
+        ) {
+        
+        self.showWalletScreen(
+            showRootScreen: showRootScreen,
+            selectedBalanceId: selectedBalanceId
+        )
     }
     
     // MARK: - Private
@@ -25,7 +32,11 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
         )
     }
     
-    private func showWalletScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+    private func showWalletScreen(
+        showRootScreen: ((_ vc: UIViewController) -> Void)?,
+        selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
+        ) {
+        
         let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
             reposController: self.reposController,
             originalAccountId: self.userDataProvider.walletData.accountId
@@ -34,6 +45,8 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             assetsRepo: self.reposController.assetsRepo,
             balancesRepo: self.reposController.balancesRepo
         )
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: false)
+        
         let transactionsRouting = TransactionsListScene.Routing (
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
                 self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
@@ -62,8 +75,10 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
+            viewConfig: viewConfig,
             headerRateProvider: headerRateProvider,
-            balancesFetcher: balancesFetcher
+            balancesFetcher: balancesFetcher,
+            selectedBalanceId: selectedBalanceId
         )
         
         self.walletScene = container
@@ -143,7 +158,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.navigationController.pushViewController(vc, animated: true)
             },
-            onShowWalletScreen: { [weak self] in
+            onShowWalletScreen: { [weak self] _ in
                 self?.currentFlowController = nil
                 self?.goBackToWalletScene()
         })
@@ -211,7 +226,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.navigationController.pushViewController(vc, animated: true)
             },
-            onShowWalletScreen: { [weak self] in
+            onShowWalletScreen: { [weak self] _ in
                 self?.currentFlowController = nil
                 self?.goBackToWalletScene()
         })
