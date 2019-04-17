@@ -74,7 +74,9 @@ class WithdrawFlowController: BaseSignedInFlowController {
         let vc = SendPayment.ViewController()
         
         let balanceDetailsLoader = SendPayment.BalanceDetailsLoaderWorker(
-            balancesRepo: self.reposController.balancesRepo
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            operation: .handleWithdraw
         )
         
         let amountFormatter = TokenDetailsScene.AmountFormatter()
