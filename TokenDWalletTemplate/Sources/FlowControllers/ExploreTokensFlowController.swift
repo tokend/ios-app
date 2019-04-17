@@ -115,6 +115,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             assetsRepo: self.reposController.assetsRepo,
             balancesRepo: self.reposController.balancesRepo
         )
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
         let transactionsRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { (_, _) in },
             showSendPayment: { _ in },
@@ -134,6 +135,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
+            viewConfig: viewConfig,
             headerRateProvider: headerRateProvider,
             balancesFetcher: balancesFetcher,
             selectedBalanceId: selectedBalanceId

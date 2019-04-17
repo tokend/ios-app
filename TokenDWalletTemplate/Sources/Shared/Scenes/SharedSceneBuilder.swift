@@ -51,14 +51,13 @@ enum SharedSceneBuilder {
         transactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol,
         actionProvider: TransactionsListScene.ActionProviderProtocol,
         transactionsRouting: TransactionsListScene.Routing,
+        viewConfig: TransactionsListScene.Model.ViewConfig,
         headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol,
         balancesFetcher: BalanceHeaderWithPicker.BalancesFetcherProtocol,
         selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
         ) -> FlexibleHeaderContainerViewController {
         
         let container = FlexibleHeaderContainerViewController()
-        
-        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: false)
         
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
