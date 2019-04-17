@@ -250,6 +250,7 @@
 "no_personal_address_replace_assets_asset" = "assets_asset";
 "no_token" = "No token";
 "no_tokens" = "No tokens";
+"no_trade_entries" = "No trade entries";
 "not_enough_data" = "Not enough data";
 "not_enough_money_on_balance" = "Not enough money on balance $(asset)";
 "not_enough_money_on_balance_replace_asset" = "asset";

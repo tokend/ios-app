@@ -253,6 +253,7 @@ enum LocKey: String {
     case no_personal_address_replace_assets_asset
     case no_token
     case no_tokens
+    case no_trade_entries
     case not_enough_data
     case not_enough_money_on_balance
     case not_enough_money_on_balance_replace_asset

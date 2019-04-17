@@ -386,7 +386,7 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
                     )
                 }
             } else {
-                emptyMessage = "No trades"
+                emptyMessage = Localized(.no_trade_entries)
                 tradesModels = []
             }
             
