@@ -66,7 +66,9 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         let vc = SendPayment.ViewController()
         
         let balanceDetailsLoader = SendPayment.BalanceDetailsLoaderWorker(
-            balancesRepo: self.reposController.balancesRepo
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            operation: .handleSend
         )
         
         let amountFormatter = TokenDetailsScene.AmountFormatter()
