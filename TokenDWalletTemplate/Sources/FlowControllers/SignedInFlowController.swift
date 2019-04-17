@@ -214,7 +214,7 @@ class SignedInFlowController: BaseSignedInFlowController {
         _ = self.reposController.balancesRepo.observeBalancesDetails()
     }
     
-    private func runWalletFlow() {
+    private func runWalletFlow(selectedBalanceId: String? = nil) {
         let walletDetailsFlowController = WalletDetailsFlowController(
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
@@ -225,9 +225,12 @@ class SignedInFlowController: BaseSignedInFlowController {
             rootNavigation: self.rootNavigation
         )
         self.currentFlowController = walletDetailsFlowController
-        walletDetailsFlowController.run { [weak self] (vc) in
-            self?.sideNavigationController.embed(centerViewController: vc)
-        }
+        walletDetailsFlowController.run(
+            showRootScreen: { [weak self] (vc) in
+                self?.sideNavigationController.embed(centerViewController: vc)
+            },
+            selectedBalanceId: selectedBalanceId
+        )
     }
     
     private func runDashboardFlow() {
@@ -267,8 +270,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.sideNavigationController.embed(centerViewController: vc)
             },
-            onShowWalletScreen: { [weak self] in
-                self?.runWalletFlow()
+            onShowWalletScreen: { [weak self] (balanceId) in
+                self?.runWalletFlow(selectedBalanceId: balanceId)
         })
     }
     
@@ -323,8 +326,8 @@ class SignedInFlowController: BaseSignedInFlowController {
                 navigationController.setViewControllers([vc], animated: false)
                 self?.sideNavigationController.embed(centerViewController: navigationController)
             },
-            onShowWalletScreen: { [weak self] in
-                self?.runWalletFlow()
+            onShowWalletScreen: { [weak self] (balanceId) in
+                self?.runWalletFlow(selectedBalanceId: balanceId)
         })
     }
     
@@ -344,8 +347,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.sideNavigationController.embed(centerViewController: vc)
             },
-            onShowWalletScreen: { [weak self] in
-                self?.runWalletFlow()
+            onShowWalletScreen: { [weak self] (balanceId) in
+                self?.runWalletFlow(selectedBalanceId: balanceId)
         })
     }
     
@@ -381,8 +384,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.sideNavigationController.embed(centerViewController: vc)
             },
-            onShowWalletScreen: { [weak self] in
-                self?.runWalletFlow()
+            onShowWalletScreen: { [weak self] (balanceId) in
+                self?.runWalletFlow(selectedBalanceId: balanceId)
         })
     }
     

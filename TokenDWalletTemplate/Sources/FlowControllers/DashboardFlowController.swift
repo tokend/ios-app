@@ -162,6 +162,8 @@ class DashboardFlowController: BaseSignedInFlowController {
             balancesRepo: self.reposController.balancesRepo
         )
         
+        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: false)
+        
         let transactionsRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { [weak self] (transactionId, balanceId) in
                 self?.showTransactionDetailsScreen(transactionId: transactionId, balanceId: balanceId)
@@ -190,6 +192,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
+            viewConfig: viewConfig,
             headerRateProvider: headerRateProvider,
             balancesFetcher: balancesFetcher,
             selectedBalanceId: selectedBalanceId
@@ -324,7 +327,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.navigationController.pushViewController(vc, animated: true)
             },
-            onShowWalletScreen: { [weak self] in
+            onShowWalletScreen: { [weak self] _ in
                 self?.currentFlowController = nil
                 self?.goBackToWalletScene()
         })
@@ -392,7 +395,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.navigationController.pushViewController(vc, animated: true)
             },
-            onShowWalletScreen: { [weak self] in
+            onShowWalletScreen: { [weak self] _ in
                 self?.currentFlowController = nil
                 self?.goBackToWalletScene()
         })
