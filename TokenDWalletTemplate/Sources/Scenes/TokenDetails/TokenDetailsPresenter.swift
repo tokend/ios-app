@@ -102,6 +102,20 @@ extension TokenDetailsScene.Presenter: TokenDetailsScene.PresentationLogic {
         )
         sections.append(summarySection)
         
+        let policyCells = token.policies.map { (policy) -> TokenDetailsTokenSummaryCell.Model in
+            return TokenDetailsTokenSummaryCell.Model.init(
+                title: policy,
+                value: ""
+            )
+        }
+        
+        let policiesSection = TokenDetailsScene.Model.TableSection(
+            title: Localized(.policy),
+            cells: policyCells,
+            description: nil
+        )
+        sections.append(policiesSection)
+        
         if let termsOfUse = token.termsOfUse {
             let termsOfUseModel = TokenDetailsTokenDocumentCell.Model(
                 icon: #imageLiteral(resourceName: "Document icon"),

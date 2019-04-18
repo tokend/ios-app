@@ -3,6 +3,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import TokenDSDK
+import TokenDWallet
 
 extension TokenDetailsScene {
     class TokenDetailsFetcher: TokenDetailsFetcherProtocol {
@@ -104,6 +105,22 @@ extension TokenDetailsScene {
                 }
             }()
             
+            let policy = Int32(asset.policy)
+            let transferablePolicy = self.meetsPolicy(
+                policy: policy,
+                policyToCheck: .transferable
+                ) ? Localized(.can_be_transfered) : Localized(.cannot_be_transfered)
+            
+            let withdrawablePolicy = self.meetsPolicy(
+                policy: policy,
+                policyToCheck: .withdrawable
+                ) ? Localized(.can_be_withdrawn) : Localized(.cannot_be_withdrawn)
+            
+            let poicies: [String] = [
+                transferablePolicy,
+                withdrawablePolicy
+            ]
+            
             return Token(
                 identifier: asset.identifier,
                 iconUrl: iconUrl,
@@ -113,8 +130,13 @@ extension TokenDetailsScene {
                 availableForIssuance: asset.availableForIssuance,
                 issued: asset.issued,
                 maximumIssuanceAmount: asset.maxIssuanceAmount,
+                policies: poicies,
                 termsOfUse: termsOfUse
             )
+        }
+        
+        private func meetsPolicy(policy: Int32, policyToCheck: AssetPolicy) -> Bool {
+            return (policy & policyToCheck.rawValue) == policyToCheck.rawValue
         }
         
         // MARK: - Public

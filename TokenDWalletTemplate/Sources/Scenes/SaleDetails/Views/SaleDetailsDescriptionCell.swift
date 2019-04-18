@@ -193,7 +193,7 @@ extension SaleDetails {
             }
             
             private func setupShortDescriptionLabel() {
-                self.shortDescriptionLabel.font = Theme.Fonts.smallTextFont
+                self.shortDescriptionLabel.font = Theme.Fonts.plainTextFont
                 self.shortDescriptionLabel.textColor = Theme.Colors.textOnContentBackgroundColor
                 self.shortDescriptionLabel.textAlignment = .left
                 self.shortDescriptionLabel.numberOfLines = 0
