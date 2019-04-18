@@ -113,6 +113,10 @@ extension TradesList.Event {
         public typealias ViewModel = Response
     }
     
+    public enum PullToRefresh {
+        public struct Request { public init() {} }
+    }
+    
     public enum Error {
         public struct Response {
             public let error: Swift.Error
