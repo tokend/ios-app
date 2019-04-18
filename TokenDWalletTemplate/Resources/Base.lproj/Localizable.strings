@@ -415,6 +415,8 @@
 "trades_header_amount_base_replace_asset" = "asset";
 "trades_header_price_quote" = "Price ($(asset))";
 "trades_header_price_quote_replace_asset" = "asset";
+"trades_header_volume_base" = "Volume ($(asset))";
+"trades_header_volume_base_replace_asset" = "asset";
 "trades_header_time" = "Time";
 "transaction_details" = "Transaction details";
 "twofactor_authentication" = "Two-factor authentication";
@@ -445,6 +447,9 @@
 "verify_email" = "Verify Email";
 "view_history" = "View history";
 "view_more" = "View more";
+"volume" = "Volume";
+"volume_newline" = "Volume\n$(base)";
+"volume_newline_replace_base" = "base";
 "wallet" = "Wallet";
 "week" = "Week";
 "withdraw" = "Withdraw";

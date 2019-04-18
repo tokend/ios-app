@@ -418,6 +418,8 @@ enum LocKey: String {
     case trades_header_amount_base_replace_asset
     case trades_header_price_quote
     case trades_header_price_quote_replace_asset
+    case trades_header_volume_base
+    case trades_header_volume_base_replace_asset
     case trades_header_time
     case transaction_details
     case twofactor_authentication
@@ -448,6 +450,9 @@ enum LocKey: String {
     case verify_email
     case view_history
     case view_more
+    case volume
+    case volume_newline
+    case volume_newline_replace_base
     case wallet
     case week
     case withdraw

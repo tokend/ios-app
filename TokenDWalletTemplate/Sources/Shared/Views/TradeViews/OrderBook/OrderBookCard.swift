@@ -20,15 +20,15 @@ class OrderBookCard: UIView {
                     ]
                 )
                 self.amountBuyTitleLabel.text = Localized(
-                    .amount_newline,
+                    .volume_newline,
                     replace: [
-                        .amount_newline_replace_base: base
+                        .volume_newline_replace_base: base
                     ]
                 )
                 self.amountSellTitleLabel.text = Localized(
-                    .amount_newline,
+                    .volume_newline,
                     replace: [
-                        .amount_newline_replace_base: base
+                        .volume_newline_replace_base: base
                     ]
                 )
             } else {
