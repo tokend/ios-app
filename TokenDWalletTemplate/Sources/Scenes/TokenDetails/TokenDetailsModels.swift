@@ -25,6 +25,7 @@ extension TokenDetailsScene.Model {
         let availableForIssuance: Decimal
         let issued: Decimal
         let maximumIssuanceAmount: Decimal
+        let policies: [String]
         
         let termsOfUse: Document?
     }

@@ -44,11 +44,15 @@
 "buy_base" = "Buy $(base)";
 "buy_base_replace_base" = "base";
 "can_be_traded_on_secondary_market" = " - Can be traded on secondary market";
+"can_be_transfered" = " - Can be transfered";
+"can_be_withdrawn" = " - Can be withdrawn";
 "cancel" = "Cancel";
 "cancel_investment" = "Cancel investment";
 "cancel_tfa" = "Cancel TFA";
 "canceled" = "Canceled";
 "cannot_be_traded_on_secondary_market" = " - Can't be traded on secondary market";
+"cannot_be_transfered" = " - Can't be transfered";
+"cannot_be_withdrawn" = " - Can't be withdrawn";
 "cannot_decode_original_account_id_data" = "Cannot decode original account id data";
 "cannot_derive_encoded_wallet_id" = "Cannot derive encoded wallet id";
 "card_holder" = "Card holder";
@@ -296,6 +300,7 @@
 "photo_verification" = "Photo verification";
 "physical_price" = "Physical price";
 "please_validate_this_seed" = "Please validate this seed in the field below to ensure that you copied it properly:";
+"policy" = "Policy";
 "price" = "Price";
 "price_colon" = "Price:";
 "price_newline" = "Price\n$(quote)";
