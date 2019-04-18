@@ -16,7 +16,18 @@ enum Fees {
         case upperBound
     }
     
-    enum Model {}
+    enum Model {
+        struct FeeModel: Equatable {
+            let asset: String
+            let feeAsset: String
+            let feeType: FeeType?
+            let subtype: Subtype?
+            let fixed: Decimal
+            let percent: Decimal
+            let lowerBound: Decimal
+            let upperBound: Decimal
+        }
+    }
     enum Event {}
 }
 
@@ -29,25 +40,14 @@ extension Fees.Model {
         var selectedAsset: String?
     }
     
-    struct FeeModel {
-        let asset: String
-        let feeAsset: String
-        let feeType: FeeType?
-        let subtype: Subtype?
-        let fixed: Decimal
-        let percent: Decimal
-        let lowerBound: Decimal
-        let upperBound: Decimal
-    }
-    
-    enum FeeType: Int32 {
+    enum FeeType: Int32, CaseIterable {
         case paymentFee = 0
         case offerFee = 1
         case withdrawalFee = 2
         case investFee = 4
     }
     
-    enum Subtype: Int32 {
+    enum Subtype: Int32, CaseIterable {
         case incomingOutgoing = 0
         case outgoing = 1
         case incoming = 2

@@ -308,6 +308,7 @@
 		DB33ECA1216672D1006D220B /* SaleInfoEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB33ECA0216672D1006D220B /* SaleInfoEmptyView.swift */; };
 		DB4512A9216E2A9100922DA7 /* TransactionsListSalesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1B2F30216E25A40081EB1D /* TransactionsListSalesFetcher.swift */; };
 		DB4512AB216E34FD00922DA7 /* TransactionDetailsInvestmentSectionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4512AA216E34FD00922DA7 /* TransactionDetailsInvestmentSectionsProvider.swift */; };
+		DB5937FF2268DD2B00C8997C /* Array+SortedInsert.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5937FE2268DD2B00C8997C /* Array+SortedInsert.swift */; };
 		DB5A3BBE21C1554600520604 /* FeesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BB821C1554600520604 /* FeesPresenter.swift */; };
 		DB5A3BBF21C1554600520604 /* FeesRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BB921C1554600520604 /* FeesRouting.swift */; };
 		DB5A3BC021C1554600520604 /* FeesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BBA21C1554600520604 /* FeesModels.swift */; };
@@ -802,6 +803,7 @@
 		DB27961521C2B98600106B0C /* FeeDataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeDataFormatter.swift; sourceTree = "<group>"; };
 		DB33ECA0216672D1006D220B /* SaleInfoEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleInfoEmptyView.swift; sourceTree = "<group>"; };
 		DB4512AA216E34FD00922DA7 /* TransactionDetailsInvestmentSectionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsInvestmentSectionsProvider.swift; sourceTree = "<group>"; };
+		DB5937FE2268DD2B00C8997C /* Array+SortedInsert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+SortedInsert.swift"; sourceTree = "<group>"; };
 		DB5A3BB821C1554600520604 /* FeesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesPresenter.swift; sourceTree = "<group>"; };
 		DB5A3BB921C1554600520604 /* FeesRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesRouting.swift; sourceTree = "<group>"; };
 		DB5A3BBA21C1554600520604 /* FeesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesModels.swift; sourceTree = "<group>"; };
@@ -1927,6 +1929,7 @@
 				E91131F920C56FC700A8AC4D /* UIView+Loading.swift */,
 				E9063E8B20F640E600A5B343 /* UIViewController+ChildViewController.swift */,
 				E91131EF20C5485900A8AC4D /* UIViewController+Nib.swift */,
+				DB5937FE2268DD2B00C8997C /* Array+SortedInsert.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3133,6 +3136,7 @@
 				E92F1BB92136DD0C00D4695E /* CreateOfferEnterAmountView.swift in Sources */,
 				7FEC94912148170500F41EE6 /* SaleDetailsPresenter.swift in Sources */,
 				E93F076920D91357000C0991 /* TransactionsListScenePaymentsFetcher.swift in Sources */,
+				DB5937FF2268DD2B00C8997C /* Array+SortedInsert.swift in Sources */,
 				7FB9E48220C06FD1005BFE0E /* KeychainManager.swift in Sources */,
 				7FEC949A2148170500F41EE6 /* SaleDetailsDescriptionCell.swift in Sources */,
 				7FEC94972148170500F41EE6 /* SaleDetailsRouting.swift in Sources */,
