@@ -95,34 +95,3 @@ extension Fees.FeesProvider: FeesProviderProtocol {
         return self.feesOverviewLoadingStatus.asObservable()
     }
 }
-
-extension Fees.Model.FeeModel: Comparable {
-    
-    static func < (left: Fees.Model.FeeModel, right: Fees.Model.FeeModel) -> Bool {
-        guard let leftFeeType = left.feeType else {
-            return right.feeType != nil
-        }
-        
-        guard let rightFeeType = right.feeType else {
-            return true
-        }
-        
-        guard leftFeeType.rawValue == rightFeeType.rawValue else {
-            return leftFeeType.rawValue < rightFeeType.rawValue
-        }
-        
-        guard let leftFeeSubType = left.subtype else {
-            return right.subtype != nil
-        }
-        
-        guard let rightFeeSubType = right.subtype else {
-            return true
-        }
-        
-        guard leftFeeSubType.rawValue == rightFeeSubType.rawValue else {
-            return leftFeeSubType.rawValue < rightFeeSubType.rawValue
-        }
-        
-        return left.lowerBound < right.lowerBound
-    }
-}
