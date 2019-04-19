@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     
@@ -17,11 +19,16 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     }
     public var onContentSizeChanged: ContentSizeDidChange?
     
+    public var onPullToRefresh: (() -> Void)?
+    
     // MARK: - Private properties
     
     private let tableView: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     private let emptyLabel: UILabel = SharedViewsBuilder.createEmptyLabel()
     private lazy var delegateDatasource: DelegateDatasource = DelegateDatasource()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Overridden methods
     
@@ -32,7 +39,9 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        
+        self.commonInit()
     }
     
     override func observeValue(
@@ -58,6 +67,7 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     
     private func commonInit() {
         self.setupTableView()
+        self.setupRefreshControl()
         self.setupEmptyLabel()
         
         self.setupLayout()
@@ -79,15 +89,26 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             context: nil)
     }
     
+    private func setupRefreshControl() {
+        self.refreshControl.rx
+            .controlEvent(.valueChanged)
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.onPullToRefresh?()
+            }).disposed(by: self.disposeBag)
+    }
+    
     private func setupEmptyLabel() { }
     
     private func setupLayout() {
         self.addSubview(self.tableView)
+        self.tableView.addSubview(self.refreshControl)
         self.addSubview(self.emptyLabel)
         
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
+        
         self.emptyLabel.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
             make.top.leading.greaterThanOrEqualToSuperview().inset(8)
@@ -104,6 +125,14 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     
     public func hideEmptyState() {
         self.emptyLabel.isHidden = true
+    }
+    
+    public func showDataLoading(_ show: Bool) {
+        if show {
+            self.refreshControl.beginRefreshing()
+        } else {
+            self.refreshControl.endRefreshing()
+        }
     }
 }
 

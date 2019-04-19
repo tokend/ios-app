@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 public class TradesView: UIView {
     
@@ -62,6 +64,8 @@ public class TradesView: UIView {
         }
     }
     
+    public var onPullToRefresh: (() -> Void)?
+    
     // MARK: - Private properties
     
     private let headerView: UIView = UIView()
@@ -70,7 +74,10 @@ public class TradesView: UIView {
     private let headerTimeLabel: UILabel = UILabel()
     private let separatorView: UIView = UIView()
     private let tableView: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     private let emptyViewLabel: UILabel = UILabel()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: -
     
@@ -94,8 +101,19 @@ public class TradesView: UIView {
         self.setupHeaderTimeLabel()
         self.setupSeparatorView()
         self.setupTableView()
+        self.setupRefreshControl()
         self.setupEmptyViewLabel()
         self.setupLayout()
+    }
+    
+    // MARK: - Public
+    
+    public func showTradesLoading(_ show: Bool) {
+        if show {
+            self.refreshControl.beginRefreshing()
+        } else {
+            self.refreshControl.endRefreshing()
+        }
     }
     
     // MARK: - Private
@@ -139,12 +157,22 @@ public class TradesView: UIView {
         )
     }
     
+    private func setupRefreshControl() {
+        self.refreshControl.rx
+            .controlEvent(.valueChanged)
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.onPullToRefresh?()
+            }).disposed(by: self.disposeBag)
+    }
+    
     private func setupEmptyViewLabel() {
         self.emptyViewLabel.textAlignment = .center
     }
     
     private func setupLayout() {
         self.addSubview(self.tableView)
+        self.tableView.addSubview(self.refreshControl)
         self.addSubview(self.headerView)
         self.addSubview(self.separatorView)
         self.addSubview(self.emptyViewLabel)

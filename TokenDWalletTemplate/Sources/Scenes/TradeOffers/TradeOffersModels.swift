@@ -515,6 +515,18 @@ extension TradeOffers.Event {
         public typealias ViewModel = Model
     }
     
+    public enum PullToRefresh {
+        
+        public struct Request {
+            
+            public let tab: Model.ContentTab
+            
+            public init(tab: Model.ContentTab) {
+                self.tab = tab
+            }
+        }
+    }
+    
     public enum CreateOffer {
         
         public struct Request {
