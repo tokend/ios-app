@@ -54,6 +54,7 @@ extension Fees {
                             upperBound: response.upperBound
                         )
                     })
+                    .sorted()
                 }
                 .filter({ (pair) -> Bool in
                     return !pair.value.isEmpty

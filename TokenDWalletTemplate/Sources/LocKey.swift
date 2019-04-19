@@ -47,11 +47,15 @@ enum LocKey: String {
     case buy_base
     case buy_base_replace_base
     case can_be_traded_on_secondary_market
+    case can_be_transfered
+    case can_be_withdrawn
     case cancel
     case cancel_investment
     case cancel_tfa
     case canceled
     case cannot_be_traded_on_secondary_market
+    case cannot_be_transfered
+    case cannot_be_withdrawn
     case cannot_decode_original_account_id_data
     case cannot_derive_encoded_wallet_id
     case card_holder
@@ -299,6 +303,7 @@ enum LocKey: String {
     case photo_verification
     case physical_price
     case please_validate_this_seed
+    case policy
     case price
     case price_colon
     case price_newline
