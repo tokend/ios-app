@@ -40,14 +40,14 @@ extension Fees.Model {
         var selectedAsset: String?
     }
     
-    enum FeeType: Int32, CaseIterable {
+    enum FeeType: Int32 {
         case paymentFee = 0
         case offerFee = 1
         case withdrawalFee = 2
         case investFee = 4
     }
     
-    enum Subtype: Int32, CaseIterable {
+    enum Subtype: Int32 {
         case incomingOutgoing = 0
         case outgoing = 1
         case incoming = 2
