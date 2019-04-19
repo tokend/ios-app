@@ -64,6 +64,7 @@ extension TradesList {
             self.setupPendingOffersButton()
             self.setupPairPicker()
             self.setupTableView()
+            self.setupRefreshControl()
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request()
@@ -101,6 +102,16 @@ extension TradesList {
         private func setupTableView() {
             self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
             self.tableView.dataSource = self
+        }
+        
+        private func setupRefreshControl() {
+            self.tableView.pullToRefreshEnabled = true
+            self.tableView.onPullToRefresh = { [weak self] in
+                let request = Event.PullToRefresh.Request()
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onPullToRefresh(request: request)
+                })
+            }
         }
         
         private func setupLayout() {
@@ -168,10 +179,10 @@ extension TradesList.ViewController: TradesList.DisplayLogic {
         switch viewModel {
             
         case .loaded:
-            self.routing?.onHideProgress()
+            self.tableView.endRefreshing()
             
         case .loading:
-            self.routing?.onShowProgress()
+            self.tableView.beginRefreshing()
         }
     }
     

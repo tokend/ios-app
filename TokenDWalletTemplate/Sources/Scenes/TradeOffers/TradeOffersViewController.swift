@@ -121,7 +121,12 @@ extension TradeOffers {
         }
         
         private func setupOrderBookView() {
-            
+            self.orderBookView.onPullToRefresh = { [weak self] in
+                let request = Event.PullToRefresh.Request(tab: .orderBook)
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onPullToRefresh(request: request)
+                })
+            }
         }
         
         private func setupChartView() {
@@ -136,7 +141,12 @@ extension TradeOffers {
         }
         
         private func setupTradesView() {
-            
+            self.tradesView.onPullToRefresh = { [weak self] in
+                let request = Event.PullToRefresh.Request(tab: .trades)
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onPullToRefresh(request: request)
+                })
+            }
         }
         
         private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {
@@ -399,6 +409,7 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         if let show = viewModel.showForChart { self.chartView.showChartLoading(show) }
         if let show = viewModel.showForBuyTable { self.orderBookView.showBuyTableLoading(show) }
         if let show = viewModel.showForSellTable { self.orderBookView.showSellTableLoading(show) }
+        if let show = viewModel.showForTrades { self.tradesView.showTradesLoading(show) }
     }
     
     public func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel) {

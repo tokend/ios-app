@@ -69,6 +69,8 @@ class OrderBookCard: UIView {
         set { self.buyTable.cells = (newValue as? [OrderBookTableViewCellModel<OrderBookTableViewBuyCell>]) ?? [] }
     }
     
+    public var onPullToRefresh: (() -> Void)?
+    
     // MARK: - Private properties
     
     private let buyTitleLabel: UILabel = UILabel()
@@ -95,7 +97,9 @@ class OrderBookCard: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        
+        self.commonInit()
     }
     
     // MARK: - Private
@@ -119,7 +123,12 @@ class OrderBookCard: UIView {
     }
     
     private func setupTables() {
-        
+        self.buyTable.onPullToRefresh = { [weak self] in
+            self?.onPullToRefresh?()
+        }
+        self.sellTable.onPullToRefresh = { [weak self] in
+            self?.onPullToRefresh?()
+        }
     }
     
     private func setupSeparators() {
@@ -249,19 +258,11 @@ class OrderBookCard: UIView {
     // MARK: - Public
     
     func showBuyTableLoading(_ show: Bool) {
-        if show {
-            self.buyTable.showLoading()
-        } else {
-            self.buyTable.hideLoading()
-        }
+        self.buyTable.showDataLoading(show)
     }
     
     func showSellTableLoading(_ show: Bool) {
-        if show {
-            self.sellTable.showLoading()
-        } else {
-            self.sellTable.hideLoading()
-        }
+        self.sellTable.showDataLoading(show)
     }
     
     func showEmptyBuyTable(_ text: String) {
