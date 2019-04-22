@@ -237,12 +237,14 @@
 "network_info_error_replace_message" = "message";
 "new_password" = "New Password";
 "new_password_lowercased" = "new password";
+"next" = "Next";
 "no_asks" = "No asks";
 "no_assets_can_be_deposited" = "No assets can be deposited";
 "no_available_periods" = "No available periods";
 "no_balance" = "No balance";
 "no_balances" = "No balances";
 "no_bids" = "No bids";
+"no_fees" = "No fees";
 "no_fees_to_overview" = "No fees to overview";
 "no_growth" = "No growth";
 "no_investments" = "No investments";

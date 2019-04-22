@@ -3,52 +3,51 @@ import RxSwift
 
 protocol SendPaymentDisplayLogic: class {
     
-    typealias Event = SendPayment.Event
+    typealias Event = SendPaymentAmount.Event
     
     func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel)
     func displayLoadBalances(viewModel: Event.LoadBalances.ViewModel)
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel)
     func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel)
-    func displaySelectedContact(viewModel: Event.SelectedContact.ViewModel)
-    func displayScanRecipientQRAddress(viewModel: Event.ScanRecipientQRAddress.ViewModel)
     func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
     func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
     func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
+    func displayFeeUpdated(viewModel: Event.FeeUpdated.ViewModel)
 }
 
-extension SendPayment {
+extension SendPaymentAmount {
     typealias DisplayLogic = SendPaymentDisplayLogic
     
     class ViewController: UIViewController {
         
-        typealias Model = SendPayment.Model
-        typealias Event = SendPayment.Event
+        typealias Model = SendPaymentAmount.Model
+        typealias Event = SendPaymentAmount.Event
         
         // MARK: - Private properties
         
         private let stackView: ScrollableStackView = ScrollableStackView()
         
         private let balanceView: BalanceView = BalanceView()
-        private let recipientAddressView: RecipientAddressView = RecipientAddressView()
         private let enterAmountView: EnterAmountView = EnterAmountView()
+        private let feeView: FeeView = FeeView()
+        private let confirmButton: UIButton = UIButton()
         
         private let disposeBag = DisposeBag()
+        
+        private let buttonSize: CGFloat = 45.0
         
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
         private var routing: Routing?
-        private var viewConfig: Model.ViewConfig?
         
         func inject(
             interactorDispatch: InteractorDispatch?,
-            routing: Routing?,
-            viewConfig: Model.ViewConfig
+            routing: Routing?
             ) {
             
             self.interactorDispatch = interactorDispatch
             self.routing = routing
-            self.viewConfig = viewConfig
         }
         
         // MARK: - Overridden
@@ -58,9 +57,11 @@ extension SendPayment {
             
             self.setupStackView()
             self.setupBalanceView()
-            self.setupRecipientAddressView()
             self.setupEnterAmountView()
+            self.setupFeeView()
             self.setupSendPaymentButton()
+            self.setupConfirmButton()
+            self.observeKeyboard()
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request()
@@ -86,8 +87,6 @@ extension SendPayment {
                 asset: sceneModel.selectedBalance?.asset
             )
             
-            self.recipientAddressView.address = sceneModel.recipientAddress
-            
             self.enterAmountView.set(amount: sceneModel.amount, asset: sceneModel.selectedBalance?.asset)
             
             self.updateAmountValid(sceneModel.amountValid)
@@ -99,43 +98,12 @@ extension SendPayment {
         }
         
         private func setupStackView() {
-            
+            self.stackView.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.stackView.stackViewsSpacing = 10.0
         }
         
         private func setupBalanceView() {
             
-        }
-        
-        private func setupRecipientAddressView() {
-            if let viewConfig = self.viewConfig {
-                self.recipientAddressView.title = viewConfig.recipientAddressFieldTitle
-                self.recipientAddressView.placeholder = viewConfig.recipientAddressFieldPlaceholder
-            }
-            
-            self.recipientAddressView.onAddressEdit = { [weak self] (address) in
-                let request = Event.EditRecipientAddress.Request(address: address)
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onEditRecipientAddress(request: request)
-                })
-            }
-            
-            self.recipientAddressView.onQRAction = { [weak self] in
-                self?.routing?.onPresentQRCodeReader({ result in
-                    let request = Event.ScanRecipientQRAddress.Request(qrResult: result)
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onScanRecipientQRAddress(request: request)
-                    })
-                })
-            }
-            
-            self.recipientAddressView.onSelectAccount = { [weak self] in
-                self?.routing?.onSelectContactEmail({ [weak self] (email) in
-                    let request = Event.SelectedContact.Request(email: email)
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onSelectedContact(request: request)
-                    })
-                })
-            }
         }
         
         private func setupEnterAmountView() {
@@ -154,6 +122,10 @@ extension SendPayment {
             }
         }
         
+        private func setupFeeView() {
+            
+        }
+        
         private func setupSendPaymentButton() {
             let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Checkmark"), style: .plain, target: nil, action: nil)
             button.rx
@@ -170,26 +142,61 @@ extension SendPayment {
             self.navigationItem.rightBarButtonItem = button
         }
         
+        private func setupConfirmButton() {
+            let attributedTitle = NSAttributedString(
+                string: Localized(.confirm),
+                attributes: [
+                    .font: Theme.Fonts.actionButtonFont,
+                    .foregroundColor: Theme.Colors.actionTitleButtonColor
+                ]
+            )
+            self.confirmButton.setAttributedTitle(attributedTitle, for: .normal)
+            self.confirmButton.backgroundColor = Theme.Colors.accentColor
+        }
+        
+        private func observeKeyboard() {
+            let keyboardObserver = KeyboardObserver(
+                self,
+                keyboardWillChange: { (attributes) in
+                    if attributes.showingIn(view: self.view) {
+                        self.confirmButton.frame.origin.y -= attributes.rectInWindow.height
+                    } else {
+                        self.confirmButton.frame.origin.y += attributes.rectInWindow.height
+                    }
+            })
+            self.view.setNeedsLayout()
+            KeyboardController.shared.add(observer: keyboardObserver)
+        }
+        
         private func setupLayout() {
             self.view.addSubview(self.stackView)
+            self.view.addSubview(self.confirmButton)
             
             self.stackView.snp.makeConstraints { (make) in
-                make.edges.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
+                make.centerY.equalTo(self.view.safeArea.centerY)
+                make.height.equalTo(200)
             }
             
             self.stackView.insert(views: [
                 self.balanceView,
-                self.recipientAddressView,
-                self.enterAmountView
+                self.enterAmountView,
+                self.feeView
                 ]
             )
+            
+            self.confirmButton.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                make.bottom.lessThanOrEqualTo(self.view.safeArea.bottom)
+                make.height.equalTo(self.buttonSize)
+            }
         }
     }
 }
 
 // MARK: - DisplayLogic
 
-extension SendPayment.ViewController: SendPayment.DisplayLogic {
+extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
     func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel) {
         self.updateWithSceneModel(viewModel.sceneModel)
     }
@@ -226,24 +233,6 @@ extension SendPayment.ViewController: SendPayment.DisplayLogic {
         self.updateWithSceneModel(viewModel.sceneModel)
     }
     
-    func displaySelectedContact(viewModel: Event.SelectedContact.ViewModel) {
-        self.updateWithSceneModel(viewModel.sceneModel)
-    }
-    
-    func displayScanRecipientQRAddress(viewModel: Event.ScanRecipientQRAddress.ViewModel) {
-        switch viewModel {
-            
-        case .canceled:
-            break
-            
-        case .failed(let errorMessage):
-            self.routing?.onShowError(errorMessage)
-            
-        case .succeeded(let sceneViewModel):
-            self.updateWithSceneModel(sceneViewModel)
-        }
-    }
-    
     func displayEditAmount(viewModel: Event.EditAmount.ViewModel) {
         self.updateAmountValid(viewModel.amountValid)
     }
@@ -278,5 +267,9 @@ extension SendPayment.ViewController: SendPayment.DisplayLogic {
         case .succeeded(let sendModel):
             self.routing?.onSendWithdraw?(sendModel)
         }
+    }
+    
+    func displayFeeUpdated(viewModel: Event.FeeUpdated.ViewModel) {
+        self.feeView.fee = viewModel.fee
     }
 }

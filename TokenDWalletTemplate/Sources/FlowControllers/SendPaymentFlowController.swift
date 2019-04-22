@@ -51,7 +51,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     // MARK: - Private
     
     private func startFromSendScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let viewController = self.setupSendScreen()
+        let viewController = self.setupSendAmountScreen()
         
         viewController.navigationItem.title = Localized(.send)
         
@@ -62,31 +62,25 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         }
     }
     
-    private func setupSendScreen() -> SendPayment.ViewController {
-        let vc = SendPayment.ViewController()
+    private func setupSendAmountScreen() -> SendPaymentAmount.ViewController {
+        let vc = SendPaymentAmount.ViewController()
         
-        let balanceDetailsLoader = SendPayment.BalanceDetailsLoaderWorker(
+        let balanceDetailsLoader = SendPaymentAmount.BalanceDetailsLoaderWorker(
             balancesRepo: self.reposController.balancesRepo,
             assetsRepo: self.reposController.assetsRepo,
             operation: .handleSend
         )
         
-        let amountFormatter = TokenDetailsScene.AmountFormatter()
-        
-        let recipientAddressResolver = SendPayment.RecipientAddressResolverWorker(
-            generalApi: self.flowControllerStack.api.generalApi
-        )
+        let amountFormatter = SendPaymentAmount.AmountFormatter()
         
         let feeLoader = FeeLoader(
             generalApi: self.flowControllerStack.api.generalApi
         )
-        let feeLoaderWorker = SendPayment.FeeLoaderWorker(
+        let feeLoaderWorker = SendPaymentAmount.FeeLoaderWorker(
             feeLoader: feeLoader
         )
         
-        let viewConfig = SendPayment.Model.ViewConfig.sendPayment()
-        
-        let routing = SendPayment.Routing(
+        let routing = SendPaymentAmount.Routing(
             onShowProgress: { [weak self] in
                 self?.navigationController.showProgress()
             },
@@ -95,16 +89,6 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             },
             onShowError: { [weak self] (errorMessage) in
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)
-            },
-            onSelectContactEmail: { [weak self] (completion) in
-                self?.presentContactEmailPicker(
-                    completion: completion,
-                    presentViewController: { [weak self] (vc, animated, completion) in
-                        self?.navigationController.present(vc, animated: animated, completion: completion)
-                })
-            },
-            onPresentQRCodeReader: { [weak self] (completion) in
-                self?.presentQRCodeReader(completion: completion)
             },
             onPresentPicker: { [weak self] (title, options, onSelected) in
                 guard let present = self?.navigationController.getPresentViewControllerClosure() else {
@@ -127,31 +111,56 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onSendWithdraw: nil
         )
         
-        SendPayment.Configurator.configure(
+        SendPaymentAmount.Configurator.configure(
             viewController: vc,
             senderAccountId: self.userDataProvider.walletData.accountId,
             selectedBalanceId: self.selectedBalanceId,
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
-            recipientAddressResolver: recipientAddressResolver,
             feeLoader: feeLoaderWorker,
-            feeType: SendPayment.Model.FeeType.payment,
-            operation: SendPayment.Model.Operation.handleSend,
-            viewConfig: viewConfig,
+            feeType: SendPaymentAmount.Model.FeeType.payment,
+            operation: SendPaymentAmount.Model.Operation.handleSend,
             routing: routing
         )
         
         return vc
     }
     
-    private func showPaymentConfirmationScreen(sendPaymentModel: SendPayment.Model.SendPaymentModel) {
+    private func setupSendDestinationScreen() {
+        let vc = SendPaymentDestination.ViewController()
+        let viewConfig = SendPaymentDestination.Model.ViewConfig.sendPayment()
+        let routing = SendPaymentDestination.Routing(
+            onSelectContactEmail: { [weak self] (completion) in
+                self?.presentContactEmailPicker(
+                    completion: completion,
+                    presentViewController: { [weak self] (vc, animated, completion) in
+                        self?.navigationController.present(vc, animated: animated, completion: completion)
+                })
+            },
+            onPresentQRCodeReader: { [weak self] (completion) in
+                self?.presentQRCodeReader(completion: completion)
+        })
+        
+        let recipientAddressResolver = SendPaymentDestination.WithdrawRecipientAddressResolver(
+            generalApi: self.flowControllerStack.api.generalApi
+        )
+        
+        SendPaymentDestination.Configurator.configure(
+            viewController: vc,
+            recipientAddressResolver: recipientAddressResolver,
+            viewConfig: viewConfig,
+            routing: routing
+        )
+    }
+    
+    private func showPaymentConfirmationScreen(sendPaymentModel: SendPaymentAmount.Model.SendPaymentModel) {
         let vc = self.setupPaymentConfirmationScreen(sendPaymentModel: sendPaymentModel)
         
         self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func setupPaymentConfirmationScreen(
-        sendPaymentModel: SendPayment.Model.SendPaymentModel
+        sendPaymentModel: SendPaymentAmount.Model.SendPaymentModel
         ) -> ConfirmationScene.ViewController {
         
         let vc = ConfirmationScene.ViewController()
@@ -220,7 +229,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     
     // MARK: -
     
-    private func presentQRCodeReader(completion: @escaping SendPayment.QRCodeReaderCompletion) {
+    private func presentQRCodeReader(completion: @escaping SendPaymentDestination.QRCodeReaderCompletion) {
         self.runQRCodeReaderFlow(
             presentingViewController: self.navigationController.getViewController(),
             handler: { result in

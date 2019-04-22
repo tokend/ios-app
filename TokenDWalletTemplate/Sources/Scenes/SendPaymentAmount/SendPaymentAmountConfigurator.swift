@@ -1,6 +1,6 @@
 import Foundation
 
-extension SendPayment {
+extension SendPaymentAmount {
     
     enum Configurator {
         static func configure(
@@ -9,11 +9,9 @@ extension SendPayment {
             selectedBalanceId: String?,
             balanceDetailsLoader: BalanceDetailsLoader,
             amountFormatter: AmountFormatterProtocol,
-            recipientAddressResolver: RecipientAddressResolver,
             feeLoader: FeeLoaderProtocol,
             feeType: Model.FeeType,
             operation: Model.Operation,
-            viewConfig: Model.ViewConfig,
             routing: Routing?
             ) {
             
@@ -34,7 +32,6 @@ extension SendPayment {
                 senderAccountId: senderAccountId,
                 selectedBalanceId: selectedBalanceId,
                 balanceDetailsLoader: balanceDetailsLoader,
-                recipientAddressResolver: recipientAddressResolver,
                 feeLoader: feeLoader
             )
             let interactorDispatch = InteractorDispatch(
@@ -43,14 +40,13 @@ extension SendPayment {
             )
             viewController.inject(
                 interactorDispatch: interactorDispatch,
-                routing: routing,
-                viewConfig: viewConfig
+                routing: routing
             )
         }
     }
 }
 
-extension SendPayment {
+extension SendPaymentAmount {
     
     class InteractorDispatch {
         

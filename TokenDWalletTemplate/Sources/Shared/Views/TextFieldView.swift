@@ -28,6 +28,11 @@ class TextFieldView: UIView {
         }
     }
     
+    var textAlignment: NSTextAlignment {
+        get { return self.textField.textAlignment }
+        set { self.textField.textAlignment = newValue }
+    }
+    
     var font: UIFont? {
         get { return self.textField.font }
         set { self.textField.font = newValue }

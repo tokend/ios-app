@@ -2,12 +2,12 @@ import Foundation
 import TokenDWallet
 import TokenDSDK
 
-enum RecipientAddressResolverResult {
-    enum AddressResolveError: Swift.Error, LocalizedError {
+public enum RecipientAddressResolverResult {
+   public enum AddressResolveError: Swift.Error, LocalizedError {
         case invalidAccountIdOrEmail
         case other(ApiErrors)
         
-        var errorDescription: String? {
+       public var errorDescription: String? {
             switch self {
             case .invalidAccountIdOrEmail:
                 return Localized(.invalid_account_id_or_email)
@@ -27,17 +27,17 @@ enum RecipientAddressResolverResult {
     case failed(AddressResolveError)
 }
 
-protocol SendPaymentRecipientAddressResolverProtocol {
+public protocol SendPaymentDestinationRecipientAddressResolverProtocol {
     func resolve(
         recipientAddress: String,
         completion: @escaping (_ result: RecipientAddressResolverResult) -> Void
     )
 }
 
-extension SendPayment {
-    typealias RecipientAddressResolver = SendPaymentRecipientAddressResolverProtocol
+extension SendPaymentDestination {
+    public typealias RecipientAddressResolver = SendPaymentDestinationRecipientAddressResolverProtocol
     
-    class RecipientAddressResolverWorker: RecipientAddressResolver {
+   public class RecipientAddressResolverWorker: RecipientAddressResolver {
         
         // MARK: - Private properties
         
@@ -45,13 +45,13 @@ extension SendPayment {
         
         // MARK: -
         
-        init(generalApi: GeneralApi) {
+        public init(generalApi: GeneralApi) {
             self.generalApi = generalApi
         }
         
         // MARK: - RecipientAddressResolver
         
-        func resolve(
+        public func resolve(
             recipientAddress: String,
             completion: @escaping (_ result: RecipientAddressResolverResult) -> Void
             ) {

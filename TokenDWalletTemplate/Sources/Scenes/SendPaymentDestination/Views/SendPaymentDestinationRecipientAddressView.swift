@@ -2,7 +2,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-extension SendPayment {
+extension SendPaymentDestination {
     class RecipientAddressView: UIView {
         
         // MARK: - Public properties
@@ -169,7 +169,7 @@ extension SendPayment {
 
 // MARK: - UITextFieldDelegate
 
-extension SendPayment.RecipientAddressView: UITextFieldDelegate {
+extension SendPaymentDestination.RecipientAddressView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false

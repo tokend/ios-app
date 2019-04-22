@@ -240,12 +240,14 @@ enum LocKey: String {
     case network_info_error_replace_message
     case new_password
     case new_password_lowercased
+    case next
     case no_asks
     case no_assets_can_be_deposited
     case no_available_periods
     case no_balance
     case no_balances
     case no_bids
+    case no_fees
     case no_fees_to_overview
     case no_growth
     case no_investments

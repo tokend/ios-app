@@ -2,12 +2,12 @@ import Foundation
 import TokenDWallet
 import RxSwift
 
-enum SendPaymentBalanceDetailsLoaderLoadingStatus {
+enum SendPaymentAmountBalanceDetailsLoaderLoadingStatus {
     case loading
     case loaded
 }
-extension SendPaymentBalanceDetailsLoaderLoadingStatus {
-    var responseValue: SendPayment.Event.LoadBalances.Response {
+extension SendPaymentAmountBalanceDetailsLoaderLoadingStatus {
+    var responseValue: SendPaymentAmount.Event.LoadBalances.Response {
         switch self {
             
         case .loaded:
@@ -19,32 +19,32 @@ extension SendPaymentBalanceDetailsLoaderLoadingStatus {
     }
 }
 
-protocol SendPaymentsBalanceDetailsLoaderProtocol {
-    func observeBalanceDetails() -> Observable<[SendPayment.Model.BalanceDetails]>
-    func observeLoadingStatus() -> Observable<SendPaymentBalanceDetailsLoaderLoadingStatus>
+protocol SendPaymentsAmountBalanceDetailsLoaderProtocol {
+    func observeBalanceDetails() -> Observable<[SendPaymentAmount.Model.BalanceDetails]>
+    func observeLoadingStatus() -> Observable<SendPaymentAmountBalanceDetailsLoaderLoadingStatus>
     func observeErrors() -> Observable<Swift.Error>
     func loadBalanceDetails()
 }
 
-extension SendPayment {
-    typealias BalanceDetailsLoader = SendPaymentsBalanceDetailsLoaderProtocol
+extension SendPaymentAmount {
+    typealias BalanceDetailsLoader = SendPaymentsAmountBalanceDetailsLoaderProtocol
 }
 
-extension SendPayment {
+extension SendPaymentAmount {
     class BalanceDetailsLoaderWorker {
         
         // MARK: - Private properties
         
         private let balancesRepo: BalancesRepo
         private let assetsRepo: AssetsRepo
-        private let operation: SendPayment.Model.Operation
+        private let operation: SendPaymentAmount.Model.Operation
         
         // MARK: -
         
         init(
             balancesRepo: BalancesRepo,
             assetsRepo: AssetsRepo,
-            operation: SendPayment.Model.Operation
+            operation: SendPaymentAmount.Model.Operation
             ) {
             
             self.balancesRepo = balancesRepo
@@ -55,8 +55,8 @@ extension SendPayment {
         // MARK: - Private
         
         private func filterWithdrawable(
-            balances: [SendPayment.Model.BalanceDetails]
-            ) -> [SendPayment.Model.BalanceDetails] {
+            balances: [SendPaymentAmount.Model.BalanceDetails]
+            ) -> [SendPaymentAmount.Model.BalanceDetails] {
             
             return balances.filter { [weak self] (balance) -> Bool in
                 if let asset = self?.assetsRepo.assetsValue.first(where: { (asset) -> Bool in
@@ -72,9 +72,9 @@ extension SendPayment {
 
 // MARK: - BalanceDetailsLoader
 
-extension SendPayment.BalanceDetailsLoaderWorker: SendPayment.BalanceDetailsLoader {
-    func observeBalanceDetails() -> Observable<[SendPayment.Model.BalanceDetails]> {
-        typealias BalanceDetails = SendPayment.Model.BalanceDetails
+extension SendPaymentAmount.BalanceDetailsLoaderWorker: SendPaymentAmount.BalanceDetailsLoader {
+    func observeBalanceDetails() -> Observable<[SendPaymentAmount.Model.BalanceDetails]> {
+        typealias BalanceDetails = SendPaymentAmount.Model.BalanceDetails
         
         return self.balancesRepo.observeBalancesDetails().map { (balanceDetails) -> [BalanceDetails] in
             let balances = balanceDetails.compactMap({ (balanceState) -> BalanceDetails? in
@@ -106,10 +106,10 @@ extension SendPayment.BalanceDetailsLoaderWorker: SendPayment.BalanceDetailsLoad
         }
     }
     
-    func observeLoadingStatus() -> Observable<SendPaymentBalanceDetailsLoaderLoadingStatus> {
+    func observeLoadingStatus() -> Observable<SendPaymentAmountBalanceDetailsLoaderLoadingStatus> {
         return self.balancesRepo
             .observeLoadingStatus()
-            .map { (status) -> SendPaymentBalanceDetailsLoaderLoadingStatus in
+            .map { (status) -> SendPaymentAmountBalanceDetailsLoaderLoadingStatus in
                 return status.status
         }
     }
@@ -124,7 +124,7 @@ extension SendPayment.BalanceDetailsLoaderWorker: SendPayment.BalanceDetailsLoad
 }
 
 private extension BalancesRepo.LoadingStatus {
-    var status: SendPaymentBalanceDetailsLoaderLoadingStatus {
+    var status: SendPaymentAmountBalanceDetailsLoaderLoadingStatus {
         switch self {
         case .loading:
             return .loading
