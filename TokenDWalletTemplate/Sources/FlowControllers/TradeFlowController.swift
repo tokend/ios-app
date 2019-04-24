@@ -97,11 +97,17 @@ class TradeFlowController: BaseSignedInFlowController {
         
         let dateFormatter = TradeOffers.TradeDateFormatter()
         
+        let offersFetcher = TradeOffers.OffersFetcher(
+            orderBookApiV3: self.flowControllerStack.apiV3.orderBookApi,
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset
+        )
+        
         let chartsFetcher = TradeOffers.ChartsFetcher(
             chartsApi: self.flowControllerStack.api.chartsApi
         )
         
-        let offersFetcher = TradeOffers.OffersFetcher(
+        let tradesFetcher = TradeOffers.TradesFetcher(
             orderBookApi: self.flowControllerStack.api.orderBookApi
         )
         
@@ -140,8 +146,9 @@ class TradeFlowController: BaseSignedInFlowController {
             sceneModel: sceneModel,
             amountFormatter: amountFormatter,
             dateFormatter: dateFormatter,
-            chartsFetcher: chartsFetcher,
             offersFetcher: offersFetcher,
+            chartsFetcher: chartsFetcher,
+            tradesFetcher: tradesFetcher,
             routing: routing
         )
         

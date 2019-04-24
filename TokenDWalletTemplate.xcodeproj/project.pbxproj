@@ -83,6 +83,8 @@
 		71C74EBD2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C74EBC2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift */; };
 		71C9F89521074F9900A59207 /* ReceiveAddressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C9F89421074F9900A59207 /* ReceiveAddressManager.swift */; };
 		71EE11972126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE11962126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift */; };
+		7F066F55226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F066F54226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift */; };
+		7F066F57226E15F600BBA155 /* TradeOffersTradesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F066F56226E15F600BBA155 /* TradeOffersTradesFetcher.swift */; };
 		7F0F36B720E2696500E906D5 /* WalletRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0F36B120E2696500E906D5 /* WalletRecoveryPresenter.swift */; };
 		7F0F36B820E2696500E906D5 /* WalletRecoveryRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0F36B220E2696500E906D5 /* WalletRecoveryRouting.swift */; };
 		7F0F36B920E2696500E906D5 /* WalletRecoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0F36B320E2696500E906D5 /* WalletRecoveryModels.swift */; };
@@ -571,6 +573,8 @@
 		71C74EBC2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSectionsProviderProtocol.swift; sourceTree = "<group>"; };
 		71C9F89421074F9900A59207 /* ReceiveAddressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveAddressManager.swift; sourceTree = "<group>"; };
 		71EE11962126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentConfirmationSectionsProvider.swift; sourceTree = "<group>"; };
+		7F066F54226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersTradesFetcherProtocol.swift; sourceTree = "<group>"; };
+		7F066F56226E15F600BBA155 /* TradeOffersTradesFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersTradesFetcher.swift; sourceTree = "<group>"; };
 		7F0F36B120E2696500E906D5 /* WalletRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoveryPresenter.swift; sourceTree = "<group>"; };
 		7F0F36B220E2696500E906D5 /* WalletRecoveryRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoveryRouting.swift; sourceTree = "<group>"; };
 		7F0F36B320E2696500E906D5 /* WalletRecoveryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoveryModels.swift; sourceTree = "<group>"; };
@@ -1431,6 +1435,8 @@
 				7F7496222260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift */,
 				7F7496242260A1D40065EE8E /* TradeOffersOffersFetcher.swift */,
 				7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */,
+				7F066F56226E15F600BBA155 /* TradeOffersTradesFetcher.swift */,
+				7F066F54226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -2980,6 +2986,7 @@
 				E91131F820C5610700A8AC4D /* ExploreTokensSceneTokensFetcher.swift in Sources */,
 				7F0F36BB20E2696500E906D5 /* WalletRecoveryInteractor.swift in Sources */,
 				DB0E51D02164E99F00DDA88C /* SaleInfoPresenter.swift in Sources */,
+				7F066F57226E15F600BBA155 /* TradeOffersTradesFetcher.swift in Sources */,
 				7FEB45C620DD5C6B001CA31C /* VerifyEmailVerifyWorkerProtocol.swift in Sources */,
 				7FABEA842100D44E0005E751 /* ScrollableStackView.swift in Sources */,
 				E91131F620C55E7A00A8AC4D /* ExploreTokensSceneTokensFetcherProtocol.swift in Sources */,
@@ -3120,6 +3127,7 @@
 				716B27EE2111F2E000C4F515 /* WithdrawFlowController.swift in Sources */,
 				7FF896EC21ADAF60001A5D48 /* UIColor+Hex.swift in Sources */,
 				E93F075E20D7F2DC000C0991 /* TransactionsListSceneDateFormatterProtocol.swift in Sources */,
+				7F066F55226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift in Sources */,
 				7FABEA7D21009EB90005E751 /* SendPaymentModels.swift in Sources */,
 				E93F074120D306F1000C0991 /* DepositSceneAddressManagerProtocol.swift in Sources */,
 				7FEB45C820DD5D94001CA31C /* VerifyEmailResendWorkerProtocol.swift in Sources */,

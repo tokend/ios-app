@@ -9,15 +9,13 @@ public protocol TradeOffersDisplayLogic: class {
     func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel)
     func displayScreenTitleUpdated(viewModel: Event.ScreenTitleUpdated.ViewModel)
     func displayContentTabSelected(viewModel: Event.ContentTabSelected.ViewModel)
-    func displayPeriodsDidChange(viewModel: Event.PeriodsDidChange.ViewModel)
-    func displayPairPriceDidChange(viewModel: Event.PairPriceDidChange.ViewModel)
+    func displayChartPeriodsDidChange(viewModel: Event.ChartPeriodsDidChange.ViewModel)
+    func displayChartPairPriceDidChange(viewModel: Event.ChartPairPriceDidChange.ViewModel)
     func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel)
-    func displaySellOffersDidUpdate(viewModel: Event.SellOffersDidUpdate.ViewModel)
-    func displayBuyOffersDidUpdate(viewModel: Event.BuyOffersDidUpdate.ViewModel)
+    func displayOffersDidUpdate(viewModel: Event.OffersDidUpdate.ViewModel)
     func displayTradesDidUpdate(viewModel: Event.TradesDidUpdate.ViewModel)
     func displayLoading(viewModel: Event.Loading.ViewModel)
     func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel)
-    func displayError(viewModel: Event.Error.ViewModel)
     func displayCreateOffer(viewModel: Event.CreateOffer.ViewModel)
 }
 
@@ -94,7 +92,9 @@ extension TradeOffers {
             self.setupNavigationBar()
             self.setupLayout()
             
-            let request = Event.ViewDidLoad.Request()
+            let request = Event.ViewDidLoad.Request(
+                offersPageSize: 1
+            )
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
             }
@@ -303,7 +303,7 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
                     })
             })
         })
-        self.picker.setSelectedItemAtIndex(viewModel.selectedIndex, animated: false)
+        self.picker.setSelectedItemAtIndex(viewModel.selectedIndex ?? 0, animated: false)
         
         self.orderBookView.baseCurrency = viewModel.assetPair.baseAsset
         self.orderBookView.quoteCurrency = viewModel.assetPair.quoteAsset
@@ -328,12 +328,12 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         self.setContentTab(viewModel.selectedTab)
     }
     
-    public func displayPeriodsDidChange(viewModel: Event.PeriodsDidChange.ViewModel) {
+    public func displayChartPeriodsDidChange(viewModel: Event.ChartPeriodsDidChange.ViewModel) {
         self.setPeriods(viewModel.periods)
         self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)
     }
     
-    public func displayPairPriceDidChange(viewModel: Event.PairPriceDidChange.ViewModel) {
+    public func displayChartPairPriceDidChange(viewModel: Event.ChartPairPriceDidChange.ViewModel) {
         self.chartView.title = viewModel.price
         self.chartView.subtitle = viewModel.per
     }
@@ -342,25 +342,35 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         self.chartView.chartEntries = viewModel.chartEntries
     }
     
-    public func displaySellOffersDidUpdate(viewModel: Event.SellOffersDidUpdate.ViewModel) {
+    public func displayOffersDidUpdate(viewModel: Event.OffersDidUpdate.ViewModel) {
         switch viewModel {
-        case .empty:
-            self.orderBookView.showEmptySellTable(Localized(.no_asks))
-            self.orderBookView.sellCells = []
-        case .cells(let cells):
-            self.orderBookView.hideEmptySellTable()
-            self.orderBookView.sellCells = self.setupCells(cells)
-        }
-    }
-    
-    public func displayBuyOffersDidUpdate(viewModel: Event.BuyOffersDidUpdate.ViewModel) {
-        switch viewModel {
-        case .empty:
-            self.orderBookView.showEmptyBuyTable(Localized(.no_bids))
-            self.orderBookView.buyCells = []
-        case .cells(let cells):
-            self.orderBookView.hideEmptyBuyTable()
-            self.orderBookView.buyCells = self.setupCells(cells)
+            
+        case .error(let isBuy, let error):
+            if isBuy {
+                self.orderBookView.showEmptyBuyTable(error)
+                self.orderBookView.buyCells = []
+            } else {
+                self.orderBookView.showEmptySellTable(error)
+                self.orderBookView.sellCells = []
+            }
+            
+        case .buyOffers(let cells):
+            if cells.isEmpty {
+                self.orderBookView.showEmptyBuyTable(Localized(.no_bids))
+                self.orderBookView.buyCells = []
+            } else {
+                self.orderBookView.hideEmptyBuyTable()
+                self.orderBookView.buyCells = cells
+            }
+            
+        case .sellOffers(let cells):
+            if cells.isEmpty {
+                self.orderBookView.showEmptySellTable(Localized(.no_asks))
+                self.orderBookView.sellCells = []
+            } else {
+                self.orderBookView.hideEmptySellTable()
+                self.orderBookView.sellCells = cells
+            }
         }
     }
     
@@ -396,17 +406,25 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
     }
     
     public func displayLoading(viewModel: Event.Loading.ViewModel) {
-        if let show = viewModel.showForChart { self.chartView.showChartLoading(show) }
-        if let show = viewModel.showForBuyTable { self.orderBookView.showBuyTableLoading(show) }
-        if let show = viewModel.showForSellTable { self.orderBookView.showSellTableLoading(show) }
+        let show = viewModel.isLoading
+        switch viewModel.contentList {
+            
+        case .buyOffers:
+            self.orderBookView.showBuyTableLoading(show)
+            
+        case .sellOffers:
+            self.orderBookView.showSellTableLoading(show)
+            
+        case .charts:
+            self.chartView.showChartLoading(show)
+            
+        case .trades:
+            break
+        }
     }
     
     public func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel) {
         self.setAxisFormatters(axisFormatters: viewModel.axisFormatters)
-    }
-    
-    public func displayError(viewModel: Event.Error.ViewModel) {
-        self.routing?.onShowError(viewModel.message)
     }
     
     public func displayCreateOffer(viewModel: Event.CreateOffer.ViewModel) {

@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     
@@ -17,11 +19,20 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     }
     public var onContentSizeChanged: ContentSizeDidChange?
     
+    public var onPullToRefresh: (() -> Void)?
+    public var onScrolledToBottom: (() -> Void)? {
+        get { return self.delegateDatasource.onScrolledToBottom }
+        set { self.delegateDatasource.onScrolledToBottom = newValue }
+    }
+    
     // MARK: - Private properties
     
     private let tableView: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     private let emptyLabel: UILabel = SharedViewsBuilder.createEmptyLabel()
     private lazy var delegateDatasource: DelegateDatasource = DelegateDatasource()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Overridden methods
     
@@ -58,6 +69,7 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     
     private func commonInit() {
         self.setupTableView()
+        self.setupRefreshControl()
         self.setupEmptyLabel()
         
         self.setupLayout()
@@ -79,10 +91,21 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             context: nil)
     }
     
+    private func setupRefreshControl() {
+        self.refreshControl.rx
+            .controlEvent(.valueChanged)
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.onPullToRefresh?()
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
     private func setupEmptyLabel() { }
     
     private func setupLayout() {
         self.addSubview(self.tableView)
+        self.tableView.addSubview(self.refreshControl)
         self.addSubview(self.emptyLabel)
         
         self.tableView.snp.makeConstraints { (make) in
@@ -109,7 +132,11 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
 
 extension OrderBookTableView {
     fileprivate class DelegateDatasource: NSObject, UITableViewDataSource, UITableViewDelegate {
+        
         public var cells: [OrderBookTableViewCellModel<CellType>] = []
+        public var onScrolledToBottom: (() -> Void)?
+        
+        // MARK: -
         
         func numberOfSections(in tableView: UITableView) -> Int {
             return 1
@@ -126,6 +153,17 @@ extension OrderBookTableView {
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             if let cell = tableView.cellForRow(at: indexPath) as? CellType {
                 self.cells[indexPath.row].onClick?(cell)
+            }
+        }
+        
+        func tableView(
+            _ tableView: UITableView,
+            willDisplay cell: UITableViewCell,
+            forRowAt indexPath: IndexPath
+            ) {
+            
+            if indexPath.row == self.cells.count - 1 {
+                self.onScrolledToBottom?()
             }
         }
     }

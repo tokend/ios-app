@@ -279,4 +279,19 @@ class OrderBookCard: UIView {
     func hideEmptySellTable() {
         self.sellTable.hideEmptyState()
     }
+    
+    func setCallbacks(
+        isBuy: Bool,
+        onPullToRefresh: (() -> Void)?,
+        onScrolledToBottom: (() -> Void)?
+        ) {
+        
+        if isBuy {
+            self.buyTable.onPullToRefresh = onPullToRefresh
+            self.buyTable.onScrolledToBottom = onScrolledToBottom
+        } else {
+            self.sellTable.onPullToRefresh = onPullToRefresh
+            self.sellTable.onScrolledToBottom = onScrolledToBottom
+        }
+    }
 }
