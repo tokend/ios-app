@@ -73,6 +73,7 @@
 "confirm_password" = "Confirm password";
 "confirm_password_lowercased" = "confirm password";
 "confirmation" = "Confirmation";
+"contacts" = "Contacts";
 "copied" = "Copied";
 "copy" = "Copy";
 "corrupted_keychain_data" = "Corrupted keychain data";
@@ -151,6 +152,7 @@
 "failed_to_decode_quote_balance_id" = "Failed to decode quote balance id";
 "failed_to_encode_destination_address" = "Failed to encode destination address";
 "failed_to_encode_destination_data" = "Failed to encode destination data";
+"failed_to_fetch_fees" = "Failed to fetch sender fee";
 "failed_to_fetch_network_info" = "Failed to fetch network info";
 "failed_to_generate_key_pair" = "Failed to generate key pair";
 "failed_to_generate_new_key_pair" = "Failed to generate new key pair";
@@ -286,6 +288,8 @@
 "passwords_dont_match" = "Passwords don't match";
 "pay_recipients_fee" = "Pay recipient's fee";
 "payment" = "Payment";
+"payment_amount" = "Payment amount";
+"payment_destination" = "Payment destination";
 "payout" = "Payout";
 "pending" = "Pending";
 "pending_investment" = "Pending investment";
@@ -457,6 +461,8 @@
 "withdraw" = "Withdraw";
 "withdrawal" = "Withdrawal";
 "withdrawn" = "Withdrawn";
+"withdraw_amount" = "Withdraw amount";
+"withdraw_destination" = "Withdraw destination";
 "wrong_email" = "Wrong email";
 "wrong_old_password" = "Wrong old password";
 "wrong_password" = "Wrong password";

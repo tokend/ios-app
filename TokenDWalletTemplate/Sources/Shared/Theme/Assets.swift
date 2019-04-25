@@ -7,6 +7,7 @@ enum Assets: String {
     case checkmark = "Checkmark"
     case closeIcon = "Close icon"
     case code = "Code"
+    case comment = "Comment"
     case copyright = "Copyright"
     case dashboardIcon = "Dashboard icon"
     case date = "Date"

@@ -7,11 +7,6 @@ extension SendPaymentDestination {
         
         // MARK: - Public properties
         
-        var title: String? {
-            get { return self.titleLabel.text }
-            set { self.titleLabel.text = newValue }
-        }
-        
         var placeholder: String? {
             get { return self.addressField.placeholder }
             set { self.addressField.placeholder = newValue }
@@ -31,6 +26,7 @@ extension SendPaymentDestination {
         private let titleLabel: UILabel = UILabel()
         private let scanQRButton: UIButton = UIButton(type: .custom)
         private let addressField: UITextField = UITextField()
+        private let separatorLine: UIView = UIView()
         private let selectAccountView: UIView = UIView()
         
         private let disposeBag = DisposeBag()
@@ -49,9 +45,11 @@ extension SendPaymentDestination {
             self.customInit()
         }
         
+        // MARK: - Private
+        
         private func customInit() {
             self.setupView()
-            self.setupTitleLabel()
+            self.setupSeparatorLine()
             self.setupScanQRButton()
             self.setupAddressField()
             self.setupSelectAccountView()
@@ -64,11 +62,8 @@ extension SendPaymentDestination {
             self.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
-        private func setupTitleLabel() {
-            self.titleLabel.text = Localized(.account_id_or_email_colon)
-            self.titleLabel.font = Theme.Fonts.textFieldTitleFont
-            self.titleLabel.textAlignment = .left
-            self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+        private func setupSeparatorLine() {
+            self.separatorLine.backgroundColor = Theme.Colors.separatorOnContentBackgroundColor
         }
         
         private func setupScanQRButton() {
@@ -85,9 +80,7 @@ extension SendPaymentDestination {
         }
         
         private func setupAddressField() {
-            self.addressField.placeholder = Localized(.enter_account_id_or_email)
             self.addressField.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.addressField.font = Theme.Fonts.textFieldTextFont
             self.addressField.autocapitalizationType = .none
             self.addressField.autocorrectionType = .no
             self.addressField.keyboardType = .emailAddress
@@ -125,19 +118,12 @@ extension SendPaymentDestination {
                     self?.onSelectAccount?()
                 })
                 .disposed(by: self.disposeBag)
-            
-            self.addressField.inputAccessoryView = self.selectAccountView
         }
         
         private func setupLayout() {
-            self.addSubview(self.titleLabel)
             self.addSubview(self.addressField)
             self.addSubview(self.scanQRButton)
-            
-            self.titleLabel.snp.makeConstraints { (make) in
-                make.leading.equalToSuperview().inset(20.0)
-                make.top.equalToSuperview().inset(14.0)
-            }
+            self.addSubview(self.separatorLine)
             
             let scanButtonEdgeInset: CGFloat = 5.0
             self.scanQRButton.contentEdgeInsets = UIEdgeInsets(
@@ -147,14 +133,22 @@ extension SendPaymentDestination {
                 right: scanButtonEdgeInset
             )
             self.scanQRButton.snp.makeConstraints { (make) in
-                make.trailing.equalToSuperview().inset(20.0 - scanButtonEdgeInset)
-                make.top.equalToSuperview().inset(14.0 - scanButtonEdgeInset)
+                make.trailing.equalToSuperview().inset(10.0 - scanButtonEdgeInset)
+                make.centerY.equalTo(self.addressField.snp.centerY)
+                make.width.height.equalTo(35.0)
             }
             
             self.addressField.snp.makeConstraints { (make) in
-                make.leading.trailing.equalToSuperview().inset(20.0)
-                make.top.equalTo(self.titleLabel.snp.bottom).offset(14.0)
-                make.bottom.equalToSuperview().inset(14.0)
+                make.leading.equalToSuperview().inset(15.0)
+                make.trailing.equalTo(self.scanQRButton.snp.leading).offset(-15.0)
+                make.top.equalToSuperview().offset(20.0)
+            }
+            
+            self.separatorLine.snp.makeConstraints { (make) in
+                make.leading.trailing.equalTo(self.addressField)
+                make.top.equalTo(self.addressField.snp.bottom)
+                make.bottom.equalToSuperview().inset(20.0)
+                make.height.equalTo(1.0)
             }
             
             self.selectAccountView.frame = CGRect(

@@ -2,12 +2,13 @@ import Foundation
 
 public protocol SendPaymentDestinationBusinessLogic {
     typealias Event = SendPaymentDestination.Event
+    typealias Model = SendPaymentDestination.Model
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onEditRecipientAddress(request: Event.EditRecipientAddress.Request)
     func onSelectedContact(request: Event.SelectedContact.Request)
     func onScanRecipientQRAddress(request: Event.ScanRecipientQRAddress.Request)
-    
+    func onSubmitAction(request: Event.SubmitAction.Request)
 }
 
 extension SendPaymentDestination {
@@ -16,28 +17,26 @@ extension SendPaymentDestination {
     @objc(SendPaymentDestinationInteractor)
     public class Interactor: NSObject {
         
-        public typealias Event = SendPaymentDestination.Event
-        public typealias Model = SendPaymentDestination.Model
-        
         // MARK: - Private properties
         
         private let presenter: PresentationLogic
         private let recipientAddressResolver: RecipientAddressResolver
+        private let contactsFetcher: ContactsFetcherProtocol
         private var sceneModel: Model.SceneModel
         
         // MARK: -
         
         public init(
             presenter: PresentationLogic,
-            recipientAddressResolver: RecipientAddressResolver
+            recipientAddressResolver: RecipientAddressResolver,
+            contactsFetcher: ContactsFetcherProtocol,
+            sceneModel: Model.SceneModel
             ) {
             
             self.presenter = presenter
             self.recipientAddressResolver = recipientAddressResolver
-            self.sceneModel = Model.SceneModel(
-                address: nil,
-                accountId: nil
-            )
+            self.contactsFetcher = contactsFetcher
+            self.sceneModel = sceneModel
         }
         
         // MARK: - Private
@@ -70,7 +69,51 @@ extension SendPaymentDestination {
         }
         
         private func handleSucceededQRScan(recipientAddress: String) {
-            self.sceneModel.address = recipientAddress
+            self.sceneModel.recipientAddress = recipientAddress
+            self.presenter.presentScanRecipientQRAddress(response: .succeeded(recipientAddress))
+        }
+        
+        private func handleSelectedContact(email: String) {
+            self.recipientAddressResolver.resolve(
+                recipientAddress: email,
+                completion: { [weak self] (result) in
+                    let response: Event.SelectedContact.Response
+                    switch result {
+                        
+                    case .failed(let error):
+                        response = .failure(message: error.localizedDescription)
+                        
+                    case .succeeded(let recipientAddress):
+                        self?.sceneModel.recipientAddress = recipientAddress
+                        response = .success(recipientAddress)
+                    }
+                    self?.presenter.presentSelectedContact(response: response)
+                })
+        }
+        
+        private func handleSendAction() {
+            guard let recipientAddress = self.sceneModel.recipientAddress,
+                !recipientAddress.isEmpty else {
+                    self.presenter.presentPaymentAction(response: .error(.emptyRecipientAddress))
+                    return
+            }
+            
+            self.recipientAddressResolver.resolve(
+                recipientAddress: recipientAddress,
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failed(let error):
+                        self?.presenter.presentPaymentAction(response: .error(.failedToResolveRecipientAddress(error)))
+                        
+                    case .succeeded(let accountId):
+                        let destinationModel = Model.SendDestinationModel(
+                            recipientNickname: recipientAddress,
+                            recipientAccountId: accountId
+                        )
+                        self?.presenter.presentPaymentAction(response: .destination(destinationModel))
+                    }
+            })
         }
         
         private func handleWithdrawSendAction() {
@@ -95,57 +138,51 @@ extension SendPaymentDestination {
                 return
             }
             
-            self.presenter.presentWithdrawAction(response: .loading)
+            guard let senderFee = self.sceneModel.senderFee else {
+                self.presenter.presentWithdrawAction(response: .failed(.failedToFetchFee))
+                return
+            }
             
-            //            self.recipientAddressResolver.resolve(
-            //                recipientAddress: recipientAddress,
-            //                completion: { [weak self] (result) in
-            //                    self?.presenter.presentWithdrawAction(response: .loaded)
-            //
-            //                    switch result {
-            //
-            //                    case .failed(let error):
-            //                        let response: Event.WithdrawAction.Response = .failed(.failedToResolveRecipientAddress(error))
-            //                        self?.presenter.presentWithdrawAction(response: response)
-            //
-            //                    case .succeeded(let recipientAddress):
-            //                        self?.loadWithdrawFees(asset: balance.asset, amount: amount, completion: { (result) in
-            //                            switch result {
-            //
-            //                            case .failed(let error):
-            //                                self?.presenter.presentWithdrawAction(response: .failed(.failedToLoadFees(error)))
-            //
-            //                            case .succeeded(let senderFee):
-            //                                let sendWitdrawtModel = Model.SendWithdrawModel(
-            //                                    senderBalanceId: balance.balanceId,
-            //                                    asset: balance.asset,
-            //                                    amount: amount,
-            //                                    recipientNickname: recipientAddress,
-            //                                    recipientAddress: recipientAddress,
-            //                                    senderFee: senderFee
-            //                                )
-            //
-            //                                self?.presenter.presentWithdrawAction(response: .succeeded(sendWitdrawtModel))
-            //                            }
-            //                        })
-            //                    }
-            //            })
+            let withdrawModel = Model.SendWithdrawModel(
+                senderBalanceId: balance.balanceId,
+                asset: balance.asset,
+                amount: amount,
+                recipientNickname: recipientAddress,
+                recipientAddress: recipientAddress,
+                senderFee: senderFee
+            )
+            self.presenter.presentWithdrawAction(response: .succeeded(withdrawModel))
         }
     }
 }
 
 extension SendPaymentDestination.Interactor: SendPaymentDestination.BusinessLogic {
+    
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
-        let response = Event.ViewDidLoad.Response()
-        self.presenter.presentViewDidLoad(response: response)
+        self.contactsFetcher.fetchContacts(completion: { [weak self] (result) in
+            let response: Event.ContactsUpdated.Response
+            switch result {
+                
+            case .failure(let error):
+                response = .error(error.localizedDescription)
+                
+            case .success(let cells):
+                let section = Model.SectionModel(
+                    title: Localized(.contacts),
+                    cells: cells
+                )
+                response = .sections([section])
+            }
+            self?.presenter.presentContactsUpdated(response: response)
+        })
     }
     
     public func onEditRecipientAddress(request: Event.EditRecipientAddress.Request) {
-        self.sceneModel.address = request.address
+        self.sceneModel.recipientAddress = request.address
     }
     
     public func onSelectedContact(request: Event.SelectedContact.Request) {
-        self.sceneModel.address = request.email
+        self.handleSelectedContact(email: request.email)
     }
     
     public func onScanRecipientQRAddress(request: Event.ScanRecipientQRAddress.Request) {
@@ -161,5 +198,15 @@ extension SendPaymentDestination.Interactor: SendPaymentDestination.BusinessLogi
         }
         
         self.presenter.presentScanRecipientQRAddress(response: response)
+    }
+    
+    public func onSubmitAction(request: Event.SubmitAction.Request) {
+        switch self.sceneModel.operation {
+        case .handleSend:
+            self.handleSendAction()
+            
+        case .handleWithdraw:
+            self.handleWithdrawSendAction()
+        }
     }
 }

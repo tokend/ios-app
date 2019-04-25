@@ -69,7 +69,12 @@ extension SendPaymentAmount {
         private func setupAmountField() {
             self.amountField.textAlignment = .right
             self.amountField.font =  Theme.Fonts.hugeTitleFont
-            _ = self.amountField.becomeFirstResponder()
+            self.amountField.attributedPlaceholder = NSAttributedString(
+                string: "0",
+                attributes: [
+                    .font: Theme.Fonts.hugeTitleFont,
+                    .foregroundColor: Theme.Colors.textFieldForegroundColor
+                ])
             self.amountField.keyboardType = .decimalPad
             self.amountField.onShouldReturn = { fieldView in
                 _ = fieldView.resignFirstResponder()
@@ -86,6 +91,8 @@ extension SendPaymentAmount {
                         self?.onEnterAmount?(value)
                 })
             )
+            
+            _ = self.amountField.becomeFirstResponder()
         }
         
         private func setupAssetButton() {

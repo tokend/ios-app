@@ -2,8 +2,8 @@ import Foundation
 import TokenDSDK
 import TokenDWallet
 
-enum SendPaymentAmountFeeLoaderResult {
-    typealias FeeLoaderError = ApiErrors
+public enum SendPaymentAmountFeeLoaderResult {
+    public typealias FeeLoaderError = ApiErrors
     
     case succeeded(SendPaymentAmount.Model.FeeModel)
     case failed(FeeLoaderError)

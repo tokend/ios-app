@@ -11,7 +11,6 @@ protocol SendPaymentPresentationLogic {
     func presentEditAmount(response: Event.EditAmount.Response)
     func presentPaymentAction(response: Event.PaymentAction.Response)
     func presentWithdrawAction(response: Event.WithdrawAction.Response)
-    func presentFeeUpdated(response: Event.FeeUpdated.Response)
 }
 
 extension SendPaymentAmount {
@@ -159,21 +158,6 @@ extension SendPaymentAmount.Presenter: SendPaymentAmount.PresentationLogic {
         
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayWithdrawAction(viewModel: viewModel)
-        }
-    }
-    
-    func presentFeeUpdated(response: Event.FeeUpdated.Response) {
-        let feeAmount = response.fee.fixed + response.fee.percent
-        let fee: String
-        
-        if feeAmount > 0 {
-            fee = self.amountFormatter.formatAmount(feeAmount, currency: response.fee.asset)
-        } else {
-            fee = Localized(.no_fees)
-        }
-        let viewModel = Event.FeeUpdated.ViewModel(fee: fee)
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayFeeUpdated(viewModel: viewModel)
         }
     }
 }

@@ -43,16 +43,16 @@ class WithdrawFlowController: BaseSignedInFlowController {
         onShowWalletScreen: @escaping (_ selectedBalanceId: String?) -> Void
         ) {
         
-        self.startFromWithdrawScreen(showRootScreen: showRootScreen)
+        self.startFromWithdrawAmountScreen(showRootScreen: showRootScreen)
         self.onShowWalletScreen = onShowWalletScreen
     }
     
     // MARK: - Private
     
-    private func startFromWithdrawScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+    private func startFromWithdrawAmountScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let viewController = self.setupWithdrawAmountScreen()
         
-        viewController.navigationItem.title = Localized(.withdraw)
+        viewController.navigationItem.title = Localized(.withdraw_amount)
         if self.navigationController == nil {
             let navigationController = NavigationController()
             self.navigationController = navigationController
@@ -88,6 +88,13 @@ class WithdrawFlowController: BaseSignedInFlowController {
             feeLoader: feeLoader
         )
         
+        let sceneModel = SendPaymentAmount.Model.SceneModel(
+            feeType: .withdraw,
+            operation: .handleWithdraw
+        )
+        
+        let viewConfig = SendPaymentAmount.Model.ViewConfig.withdrawViewConfig()
+        
         let routing = SendPaymentAmount.Routing(
             onShowProgress: { [weak self] in
                 self?.navigationController?.showProgress()
@@ -114,28 +121,50 @@ class WithdrawFlowController: BaseSignedInFlowController {
                 )
             },
             onSendAction: nil,
-            onSendWithdraw: { [weak self] (sendModel) in
-                self?.showWithdrawConfirmationScreen(sendWithdrawModel: sendModel)
+            onShowWithdrawDestination: { [weak self] (sendModel) in
+                self?.showWithdrawDestinationScreen(withdrawAmountModel: sendModel)
         })
         
         SendPaymentAmount.Configurator.configure(
             viewController: vc,
             senderAccountId: self.userDataProvider.walletData.accountId,
             selectedBalanceId: self.selectedBalanceId,
+            sceneModel: sceneModel,
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
             feeLoader: feeLoaderWorker,
-            feeType: SendPaymentAmount.Model.FeeType.withdraw,
-            operation: SendPaymentAmount.Model.Operation.handleWithdraw,
+            viewConfig: viewConfig,
             routing: routing
         )
         
         return vc
     }
     
-    private func setupWithdrawDestinationScreen() {
+    private func showWithdrawDestinationScreen(
+        withdrawAmountModel: SendPaymentAmount.Model.SendWithdrawModel
+        ) {
+        
+        let vc = self.setupWithdrawDestinationScreen(withdrawAmountModel: withdrawAmountModel)
+        
+        vc.navigationItem.title = Localized(.withdraw_destination)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func setupWithdrawDestinationScreen(
+        withdrawAmountModel: SendPaymentAmount.Model.SendWithdrawModel
+        ) -> SendPaymentDestination.ViewController {
+        
         let vc = SendPaymentDestination.ViewController()
         let viewConfig = SendPaymentDestination.Model.ViewConfig.sendWithdraw()
+        
+        let sceneModel = SendPaymentDestination.Model.SceneModel(
+            feeType: .withdraw,
+            operation: .handleWithdraw
+        )
+        sceneModel.amount = withdrawAmountModel.amount
+        sceneModel.selectedBalance = withdrawAmountModel.senderBalance
+        sceneModel.senderFee = withdrawAmountModel.senderFee
+        
         let routing = SendPaymentDestination.Routing(
             onSelectContactEmail: { [weak self] (completion) in
                 self?.presentContactEmailPicker(
@@ -146,28 +175,44 @@ class WithdrawFlowController: BaseSignedInFlowController {
             },
             onPresentQRCodeReader: { [weak self] (completion) in
                 self?.presentQRCodeReader(completion: completion)
+            }, showWithdrawConformation: { [weak self] (model) in
+                self?.showWithdrawConfirmationScreen(sendWithdrawModel: model)
+            }, showSendAmount: { _ in
+                
+            }, showProgress: { [weak self] in
+                self?.navigationController?.showProgress()
+            }, hideProgress: { [weak self] in
+                self?.navigationController?.hideProgress()
+            }, showError: { [weak self] (message) in
+                self?.navigationController?.showErrorMessage(message, completion: nil)
         })
         
         let recipientAddressResolver = SendPaymentDestination.WithdrawRecipientAddressResolver(
             generalApi: self.flowControllerStack.api.generalApi
         )
         
+        let contactsFetcher = SendPaymentDestination.ContactsFetcher()
+        
         SendPaymentDestination.Configurator.configure(
             viewController: vc,
             recipientAddressResolver: recipientAddressResolver,
+            contactsFetcher: contactsFetcher,
+            sceneModel: sceneModel,
             viewConfig: viewConfig,
             routing: routing
         )
+        
+        return vc
     }
     
-    private func showWithdrawConfirmationScreen(sendWithdrawModel: SendPaymentAmount.Model.SendWithdrawModel) {
+    private func showWithdrawConfirmationScreen(sendWithdrawModel: SendPaymentDestination.Model.SendWithdrawModel) {
         let vc = self.setupWithdrawConfirmationScreen(sendWithdrawModel: sendWithdrawModel)
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func setupWithdrawConfirmationScreen(
-        sendWithdrawModel: SendPaymentAmount.Model.SendWithdrawModel
+        sendWithdrawModel: SendPaymentDestination.Model.SendWithdrawModel
         ) -> ConfirmationScene.ViewController {
         
         let vc = ConfirmationScene.ViewController()

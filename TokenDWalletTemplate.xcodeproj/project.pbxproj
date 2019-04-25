@@ -305,7 +305,6 @@
 		DB593826226DD77500C8997C /* SendPaymentAmountEnterAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB593818226DD77400C8997C /* SendPaymentAmountEnterAmountView.swift */; };
 		DB593827226DD77500C8997C /* SendPaymentAmountBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB593819226DD77400C8997C /* SendPaymentAmountBalanceView.swift */; };
 		DB593829226DD77500C8997C /* SendPaymentAmountConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59381B226DD77400C8997C /* SendPaymentAmountConfigurator.swift */; };
-		DB59382B226DFB1A00C8997C /* SendPaymentAmountFeeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59382A226DFB1A00C8997C /* SendPaymentAmountFeeView.swift */; };
 		DB593833226E0A0600C8997C /* SendPaymentDestinationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59382D226E0A0600C8997C /* SendPaymentDestinationPresenter.swift */; };
 		DB593834226E0A0600C8997C /* SendPaymentDestinationRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59382E226E0A0600C8997C /* SendPaymentDestinationRouting.swift */; };
 		DB593835226E0A0600C8997C /* SendPaymentDestinationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59382F226E0A0600C8997C /* SendPaymentDestinationModels.swift */; };
@@ -315,6 +314,9 @@
 		DB59383C226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59383B226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift */; };
 		DB59383F226E0AEC00C8997C /* SendPaymentDestinationRecipientAddressResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59383D226E0AEC00C8997C /* SendPaymentDestinationRecipientAddressResolver.swift */; };
 		DB593840226E0AEC00C8997C /* WithdrawRecipientAddressResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59383E226E0AEC00C8997C /* WithdrawRecipientAddressResolver.swift */; };
+		DB593842226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB593841226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift */; };
+		DB593844227095F900C8997C /* SendPaymentDestinationContactsFethcer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB593843227095F800C8997C /* SendPaymentDestinationContactsFethcer.swift */; };
+		DB5938462270A1DF00C8997C /* SendPaymentDestinationContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5938452270A1DF00C8997C /* SendPaymentDestinationContactCell.swift */; };
 		DB5A3BBE21C1554600520604 /* FeesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BB821C1554600520604 /* FeesPresenter.swift */; };
 		DB5A3BBF21C1554600520604 /* FeesRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BB921C1554600520604 /* FeesRouting.swift */; };
 		DB5A3BC021C1554600520604 /* FeesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BBA21C1554600520604 /* FeesModels.swift */; };
@@ -806,7 +808,6 @@
 		DB593818226DD77400C8997C /* SendPaymentAmountEnterAmountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountEnterAmountView.swift; sourceTree = "<group>"; };
 		DB593819226DD77400C8997C /* SendPaymentAmountBalanceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountBalanceView.swift; sourceTree = "<group>"; };
 		DB59381B226DD77400C8997C /* SendPaymentAmountConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountConfigurator.swift; sourceTree = "<group>"; };
-		DB59382A226DFB1A00C8997C /* SendPaymentAmountFeeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountFeeView.swift; sourceTree = "<group>"; };
 		DB59382D226E0A0600C8997C /* SendPaymentDestinationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationPresenter.swift; sourceTree = "<group>"; };
 		DB59382E226E0A0600C8997C /* SendPaymentDestinationRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationRouting.swift; sourceTree = "<group>"; };
 		DB59382F226E0A0600C8997C /* SendPaymentDestinationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationModels.swift; sourceTree = "<group>"; };
@@ -816,6 +817,9 @@
 		DB59383B226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationRecipientAddressView.swift; sourceTree = "<group>"; };
 		DB59383D226E0AEC00C8997C /* SendPaymentDestinationRecipientAddressResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationRecipientAddressResolver.swift; sourceTree = "<group>"; };
 		DB59383E226E0AEC00C8997C /* WithdrawRecipientAddressResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawRecipientAddressResolver.swift; sourceTree = "<group>"; };
+		DB593841226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountTitleTextEditView.swift; sourceTree = "<group>"; };
+		DB593843227095F800C8997C /* SendPaymentDestinationContactsFethcer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationContactsFethcer.swift; sourceTree = "<group>"; };
+		DB5938452270A1DF00C8997C /* SendPaymentDestinationContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationContactCell.swift; sourceTree = "<group>"; };
 		DB5A3BB821C1554600520604 /* FeesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesPresenter.swift; sourceTree = "<group>"; };
 		DB5A3BB921C1554600520604 /* FeesRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesRouting.swift; sourceTree = "<group>"; };
 		DB5A3BBA21C1554600520604 /* FeesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesModels.swift; sourceTree = "<group>"; };
@@ -2058,7 +2062,7 @@
 			children = (
 				DB593819226DD77400C8997C /* SendPaymentAmountBalanceView.swift */,
 				DB593818226DD77400C8997C /* SendPaymentAmountEnterAmountView.swift */,
-				DB59382A226DFB1A00C8997C /* SendPaymentAmountFeeView.swift */,
+				DB593841226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2082,6 +2086,7 @@
 			isa = PBXGroup;
 			children = (
 				DB59383B226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift */,
+				DB5938452270A1DF00C8997C /* SendPaymentDestinationContactCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2091,6 +2096,7 @@
 			children = (
 				DB59383D226E0AEC00C8997C /* SendPaymentDestinationRecipientAddressResolver.swift */,
 				DB59383E226E0AEC00C8997C /* WithdrawRecipientAddressResolver.swift */,
+				DB593843227095F800C8997C /* SendPaymentDestinationContactsFethcer.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -2911,6 +2917,7 @@
 				7F2A7E2920F62B7D007F8CF8 /* SideMenuRouting.swift in Sources */,
 				710E86052105E1AB007204D4 /* ReceiveAddressViewController.swift in Sources */,
 				7FC88B85216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift in Sources */,
+				DB593842226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift in Sources */,
 				7F74961A226081E80065EE8E /* TradeOffersInteractor.swift in Sources */,
 				7F74962A2260A1D40065EE8E /* TradeOffersChartsFetcher.swift in Sources */,
 				E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */,
@@ -2922,6 +2929,7 @@
 				E9A5CBDA211B338C009112CA /* DashboardModels.swift in Sources */,
 				DB990C3621E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift in Sources */,
 				7FC88B7C215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift in Sources */,
+				DB593844227095F900C8997C /* SendPaymentDestinationContactsFethcer.swift in Sources */,
 				E93F075220D7C87F000C0991 /* TransactionsListViewController.swift in Sources */,
 				E9908EE8210F176400A0EA1C /* TransactionSender.swift in Sources */,
 				DB5A3BC121C1554600520604 /* FeesViewController.swift in Sources */,
@@ -3012,7 +3020,6 @@
 				E9908EF1211079F300A0EA1C /* BalanceBinder.swift in Sources */,
 				E93F075320D7C87F000C0991 /* TransactionsListInteractor.swift in Sources */,
 				E980D85C20D1267900C53841 /* DepositSceneInteractor.swift in Sources */,
-				DB59382B226DFB1A00C8997C /* SendPaymentAmountFeeView.swift in Sources */,
 				E9A5CBF2211DBCCB009112CA /* DashboardPaymentsPlugInRouting.swift in Sources */,
 				7FC88B812164F09A00BED021 /* SaleDetailsChartDateFormatter.swift in Sources */,
 				E911320D20C6D0D800A8AC4D /* TokenDetailsPresenter.swift in Sources */,
@@ -3194,6 +3201,7 @@
 				DB5A3BC221C1554600520604 /* FeesInteractor.swift in Sources */,
 				7F967FC3212C3FF8005527EA /* LocalAuthFlowController.swift in Sources */,
 				E92F1C142139B7FF00D4695E /* FeeLoader.swift in Sources */,
+				DB5938462270A1DF00C8997C /* SendPaymentDestinationContactCell.swift in Sources */,
 				E9BCDD542121D74700EB0DF2 /* DashboardPaymentsPlugInRateProviderProtocol.swift in Sources */,
 				7F967FCF212D79B5005527EA /* RegisterSceneLocalSignInWorker.swift in Sources */,
 				71136B112134433F00D83DD3 /* TransactionDetailsAmountFormatter.swift in Sources */,

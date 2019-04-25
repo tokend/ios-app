@@ -7,6 +7,8 @@ extension SendPaymentDestination {
         public static func configure(
             viewController: ViewController,
             recipientAddressResolver: RecipientAddressResolver,
+            contactsFetcher: ContactsFetcherProtocol,
+            sceneModel: SendPaymentDestination.Model.SceneModel,
             viewConfig: Model.ViewConfig?,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
@@ -16,7 +18,9 @@ extension SendPaymentDestination {
             let presenter = Presenter(presenterDispatch: presenterDispatch)
             let interactor = Interactor(
                 presenter: presenter,
-                recipientAddressResolver: recipientAddressResolver
+                recipientAddressResolver: recipientAddressResolver,
+                contactsFetcher: contactsFetcher,
+                sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

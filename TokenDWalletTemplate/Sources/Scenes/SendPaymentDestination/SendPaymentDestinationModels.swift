@@ -5,8 +5,8 @@ public enum SendPaymentDestination {
     // MARK: - Typealiases
     
     public typealias DeinitCompletion = ((_ vc: UIViewController) -> Void)?
-    typealias QRCodeReaderCompletion = (_ result: Model.QRCodeReaderResult) -> Void
-    typealias SelectContactEmailCompletion = (_ email: String) -> Void
+    public typealias QRCodeReaderCompletion = (_ result: Model.QRCodeReaderResult) -> Void
+    public typealias SelectContactEmailCompletion = (_ email: String) -> Void
     
     // MARK: -
     
@@ -16,11 +16,25 @@ public enum SendPaymentDestination {
 
 // MARK: - Models
 
-extension SendPaymentDestination.Model {
+public extension SendPaymentDestination.Model {
+    public typealias FeeModel = SendPaymentAmount.Model.FeeModel
+    public typealias Operation = SendPaymentAmount.Model.Operation
+    public typealias FeeType = SendPaymentAmount.Model.FeeType
+    public typealias BalanceDetails = SendPaymentAmount.Model.BalanceDetails
+    public typealias SceneModel = SendPaymentAmount.Model.SceneModel
     
-    public struct SceneModel {
-        var address: String?
-        var accountId: String?
+    public struct SendDestinationModel {
+        public let recipientNickname: String
+        public let recipientAccountId: String
+    }
+    
+    struct SendWithdrawModel {
+        let senderBalanceId: String
+        let asset: String
+        let amount: Decimal
+        let recipientNickname: String
+        let recipientAddress: String
+        let senderFee: FeeModel
     }
     
     public enum QRCodeReaderResult {
@@ -28,11 +42,26 @@ extension SendPaymentDestination.Model {
         case success(value: String, metadataType: String)
     }
     
-    public struct ViewConfig {
-        let recipientAddressFieldTitle: String
-        let recipientAddressFieldPlaceholder: String?
+    public struct ContactModel {
+        let name: String
+        let email: String
     }
     
+    public struct SectionModel {
+        let title: String
+        let cells: [ContactModel]
+    }
+    
+    public struct SectionViewModel {
+        let title: String
+        let cells: [SendPaymentDestination.ContactCell.ViewModel]
+    }
+    
+    public struct ViewConfig {
+        let recipientAddressFieldPlaceholder: String
+        let actionTitle: String
+        let actionButtonTitle: NSAttributedString
+    }
 }
 
 // MARK: - Events
@@ -58,14 +87,11 @@ extension SendPaymentDestination.Event {
         public struct Request {
             public let email: String
         }
-        
-        public struct Response {
-            public let email: String
+        public enum Response {
+            case failure(message: String)
+            case success(String)
         }
-        
-        public struct ViewModel {
-            public let email: String
-        }
+        public typealias ViewModel = Response
     }
     
     public struct ScanRecipientQRAddress {
@@ -83,6 +109,46 @@ extension SendPaymentDestination.Event {
             case canceled
             case failed(errorMessage: String)
             case succeeded(String)
+        }
+    }
+    
+    public struct SubmitAction {
+        public struct Request {}
+    }
+    
+    public struct PaymentAction {
+       public enum Response {
+            case destination(Model.SendDestinationModel)
+            case error(DestinationError)
+        }
+        
+        public enum ViewModel {
+            case destination(Model.SendDestinationModel)
+            case error(String)
+        }
+    }
+    
+    public struct WithdrawAction {
+        public enum Response {
+            case failed(SendError)
+            case succeeded(Model.SendWithdrawModel)
+        }
+        
+        public enum ViewModel {
+            case failed(errorMessage: String)
+            case succeeded(Model.SendWithdrawModel)
+        }
+    }
+    
+    public struct ContactsUpdated {
+        public enum Response {
+            case sections([Model.SectionModel])
+            case error(String)
+        }
+        
+        public enum ViewModel {
+            case sections([Model.SectionViewModel])
+            case error(String)
         }
     }
 }
@@ -118,16 +184,114 @@ extension SendPaymentDestination.Event.ScanRecipientQRAddress {
 extension SendPaymentDestination.Model.ViewConfig {
     
     static func sendPayment() -> SendPaymentDestination.Model.ViewConfig {
+        let actionButtonTitle = NSAttributedString(
+            string: Localized(.next),
+            attributes: [
+                .font: Theme.Fonts.actionButtonFont,
+                .foregroundColor: Theme.Colors.textOnMainColor
+            ]
+        )
         return SendPaymentDestination.Model.ViewConfig(
-            recipientAddressFieldTitle: Localized(.account_id_or_email_colon),
-            recipientAddressFieldPlaceholder: Localized(.enter_account_id_or_email)
+            recipientAddressFieldPlaceholder: Localized(.enter_account_id_or_email),
+            actionTitle: Localized(.enter_account_id_or_email),
+            actionButtonTitle: actionButtonTitle
         )
     }
     
     static func sendWithdraw() -> SendPaymentDestination.Model.ViewConfig {
-        return SendPaymentDestination.Model.ViewConfig(
-            recipientAddressFieldTitle: Localized(.destination_address),
-            recipientAddressFieldPlaceholder: Localized(.enter_destination_address)
+        let actionButtonTitle = NSAttributedString(
+            string: Localized(.confirm),
+            attributes: [
+                .font: Theme.Fonts.actionButtonFont,
+                .foregroundColor: Theme.Colors.textOnMainColor
+            ]
         )
+        return SendPaymentDestination.Model.ViewConfig(
+            recipientAddressFieldPlaceholder: Localized(.enter_destination_address),
+            actionTitle: Localized(.enter_destination_address),
+            actionButtonTitle: actionButtonTitle
+        )
+    }
+}
+
+extension SendPaymentDestination.Event.PaymentAction {
+    
+    public enum DestinationError: Error, LocalizedError {
+        case emptyRecipientAddress
+        case failedToResolveRecipientAddress(RecipientAddressResolverResult.AddressResolveError)
+        case other(Error)
+        
+        // MARK: - LocalizedError
+        
+        public var errorDescription: String? {
+            switch self {
+            case .emptyRecipientAddress:
+                return Localized(.empty_recipient_address)
+                
+            case .failedToResolveRecipientAddress(let error):
+                let message = error.localizedDescription
+                return Localized(
+                    .failed_to_resolve_recipient_address,
+                    replace: [
+                        .failed_to_resolve_recipient_address_replace_message: message
+                    ]
+                )
+                
+            case .other(let error):
+                let message = error.localizedDescription
+                return Localized(
+                    .request_error,
+                    replace: [
+                        .request_error_replace_message: message
+                    ]
+                )
+            }
+        }
+    }
+}
+
+extension SendPaymentDestination.Event.WithdrawAction {
+    public enum SendError: Error, LocalizedError {
+        case emptyAmount
+        case emptyRecipientAddress
+        case failedToFetchFee
+        case failedToResolveRecipientAddress(RecipientAddressResolverResult.AddressResolveError)
+        case insufficientFunds
+        case noBalance
+        case other(Error)
+        
+        // MARK: - LocalizedError
+        
+        public var errorDescription: String? {
+            switch self {
+            case .emptyAmount:
+                return Localized(.empty_amount)
+            case .emptyRecipientAddress:
+                return Localized(.empty_recipient_address)
+            case .failedToFetchFee:
+                return Localized(.failed_to_fetch_fees)
+            case .failedToResolveRecipientAddress(let error):
+                let message = error.localizedDescription
+                return Localized(
+                    .failed_to_resolve_recipient_address,
+                    replace: [
+                        .failed_to_resolve_recipient_address_replace_message: message
+                    ]
+                )
+                
+            case .insufficientFunds:
+                return Localized(.insufficient_funds)
+            case .noBalance:
+                return Localized(.no_balance)
+            case .other(let error):
+                let message = error.localizedDescription
+                return Localized(
+                    .request_error,
+                    replace: [
+                        .request_error_replace_message: message
+                    ]
+                )
+            }
+        }
     }
 }

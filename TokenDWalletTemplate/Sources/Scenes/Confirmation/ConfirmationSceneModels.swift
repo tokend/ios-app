@@ -104,6 +104,7 @@ extension ConfirmationScene.Model {
         let recipientAccountId: String
         let senderFee: FeeModel
         let recipientFee: FeeModel
+        let description: String
         let reference: String
     }
     

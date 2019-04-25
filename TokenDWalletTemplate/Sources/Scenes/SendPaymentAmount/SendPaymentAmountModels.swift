@@ -1,88 +1,94 @@
 import Foundation
 
-enum SendPaymentAmount {
+public enum SendPaymentAmount {
     
     // MARK: -
     
-    enum Model {}
-    enum Event {}
+    public enum Model {}
+    public enum Event {}
 }
 
 // MARK: - Models
 
-extension SendPaymentAmount.Model {
+public extension SendPaymentAmount.Model {
     
-    class SceneModel {
-        var selectedBalance: BalanceDetails?
-        var recipientAddress: String?
-        var resolvedRecipientId: String?
-        let recipientAccountId: String
-        var amount: Decimal = 0.0
-        let operation: Operation
-        let feeType: FeeType
+   public class SceneModel {
+        public var selectedBalance: BalanceDetails?
+        public var senderFee: FeeModel?
+        public var recipientAddress: String?
+        public var resolvedRecipientId: String?
+        public var description: String?
+        public var amount: Decimal = 0.0
+        public let operation: Operation
+        public let feeType: FeeType
+    
         init(
             feeType: FeeType,
             operation: Operation,
             recipientAddress: String? = nil
             ) {
+            
             self.operation = operation
             self.recipientAddress = recipientAddress
             self.feeType = feeType
-            self.recipientAccountId = "GAA7XZQOYZ6YU5QQGEZUFEWSNL4QJT3V5F5GNCHUVWVNE4CVCSY4L4N7"
         }
     }
     
-    struct SceneViewModel {
+    public struct ViewConfig {
+        let descriptionIsHidden: Bool
+        let actionButtonTitle: NSAttributedString
+    }
+    
+    public struct SceneViewModel {
         let selectedBalance: BalanceDetailsViewModel?
         let recipientAddress: String?
         let amount: Decimal
         let amountValid: Bool
     }
     
-    struct BalanceDetails {
-        let asset: String
-        let balance: Decimal
-        let balanceId: String
+    public struct BalanceDetails {
+        public let asset: String
+        public let balance: Decimal
+        public let balanceId: String
     }
     
-    struct BalanceDetailsViewModel {
-        let asset: String
-        let balance: String
-        let balanceId: String
+    public struct BalanceDetailsViewModel {
+        public let asset: String
+        public let balance: String
+        public let balanceId: String
     }
     
-    struct FeeModel {
-        let asset: String
-        let fixed: Decimal
-        let percent: Decimal
+    public struct FeeModel {
+        public let asset: String
+        public let fixed: Decimal
+        public let percent: Decimal
     }
     
-    struct SendPaymentModel {
-        let senderBalanceId: String
-        let asset: String
-        let amount: Decimal
-        let recipientNickname: String
-        let recipientAccountId: String
-        let senderFee: FeeModel
-        let recipientFee: FeeModel
-        let reference: String
+    public struct SendPaymentModel {
+        public let senderBalanceId: String
+        public let asset: String
+        public let amount: Decimal
+        public let recipientNickname: String
+        public let recipientAccountId: String
+        public let senderFee: FeeModel
+        public let recipientFee: FeeModel
+        public let description: String
+        public let reference: String
     }
     
-    struct SendWithdrawModel {
-        let senderBalanceId: String
-        let asset: String
-        let amount: Decimal
-        let recipientNickname: String
-        let recipientAddress: String
-        let senderFee: FeeModel
+    public struct SendWithdrawModel {
+        public let senderBalance: BalanceDetails
+        public let asset: String
+        public let amount: Decimal
+        public let senderFee: FeeModel
     }
     
-    enum Operation {
+    public enum Operation {
         case handleSend
         case handleWithdraw
     }
     
-    enum FeeType {
+    public enum FeeType {
         case payment
         case offer
         case withdraw
@@ -93,7 +99,7 @@ extension SendPaymentAmount.Model {
 
 extension SendPaymentAmount.Event {
     
-    typealias Model = SendPaymentAmount.Model
+    public typealias Model = SendPaymentAmount.Model
     
     struct ViewDidLoad {
         struct Request {}
@@ -166,6 +172,12 @@ extension SendPaymentAmount.Event {
         }
     }
     
+    struct DescriptionUpdated {
+        struct Request {
+            let description: String?
+        }
+    }
+    
     struct SubmitAction {
         struct Request {}
     }
@@ -199,15 +211,6 @@ extension SendPaymentAmount.Event {
             case loaded
             case failed(errorMessage: String)
             case succeeded(Model.SendPaymentModel)
-        }
-    }
-    
-    enum FeeUpdated {
-        struct Response {
-            let fee: Model.FeeModel
-        }
-        struct ViewModel {
-            let fee: String
         }
     }
 }
@@ -269,11 +272,44 @@ extension SendPaymentAmount.Event.PaymentAction {
 // MARK: -
 
 extension SendPaymentAmount.Model.BalanceDetails: Equatable {
-    static func ==(
+    public static func ==(
         left: SendPaymentAmount.Model.BalanceDetails,
         right: SendPaymentAmount.Model.BalanceDetails
         ) -> Bool {
         
         return left.balanceId == right.balanceId
+    }
+}
+
+extension SendPaymentAmount.Model.ViewConfig {
+    
+    static func sendPaymentViewConfig() -> SendPaymentAmount.Model.ViewConfig {
+        let actionButtonTitle = NSAttributedString(
+            string: Localized(.confirm),
+            attributes: [
+                .font: Theme.Fonts.actionButtonFont,
+                .foregroundColor: Theme.Colors.textOnMainColor
+            ]
+        )
+        
+        return SendPaymentAmount.Model.ViewConfig(
+            descriptionIsHidden: false,
+            actionButtonTitle: actionButtonTitle
+        )
+    }
+    
+    static func withdrawViewConfig() -> SendPaymentAmount.Model.ViewConfig {
+        let actionButtonTitle = NSAttributedString(
+            string: Localized(.confirm),
+            attributes: [
+                .font: Theme.Fonts.actionButtonFont,
+                .foregroundColor: Theme.Colors.textOnMainColor
+            ]
+        )
+        
+        return SendPaymentAmount.Model.ViewConfig(
+            descriptionIsHidden: true,
+            actionButtonTitle: actionButtonTitle
+        )
     }
 }

@@ -76,6 +76,7 @@ enum LocKey: String {
     case confirm_password
     case confirm_password_lowercased
     case confirmation
+    case contacts
     case copied
     case copy
     case corrupted_keychain_data
@@ -154,6 +155,7 @@ enum LocKey: String {
     case failed_to_decode_quote_balance_id
     case failed_to_encode_destination_address
     case failed_to_encode_destination_data
+    case failed_to_fetch_fees
     case failed_to_fetch_network_info
     case failed_to_generate_key_pair
     case failed_to_generate_new_key_pair
@@ -289,6 +291,8 @@ enum LocKey: String {
     case passwords_dont_match
     case pay_recipients_fee
     case payment
+    case payment_amount
+    case payment_destination
     case payout
     case pending
     case pending_investment
@@ -460,6 +464,8 @@ enum LocKey: String {
     case withdraw
     case withdrawal
     case withdrawn
+    case withdraw_amount
+    case withdraw_destination
     case wrong_email
     case wrong_old_password
     case wrong_password

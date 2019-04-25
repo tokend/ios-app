@@ -7,11 +7,11 @@ extension SendPaymentAmount {
             viewController: ViewController,
             senderAccountId: String,
             selectedBalanceId: String?,
+            sceneModel: Model.SceneModel,
             balanceDetailsLoader: BalanceDetailsLoader,
             amountFormatter: AmountFormatterProtocol,
             feeLoader: FeeLoaderProtocol,
-            feeType: Model.FeeType,
-            operation: Model.Operation,
+            viewConfig: Model.ViewConfig,
             routing: Routing?
             ) {
             
@@ -28,7 +28,7 @@ extension SendPaymentAmount {
             let interactor = Interactor(
                 presenter: presenter,
                 queue: queue,
-                sceneModel: Model.SceneModel(feeType: feeType, operation: operation),
+                sceneModel: sceneModel,
                 senderAccountId: senderAccountId,
                 selectedBalanceId: selectedBalanceId,
                 balanceDetailsLoader: balanceDetailsLoader,
@@ -40,6 +40,7 @@ extension SendPaymentAmount {
             )
             viewController.inject(
                 interactorDispatch: interactorDispatch,
+                viewConfig: viewConfig,
                 routing: routing
             )
         }

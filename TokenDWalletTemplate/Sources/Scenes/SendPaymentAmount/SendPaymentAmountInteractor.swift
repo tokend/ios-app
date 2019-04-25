@@ -11,6 +11,7 @@ protocol SendPaymentBusinessLogic {
     func onSelectBalance(request: Event.SelectBalance.Request)
     func onBalanceSelected(request: Event.BalanceSelected.Request)
     func onEditAmount(request: Event.EditAmount.Request)
+    func onDescriptionUpdated(request: Event.DescriptionUpdated.Request)
     func onSubmitAction(request: Event.SubmitAction.Request)
 }
 
@@ -128,51 +129,38 @@ extension SendPaymentAmount {
                 return
             }
             
-            guard let recipientAddress = self.sceneModel.recipientAddress, recipientAddress.count > 0 else {
+            guard let recipientAddress = self.sceneModel.resolvedRecipientId, recipientAddress.count > 0 else {
                 self.presenter.presentPaymentAction(response: .failed(.emptyRecipientAddress))
                 return
             }
             
-            self.presenter.presentPaymentAction(response: .loading)
-            
-//            self.recipientAddressResolver.resolve(
-//                recipientAddress: recipientAddress,
-//                completion: { [weak self] (result) in
-//                    switch result {
-//                        
-//                    case .failed(let error):
-//                        self?.presenter.presentPaymentAction(response: .loaded)
-//                        self?.presenter.presentPaymentAction(response: .failed(.failedToResolveRecipientAddress(error)))
-//                        
-//                    case .succeeded(let accountId):
-//                        self?.loadFees(
-//                            asset: balance.asset,
-//                            amount: amount,
-//                            accountId: accountId,
-//                            completion: { result in
-//                                self?.presenter.presentPaymentAction(response: .loaded)
-//                                
-//                                switch result {
-//                                    
-//                                case .failed(let error):
-//                                    self?.presenter.presentPaymentAction(response: .failed(.failedToLoadFees(error)))
-//                                    
-//                                case .succeeded(let senderFee, let recipientFee):
-//                                    let sendPaymentModel = Model.SendPaymentModel(
-//                                        senderBalanceId: balance.balanceId,
-//                                        asset: balance.asset,
-//                                        amount: amount,
-//                                        recipientNickname: recipientAddress,
-//                                        recipientAccountId: accountId,
-//                                        senderFee: senderFee,
-//                                        recipientFee: recipientFee,
-//                                        reference: Date().description
-//                                    )
-//                                    self?.presenter.presentPaymentAction(response: .succeeded(sendPaymentModel))
-//                                }
-//                        })
-//                    }
-//            })
+            self.loadFees(
+                asset: balance.asset,
+                amount: amount,
+                accountId: recipientAddress,
+                completion: { result in
+                    self.presenter.presentPaymentAction(response: .loaded)
+                    
+                    switch result {
+                        
+                    case .failed(let error):
+                        self.presenter.presentPaymentAction(response: .failed(.failedToLoadFees(error)))
+                        
+                    case .succeeded(let senderFee, let recipientFee):
+                        let sendPaymentModel = Model.SendPaymentModel(
+                            senderBalanceId: balance.balanceId,
+                            asset: balance.asset,
+                            amount: amount,
+                            recipientNickname: recipientAddress,
+                            recipientAccountId: recipientAddress,
+                            senderFee: senderFee,
+                            recipientFee: recipientFee,
+                            description: self.sceneModel.description ?? "",
+                            reference: Date().description
+                        )
+                        self.presenter.presentPaymentAction(response: .succeeded(sendPaymentModel))
+                    }
+            })
         }
         
         private func handleWithdrawSendAction() {
@@ -192,46 +180,27 @@ extension SendPaymentAmount {
                 return
             }
             
-            guard let recipientAddress = self.sceneModel.recipientAddress, recipientAddress.count > 0 else {
-                self.presenter.presentWithdrawAction(response: .failed(.emptyRecipientAddress))
-                return
-            }
-            
             self.presenter.presentWithdrawAction(response: .loading)
             
-//            self.recipientAddressResolver.resolve(
-//                recipientAddress: recipientAddress,
-//                completion: { [weak self] (result) in
-//                    self?.presenter.presentWithdrawAction(response: .loaded)
-//
-//                    switch result {
-//
-//                    case .failed(let error):
-//                        let response: Event.WithdrawAction.Response = .failed(.failedToResolveRecipientAddress(error))
-//                        self?.presenter.presentWithdrawAction(response: response)
-//
-//                    case .succeeded(let recipientAddress):
-//                        self?.loadWithdrawFees(asset: balance.asset, amount: amount, completion: { (result) in
-//                            switch result {
-//
-//                            case .failed(let error):
-//                                self?.presenter.presentWithdrawAction(response: .failed(.failedToLoadFees(error)))
-//
-//                            case .succeeded(let senderFee):
-//                                let sendWitdrawtModel = Model.SendWithdrawModel(
-//                                    senderBalanceId: balance.balanceId,
-//                                    asset: balance.asset,
-//                                    amount: amount,
-//                                    recipientNickname: recipientAddress,
-//                                    recipientAddress: recipientAddress,
-//                                    senderFee: senderFee
-//                                )
-//
-//                                self?.presenter.presentWithdrawAction(response: .succeeded(sendWitdrawtModel))
-//                            }
-//                        })
-//                    }
-//            })
+            self.loadWithdrawFees(
+                asset: balance.asset,
+                amount: amount,
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failed(let error):
+                        self?.presenter.presentWithdrawAction(response: .failed(.failedToLoadFees(error)))
+                        
+                    case .succeeded(let senderFee):
+                        let sendWitdrawtModel = Model.SendWithdrawModel(
+                            senderBalance: balance,
+                            asset: balance.asset,
+                            amount: amount,
+                            senderFee: senderFee
+                        )
+                        self?.presenter.presentWithdrawAction(response: .succeeded(sendWitdrawtModel))
+                    }
+            })
         }
         
         enum LoadFeesResult {
@@ -325,28 +294,6 @@ extension SendPaymentAmount {
                     }
             })
         }
-        
-        private func updateFee() {
-            guard let asset = self.sceneModel.selectedBalance?.asset else {
-                return
-            }
-            
-            self.loadFees(
-                asset: asset,
-                amount: self.sceneModel.amount,
-                accountId: self.sceneModel.recipientAccountId,
-                completion: { [weak self] (result) in
-                    switch result {
-                        
-                    case .failed(let error):
-                        break
-                        
-                    case .succeeded(let senderFee, let recipientFee):
-                        let response = Event.FeeUpdated.Response(fee: senderFee)
-                        self?.presenter.presentFeeUpdated(response: response)
-                    }
-            })
-        }
     }
 }
 
@@ -399,7 +346,6 @@ extension SendPaymentAmount.Interactor: SendPaymentAmount.BusinessLogic {
     func onBalanceSelected(request: Event.BalanceSelected.Request) {
         guard let balance = self.getBalanceWith(balanceId: request.balanceId) else { return }
         self.sceneModel.selectedBalance = balance
-        self.updateFee()
         
         let response = Event.BalanceSelected.Response(
             sceneModel: self.sceneModel,
@@ -410,16 +356,21 @@ extension SendPaymentAmount.Interactor: SendPaymentAmount.BusinessLogic {
     
     func onEditAmount(request: Event.EditAmount.Request) {
         self.sceneModel.amount = request.amount
-        self.updateFee()
         
         let response = Event.EditAmount.Response(amountValid: self.checkAmountValid())
         self.presenter.presentEditAmount(response: response)
     }
     
+    func onDescriptionUpdated(request: Event.DescriptionUpdated.Request) {
+        self.sceneModel.description = request.description
+    }
+    
     func onSubmitAction(request: Event.SubmitAction.Request) {
         switch self.sceneModel.operation {
+            
         case .handleSend:
             self.handleSendAction()
+            
         case .handleWithdraw:
             self.handleWithdrawSendAction()
         }

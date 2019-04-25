@@ -12,7 +12,6 @@ protocol SendPaymentDisplayLogic: class {
     func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
     func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
     func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
-    func displayFeeUpdated(viewModel: Event.FeeUpdated.ViewModel)
 }
 
 extension SendPaymentAmount {
@@ -29,7 +28,7 @@ extension SendPaymentAmount {
         
         private let balanceView: BalanceView = BalanceView()
         private let enterAmountView: EnterAmountView = EnterAmountView()
-        private let feeView: FeeView = FeeView()
+        private let descritionTextView: DescriptionTextView = DescriptionTextView()
         private let confirmButton: UIButton = UIButton()
         
         private let disposeBag = DisposeBag()
@@ -39,14 +38,17 @@ extension SendPaymentAmount {
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
+        private var viewConfig: Model.ViewConfig?
         private var routing: Routing?
         
         func inject(
             interactorDispatch: InteractorDispatch?,
+            viewConfig: Model.ViewConfig?,
             routing: Routing?
             ) {
             
             self.interactorDispatch = interactorDispatch
+            self.viewConfig = viewConfig
             self.routing = routing
         }
         
@@ -55,11 +57,11 @@ extension SendPaymentAmount {
         override func viewDidLoad() {
             super.viewDidLoad()
             
+            self.setupView()
             self.setupStackView()
             self.setupBalanceView()
             self.setupEnterAmountView()
-            self.setupFeeView()
-            self.setupSendPaymentButton()
+            self.setupDescriptionTextView()
             self.setupConfirmButton()
             self.observeKeyboard()
             self.setupLayout()
@@ -97,6 +99,10 @@ extension SendPaymentAmount {
             self.enterAmountView.set(amountHighlighted: !amountValid)
         }
         
+        private func setupView() {
+            self.view.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
         private func setupStackView() {
             self.stackView.backgroundColor = Theme.Colors.contentBackgroundColor
             self.stackView.stackViewsSpacing = 10.0
@@ -122,24 +128,20 @@ extension SendPaymentAmount {
             }
         }
         
-        private func setupFeeView() {
-            
-        }
-        
-        private func setupSendPaymentButton() {
-            let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Checkmark"), style: .plain, target: nil, action: nil)
-            button.rx
-                .tap
-                .asDriver()
-                .drive(onNext: { [weak self] in
-                    self?.view.endEditing(true)
-                    let request = Event.SubmitAction.Request()
+        private func setupDescriptionTextView() {
+            guard let viewConfig = self.viewConfig else {
+                return
+            }
+            if !viewConfig.descriptionIsHidden {
+                self.descritionTextView.onEdit = { [weak self] (description) in
+                    let request = Event.DescriptionUpdated.Request(description: description)
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onSubmitAction(request: request)
+                        businessLogic.onDescriptionUpdated(request: request)
                     })
-                })
-                .disposed(by: self.disposeBag)
-            self.navigationItem.rightBarButtonItem = button
+                }
+            } else {
+                self.descritionTextView.isHidden = true
+            }
         }
         
         private func setupConfirmButton() {
@@ -152,6 +154,19 @@ extension SendPaymentAmount {
             )
             self.confirmButton.setAttributedTitle(attributedTitle, for: .normal)
             self.confirmButton.backgroundColor = Theme.Colors.accentColor
+            
+            self.confirmButton
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.view.endEditing(true)
+                    let request = Event.SubmitAction.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onSubmitAction(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func observeKeyboard() {
@@ -170,6 +185,7 @@ extension SendPaymentAmount {
         
         private func setupLayout() {
             self.view.addSubview(self.stackView)
+            self.view.addSubview(self.descritionTextView)
             self.view.addSubview(self.confirmButton)
             
             self.stackView.snp.makeConstraints { (make) in
@@ -180,11 +196,14 @@ extension SendPaymentAmount {
             
             self.stackView.insert(views: [
                 self.balanceView,
-                self.enterAmountView,
-                self.feeView
+                self.enterAmountView
                 ]
             )
             
+            self.descritionTextView.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(self.confirmButton.snp.top)
+            }
             self.confirmButton.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
                 make.bottom.lessThanOrEqualTo(self.view.safeArea.bottom)
@@ -265,11 +284,8 @@ extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
             self.routing?.onShowError(errorMessage)
             
         case .succeeded(let sendModel):
-            self.routing?.onSendWithdraw?(sendModel)
+            self.routing?.onHideProgress()
+            self.routing?.onShowWithdrawDestination?(sendModel)
         }
-    }
-    
-    func displayFeeUpdated(viewModel: Event.FeeUpdated.ViewModel) {
-        self.feeView.fee = viewModel.fee
     }
 }

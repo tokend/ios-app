@@ -45,15 +45,15 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         ) {
         self.onShowWalletScreen = onShowWalletScreen
         
-        self.startFromSendScreen(showRootScreen: showRootScreen)
+        self.startFromDestinationScreen(showRootScreen: showRootScreen)
     }
     
     // MARK: - Private
     
-    private func startFromSendScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let viewController = self.setupSendAmountScreen()
+    private func startFromDestinationScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+        let viewController = self.setupSendDestinationScreen()
         
-        viewController.navigationItem.title = Localized(.send)
+        viewController.navigationItem.title = Localized(.payment_destination)
         
         if let showRoot = showRootScreen {
             showRoot(viewController)
@@ -62,7 +62,20 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         }
     }
     
-    private func setupSendAmountScreen() -> SendPaymentAmount.ViewController {
+    private func showSendPaymentAmountScene(
+        destination: SendPaymentDestination.Model.SendDestinationModel
+        ) {
+        
+        let vc = self.setupSendAmountScreen(destination: destination)
+        
+        vc.navigationItem.title = Localized(.payment_amount)
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupSendAmountScreen(
+        destination: SendPaymentDestination.Model.SendDestinationModel
+        ) -> SendPaymentAmount.ViewController {
+        
         let vc = SendPaymentAmount.ViewController()
         
         let balanceDetailsLoader = SendPaymentAmount.BalanceDetailsLoaderWorker(
@@ -79,6 +92,15 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         let feeLoaderWorker = SendPaymentAmount.FeeLoaderWorker(
             feeLoader: feeLoader
         )
+        
+        let sceneModel = SendPaymentAmount.Model.SceneModel(
+            feeType: .payment,
+            operation: .handleSend,
+            recipientAddress: destination.recipientNickname
+        )
+        sceneModel.resolvedRecipientId = destination.recipientAccountId
+        
+        let viewConfig = SendPaymentAmount.Model.ViewConfig.sendPaymentViewConfig()
         
         let routing = SendPaymentAmount.Routing(
             onShowProgress: { [weak self] in
@@ -108,25 +130,25 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onSendAction: { [weak self] (sendModel) in
                 self?.showPaymentConfirmationScreen(sendPaymentModel: sendModel)
             },
-            onSendWithdraw: nil
+            onShowWithdrawDestination: nil
         )
         
         SendPaymentAmount.Configurator.configure(
             viewController: vc,
             senderAccountId: self.userDataProvider.walletData.accountId,
             selectedBalanceId: self.selectedBalanceId,
+            sceneModel: sceneModel,
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
             feeLoader: feeLoaderWorker,
-            feeType: SendPaymentAmount.Model.FeeType.payment,
-            operation: SendPaymentAmount.Model.Operation.handleSend,
+            viewConfig: viewConfig,
             routing: routing
         )
         
         return vc
     }
     
-    private func setupSendDestinationScreen() {
+    private func setupSendDestinationScreen() -> SendPaymentDestination.ViewController {
         let vc = SendPaymentDestination.ViewController()
         let viewConfig = SendPaymentDestination.Model.ViewConfig.sendPayment()
         let routing = SendPaymentDestination.Routing(
@@ -139,18 +161,44 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             },
             onPresentQRCodeReader: { [weak self] (completion) in
                 self?.presentQRCodeReader(completion: completion)
+            },
+            showWithdrawConformation: { (_) in
+                
+            },
+            showSendAmount: { [weak self] (destination) in
+                self?.showSendPaymentAmountScene(destination: destination)
+            },
+            showProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            hideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+            },
+            showError: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(message, completion: nil)
         })
         
-        let recipientAddressResolver = SendPaymentDestination.WithdrawRecipientAddressResolver(
+        let recipientAddressResolver = SendPaymentDestination.RecipientAddressResolverWorker(
             generalApi: self.flowControllerStack.api.generalApi
+        )
+        
+        let contactsFetcher = SendPaymentDestination.ContactsFetcher()
+        
+        let sceneModel = SendPaymentDestination.Model.SceneModel(
+            feeType: .payment,
+            operation: .handleSend
         )
         
         SendPaymentDestination.Configurator.configure(
             viewController: vc,
             recipientAddressResolver: recipientAddressResolver,
+            contactsFetcher: contactsFetcher,
+            sceneModel: sceneModel,
             viewConfig: viewConfig,
             routing: routing
         )
+        
+        return vc
     }
     
     private func showPaymentConfirmationScreen(sendPaymentModel: SendPaymentAmount.Model.SendPaymentModel) {
@@ -189,6 +237,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             recipientAccountId: sendPaymentModel.recipientAccountId,
             senderFee: senderFee,
             recipientFee: recipientFee,
+            description: sendPaymentModel.description,
             reference: sendPaymentModel.reference
         )
         

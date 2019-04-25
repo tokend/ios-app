@@ -16,6 +16,11 @@ class TextFieldView: UIView {
         set { self.textField.placeholder = newValue }
     }
     
+    var attributedPlaceholder: NSAttributedString? {
+        get { return self.textField.attributedPlaceholder }
+        set { self.textField.attributedPlaceholder = newValue }
+    }
+    
     var textColor: UIColor? {
         didSet {
             self.updateTextColor()

@@ -11,6 +11,6 @@ extension SendPaymentAmount {
         _ onSelect: @escaping (_ index: Int) -> Void
         ) -> Void
         let onSendAction: ((_ sendModel: Model.SendPaymentModel) -> Void)?
-        let onSendWithdraw: ((_ sendModel: Model.SendWithdrawModel) -> Void)?
+        let onShowWithdrawDestination: ((_ sendModel: Model.SendWithdrawModel) -> Void)?
     }
 }
