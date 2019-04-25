@@ -291,15 +291,7 @@ extension SendPaymentDestination.ViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = self.sections[indexPath.section].cells[indexPath.row]
-        guard let cell = tableView.dequeueReusableCell(
-            with: model,
-            for: indexPath
-            ) as? SendPaymentDestination.ContactCell.View else {
-                
-                return UITableViewCell()
-        }
-        
-        model.setup(cell: cell)
+        let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         return cell
     }
 }

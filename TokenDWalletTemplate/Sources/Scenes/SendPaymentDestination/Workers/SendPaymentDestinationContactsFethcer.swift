@@ -34,7 +34,7 @@ extension SendPaymentDestination {
             
             let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey]
             let request = CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])
-            var contacts: [SendPaymentDestination.Model.ContactModel] = []
+            var contacts: [Model.ContactModel] = []
             
             try? self.contactStore.enumerateContacts(
                 with: request,
@@ -43,7 +43,7 @@ extension SendPaymentDestination {
                         return
                     }
                     let name = contact.givenName + " " + contact.familyName
-                    let contactModel = SendPaymentDestination.Model.ContactModel(
+                    let contactModel = Model.ContactModel(
                         name: name,
                         email: email.value as String
                     )
