@@ -48,7 +48,7 @@ public enum TradeOffers {
             }
         }
         
-        public struct Offer {
+        public struct Offer: Equatable {
             
             public let amount: Amount
             public let price: Amount
@@ -160,7 +160,7 @@ extension TradeOffers.Model {
         }
     }
     
-    public struct Amount {
+    public struct Amount: Equatable {
         
         public let value: Decimal
         public let currency: String
@@ -474,7 +474,7 @@ extension TradeOffers.Event {
         
         public enum Response {
             case error(isBuy: Bool, error: Swift.Error)
-            case offers(isBuy: Bool, offers: [Model.Offer])
+            case offers(isBuy: Bool, offers: [Model.Offer], isLoadingMore: Bool)
         }
         
         public enum ViewModel {

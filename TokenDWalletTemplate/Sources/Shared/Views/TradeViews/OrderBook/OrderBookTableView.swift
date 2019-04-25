@@ -17,7 +17,6 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             self.tableView.reloadData()
         }
     }
-    public var onContentSizeChanged: ContentSizeDidChange?
     
     public var onPullToRefresh: (() -> Void)?
     public var onScrolledToBottom: (() -> Void)? {
@@ -46,25 +45,6 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey: Any]?,
-        context: UnsafeMutableRawPointer?
-        ) {
-        
-        guard let tableObject = object as? UITableView,
-            tableObject == self.tableView
-            else {
-                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-                return
-        }
-        
-        if let newSize = change?[.newKey] as? CGSize {
-            self.onContentSizeChanged?(newSize)
-        }
-    }
-    
     // MARK: - Private
     
     private func commonInit() {
@@ -80,15 +60,8 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         self.tableView.delegate = self.delegateDatasource
         self.tableView.separatorColor = Theme.Colors.separatorOnMainColor
         self.tableView.separatorInset = .zero
-        self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.rowHeight = 44
         self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        
-        self.tableView.addObserver(
-            self,
-            forKeyPath: "contentSize",
-            options: [.new],
-            context: nil)
     }
     
     private func setupRefreshControl() {
@@ -112,13 +85,27 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             make.edges.equalToSuperview()
         }
         self.emptyLabel.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-            make.top.leading.greaterThanOrEqualToSuperview().inset(8)
-            make.trailing.bottom.lessThanOrEqualToSuperview().inset(8)
+            make.centerY.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(8)
         }
     }
     
     // MARK: - Public
+    
+    public func showDataLoading(_ show: Bool) {
+        if show {
+            self.emptyLabel.alpha = 0.0
+            if self.cells.isEmpty {
+                self.showLoading()
+            } else {
+                self.refreshControl.beginRefreshing()
+            }
+        } else {
+            self.emptyLabel.alpha = 1.0
+            self.hideLoading()
+            self.refreshControl.endRefreshing()
+        }
+    }
     
     public func showEmptyStateWithText(_ text: String) {
         self.emptyLabel.text = text

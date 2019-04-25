@@ -395,7 +395,7 @@
 		E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF52139B77C00D4695E /* OrderBookCard.swift */; };
 		E92F1C0E2139B77D00D4695E /* OrderBookTableViewBuyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF62139B77C00D4695E /* OrderBookTableViewBuyCell.swift */; };
 		E92F1C0F2139B77D00D4695E /* OrderBookTableViewSellCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF72139B77C00D4695E /* OrderBookTableViewSellCell.swift */; };
-		E92F1C102139B77D00D4695E /* OrderBookTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF82139B77C00D4695E /* OrderBookTableViewCell.swift */; };
+		E92F1C102139B77D00D4695E /* OrderBookTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF82139B77C00D4695E /* OrderBookTableViewCellModel.swift */; };
 		E92F1C112139B77D00D4695E /* OrderBookTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF92139B77C00D4695E /* OrderBookTableView.swift */; };
 		E92F1C122139B7DA00D4695E /* CreateOfferModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA5B20FD088E0005E751 /* CreateOfferModels.swift */; };
 		E92F1C132139B7F100D4695E /* VerifyEmailWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEB45C920DD5FC4001CA31C /* VerifyEmailWorker.swift */; };
@@ -892,7 +892,7 @@
 		E92F1BF52139B77C00D4695E /* OrderBookCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookCard.swift; sourceTree = "<group>"; };
 		E92F1BF62139B77C00D4695E /* OrderBookTableViewBuyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewBuyCell.swift; sourceTree = "<group>"; };
 		E92F1BF72139B77C00D4695E /* OrderBookTableViewSellCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewSellCell.swift; sourceTree = "<group>"; };
-		E92F1BF82139B77C00D4695E /* OrderBookTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewCell.swift; sourceTree = "<group>"; };
+		E92F1BF82139B77C00D4695E /* OrderBookTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewCellModel.swift; sourceTree = "<group>"; };
 		E92F1BF92139B77C00D4695E /* OrderBookTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableView.swift; sourceTree = "<group>"; };
 		E93F074020D306F1000C0991 /* DepositSceneAddressManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneAddressManagerProtocol.swift; sourceTree = "<group>"; };
 		E93F074220D30716000C0991 /* DepositSceneAddressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneAddressManager.swift; sourceTree = "<group>"; };
@@ -2253,7 +2253,7 @@
 				E92F1BF52139B77C00D4695E /* OrderBookCard.swift */,
 				E92F1BF92139B77C00D4695E /* OrderBookTableView.swift */,
 				E92F1BF62139B77C00D4695E /* OrderBookTableViewBuyCell.swift */,
-				E92F1BF82139B77C00D4695E /* OrderBookTableViewCell.swift */,
+				E92F1BF82139B77C00D4695E /* OrderBookTableViewCellModel.swift */,
 				E92F1BF72139B77C00D4695E /* OrderBookTableViewSellCell.swift */,
 			);
 			path = OrderBook;
@@ -2918,7 +2918,7 @@
 				7F7495FE225E027E0065EE8E /* DynamicTableViewDataSourceDelegate.swift in Sources */,
 				710E86332105FA95007204D4 /* BXFInteractiveLabel.swift in Sources */,
 				710D30AA2114A3B1007BCCB0 /* Hashable+Iterate.swift in Sources */,
-				E92F1C102139B77D00D4695E /* OrderBookTableViewCell.swift in Sources */,
+				E92F1C102139B77D00D4695E /* OrderBookTableViewCellModel.swift in Sources */,
 				E980D87420D1830800C53841 /* DepositSceneAssetsFetcher.swift in Sources */,
 				710E86102105E1AB007204D4 /* ReceiveAddressQRCell.swift in Sources */,
 				7F7495F7225CF9C00065EE8E /* TradesListViewController.swift in Sources */,

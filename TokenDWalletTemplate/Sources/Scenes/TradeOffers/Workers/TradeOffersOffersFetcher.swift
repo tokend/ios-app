@@ -15,7 +15,8 @@ extension TradeOffers {
             public var cancelable: TokenDSDK.Cancelable?
             public var prevRequest: JSONAPI.RequestModel?
             public var prevLinks: Links?
-            public var isLoadingMore: LoadingStatus = .loaded
+            public var hasMoreItems: Bool = true
+            public var isLoadingMore: Bool = false
             
             public let items: BehaviorRelay<[Model.Offer]> = BehaviorRelay(value: [])
             public let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
@@ -30,7 +31,10 @@ extension TradeOffers {
             // MARK: - Public
             
             public func cancel() {
-                
+                self.cancelable?.cancel()
+                self.cancelable = nil
+                self.loadingStatus.accept(.loaded)
+                self.isLoadingMore = false
             }
         }
         
@@ -73,7 +77,7 @@ extension TradeOffers {
             let paginationStrategy = IndexedPaginationStrategy(
                 index: nil,
                 limit: pageSize,
-                order: .descending
+                order: request.isBuy ? .descending : .ascending
             )
             let pagination = RequestPagination(.strategy(paginationStrategy))
             
@@ -96,8 +100,11 @@ extension TradeOffers {
                         
                     case .success(let document):
                         request.prevLinks = document.links
-                        let offers: [Model.Offer] = self?.mapOffers(document.data ?? []) ?? []
-                        request.items.accept(offers)
+                        self?.onOffersLoaded(
+                            request: request,
+                            resources: document.data,
+                            shouldAppend: false
+                        )
                     }
             })
         }
@@ -109,43 +116,69 @@ extension TradeOffers {
         }
         
         private func loadMoreOffers(request: RequestModel) {
-//            guard let prevRequest = request.prevRequest,
-//                let links = request.prevLinks,
-//                links.next != nil,
-//                !request.isLoadingMore else {
-//                    return
-//            }
-//
-//            request.isLoadingMore = true
-//            self.loadingStatus.accept(.loading)
-//            self.api.loadPageForLinks(
-//                ParticipantEffectResource.self,
-//                links: links,
-//                page: .next,
-//                previousRequest: prevRequest,
-//                shouldSign: true,
-//                onRequestBuilt: { [weak self] (prevRequest) in
-//                    self?.prevRequest = prevRequest
-//                },
-//                completion: { [weak self] (result) in
-//                    self?.isLoadingMore = false
-//                    self?.loadingStatus.accept(.loaded)
-//
-//                    switch result {
-//
-//                    case .failure(let error):
-//                        self?.errors.accept(error)
-//
-//                    case .success(let document):
-//                        if let history = document.data {
-//                            self?.prevLinks = document.links
-//                            self?.historyDidLoad(
-//                                history: history,
-//                                fromLast: true
-//                            )
-//                        }
-//                    }
-//            })
+            guard
+                self.getLoadingStatusValue(request.isBuy) == .loaded,
+                let prevRequest = request.prevRequest,
+                let links = request.prevLinks,
+                links.next != nil,
+                !request.isLoadingMore else {
+                    return
+            }
+            
+            guard request.hasMoreItems else {
+                print("no more items")
+                return
+            }
+            
+            request.isLoadingMore = true
+            request.loadingStatus.accept(.loading)
+            
+            self.orderBookApiV3.loadPageForLinks(
+                OrderBookEntryResource.self,
+                links: links,
+                page: .next,
+                previousRequest: prevRequest,
+                shouldSign: true,
+                onRequestBuilt: { (prevRequest) in
+                    request.prevRequest = prevRequest
+            },
+                completion: { [weak self] (result) in
+                    request.isLoadingMore = false
+                    request.loadingStatus.accept(.loaded)
+                    
+                    switch result {
+                        
+                    case .failure(let error):
+                        request.errorStatus.accept(error)
+                        
+                    case .success(let document):
+                        request.prevLinks = document.links
+                        self?.onOffersLoaded(
+                            request: request,
+                            resources: document.data,
+                            shouldAppend: true
+                        )
+                    }
+            })
+        }
+        
+        private func onOffersLoaded(
+            request: RequestModel,
+            resources: [OrderBookEntryResource]?,
+            shouldAppend: Bool
+            ) {
+            
+            let newOffers: [Model.Offer] = self.mapOffers(resources ?? [])
+            
+            if shouldAppend {
+                var prevOffers = self.getItemsValue(request.isBuy)
+                prevOffers.appendUniques(contentsOf: newOffers)
+                request.items.accept(prevOffers)
+            } else {
+                request.items.accept(newOffers)
+            }
+            
+            request.hasMoreItems = (resources?.count ?? 0) >= request.pageSize
         }
         
         private func mapOffers(_ resources: [OrderBookEntryResource]) -> [Model.Offer] {
@@ -168,7 +201,7 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
         return self.getRequestModel(isBuy).loadingStatus.value
     }
     
-    public func getLoadingMoreStatusValue(_ isBuy: Bool) -> LoadingStatus {
+    public func getLoadingMoreStatusValue(_ isBuy: Bool) -> Bool {
         return self.getRequestModel(isBuy).isLoadingMore
     }
     

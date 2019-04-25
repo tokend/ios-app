@@ -156,9 +156,11 @@ extension TradeOffers {
                 offers = self.sceneModel.sellOffers
             }
             
+            let isLoadingMore = self.offersFetcher.getLoadingMoreStatusValue(isBuy)
             let response = Event.OffersDidUpdate.Response.offers(
                 isBuy: isBuy,
-                offers: offers
+                offers: offers,
+                isLoadingMore: isLoadingMore
             )
             self.presenter.presentOffersDidUpdate(response: response)
         }
@@ -291,10 +293,36 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
     }
     
     public func onPullToRefresh(request: Event.PullToRefresh.Request) {
-        
+        switch request {
+            
+        case .buyOffers:
+            self.offersFetcher.reloadItems(true)
+            
+        case .sellOffers:
+            self.offersFetcher.reloadItems(false)
+            
+        case .charts:
+            break
+            
+        case .trades:
+            self.tradesFetcher.reloadItems()
+        }
     }
     
     public func onLoadMore(request: Event.LoadMore.Request) {
-        
+        switch request {
+            
+        case .buyOffers:
+            self.offersFetcher.loadMoreItems(true)
+            
+        case .sellOffers:
+            self.offersFetcher.loadMoreItems(false)
+            
+        case .charts:
+            break
+            
+        case .trades:
+            self.tradesFetcher.loadMoreItems()
+        }
     }
 }

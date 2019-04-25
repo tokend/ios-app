@@ -41,8 +41,8 @@
 "bought" = "Bought";
 "bounds" = "bounds";
 "buy" = "Buy";
-"buy_base" = "Buy $(base)";
-"buy_base_replace_base" = "base";
+"bid_base" = "Bid ($(base))";
+"bid_base_replace_base" = "base";
 "can_be_traded_on_secondary_market" = " - Can be traded on secondary market";
 "can_be_transfered" = " - Can be transfered";
 "can_be_withdrawn" = " - Can be withdrawn";
@@ -351,8 +351,8 @@
 "selected_file_replace_file_name" = "file_name";
 "selfie_with_verification_code" = "Selfie with verification code";
 "sell" = "Sell";
-"sell_base" = "Sell $(base)";
-"sell_base_replace_base" = "base";
+"ask_base" = "Ask ($(base))";
+"ask_base_replace_base" = "base";
 "send" = "Send";
 "send_transaction_error" = "Send transaction error: $(message)";
 "send_transaction_error_replace_message" = "message";

@@ -104,7 +104,8 @@ extension TradeOffers {
         }
         
         private func cellModelFrom<CellType: OrderBookTableViewCell>(
-            _ offer: Model.Offer
+            _ offer: Model.Offer,
+            isLoading: Bool
             ) -> OrderBookTableViewCellModel<CellType> {
             
             let anOffer = offer.getOffer(CellType.self)
@@ -116,6 +117,7 @@ extension TradeOffers {
                 amountCurrency: offer.amount.currency,
                 isBuy: offer.isBuy,
                 offer: anOffer,
+                isLoading: isLoading,
                 onClick: nil
             )
         }
@@ -252,15 +254,21 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         case .error(let isBuy, let error):
             viewModel = .error(isBuy: isBuy, error: error.localizedDescription)
             
-        case .offers(let isBuy, let offers):
+        case .offers(let isBuy, let offers, let isLoadingMore):
             if isBuy {
-                let cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
-                    return self.cellModelFrom(offer)
+                var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
+                    return self.cellModelFrom(offer, isLoading: false)
+                }
+                if isLoadingMore, let anyOffer = offers.first {
+                    cells.append(self.cellModelFrom(anyOffer, isLoading: true))
                 }
                 viewModel = .buyOffers(cells: cells)
             } else {
-                let cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
-                    return self.cellModelFrom(offer)
+                var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
+                    return self.cellModelFrom(offer, isLoading: false)
+                }
+                if isLoadingMore, let anyOffer = offers.first {
+                    cells.append(self.cellModelFrom(anyOffer, isLoading: true))
                 }
                 viewModel = .sellOffers(cells: cells)
             }

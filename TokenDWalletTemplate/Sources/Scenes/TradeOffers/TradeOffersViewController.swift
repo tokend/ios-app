@@ -93,7 +93,7 @@ extension TradeOffers {
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request(
-                offersPageSize: 1
+                offersPageSize: 5
             )
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
@@ -121,7 +121,35 @@ extension TradeOffers {
         }
         
         private func setupOrderBookView() {
+            self.orderBookView.setCallbacks(
+                isBuy: true,
+                onPullToRefresh: { [weak self] in
+                    let request = Event.PullToRefresh.Request.buyOffers
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onPullToRefresh(request: request)
+                    })
+                },
+                onScrolledToBottom: { [weak self] in
+                    let request = Event.LoadMore.Request.buyOffers
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onLoadMore(request: request)
+                    })
+            })
             
+            self.orderBookView.setCallbacks(
+                isBuy: false,
+                onPullToRefresh: { [weak self] in
+                    let request = Event.PullToRefresh.Request.sellOffers
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onPullToRefresh(request: request)
+                    })
+                },
+                onScrolledToBottom: { [weak self] in
+                    let request = Event.LoadMore.Request.sellOffers
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onLoadMore(request: request)
+                    })
+            })
         }
         
         private func setupChartView() {
@@ -306,7 +334,6 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         self.picker.setSelectedItemAtIndex(viewModel.selectedIndex ?? 0, animated: false)
         
         self.orderBookView.baseCurrency = viewModel.assetPair.baseAsset
-        self.orderBookView.quoteCurrency = viewModel.assetPair.quoteAsset
         
         self.setPeriods(viewModel.periods)
         self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)
@@ -346,29 +373,23 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         switch viewModel {
             
         case .error(let isBuy, let error):
-            if isBuy {
-                self.orderBookView.showEmptyBuyTable(error)
-                self.orderBookView.buyCells = []
-            } else {
-                self.orderBookView.showEmptySellTable(error)
-                self.orderBookView.sellCells = []
-            }
+            self.orderBookView.showEmptyTable(isBuy: isBuy, text: error)
             
         case .buyOffers(let cells):
             if cells.isEmpty {
-                self.orderBookView.showEmptyBuyTable(Localized(.no_bids))
+                self.orderBookView.showEmptyTable(isBuy: true, text: Localized(.no_bids))
                 self.orderBookView.buyCells = []
             } else {
-                self.orderBookView.hideEmptyBuyTable()
+                self.orderBookView.hideEmptyTable(isBuy: true)
                 self.orderBookView.buyCells = cells
             }
             
         case .sellOffers(let cells):
             if cells.isEmpty {
-                self.orderBookView.showEmptySellTable(Localized(.no_asks))
+                self.orderBookView.showEmptyTable(isBuy: false, text: Localized(.no_asks))
                 self.orderBookView.sellCells = []
             } else {
-                self.orderBookView.hideEmptySellTable()
+                self.orderBookView.hideEmptyTable(isBuy: false)
                 self.orderBookView.sellCells = cells
             }
         }
@@ -410,10 +431,10 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         switch viewModel.contentList {
             
         case .buyOffers:
-            self.orderBookView.showBuyTableLoading(show)
+            self.orderBookView.showTableLoading(isBuy: true, show: show)
             
         case .sellOffers:
-            self.orderBookView.showSellTableLoading(show)
+            self.orderBookView.showTableLoading(isBuy: false, show: show)
             
         case .charts:
             self.chartView.showChartLoading(show)

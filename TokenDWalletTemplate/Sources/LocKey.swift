@@ -44,8 +44,8 @@ enum LocKey: String {
     case bought
     case bounds
     case buy
-    case buy_base
-    case buy_base_replace_base
+    case bid_base
+    case bid_base_replace_base
     case can_be_traded_on_secondary_market
     case can_be_transfered
     case can_be_withdrawn
@@ -354,8 +354,8 @@ enum LocKey: String {
     case selected_file_replace_file_name
     case selfie_with_verification_code
     case sell
-    case sell_base
-    case sell_base_replace_base
+    case ask_base
+    case ask_base_replace_base
     case send
     case send_transaction_error
     case send_transaction_error_replace_message
