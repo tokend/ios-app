@@ -2,7 +2,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-extension SendPayment {
+extension SendPaymentAmount {
     class EnterAmountView: UIView {
         
         // MARK: - Public properties
@@ -12,7 +12,6 @@ extension SendPayment {
         
         // MARK: - Private properties
         
-        private let titleLabel: UILabel = UILabel()
         private let amountField: TextFieldView = SharedViewsBuilder.createTextFieldView()
         private var amountEditingContext: TextEditingContext<Decimal>?
         private let assetButton: UIButton = UIButton(type: .system)
@@ -35,7 +34,6 @@ extension SendPayment {
         
         private func customInit() {
             self.setupView()
-            self.setupTitleLabel()
             self.setupAmountField()
             self.setupAssetButton()
             self.setupLayout()
@@ -45,7 +43,14 @@ extension SendPayment {
         
         func set(amount: Decimal?, asset: String?) {
             self.amountEditingContext?.setValue(amount)
-            self.assetButton.setTitle(asset, for: .normal)
+            self.assetButton.setAttributedTitle(
+                NSAttributedString(
+                    string: asset ?? "",
+                    attributes: [
+                        .font: Theme.Fonts.largeTitleFont
+                    ]),
+                for: .normal
+            )
         }
         
         func set(amountHighlighted: Bool) {
@@ -60,15 +65,16 @@ extension SendPayment {
             self.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
-        private func setupTitleLabel() {
-            self.titleLabel.text = Localized(.amount_colon)
-            self.titleLabel.font = Theme.Fonts.textFieldTitleFont
-            self.titleLabel.textAlignment = .left
-            self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-        }
-        
         private func setupAmountField() {
-            self.amountField.placeholder = Localized(.enter_amount)
+            self.amountField.textAlignment = .right
+            self.amountField.font =  Theme.Fonts.hugeTitleFont
+            self.amountField.attributedPlaceholder = NSAttributedString(
+                string: "0",
+                attributes: [
+                    .font: Theme.Fonts.hugeTitleFont,
+                    .foregroundColor: Theme.Colors.textFieldForegroundColor
+                ])
+            self.amountField.keyboardType = .decimalPad
             self.amountField.onShouldReturn = { fieldView in
                 _ = fieldView.resignFirstResponder()
                 return false
@@ -84,6 +90,8 @@ extension SendPayment {
                         self?.onEnterAmount?(value)
                 })
             )
+            
+            _ = self.amountField.becomeFirstResponder()
         }
         
         private func setupAssetButton() {
@@ -99,34 +107,26 @@ extension SendPayment {
         }
         
         private func setupLayout() {
-            self.addSubview(self.titleLabel)
             self.addSubview(self.amountField)
             self.addSubview(self.assetButton)
             
-            self.titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
             self.amountField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             self.assetButton.setContentCompressionResistancePriority(.required, for: .horizontal)
             
-            self.titleLabel.setContentHuggingPriority(.required, for: .horizontal)
             self.amountField.setContentHuggingPriority(.defaultLow, for: .horizontal)
             self.assetButton.setContentHuggingPriority(.required, for: .horizontal)
-            
-            self.titleLabel.snp.makeConstraints { (make) in
-                make.leading.equalToSuperview().inset(20.0)
-                make.centerY.equalToSuperview()
-                make.top.bottom.equalToSuperview().inset(14.0)
-            }
             
             self.assetButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0)
             self.assetButton.snp.makeConstraints { (make) in
                 make.top.bottom.equalToSuperview()
-                make.trailing.equalToSuperview()
+                make.leading.equalTo(self.amountField.snp.trailing)
+                make.trailing.lessThanOrEqualToSuperview()
             }
             
             self.amountField.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.titleLabel.snp.trailing).offset(10.0)
-                make.centerY.equalTo(self.titleLabel)
-                make.trailing.equalTo(self.assetButton.snp.leading).offset(-5.0)
+                make.top.bottom.equalToSuperview().inset(5.0)
+                make.leading.equalToSuperview().inset(10.0)
+                make.trailing.greaterThanOrEqualTo(self.snp.centerX)
             }
         }
     }

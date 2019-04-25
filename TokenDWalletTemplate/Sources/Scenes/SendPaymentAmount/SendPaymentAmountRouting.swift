@@ -1,18 +1,16 @@
 import Foundation
 
-extension SendPayment {
+extension SendPaymentAmount {
     struct Routing {
         let onShowProgress: () -> Void
         let onHideProgress: () -> Void
         let onShowError: (_ erroMessage: String) -> Void
-        let onSelectContactEmail: (_ completion: @escaping SelectContactEmailCompletion) -> Void
-        let onPresentQRCodeReader: (_ completion: @escaping QRCodeReaderCompletion) -> Void
         let onPresentPicker: (
         _ title: String,
         _ options: [String],
         _ onSelect: @escaping (_ index: Int) -> Void
         ) -> Void
         let onSendAction: ((_ sendModel: Model.SendPaymentModel) -> Void)?
-        let onSendWithdraw: ((_ sendModel: Model.SendWithdrawModel) -> Void)?
+        let onShowWithdrawDestination: ((_ sendModel: Model.SendWithdrawModel) -> Void)?
     }
 }

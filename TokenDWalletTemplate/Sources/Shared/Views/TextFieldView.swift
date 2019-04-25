@@ -16,6 +16,11 @@ class TextFieldView: UIView {
         set { self.textField.placeholder = newValue }
     }
     
+    var attributedPlaceholder: NSAttributedString? {
+        get { return self.textField.attributedPlaceholder }
+        set { self.textField.attributedPlaceholder = newValue }
+    }
+    
     var textColor: UIColor? {
         didSet {
             self.updateTextColor()
@@ -26,6 +31,11 @@ class TextFieldView: UIView {
         didSet {
             self.updateTextColor()
         }
+    }
+    
+    var textAlignment: NSTextAlignment {
+        get { return self.textField.textAlignment }
+        set { self.textField.textAlignment = newValue }
     }
     
     var font: UIFont? {

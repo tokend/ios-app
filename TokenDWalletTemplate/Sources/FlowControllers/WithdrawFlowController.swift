@@ -43,16 +43,16 @@ class WithdrawFlowController: BaseSignedInFlowController {
         onShowWalletScreen: @escaping (_ selectedBalanceId: String?) -> Void
         ) {
         
-        self.startFromWithdrawScreen(showRootScreen: showRootScreen)
+        self.startFromWithdrawAmountScreen(showRootScreen: showRootScreen)
         self.onShowWalletScreen = onShowWalletScreen
     }
     
     // MARK: - Private
     
-    private func startFromWithdrawScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let viewController = self.setupWithdrawScreen()
+    private func startFromWithdrawAmountScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+        let viewController = self.setupWithdrawAmountScreen()
         
-        viewController.navigationItem.title = Localized(.withdraw)
+        viewController.navigationItem.title = Localized(.withdraw_amount)
         if self.navigationController == nil {
             let navigationController = NavigationController()
             self.navigationController = navigationController
@@ -70,31 +70,32 @@ class WithdrawFlowController: BaseSignedInFlowController {
         }
     }
     
-    private func setupWithdrawScreen() -> SendPayment.ViewController {
-        let vc = SendPayment.ViewController()
+    private func setupWithdrawAmountScreen() -> SendPaymentAmount.ViewController {
+        let vc = SendPaymentAmount.ViewController()
         
-        let balanceDetailsLoader = SendPayment.BalanceDetailsLoaderWorker(
+        let balanceDetailsLoader = SendPaymentAmount.BalanceDetailsLoaderWorker(
             balancesRepo: self.reposController.balancesRepo,
             assetsRepo: self.reposController.assetsRepo,
             operation: .handleWithdraw
         )
         
-        let amountFormatter = TokenDetailsScene.AmountFormatter()
-        
-        let recipientAddressResolver = SendPayment.WithdrawRecipientAddressResolver(
-            generalApi: self.flowControllerStack.api.generalApi
-        )
+        let amountFormatter = SendPaymentAmount.AmountFormatter()
         
         let feeLoader = FeeLoader(
             generalApi: self.flowControllerStack.api.generalApi
         )
-        let feeLoaderWorker = SendPayment.FeeLoaderWorker(
+        let feeLoaderWorker = SendPaymentAmount.FeeLoaderWorker(
             feeLoader: feeLoader
         )
         
-        let viewConfig = SendPayment.Model.ViewConfig.sendWithdraw()
+        let sceneModel = SendPaymentAmount.Model.SceneModel(
+            feeType: .withdraw,
+            operation: .handleWithdraw
+        )
         
-        let routing = SendPayment.Routing(
+        let viewConfig = SendPaymentAmount.Model.ViewConfig.withdrawViewConfig()
+        
+        let routing = SendPaymentAmount.Routing(
             onShowProgress: { [weak self] in
                 self?.navigationController?.showProgress()
             },
@@ -103,16 +104,6 @@ class WithdrawFlowController: BaseSignedInFlowController {
             },
             onShowError: { [weak self] (errorMessage) in
                 self?.navigationController?.showErrorMessage(errorMessage, completion: nil)
-            },
-            onSelectContactEmail: { [weak self] (completion) in
-                self?.presentContactEmailPicker(
-                    completion: completion,
-                    presentViewController: { [weak self] (vc, animated, completion) in
-                        self?.navigationController?.present(vc, animated: animated, completion: completion)
-                })
-            },
-            onPresentQRCodeReader: { [weak self] (completion) in
-                self?.presentQRCodeReader(completion: completion)
             },
             onPresentPicker: { [weak self] (title, options, onSelected) in
                 guard let present = self?.navigationController?.getPresentViewControllerClosure() else {
@@ -130,20 +121,18 @@ class WithdrawFlowController: BaseSignedInFlowController {
                 )
             },
             onSendAction: nil,
-            onSendWithdraw: { [weak self] (sendModel) in
-                self?.showWithdrawConfirmationScreen(sendWithdrawModel: sendModel)
+            onShowWithdrawDestination: { [weak self] (sendModel) in
+                self?.showWithdrawDestinationScreen(withdrawAmountModel: sendModel)
         })
         
-        SendPayment.Configurator.configure(
+        SendPaymentAmount.Configurator.configure(
             viewController: vc,
             senderAccountId: self.userDataProvider.walletData.accountId,
             selectedBalanceId: self.selectedBalanceId,
+            sceneModel: sceneModel,
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
-            recipientAddressResolver: recipientAddressResolver,
             feeLoader: feeLoaderWorker,
-            feeType: SendPayment.Model.FeeType.withdraw,
-            operation: SendPayment.Model.Operation.handleWithdraw,
             viewConfig: viewConfig,
             routing: routing
         )
@@ -151,14 +140,79 @@ class WithdrawFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showWithdrawConfirmationScreen(sendWithdrawModel: SendPayment.Model.SendWithdrawModel) {
+    private func showWithdrawDestinationScreen(
+        withdrawAmountModel: SendPaymentAmount.Model.SendWithdrawModel
+        ) {
+        
+        let vc = self.setupWithdrawDestinationScreen(withdrawAmountModel: withdrawAmountModel)
+        
+        vc.navigationItem.title = Localized(.withdraw_destination)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func setupWithdrawDestinationScreen(
+        withdrawAmountModel: SendPaymentAmount.Model.SendWithdrawModel
+        ) -> SendPaymentDestination.ViewController {
+        
+        let vc = SendPaymentDestination.ViewController()
+        let viewConfig = SendPaymentDestination.Model.ViewConfig.sendWithdraw()
+        
+        let sceneModel = SendPaymentDestination.Model.SceneModel(
+            feeType: .withdraw,
+            operation: .handleWithdraw
+        )
+        sceneModel.amount = withdrawAmountModel.amount
+        sceneModel.selectedBalance = withdrawAmountModel.senderBalance
+        sceneModel.senderFee = withdrawAmountModel.senderFee
+        
+        let routing = SendPaymentDestination.Routing(
+            onSelectContactEmail: { [weak self] (completion) in
+                self?.presentContactEmailPicker(
+                    completion: completion,
+                    presentViewController: { [weak self] (vc, animated, completion) in
+                        self?.navigationController?.present(vc, animated: animated, completion: completion)
+                })
+            },
+            onPresentQRCodeReader: { [weak self] (completion) in
+                self?.presentQRCodeReader(completion: completion)
+            }, showWithdrawConformation: { [weak self] (model) in
+                self?.showWithdrawConfirmationScreen(sendWithdrawModel: model)
+            }, showSendAmount: { _ in
+                
+            }, showProgress: { [weak self] in
+                self?.navigationController?.showProgress()
+            }, hideProgress: { [weak self] in
+                self?.navigationController?.hideProgress()
+            }, showError: { [weak self] (message) in
+                self?.navigationController?.showErrorMessage(message, completion: nil)
+        })
+        
+        let recipientAddressResolver = SendPaymentDestination.WithdrawRecipientAddressResolver(
+            generalApi: self.flowControllerStack.api.generalApi
+        )
+        
+        let contactsFetcher = SendPaymentDestination.ContactsFetcher()
+        
+        SendPaymentDestination.Configurator.configure(
+            viewController: vc,
+            recipientAddressResolver: recipientAddressResolver,
+            contactsFetcher: contactsFetcher,
+            sceneModel: sceneModel,
+            viewConfig: viewConfig,
+            routing: routing
+        )
+        
+        return vc
+    }
+    
+    private func showWithdrawConfirmationScreen(sendWithdrawModel: SendPaymentDestination.Model.SendWithdrawModel) {
         let vc = self.setupWithdrawConfirmationScreen(sendWithdrawModel: sendWithdrawModel)
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func setupWithdrawConfirmationScreen(
-        sendWithdrawModel: SendPayment.Model.SendWithdrawModel
+        sendWithdrawModel: SendPaymentDestination.Model.SendWithdrawModel
         ) -> ConfirmationScene.ViewController {
         
         let vc = ConfirmationScene.ViewController()
@@ -218,7 +272,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
     
     // MARK: -
     
-    private func presentQRCodeReader(completion: @escaping SendPayment.QRCodeReaderCompletion) {
+    private func presentQRCodeReader(completion: @escaping SendPaymentDestination.QRCodeReaderCompletion) {
         self.runQRCodeReaderFlow(
             presentingViewController: self.navigationController?.getViewController() ?? UIViewController(),
             handler: { result in

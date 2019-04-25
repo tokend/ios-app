@@ -2,25 +2,25 @@ import Foundation
 import TokenDSDK
 import TokenDWallet
 
-enum SendPaymentFeeLoaderResult {
-    typealias FeeLoaderError = ApiErrors
+public enum SendPaymentAmountFeeLoaderResult {
+    public typealias FeeLoaderError = ApiErrors
     
-    case succeeded(SendPayment.Model.FeeModel)
+    case succeeded(SendPaymentAmount.Model.FeeModel)
     case failed(FeeLoaderError)
 }
-protocol SendPaymentFeeLoaderProtocol {
+protocol SendPaymentAmountFeeLoaderProtocol {
     func loadFee(
         accountId: String,
         asset: String,
-        feeType: SendPayment.Model.FeeType,
+        feeType: SendPaymentAmount.Model.FeeType,
         amount: Decimal,
         subtype: Int32,
-        completion: @escaping (_ result: SendPaymentFeeLoaderResult) -> Void
+        completion: @escaping (_ result: SendPaymentAmountFeeLoaderResult) -> Void
     )
 }
 
-extension SendPayment {
-    typealias FeeLoaderProtocol = SendPaymentFeeLoaderProtocol
+extension SendPaymentAmount {
+    typealias FeeLoaderProtocol = SendPaymentAmountFeeLoaderProtocol
     
     class FeeLoaderWorker: FeeLoaderProtocol {
         
@@ -45,7 +45,7 @@ extension SendPayment {
             feeType: Model.FeeType,
             amount: Decimal,
             subtype: Int32,
-            completion: @escaping (SendPaymentFeeLoaderResult) -> Void
+            completion: @escaping (SendPaymentAmountFeeLoaderResult) -> Void
             ) {
             
             self.feeLoader.loadFee(

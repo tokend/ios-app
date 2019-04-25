@@ -26,7 +26,6 @@ extension ConfirmationScene {
         private let amountConverter: AmountConverterProtocol
         private let sectionsRelay: BehaviorRelay<[ConfirmationScene.Model.SectionModel]> = BehaviorRelay(value: [])
         private var payRecipientFeeCellState: Bool = true
-        private var descriptionCellText: String = ""
         
         // MARK: -
         
@@ -97,7 +96,7 @@ extension ConfirmationScene {
                 destination: .account(destinationAccountID),
                 amount: amount,
                 feeData: feeData,
-                subject: self.descriptionCellText,
+                subject: self.sendPaymentModel.description,
                 reference: self.sendPaymentModel.reference,
                 ext: .emptyVersion()
             )
@@ -158,12 +157,14 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
     }
     
     func loadConfirmationSections() {
+        var sections: [ConfirmationScene.Model.SectionModel] = []
         let recipientCell = ConfirmationScene.Model.CellModel(
             title: Localized(.recipient),
             cellType: .text(value: self.sendPaymentModel.recipientAccountId),
             identifier: .recipient
         )
         let recipientSection = ConfirmationScene.Model.SectionModel(cells: [recipientCell])
+        sections.append(recipientSection)
         
         let amountCellText = self.amountFormatter.assetAmountToString(
             self.sendPaymentModel.amount
@@ -201,39 +202,36 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
             identifier: .payRecipientFee
         )
         
-        let descriptionCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.description),
-            cellType: .textField(
-                value: self.descriptionCellText,
-                placeholder: Localized(.description_optional), maxCharacters: 100
-            ),
-            identifier: .description
-        )
-        
         let amountSection = ConfirmationScene.Model.SectionModel(
             cells: [
                 amountCell,
                 feeCell,
                 recipientFeeCell,
-                payRecipientFeeCell,
-                descriptionCell
+                payRecipientFeeCell
             ]
         )
+        sections.append(amountSection)
         
-        self.sectionsRelay.accept([
-            recipientSection,
-            amountSection
-            ]
-        )
+        if !self.sendPaymentModel.description.isEmpty {
+            let descriptionCell = ConfirmationScene.Model.CellModel(
+                title: Localized(.description),
+                cellType: .text(value: self.sendPaymentModel.description),
+                identifier: .description
+            )
+            let descriptionSection = ConfirmationScene.Model.SectionModel(
+                cells: [descriptionCell]
+            )
+            sections.append(descriptionSection)
+        }
+        
+        self.sectionsRelay.accept(sections)
     }
     
     func handleTextEdit(
         identifier: ConfirmationScene.CellIdentifier,
         value: String?
         ) {
-        if identifier == .description {
-            self.descriptionCellText = value ?? ""
-        }
+        
     }
     
     func handleBoolSwitch(
