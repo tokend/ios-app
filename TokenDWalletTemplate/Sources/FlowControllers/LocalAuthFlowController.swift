@@ -196,7 +196,17 @@ class LocalAuthFlowController: BaseFlowController {
     
     private func showRecoveryScreen() {
         let vc = self.setupRecoveryScreen(onSuccess: { [weak self] in
-            self?.onRecoverySucceeded()
+            guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                return
+            }
+            self?.showSuccessMessage(
+                title: Localized(.success),
+                message: Localized(.account_has_been_successfully_recovered),
+                completion: {
+                    self?.onRecoverySucceeded()
+            },
+                presentViewController: present
+            )
         })
         
         self.navigationController.pushViewController(vc, animated: true)
