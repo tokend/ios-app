@@ -74,6 +74,8 @@ extension SendPaymentDestination {
             self.setupTableView()
             self.setupActionButton()
             self.setupLayout()
+            
+            self.observeKeyboard()
         }
         
         // MARK: - Private
@@ -104,15 +106,6 @@ extension SendPaymentDestination {
                     let request = Event.ScanRecipientQRAddress.Request(qrResult: result)
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         businessLogic.onScanRecipientQRAddress(request: request)
-                    })
-                })
-            }
-            
-            self.recipientAddressView.onSelectAccount = { [weak self] in
-                self?.routing?.onSelectContactEmail({ [weak self] (email) in
-                    let request = Event.SelectedContact.Request(email: email)
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onSelectedContact(request: request)
                     })
                 })
             }
@@ -150,6 +143,27 @@ extension SendPaymentDestination {
                 viewConfig.actionButtonTitle,
                 for: .normal
             )
+        }
+        
+        private func observeKeyboard() {
+            let keyboardObserver = KeyboardObserver(
+                self,
+                keyboardWillChange: { (attributes) in
+                    if attributes.showingIn(view: self.view) {
+                        self.actionButton.snp.remakeConstraints({ (make) in
+                            make.leading.trailing.equalToSuperview()
+                            make.bottom.equalToSuperview().inset(attributes.rectInWindow.height)
+                            make.height.equalTo(self.buttonHeight)
+                        })
+                    } else {
+                        self.actionButton.snp.remakeConstraints({ (make) in
+                            make.leading.trailing.equalToSuperview()
+                            make.bottom.equalTo(self.view.safeArea.bottom)
+                            make.height.equalTo(self.buttonHeight)
+                        })
+                    }
+            })
+            KeyboardController.shared.add(observer: keyboardObserver)
         }
         
         private func setupLayout() {

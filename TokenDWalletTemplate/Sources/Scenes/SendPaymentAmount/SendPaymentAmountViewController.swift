@@ -29,7 +29,7 @@ extension SendPaymentAmount {
         private let balanceView: BalanceView = BalanceView()
         private let enterAmountView: EnterAmountView = EnterAmountView()
         private let descritionTextView: DescriptionTextView = DescriptionTextView()
-        private let confirmButton: UIButton = UIButton()
+        private let actionButton: UIButton = UIButton()
         
         private let disposeBag = DisposeBag()
         
@@ -62,9 +62,10 @@ extension SendPaymentAmount {
             self.setupBalanceView()
             self.setupEnterAmountView()
             self.setupDescriptionTextView()
-            self.setupConfirmButton()
-            self.observeKeyboard()
+            self.setupActionButton()
             self.setupLayout()
+            
+            self.observeKeyboard()
             
             let request = Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
@@ -144,7 +145,7 @@ extension SendPaymentAmount {
             }
         }
         
-        private func setupConfirmButton() {
+        private func setupActionButton() {
             let attributedTitle = NSAttributedString(
                 string: Localized(.confirm),
                 attributes: [
@@ -152,10 +153,10 @@ extension SendPaymentAmount {
                     .foregroundColor: Theme.Colors.actionTitleButtonColor
                 ]
             )
-            self.confirmButton.setAttributedTitle(attributedTitle, for: .normal)
-            self.confirmButton.backgroundColor = Theme.Colors.accentColor
+            self.actionButton.setAttributedTitle(attributedTitle, for: .normal)
+            self.actionButton.backgroundColor = Theme.Colors.accentColor
             
-            self.confirmButton
+            self.actionButton
                 .rx
                 .tap
                 .asDriver()
@@ -174,19 +175,26 @@ extension SendPaymentAmount {
                 self,
                 keyboardWillChange: { (attributes) in
                     if attributes.showingIn(view: self.view) {
-                        self.confirmButton.frame.origin.y -= attributes.rectInWindow.height
+                        self.actionButton.snp.remakeConstraints({ (make) in
+                            make.leading.trailing.equalToSuperview()
+                            make.bottom.equalToSuperview().inset(attributes.rectInWindow.height)
+                            make.height.equalTo(self.buttonSize)
+                        })
                     } else {
-                        self.confirmButton.frame.origin.y += attributes.rectInWindow.height
+                        self.actionButton.snp.remakeConstraints({ (make) in
+                            make.leading.trailing.equalToSuperview()
+                            make.bottom.lessThanOrEqualTo(self.view.safeArea.bottom)
+                            make.height.equalTo(self.buttonSize)
+                        })
                     }
             })
-            self.view.setNeedsLayout()
             KeyboardController.shared.add(observer: keyboardObserver)
         }
         
         private func setupLayout() {
             self.view.addSubview(self.stackView)
             self.view.addSubview(self.descritionTextView)
-            self.view.addSubview(self.confirmButton)
+            self.view.addSubview(self.actionButton)
             
             self.stackView.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
@@ -202,9 +210,9 @@ extension SendPaymentAmount {
             
             self.descritionTextView.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(self.confirmButton.snp.top)
+                make.bottom.equalTo(self.actionButton.snp.top)
             }
-            self.confirmButton.snp.makeConstraints { (make) in
+            self.actionButton.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
                 make.bottom.lessThanOrEqualTo(self.view.safeArea.bottom)
                 make.height.equalTo(self.buttonSize)
