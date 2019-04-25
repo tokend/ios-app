@@ -149,19 +149,24 @@ extension SendPaymentDestination {
             let keyboardObserver = KeyboardObserver(
                 self,
                 keyboardWillChange: { (attributes) in
+                    let keyboardHeight = attributes.heightIn(view: self.view)
                     if attributes.showingIn(view: self.view) {
-                        self.actionButton.snp.remakeConstraints({ (make) in
+                        self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
-                            make.bottom.equalToSuperview().inset(attributes.rectInWindow.height)
+                            make.bottom.equalTo(self.view.safeArea.bottom).inset(keyboardHeight)
                             make.height.equalTo(self.buttonHeight)
-                        })
+                        }
                     } else {
-                        self.actionButton.snp.remakeConstraints({ (make) in
+                        self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
                             make.bottom.equalTo(self.view.safeArea.bottom)
                             make.height.equalTo(self.buttonHeight)
-                        })
+                        }
                     }
+                    
+                    UIView.animate(withKeyboardAttributes: attributes, animations: {
+                        self.view.layoutIfNeeded()
+                    })
             })
             KeyboardController.shared.add(observer: keyboardObserver)
         }

@@ -33,7 +33,7 @@ extension SendPaymentAmount {
         
         private let disposeBag = DisposeBag()
         
-        private let buttonSize: CGFloat = 45.0
+        private let buttonHeight: CGFloat = 45.0
         
         // MARK: - Injections
         
@@ -146,16 +146,10 @@ extension SendPaymentAmount {
         }
         
         private func setupActionButton() {
-            let attributedTitle = NSAttributedString(
-                string: Localized(.confirm),
-                attributes: [
-                    .font: Theme.Fonts.actionButtonFont,
-                    .foregroundColor: Theme.Colors.actionTitleButtonColor
-                ]
-            )
-            self.actionButton.setAttributedTitle(attributedTitle, for: .normal)
+            if let attributedTitle = self.viewConfig?.actionButtonTitle {
+                self.actionButton.setAttributedTitle(attributedTitle, for: .normal)
+            }
             self.actionButton.backgroundColor = Theme.Colors.accentColor
-            
             self.actionButton
                 .rx
                 .tap
@@ -174,19 +168,24 @@ extension SendPaymentAmount {
             let keyboardObserver = KeyboardObserver(
                 self,
                 keyboardWillChange: { (attributes) in
+                    let keyboardHeight = attributes.heightIn(view: self.view)
                     if attributes.showingIn(view: self.view) {
-                        self.actionButton.snp.remakeConstraints({ (make) in
+                        self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
-                            make.bottom.equalToSuperview().inset(attributes.rectInWindow.height)
-                            make.height.equalTo(self.buttonSize)
-                        })
+                            make.bottom.equalTo(self.view.safeArea.bottom).inset(keyboardHeight)
+                            make.height.equalTo(self.buttonHeight)
+                        }
                     } else {
-                        self.actionButton.snp.remakeConstraints({ (make) in
+                        self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
-                            make.bottom.lessThanOrEqualTo(self.view.safeArea.bottom)
-                            make.height.equalTo(self.buttonSize)
-                        })
+                            make.bottom.equalTo(self.view.safeArea.bottom)
+                            make.height.equalTo(self.buttonHeight)
+                        }
                     }
+                    
+                    UIView.animate(withKeyboardAttributes: attributes, animations: {
+                        self.view.layoutIfNeeded()
+                    })
             })
             KeyboardController.shared.add(observer: keyboardObserver)
         }
@@ -199,7 +198,7 @@ extension SendPaymentAmount {
             self.stackView.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
                 make.centerY.equalTo(self.view.safeArea.centerY)
-                make.height.equalTo(200)
+                make.height.equalTo(300)
             }
             
             self.stackView.insert(views: [
@@ -214,8 +213,8 @@ extension SendPaymentAmount {
             }
             self.actionButton.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
-                make.bottom.lessThanOrEqualTo(self.view.safeArea.bottom)
-                make.height.equalTo(self.buttonSize)
+                make.bottom.equalTo(self.view.safeArea.bottom)
+                make.height.equalTo(self.buttonHeight)
             }
         }
     }

@@ -43,7 +43,6 @@ extension SendPaymentAmount {
         
         func set(amount: Decimal?, asset: String?) {
             self.amountEditingContext?.setValue(amount)
-            //            self.assetButton.setTitle(asset, for: .normal)
             self.assetButton.setAttributedTitle(
                 NSAttributedString(
                     string: asset ?? "",
@@ -125,9 +124,9 @@ extension SendPaymentAmount {
             }
             
             self.amountField.snp.makeConstraints { (make) in
+                make.top.bottom.equalToSuperview().inset(5.0)
                 make.leading.equalToSuperview().inset(10.0)
                 make.trailing.greaterThanOrEqualTo(self.snp.centerX)
-                make.top.bottom.equalToSuperview().inset(5.0)
             }
         }
     }

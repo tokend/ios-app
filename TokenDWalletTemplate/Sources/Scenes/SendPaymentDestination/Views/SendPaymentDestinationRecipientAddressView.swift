@@ -19,7 +19,6 @@ extension SendPaymentDestination {
         
         var onAddressEdit: ((_ address: String?) -> Void)?
         var onQRAction: (() -> Void)?
-        var onSelectAccount: (() -> Void)?
         
         // MARK: - Private properties
         
@@ -27,7 +26,6 @@ extension SendPaymentDestination {
         private let scanQRButton: UIButton = UIButton(type: .custom)
         private let addressField: UITextField = UITextField()
         private let separatorLine: UIView = UIView()
-        private let selectAccountView: UIView = UIView()
         
         private let disposeBag = DisposeBag()
         
@@ -52,7 +50,6 @@ extension SendPaymentDestination {
             self.setupSeparatorLine()
             self.setupScanQRButton()
             self.setupAddressField()
-            self.setupSelectAccountView()
             self.setupLayout()
         }
         
@@ -97,29 +94,6 @@ extension SendPaymentDestination {
                 .disposed(by: self.disposeBag)
         }
         
-        private func setupSelectAccountView() {
-            self.selectAccountView.backgroundColor = Theme.Colors.contentBackgroundColor
-            
-            let selectButton = UIButton(type: .custom)
-            selectButton.setTitleColor(Theme.Colors.accentColor, for: .normal)
-            selectButton.backgroundColor = UIColor.clear
-            
-            selectButton.setTitle(Localized(.select_contact), for: .normal)
-            self.selectAccountView.addSubview(selectButton)
-            selectButton.snp.makeConstraints { (make) in
-                make.edges.equalToSuperview()
-            }
-            
-            selectButton
-                .rx
-                .controlEvent(.touchUpInside)
-                .asDriver()
-                .drive(onNext: { [weak self] in
-                    self?.onSelectAccount?()
-                })
-                .disposed(by: self.disposeBag)
-        }
-        
         private func setupLayout() {
             self.addSubview(self.addressField)
             self.addSubview(self.scanQRButton)
@@ -150,13 +124,6 @@ extension SendPaymentDestination {
                 make.bottom.equalToSuperview().inset(20.0)
                 make.height.equalTo(1.0)
             }
-            
-            self.selectAccountView.frame = CGRect(
-                x: 0.0, y: 0.0,
-                width: min(UIScreen.main.bounds.width, UIScreen.main.bounds.height),
-                height: 44.0
-            )
-            self.selectAccountView.autoresizingMask = [.flexibleWidth]
         }
     }
 }
