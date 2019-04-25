@@ -61,6 +61,7 @@ public extension SendPaymentDestination.Model {
         let recipientAddressFieldPlaceholder: String
         let actionTitle: String
         let actionButtonTitle: NSAttributedString
+        let contactsAreHidden: Bool
     }
 }
 
@@ -194,7 +195,8 @@ extension SendPaymentDestination.Model.ViewConfig {
         return SendPaymentDestination.Model.ViewConfig(
             recipientAddressFieldPlaceholder: Localized(.enter_account_id_or_email),
             actionTitle: Localized(.enter_account_id_or_email),
-            actionButtonTitle: actionButtonTitle
+            actionButtonTitle: actionButtonTitle,
+            contactsAreHidden: false
         )
     }
     
@@ -209,7 +211,8 @@ extension SendPaymentDestination.Model.ViewConfig {
         return SendPaymentDestination.Model.ViewConfig(
             recipientAddressFieldPlaceholder: Localized(.enter_destination_address),
             actionTitle: Localized(.enter_destination_address),
-            actionButtonTitle: actionButtonTitle
+            actionButtonTitle: actionButtonTitle,
+            contactsAreHidden: true
         )
     }
 }

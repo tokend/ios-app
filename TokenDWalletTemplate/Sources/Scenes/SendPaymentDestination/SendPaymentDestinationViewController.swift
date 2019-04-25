@@ -112,6 +112,12 @@ extension SendPaymentDestination {
         }
         
         private func setupTableView() {
+            guard let viewConfig = self.viewConfig,
+                !viewConfig.contactsAreHidden else {
+                    self.tableView.isHidden = true
+                    return
+            }
+            
             self.tableView.backgroundColor = Theme.Colors.contentBackgroundColor
             self.tableView.register(classes: [
                 SendPaymentDestination.ContactCell.ViewModel.self

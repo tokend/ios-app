@@ -153,28 +153,39 @@ extension SendPaymentDestination {
             )
             self.presenter.presentWithdrawAction(response: .succeeded(withdrawModel))
         }
+        
+        private func fetchContacts() {
+            self.contactsFetcher.fetchContacts(completion: { [weak self] (result) in
+                let response: Event.ContactsUpdated.Response
+                switch result {
+                    
+                case .failure(let error):
+                    response = .error(error.localizedDescription)
+                    
+                case .success(let cells):
+                    let section = Model.SectionModel(
+                        title: Localized(.contacts),
+                        cells: cells
+                    )
+                    response = .sections([section])
+                }
+                self?.presenter.presentContactsUpdated(response: response)
+            })
+        }
     }
 }
 
 extension SendPaymentDestination.Interactor: SendPaymentDestination.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
-        self.contactsFetcher.fetchContacts(completion: { [weak self] (result) in
-            let response: Event.ContactsUpdated.Response
-            switch result {
-                
-            case .failure(let error):
-                response = .error(error.localizedDescription)
-                
-            case .success(let cells):
-                let section = Model.SectionModel(
-                    title: Localized(.contacts),
-                    cells: cells
-                )
-                response = .sections([section])
-            }
-            self?.presenter.presentContactsUpdated(response: response)
-        })
+        switch self.sceneModel.operation {
+            
+        case .handleSend:
+            self.fetchContacts()
+            
+        case .handleWithdraw:
+            break
+        }
     }
     
     public func onEditRecipientAddress(request: Event.EditRecipientAddress.Request) {
