@@ -148,9 +148,18 @@ class LaunchFlowController: BaseFlowController {
     
     private func showRecoveryScreen() {
         let vc = self.setupRecoveryScreen(onSuccess: { [weak self] in
-            self?.navigationController.popViewController(true)
+            guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                return
+            }
+            self?.showSuccessMessage(
+                title: Localized(.success),
+                message: Localized(.account_has_been_successfully_recovered),
+                completion: {
+                    self?.navigationController.popViewController(true)
+            },
+                presentViewController: present
+            )
         })
-        
         self.navigationController.pushViewController(vc, animated: true)
     }
     

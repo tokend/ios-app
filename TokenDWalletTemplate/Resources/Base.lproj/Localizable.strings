@@ -2,6 +2,7 @@
 
 "access_revoked_sign_in_required" = "Access revoked.\nSign In required.";
 "account" = "ACCOUNT";
+"account_has_been_successfully_recovered" = "Account has been successfully recovered";
 "account_id" = "Account ID";
 "account_id_or_email_colon" = "Account ID or email:";
 "acknowledgements" = "Acknowledgements";
@@ -264,6 +265,7 @@
 "not_enough_money_on_balance_replace_asset" = "asset";
 "offer" = "Offer";
 "offers_cap" = "OFFERS";
+"ok" = "OK";
 "old_password" = "Old Password";
 "old_password_lowercased" = "old password";
 "one_equals" = "1 $(base_asset) = $(price) $(quote_asset)";

@@ -5,6 +5,7 @@ import Foundation
 enum LocKey: String {
     case access_revoked_sign_in_required
     case account
+    case account_has_been_successfully_recovered
     case account_id
     case account_id_or_email_colon
     case acknowledgements
@@ -267,6 +268,7 @@ enum LocKey: String {
     case not_enough_money_on_balance_replace_asset
     case offer
     case offers_cap
+    case ok
     case old_password
     case old_password_lowercased
     case one_equals

@@ -191,7 +191,17 @@ class SettingsFlowController: BaseSignedInFlowController {
     
     private func showChangePasswordScreen() {
         let vc = self.setupChangePasswordScreen(onSuccess: { [weak self] in
-            self?.navigationController.popViewController(true)
+            guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                return
+            }
+            self?.showSuccessMessage(
+                title: Localized(.success),
+                message: Localized(.account_has_been_successfully_recovered),
+                completion: { [weak self] in
+                    self?.navigationController.popViewController(true)
+                },
+                presentViewController: present
+            )
         })
         
         self.navigationController.pushViewController(vc, animated: true)

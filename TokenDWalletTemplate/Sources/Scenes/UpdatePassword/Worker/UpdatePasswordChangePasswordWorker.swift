@@ -77,6 +77,7 @@ extension UpdatePassword {
                     switch result {
                         
                     case .failure(let error):
+                        stopLoading()
                         completion(.failed(.submitError(error)))
                         
                     case .success(let components):

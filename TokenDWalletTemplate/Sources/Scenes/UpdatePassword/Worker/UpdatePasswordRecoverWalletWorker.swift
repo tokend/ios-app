@@ -53,11 +53,11 @@ extension UpdatePassword {
                 onSignRequest: onSignRequest,
                 networkInfo: networkInfo,
                 completion: { [weak self] (result) in
-                    stopLoading()
 
                     switch result {
                         
                     case .failure(let error):
+                        stopLoading()
                         completion(.failed(.submitError(error)))
                         
                     case .success(let components):
