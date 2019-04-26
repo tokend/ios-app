@@ -196,7 +196,7 @@ class SettingsFlowController: BaseSignedInFlowController {
             }
             self?.showSuccessMessage(
                 title: Localized(.success),
-                message: Localized(.account_has_been_successfully_recovered),
+                message: Localized(.password_has_been_successfully_changed),
                 completion: { [weak self] in
                     self?.navigationController.popViewController(true)
                 },
@@ -213,13 +213,15 @@ class SettingsFlowController: BaseSignedInFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.ChangePasswordWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.managersController.keychainManager,
             userDataManager: self.managersController.userDataManager,
             userDataProvider: self.userDataProvider,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()

@@ -288,6 +288,9 @@
 "paid" = "Paid";
 "password" = "Password";
 "passwords_dont_match" = "Passwords don't match";
+"password_has_been_successfully_changed" = "Password has been successfully changed";
+"password_should_contain_at_least_characters" = "Password should contain at least $(minimal_length) characters";
+"password_should_contain_at_least_characters_replace_minimal_length" = "minimal_length";
 "pay_recipients_fee" = "Pay recipient's fee";
 "payment" = "Payment";
 "payment_amount" = "Payment amount";

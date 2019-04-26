@@ -169,12 +169,14 @@ class LaunchFlowController: BaseFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.RecoverWalletWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.keychainManager,
             userDataManager: self.userDataManager,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()
@@ -369,6 +371,8 @@ class LaunchFlowController: BaseFlowController {
                 self?.submittedEmail = email
         })
         
+        let passwordValidator = PasswordValidator()
+        
         let routing = RegisterScene.Routing(
             showProgress: { [weak self] in
                 self?.navigationController.showProgress()
@@ -421,6 +425,7 @@ class LaunchFlowController: BaseFlowController {
             viewController: vc,
             sceneModel: sceneModel,
             registerWorker: registrationWorker,
+            passwordValidator: passwordValidator,
             routing: routing
         )
         
