@@ -2,7 +2,7 @@ import UIKit
 
 protocol RegisterScenePresentationLogic {
     typealias Event = RegisterScene.Event
-
+    
     func presentSetupScene(response: Event.SetupScene.Response)
     func presentScanServerInfoSync(response: Event.ScanServerInfoSync.Response)
     func presentSignAction(response: Event.SignAction.Response)
@@ -233,6 +233,16 @@ extension RegisterScene {
                 error = SignError(
                     message: Localized(.enter_password),
                     type: .wrongPassword
+                )
+                
+            case .passwordIsTooShort(let minimalLength):
+                error = SignError(
+                    message: Localized(
+                        .password_should_contain_at_least_characters,
+                        replace: [
+                            .password_should_contain_at_least_characters_replace_minimal_length: "\(minimalLength)"
+                        ]),
+                    type: .passwordIsTooShort
                 )
                 
             case .passwordsDontMatch:

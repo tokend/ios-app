@@ -291,6 +291,9 @@ enum LocKey: String {
     case paid
     case password
     case passwords_dont_match
+    case password_has_been_successfully_changed
+    case password_should_contain_at_least_characters
+    case password_should_contain_at_least_characters_replace_minimal_length
     case pay_recipients_fee
     case payment
     case payment_amount

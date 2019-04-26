@@ -150,6 +150,11 @@ extension UpdatePassword.ChangePasswordWorker: UpdatePassword.SubmitPasswordHand
             return
         }
         
+        guard newPassword.count >= 6 else {
+            completion(.failed(.passwordIsTooShort(minimalLength: 6)))
+            return
+        }
+        
         guard let confirmPassword = self.getConfirmPassword(fields: fields), confirmPassword.count > 0 else {
             completion(.failed(.emptyField(.confirmPassword)))
             return

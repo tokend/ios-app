@@ -251,6 +251,12 @@ extension RegisterScene {
                 return
             }
             
+            guard password.count >= 6 else {
+                let response: Event.SignAction.Response = .failed(.passwordIsTooShort(minimalLength: 6))
+                self.presenter.presentSignAction(response: response)
+                return
+            }
+            
             guard let confirmPassword = self.getConfirmPassword(), confirmPassword.count > 0 else {
                 let response: Event.SignAction.Response = .failed(.emptyConfirmPassword)
                 self.presenter.presentSignAction(response: response)

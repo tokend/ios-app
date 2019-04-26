@@ -196,7 +196,7 @@ class SettingsFlowController: BaseSignedInFlowController {
             }
             self?.showSuccessMessage(
                 title: Localized(.success),
-                message: Localized(.account_has_been_successfully_recovered),
+                message: Localized(.password_has_been_successfully_changed),
                 completion: { [weak self] in
                     self?.navigationController.popViewController(true)
                 },

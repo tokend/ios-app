@@ -75,6 +75,16 @@ extension UpdatePassword {
                     error: submitActionError
                 )
                 
+            case .passwordIsTooShort(let minimalLength):
+                error = SubmitError(
+                    message: Localized(
+                        .password_should_contain_at_least_characters,
+                        replace: [
+                            .password_should_contain_at_least_characters_replace_minimal_length: "\(minimalLength)"
+                        ]),
+                    error: submitActionError
+                )
+                
             case .passwordsDontMatch:
                 error = SubmitError(
                     message: Localized(.passwords_dont_match),
