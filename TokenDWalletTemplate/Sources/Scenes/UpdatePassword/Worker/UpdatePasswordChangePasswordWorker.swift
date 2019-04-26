@@ -150,8 +150,12 @@ extension UpdatePassword.ChangePasswordWorker: UpdatePassword.SubmitPasswordHand
             return
         }
         
-        guard newPassword.count >= 6 else {
-            completion(.failed(.passwordIsTooShort(minimalLength: 6)))
+        guard PasswordValidator.canBePassword(password: newPassword) else {
+            completion(.failed(
+                .passwordIsTooShort(
+                    minimalLength: PasswordValidator.minimalLength
+                ))
+            )
             return
         }
         

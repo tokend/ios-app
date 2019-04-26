@@ -317,6 +317,7 @@
 		DB593842226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB593841226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift */; };
 		DB593844227095F900C8997C /* SendPaymentDestinationContactsFethcer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB593843227095F800C8997C /* SendPaymentDestinationContactsFethcer.swift */; };
 		DB5938462270A1DF00C8997C /* SendPaymentDestinationContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5938452270A1DF00C8997C /* SendPaymentDestinationContactCell.swift */; };
+		DB59386A2273192500C8997C /* PasswordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5938692273192500C8997C /* PasswordValidator.swift */; };
 		DB5A3BBE21C1554600520604 /* FeesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BB821C1554600520604 /* FeesPresenter.swift */; };
 		DB5A3BBF21C1554600520604 /* FeesRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BB921C1554600520604 /* FeesRouting.swift */; };
 		DB5A3BC021C1554600520604 /* FeesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BBA21C1554600520604 /* FeesModels.swift */; };
@@ -820,6 +821,7 @@
 		DB593841226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountTitleTextEditView.swift; sourceTree = "<group>"; };
 		DB593843227095F800C8997C /* SendPaymentDestinationContactsFethcer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationContactsFethcer.swift; sourceTree = "<group>"; };
 		DB5938452270A1DF00C8997C /* SendPaymentDestinationContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationContactCell.swift; sourceTree = "<group>"; };
+		DB5938692273192500C8997C /* PasswordValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordValidator.swift; sourceTree = "<group>"; };
 		DB5A3BB821C1554600520604 /* FeesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesPresenter.swift; sourceTree = "<group>"; };
 		DB5A3BB921C1554600520604 /* FeesRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesRouting.swift; sourceTree = "<group>"; };
 		DB5A3BBA21C1554600520604 /* FeesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesModels.swift; sourceTree = "<group>"; };
@@ -2101,6 +2103,14 @@
 			path = Workers;
 			sourceTree = "<group>";
 		};
+		DB5938682273190A00C8997C /* PasswordValidator */ = {
+			isa = PBXGroup;
+			children = (
+				DB5938692273192500C8997C /* PasswordValidator.swift */,
+			);
+			path = PasswordValidator;
+			sourceTree = "<group>";
+		};
 		DB5A3BB721C1551D00520604 /* Fees */ = {
 			isa = PBXGroup;
 			children = (
@@ -2352,6 +2362,7 @@
 				7FC88B7D2162552100BED021 /* ChartCardValueFormatter */,
 				7FEA09BA2134462E0037F25F /* ClientRedirections */,
 				E92F1BD2213869CD00D4695E /* FeeLoader */,
+				DB5938682273190A00C8997C /* PasswordValidator */,
 				E980D86320D1287400C53841 /* QRCodeGenerator */,
 				E9BCDD7421243C7C00EB0DF2 /* RateProvider */,
 				7FF896ED21AEBC79001A5D48 /* TermsInfoProvider */,
@@ -3163,6 +3174,7 @@
 				7FA0115121C9651F00CA5586 /* MarkdownViewerInteractor.swift in Sources */,
 				7F749618226081E80065EE8E /* TradeOffersModels.swift in Sources */,
 				E99D213720CB144E005023D7 /* AssetsRepo.swift in Sources */,
+				DB59386A2273192500C8997C /* PasswordValidator.swift in Sources */,
 				DB990C3221E4E86600D041BE /* RegisterSceneSignUpBuilderProtocol.swift in Sources */,
 				7FA02BD521590E16005C1BE4 /* SalesInvestedAmountFormatter.swift in Sources */,
 				E9BCDD622121F64500EB0DF2 /* DashboardPendingOffersPreviewPlugInInteractor.swift in Sources */,

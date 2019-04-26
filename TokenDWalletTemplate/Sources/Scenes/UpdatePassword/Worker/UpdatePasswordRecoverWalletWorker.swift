@@ -53,7 +53,7 @@ extension UpdatePassword {
                 onSignRequest: onSignRequest,
                 networkInfo: networkInfo,
                 completion: { [weak self] (result) in
-
+                    
                     switch result {
                         
                     case .failure(let error):
@@ -135,8 +135,12 @@ extension UpdatePassword.RecoverWalletWorker: UpdatePassword.SubmitPasswordHandl
             return
         }
         
-        guard newPassword.count >= 6 else {
-            completion(.failed(.passwordIsTooShort(minimalLength: 6)))
+        guard PasswordValidator.canBePassword(password: newPassword) else {
+            completion(.failed(
+                .passwordIsTooShort(
+                    minimalLength: PasswordValidator.minimalLength
+                ))
+            )
             return
         }
         
