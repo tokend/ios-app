@@ -157,7 +157,7 @@ extension SaleDetails {
                     return false
                 }
                 
-                let valueFormatter = DecimalFormatter()
+                let valueFormatter = PrecisedFormatter()
                 valueFormatter.emptyZeroValue = true
                 
                 self.amountEditingContext = TextEditingContext(

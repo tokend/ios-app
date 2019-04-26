@@ -3,7 +3,7 @@ import UIKit
 public class SharedAmountFormatter: NSObject {
     
     // TODO: Refactor
-    public static var precision: Int = 6
+    public static var maxFractionDigits: Int = 6
     
     // MARK: - Private properties
     
@@ -24,12 +24,12 @@ public class SharedAmountFormatter: NSObject {
     }
     
     public func assetAmountToString(_ amount: Decimal) -> String {
-        self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
+        self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
         return self.assetNumberFormatter.string(from: amount) ?? "\(amount)"
     }
     
     public func percentToString(value: Decimal) -> String {
-        self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
+        self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
         return self.assetNumberFormatter.string(from: value) ?? "\(value)"
     }
     
@@ -46,7 +46,7 @@ public class SharedAmountFormatter: NSObject {
         } else {
             numberFormatter = self.assetNumberFormatter
         }
-        numberFormatter.maximumFractionDigits = SharedAmountFormatter.precision
+        numberFormatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
         
         if abs(decimal) < 1000 {
             let formatted = numberFormatter.string(from: decimal)
@@ -73,7 +73,7 @@ public class SharedAmountFormatter: NSObject {
         formatter.groupingSeparator = ","
         formatter.numberStyle = .decimal
         formatter.maximumIntegerDigits = 30
-        formatter.maximumFractionDigits = SharedAmountFormatter.precision
+        formatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
         formatter.roundingMode = .halfDown
         formatter.minimumIntegerDigits = 1
         

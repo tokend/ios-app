@@ -82,7 +82,7 @@ extension CreateOffer {
                 _ = fieldView.resignFirstResponder()
                 return false
             }
-            let valueFormatter = DecimalFormatter()
+            let valueFormatter = PrecisedFormatter()
             valueFormatter.emptyZeroValue = true
             
             self.amountEditingContext = TextEditingContext(

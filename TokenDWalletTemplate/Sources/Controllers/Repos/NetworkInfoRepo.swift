@@ -52,10 +52,10 @@ class NetworkInfoRepo {
         self.api.requestNetworkInfo { [weak self] (result) in
             switch result {
             case .succeeded(let infoModel):
-                // TODO: Refactor
-                let precision = Int(infoModel.precision)
-                SharedAmountFormatter.precision = precision
-                DecimalFormatter.precision = precision
+                let maxFractionDigits = Int(log10(Double(infoModel.precision)))
+                SharedAmountFormatter.maxFractionDigits = maxFractionDigits
+                DecimalFormatter.maxFractionDigits = maxFractionDigits
+                PrecisedFormatter.precision = infoModel.precision
                 
                 self?.networkInfo = infoModel
                 self?.completionBlocks.forEach({ (block) in
