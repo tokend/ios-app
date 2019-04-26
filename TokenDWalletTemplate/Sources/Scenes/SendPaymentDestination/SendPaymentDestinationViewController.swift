@@ -32,6 +32,8 @@ extension SendPaymentDestination {
         
         private var sections: [SendPaymentDestination.Model.SectionViewModel] = []
         
+        private var viewDidAppear: Bool = false
+        
         // MARK: -
         
         deinit {
@@ -76,6 +78,12 @@ extension SendPaymentDestination {
             self.setupLayout()
             
             self.observeKeyboard()
+        }
+        
+        public override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            
+            self.viewDidAppear = true
         }
         
         // MARK: - Private
@@ -170,9 +178,11 @@ extension SendPaymentDestination {
                         }
                     }
                     
-                    UIView.animate(withKeyboardAttributes: attributes, animations: {
-                        self.view.layoutIfNeeded()
-                    })
+                    if self.viewDidAppear {
+                        UIView.animate(withKeyboardAttributes: attributes, animations: {
+                            self.view.layoutIfNeeded()
+                        })
+                    }
             })
             KeyboardController.shared.add(observer: keyboardObserver)
         }
