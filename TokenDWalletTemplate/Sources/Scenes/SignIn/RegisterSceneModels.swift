@@ -270,7 +270,7 @@ extension RegisterScene.Event.SignAction.Response {
         case emptyConfirmPassword
         case emptyEmail
         case emptyPassword
-        case passwordIsTooShort(String)
+        case passwordInvalid(String)
         case passwordsDontMatch
         case signInRequestError(RegisterScene.RegisterWorker.SignInResult.SignError)
         case signUpRequestError(RegisterScene.RegisterWorker.SignUpResult.SignError)
@@ -287,7 +287,7 @@ extension RegisterScene.Event.SignAction.ViewModel {
             case failedToSaveAccount
             case failedToSaveNetwork
             case otherError
-            case passwordIsTooShort
+            case passwordInvalid
             case passwordsDontMatch
             case termsNotAgreed
             case tfaFailed

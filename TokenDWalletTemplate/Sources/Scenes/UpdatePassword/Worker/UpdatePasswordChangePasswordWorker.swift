@@ -156,7 +156,7 @@ extension UpdatePassword.ChangePasswordWorker: UpdatePassword.SubmitPasswordHand
         switch passwordValidationResult {
             
         case .error(let message):
-            completion(.failed(.passwordIsTooShort(message)))
+            completion(.failed(.passwordInvalid(message)))
             return
             
         default:

@@ -75,7 +75,7 @@ extension UpdatePassword {
                     error: submitActionError
                 )
                 
-            case .passwordIsTooShort(let message):
+            case .passwordInvalid(let message):
                 error = SubmitError(
                     message: message,
                     error: submitActionError

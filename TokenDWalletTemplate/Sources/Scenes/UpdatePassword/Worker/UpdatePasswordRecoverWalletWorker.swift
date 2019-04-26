@@ -139,7 +139,7 @@ extension UpdatePassword.RecoverWalletWorker: UpdatePassword.SubmitPasswordHandl
         switch passwordValidationResult {
             
         case .error(let message):
-            completion(.failed(.passwordIsTooShort(message)))
+            completion(.failed(.passwordInvalid(message)))
             return
             
         default:

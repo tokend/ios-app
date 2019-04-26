@@ -235,10 +235,10 @@ extension RegisterScene {
                     type: .wrongPassword
                 )
                 
-            case .passwordIsTooShort(let message):
+            case .passwordInvalid(let message):
                 error = SignError(
                     message: message,
-                    type: .passwordIsTooShort
+                    type: .passwordInvalid
                 )
                 
             case .passwordsDontMatch:

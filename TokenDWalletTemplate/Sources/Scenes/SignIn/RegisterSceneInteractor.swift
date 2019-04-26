@@ -258,7 +258,7 @@ extension RegisterScene {
             switch passwordValidationResult {
                 
             case .error(let message):
-                let response: Event.SignAction.Response = .failed(.passwordIsTooShort(message))
+                let response: Event.SignAction.Response = .failed(.passwordInvalid(message))
                 self.presenter.presentSignAction(response: response)
                 return
                 
