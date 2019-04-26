@@ -82,6 +82,7 @@ extension TradeOffers {
             let pagination = RequestPagination(.strategy(paginationStrategy))
             
             request.loadingStatus.accept(.loading)
+            
             request.cancelable = self.orderBookApiV3.requestOffers(
                 orderBookId: "0",
                 filters: filters,
@@ -100,7 +101,7 @@ extension TradeOffers {
                         
                     case .success(let document):
                         request.prevLinks = document.links
-                        self?.onOffersLoaded(
+                        self?.onItemsLoaded(
                             request: request,
                             resources: document.data,
                             shouldAppend: false
@@ -153,7 +154,7 @@ extension TradeOffers {
                         
                     case .success(let document):
                         request.prevLinks = document.links
-                        self?.onOffersLoaded(
+                        self?.onItemsLoaded(
                             request: request,
                             resources: document.data,
                             shouldAppend: true
@@ -162,13 +163,15 @@ extension TradeOffers {
             })
         }
         
-        private func onOffersLoaded(
+        private func onItemsLoaded(
             request: RequestModel,
             resources: [OrderBookEntryResource]?,
             shouldAppend: Bool
             ) {
             
-            let newOffers: [Model.Offer] = self.mapOffers(resources ?? [])
+            request.hasMoreItems = (resources?.count ?? 0) >= request.pageSize
+            
+            let newOffers: [Model.Offer] = self.mapItems(resources ?? [])
             
             if shouldAppend {
                 var prevOffers = self.getItemsValue(request.isBuy)
@@ -177,16 +180,14 @@ extension TradeOffers {
             } else {
                 request.items.accept(newOffers)
             }
-            
-            request.hasMoreItems = (resources?.count ?? 0) >= request.pageSize
         }
         
-        private func mapOffers(_ resources: [OrderBookEntryResource]) -> [Model.Offer] {
-            let offers: [Model.Offer] = resources.compactMap { (resource) -> Model.Offer? in
-                return resource.offer
+        private func mapItems(_ items: [OrderBookEntryResource]) -> [Model.Offer] {
+            let models: [Model.Offer] = items.compactMap { (item) -> Model.Offer? in
+                return item.offer
             }
             
-            return offers
+            return models
         }
     }
 }

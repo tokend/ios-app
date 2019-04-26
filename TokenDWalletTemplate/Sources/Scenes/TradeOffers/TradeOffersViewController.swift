@@ -93,7 +93,8 @@ extension TradeOffers {
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request(
-                offersPageSize: 5
+                offersPageSize: 20,
+                tradesPageSize: 20
             )
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)

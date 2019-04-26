@@ -71,7 +71,7 @@ extension TradeOffers {
             
         }
         
-        private func observeTrades() {
+        private func observeTrades(pageSize: Int) {
             self.tradesFetcher.observeErrorStatus()
                 .subscribe(onNext: { [weak self] (error) in
                     let response = Event.TradesDidUpdate.Response.error(error)
@@ -89,7 +89,7 @@ extension TradeOffers {
                 })
                 .disposed(by: self.disposeBag)
             
-            self.tradesFetcher.observeItems()
+            self.tradesFetcher.observeItems(pageSize: pageSize)
                 .subscribe(onNext: { [weak self] (trades) in
                     self?.sceneModel.trades = trades
                     self?.onTradesDidUpdate()
@@ -250,7 +250,7 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
         
         self.observeOffers(pageSize: request.offersPageSize)
         self.observeCharts()
-        self.observeTrades()
+        self.observeTrades(pageSize: request.tradesPageSize)
     }
     
     public func onViewWillAppear(request: Event.ViewWillAppear.Request) {

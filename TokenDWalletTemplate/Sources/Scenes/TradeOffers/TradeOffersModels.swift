@@ -66,7 +66,7 @@ public enum TradeOffers {
             }
         }
         
-        public struct Trade {
+        public struct Trade: Equatable {
             
             public let amount: Decimal
             public let price: Decimal
@@ -242,9 +242,15 @@ extension TradeOffers.Event {
         public struct Request {
             
             public let offersPageSize: Int
+            public let tradesPageSize: Int
             
-            public init(offersPageSize: Int) {
+            public init(
+                offersPageSize: Int,
+                tradesPageSize: Int
+                ) {
+                
                 self.offersPageSize = offersPageSize
+                self.tradesPageSize = tradesPageSize
             }
         }
         

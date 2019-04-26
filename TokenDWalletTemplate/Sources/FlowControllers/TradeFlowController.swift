@@ -108,7 +108,9 @@ class TradeFlowController: BaseSignedInFlowController {
         )
         
         let tradesFetcher = TradeOffers.TradesFetcher(
-            orderBookApi: self.flowControllerStack.api.orderBookApi
+            orderBookApi: self.flowControllerStack.api.orderBookApi,
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset
         )
         
         let routing = TradeOffers.Routing(
