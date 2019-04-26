@@ -213,13 +213,15 @@ class SettingsFlowController: BaseSignedInFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.ChangePasswordWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.managersController.keychainManager,
             userDataManager: self.managersController.userDataManager,
             userDataProvider: self.userDataProvider,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()

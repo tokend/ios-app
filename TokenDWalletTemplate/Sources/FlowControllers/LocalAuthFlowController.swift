@@ -141,6 +141,8 @@ class LocalAuthFlowController: BaseFlowController {
             keychainManager: self.keychainManager
         )
         
+        let passwordValidator = PasswordValidator()
+        
         let routing = RegisterScene.Routing(
             showProgress: { [weak self] in
                 self?.navigationController.showProgress()
@@ -186,6 +188,7 @@ class LocalAuthFlowController: BaseFlowController {
             viewController: vc,
             sceneModel: sceneModel,
             registerWorker: localAuthWorker,
+            passwordValidator: passwordValidator,
             routing: routing
         )
         
@@ -218,12 +221,14 @@ class LocalAuthFlowController: BaseFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.RecoverWalletWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.keychainManager,
             userDataManager: self.userDataManager,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()

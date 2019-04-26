@@ -29,18 +29,21 @@ extension RegisterScene {
         
         private let presenter: PresentationLogic
         private let registerWorker: RegisterWorker
+        private let passwordValidator: PasswordValidatorProtocol
         
         // MARK: -
         
         init(
             presenter: PresentationLogic,
             sceneModel: Model.SceneModel,
-            registerWorker: RegisterWorker
+            registerWorker: RegisterWorker,
+            passwordValidator: PasswordValidatorProtocol
             ) {
             
             self.presenter = presenter
             self.sceneModel = sceneModel
             self.registerWorker = registerWorker
+            self.passwordValidator = passwordValidator
         }
         
         // MARK: - Private
@@ -251,14 +254,16 @@ extension RegisterScene {
                 return
             }
             
-            guard PasswordValidator.canBePassword(password: password) else {
-                let response: Event.SignAction.Response = .failed(
-                    .passwordIsTooShort(
-                        minimalLength: PasswordValidator.minimalLength
-                    )
-                )
+            let passwordValidationResult = self.passwordValidator.validate(password: password)
+            switch passwordValidationResult {
+                
+            case .error(let message):
+                let response: Event.SignAction.Response = .failed(.passwordIsTooShort(message))
                 self.presenter.presentSignAction(response: response)
                 return
+                
+            default:
+                break
             }
             
             guard let confirmPassword = self.getConfirmPassword(), confirmPassword.count > 0 else {

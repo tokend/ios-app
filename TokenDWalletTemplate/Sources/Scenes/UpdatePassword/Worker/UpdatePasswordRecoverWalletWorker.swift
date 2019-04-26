@@ -135,13 +135,15 @@ extension UpdatePassword.RecoverWalletWorker: UpdatePassword.SubmitPasswordHandl
             return
         }
         
-        guard PasswordValidator.canBePassword(password: newPassword) else {
-            completion(.failed(
-                .passwordIsTooShort(
-                    minimalLength: PasswordValidator.minimalLength
-                ))
-            )
+        let passwordValidationResult = self.passwordValidator.validate(password: newPassword)
+        switch passwordValidationResult {
+            
+        case .error(let message):
+            completion(.failed(.passwordIsTooShort(message)))
             return
+            
+        default:
+            break
         }
         
         guard let confirmPassword = self.getConfirmPassword(fields: fields), confirmPassword.count > 0 else {

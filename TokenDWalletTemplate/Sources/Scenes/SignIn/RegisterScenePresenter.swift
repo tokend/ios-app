@@ -235,13 +235,9 @@ extension RegisterScene {
                     type: .wrongPassword
                 )
                 
-            case .passwordIsTooShort(let minimalLength):
+            case .passwordIsTooShort(let message):
                 error = SignError(
-                    message: Localized(
-                        .password_should_contain_at_least_characters,
-                        replace: [
-                            .password_should_contain_at_least_characters_replace_minimal_length: "\(minimalLength)"
-                        ]),
+                    message: message,
                     type: .passwordIsTooShort
                 )
                 

@@ -18,7 +18,8 @@ extension UpdatePassword {
             userDataManager: UserDataManagerProtocol,
             userDataProvider: UserDataProviderProtocol,
             networkInfoFetcher: NetworkInfoFetcher,
-            updateRequestBuilder: UpdatePasswordRequestBuilderProtocol
+            updateRequestBuilder: UpdatePasswordRequestBuilderProtocol,
+            passwordValidator: PasswordValidatorProtocol
             ) {
             
             self.userDataProvider = userDataProvider
@@ -28,7 +29,8 @@ extension UpdatePassword {
                 keychainManager: keychainManager,
                 userDataManager: userDataManager,
                 networkInfoFetcher: networkInfoFetcher,
-                updateRequestBuilder: updateRequestBuilder
+                updateRequestBuilder: updateRequestBuilder,
+                passwordValidator: passwordValidator
             )
         }
         
@@ -150,13 +152,15 @@ extension UpdatePassword.ChangePasswordWorker: UpdatePassword.SubmitPasswordHand
             return
         }
         
-        guard PasswordValidator.canBePassword(password: newPassword) else {
-            completion(.failed(
-                .passwordIsTooShort(
-                    minimalLength: PasswordValidator.minimalLength
-                ))
-            )
+        let passwordValidationResult = self.passwordValidator.validate(password: newPassword)
+        switch passwordValidationResult {
+            
+        case .error(let message):
+            completion(.failed(.passwordIsTooShort(message)))
             return
+            
+        default:
+            break
         }
         
         guard let confirmPassword = self.getConfirmPassword(fields: fields), confirmPassword.count > 0 else {

@@ -270,7 +270,7 @@ extension RegisterScene.Event.SignAction.Response {
         case emptyConfirmPassword
         case emptyEmail
         case emptyPassword
-        case passwordIsTooShort(minimalLength: Int)
+        case passwordIsTooShort(String)
         case passwordsDontMatch
         case signInRequestError(RegisterScene.RegisterWorker.SignInResult.SignError)
         case signUpRequestError(RegisterScene.RegisterWorker.SignUpResult.SignError)

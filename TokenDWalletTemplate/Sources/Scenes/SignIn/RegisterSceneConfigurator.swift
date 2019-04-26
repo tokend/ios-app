@@ -7,6 +7,7 @@ extension RegisterScene {
             viewController: ViewController,
             sceneModel: Model.SceneModel,
             registerWorker: RegisterWorker,
+            passwordValidator: PasswordValidatorProtocol,
             routing: Routing?
             ) {
             
@@ -15,7 +16,8 @@ extension RegisterScene {
             let interactor = Interactor(
                 presenter: presenter,
                 sceneModel: sceneModel,
-                registerWorker: registerWorker
+                registerWorker: registerWorker,
+                passwordValidator: passwordValidator
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(interactorDispatch: interactorDispatch, routing: routing)

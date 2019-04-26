@@ -85,7 +85,7 @@ extension UpdatePassword.Event.SubmitAction.Response {
     enum ErrorModel {
         case emptyField(UpdatePassword.Model.FieldType)
         case incorrectSeed
-        case passwordIsTooShort(minimalLength: Int)
+        case passwordIsTooShort(String)
         case passwordsDontMatch
         case submitError(UpdatePassword.SubmitPasswordHandler.Result.SubmitError)
         case networkInfoFetchFailed(Error)
