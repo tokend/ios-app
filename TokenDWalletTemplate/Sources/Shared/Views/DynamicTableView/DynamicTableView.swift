@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 public class DynamicTableView: UIView {
     
@@ -10,9 +12,20 @@ public class DynamicTableView: UIView {
         }
     }
     
+    public var pullToRefreshEnabled: Bool = false {
+        didSet {
+            self.setPullToRefresh(enabled: self.pullToRefreshEnabled)
+        }
+    }
+    
+    public var onPullToRefresh: (() -> Void)?
+    
     // MARK: - Private properties
     
     private let tableView: UITableView = UITableView()
+    private var refreshControl: UIRefreshControl?
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: -
     
@@ -38,6 +51,16 @@ public class DynamicTableView: UIView {
         self.tableView.reloadData()
     }
     
+    // MARK: - Public
+    
+    public func beginRefreshing() {
+        self.refreshControl?.beginRefreshing()
+    }
+    
+    public func endRefreshing() {
+        self.refreshControl?.endRefreshing()
+    }
+    
     // MARK: - Private
     
     private func setupTableView() {
@@ -58,6 +81,28 @@ public class DynamicTableView: UIView {
         
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
+        }
+    }
+    
+    // MARK: -
+    
+    private func setPullToRefresh(enabled: Bool) {
+        if enabled {
+            let refreshControl = UIRefreshControl()
+            
+            refreshControl.rx
+                .controlEvent(.valueChanged)
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.onPullToRefresh?()
+                })
+                .disposed(by: self.disposeBag)
+            
+            self.refreshControl = refreshControl
+            self.tableView.addSubview(refreshControl)
+        } else {
+            self.refreshControl?.removeFromSuperview()
+            self.refreshControl = nil
         }
     }
 }

@@ -10,6 +10,7 @@ public protocol TradeOffersBusinessLogic {
     func onContentTabSelected(request: Event.ContentTabSelected.Request)
     func onDidHighlightChart(request: Event.DidHighlightChart.Request)
     func onDidSelectPeriod(request: Event.DidSelectPeriod.Request)
+    func onPullToRefresh(request: Event.PullToRefresh.Request)
     func onCreateOffer(request: Event.CreateOffer.Request)
 }
 
@@ -394,6 +395,23 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
     
     public func onDidSelectPeriod(request: Event.DidSelectPeriod.Request) {
         self.selectPeriod(request.period)
+    }
+    
+    public func onPullToRefresh(request: Event.PullToRefresh.Request) {
+        switch request.tab {
+            
+        case .orderBook:
+            self.shouldUpdateOrderBook = true
+            self.updateOrderBook()
+            
+        case .chart:
+            self.shouldUpdateCharts = true
+            self.updateCharts()
+            
+        case .trades:
+            self.shouldUpdateTrades = true
+            self.updateTrades()
+        }
     }
     
     public func onCreateOffer(request: Event.CreateOffer.Request) {

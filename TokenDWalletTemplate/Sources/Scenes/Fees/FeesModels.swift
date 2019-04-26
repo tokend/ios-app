@@ -16,7 +16,18 @@ enum Fees {
         case upperBound
     }
     
-    enum Model {}
+    enum Model {
+        struct FeeModel: Equatable {
+            let asset: String
+            let feeAsset: String
+            let feeType: FeeType?
+            let subtype: Subtype?
+            let fixed: Decimal
+            let percent: Decimal
+            let lowerBound: Decimal
+            let upperBound: Decimal
+        }
+    }
     enum Event {}
 }
 
@@ -27,17 +38,6 @@ extension Fees.Model {
     struct SceneModel {
         var fees: [(asset: String, fees: [FeeModel])]
         var selectedAsset: String?
-    }
-    
-    struct FeeModel {
-        let asset: String
-        let feeAsset: String
-        let feeType: FeeType?
-        let subtype: Subtype?
-        let fixed: Decimal
-        let percent: Decimal
-        let lowerBound: Decimal
-        let upperBound: Decimal
     }
     
     enum FeeType: Int32 {
@@ -126,5 +126,36 @@ extension Fees.Event {
         struct ViewModel {
             let sections: [Model.SectionViewModel]
         }
+    }
+}
+
+extension Fees.Model.FeeModel: Comparable {
+    
+    static func < (left: Fees.Model.FeeModel, right: Fees.Model.FeeModel) -> Bool {
+        guard let leftFeeType = left.feeType else {
+            return right.feeType != nil
+        }
+        
+        guard let rightFeeType = right.feeType else {
+            return true
+        }
+        
+        guard leftFeeType.rawValue == rightFeeType.rawValue else {
+            return leftFeeType.rawValue < rightFeeType.rawValue
+        }
+        
+        guard let leftFeeSubType = left.subtype else {
+            return right.subtype != nil
+        }
+        
+        guard let rightFeeSubType = right.subtype else {
+            return true
+        }
+        
+        guard leftFeeSubType.rawValue == rightFeeSubType.rawValue else {
+            return leftFeeSubType.rawValue < rightFeeSubType.rawValue
+        }
+        
+        return left.lowerBound < right.lowerBound
     }
 }

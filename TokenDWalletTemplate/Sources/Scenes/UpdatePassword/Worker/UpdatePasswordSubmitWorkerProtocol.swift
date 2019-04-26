@@ -8,7 +8,7 @@ enum UpdatePasswordSubmitResult {
 }
 
 protocol UpdatePasswordSubmitWorkerProtocol {
-    typealias Result = UpdatePasswordSubmitResult
+    typealias Result = UpdatePasswordSubmitResult 
     
     func submitFields(
         _ fields: [UpdatePassword.Model.Field],

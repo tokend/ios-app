@@ -2,26 +2,24 @@ import Foundation
 
 protocol SendPaymentPresentationLogic {
     
-    typealias Event = SendPayment.Event
+    typealias Event = SendPaymentAmount.Event
     
     func presentViewDidLoad(response: Event.ViewDidLoad.Response)
     func presentLoadBalances(response: Event.LoadBalances.Response)
     func presentSelectBalance(response: Event.SelectBalance.Response)
     func presentBalanceSelected(response: Event.BalanceSelected.Response)
-    func presentSelectedContact(response: Event.SelectedContact.Response)
-    func presentScanRecipientQRAddress(response: Event.ScanRecipientQRAddress.Response)
     func presentEditAmount(response: Event.EditAmount.Response)
     func presentPaymentAction(response: Event.PaymentAction.Response)
     func presentWithdrawAction(response: Event.WithdrawAction.Response)
 }
 
-extension SendPayment {
+extension SendPaymentAmount {
     typealias PresentationLogic = SendPaymentPresentationLogic
     
     struct Presenter {
         
-        typealias Model = SendPayment.Model
-        typealias Event = SendPayment.Event
+        typealias Model = SendPaymentAmount.Model
+        typealias Event = SendPaymentAmount.Event
         
         private let presenterDispatch: PresenterDispatch
         private let amountFormatter: AmountFormatterProtocol
@@ -64,7 +62,7 @@ extension SendPayment {
     }
 }
 
-extension SendPayment.Presenter: SendPayment.PresentationLogic {
+extension SendPaymentAmount.Presenter: SendPaymentAmount.PresentationLogic {
     func presentViewDidLoad(response: Event.ViewDidLoad.Response) {
         let sceneViewModel = self.getSceneViewModel(response.sceneModel, amountValid: response.amountValid)
         let viewModel = Event.ViewDidLoad.ViewModel(sceneModel: sceneViewModel)
@@ -111,36 +109,6 @@ extension SendPayment.Presenter: SendPayment.PresentationLogic {
         let viewModel = Event.BalanceSelected.ViewModel(sceneModel: sceneViewModel)
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayBalanceSelected(viewModel: viewModel)
-        }
-    }
-    
-    func presentSelectedContact(response: Event.SelectedContact.Response) {
-        let sceneViewModel = self.getSceneViewModel(
-            response.sceneModel,
-            amountValid: response.amountValid
-        )
-        let viewModel = Event.SelectedContact.ViewModel(sceneModel: sceneViewModel)
-        self.presenterDispatch.display { displayLogic in
-            displayLogic.displaySelectedContact(viewModel: viewModel)
-        }
-    }
-    
-    func presentScanRecipientQRAddress(response: Event.ScanRecipientQRAddress.Response) {
-        let viewModel: Event.ScanRecipientQRAddress.ViewModel
-        switch response {
-        case .canceled:
-            viewModel = .canceled
-            
-        case .failed(let error):
-            viewModel = .failed(errorMessage: error.localizedDescription)
-            
-        case .succeeded(let sceneModel, let amountValid):
-            let sceneViewModel = self.getSceneViewModel(sceneModel, amountValid: amountValid)
-            viewModel = .succeeded(sceneViewModel)
-        }
-        
-        self.presenterDispatch.display { displayLogic in
-            displayLogic.displayScanRecipientQRAddress(viewModel: viewModel)
         }
     }
     

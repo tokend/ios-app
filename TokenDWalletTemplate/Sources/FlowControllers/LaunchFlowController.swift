@@ -148,9 +148,18 @@ class LaunchFlowController: BaseFlowController {
     
     private func showRecoveryScreen() {
         let vc = self.setupRecoveryScreen(onSuccess: { [weak self] in
-            self?.navigationController.popViewController(true)
+            guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                return
+            }
+            self?.showSuccessMessage(
+                title: Localized(.success),
+                message: Localized(.account_has_been_successfully_recovered),
+                completion: {
+                    self?.navigationController.popViewController(true)
+            },
+                presentViewController: present
+            )
         })
-        
         self.navigationController.pushViewController(vc, animated: true)
     }
     
@@ -160,12 +169,14 @@ class LaunchFlowController: BaseFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.RecoverWalletWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.keychainManager,
             userDataManager: self.userDataManager,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()
@@ -360,6 +371,8 @@ class LaunchFlowController: BaseFlowController {
                 self?.submittedEmail = email
         })
         
+        let passwordValidator = PasswordValidator()
+        
         let routing = RegisterScene.Routing(
             showProgress: { [weak self] in
                 self?.navigationController.showProgress()
@@ -412,6 +425,7 @@ class LaunchFlowController: BaseFlowController {
             viewController: vc,
             sceneModel: sceneModel,
             registerWorker: registrationWorker,
+            passwordValidator: passwordValidator,
             routing: routing
         )
         

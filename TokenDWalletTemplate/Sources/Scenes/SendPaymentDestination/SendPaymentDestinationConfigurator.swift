@@ -1,33 +1,42 @@
 import Foundation
 
-extension RegisterScene {
+extension SendPaymentDestination {
     
-    enum Configurator {
-        static func configure(
+    public enum Configurator {
+        
+        public static func configure(
             viewController: ViewController,
-            sceneModel: Model.SceneModel,
-            registerWorker: RegisterWorker,
-            passwordValidator: PasswordValidatorProtocol,
-            routing: Routing?
+            recipientAddressResolver: RecipientAddressResolver,
+            contactsFetcher: ContactsFetcherProtocol,
+            sceneModel: SendPaymentDestination.Model.SceneModel,
+            viewConfig: Model.ViewConfig?,
+            routing: Routing?,
+            onDeinit: DeinitCompletion = nil
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
             let presenter = Presenter(presenterDispatch: presenterDispatch)
             let interactor = Interactor(
                 presenter: presenter,
-                sceneModel: sceneModel,
-                registerWorker: registerWorker,
-                passwordValidator: passwordValidator
+                recipientAddressResolver: recipientAddressResolver,
+                contactsFetcher: contactsFetcher,
+                sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
-            viewController.inject(interactorDispatch: interactorDispatch, routing: routing)
+            viewController.inject(
+                interactorDispatch: interactorDispatch,
+                viewConfig: viewConfig,
+                routing: routing,
+                onDeinit: onDeinit
+            )
         }
     }
 }
 
-extension RegisterScene {
+extension SendPaymentDestination {
     
-    class InteractorDispatch {
+    @objc(SendPaymentDestinationInteractorDispatch)
+    public class InteractorDispatch: NSObject {
         
         private let queue: DispatchQueue = DispatchQueue(
             label: "\(NSStringFromClass(InteractorDispatch.self))\(BusinessLogic.self)".queueLabel,
@@ -36,32 +45,33 @@ extension RegisterScene {
         
         private let businessLogic: BusinessLogic
         
-        init(businessLogic: BusinessLogic) {
+        public init(businessLogic: BusinessLogic) {
             self.businessLogic = businessLogic
         }
         
-        func sendRequest(requestBlock: @escaping (_ businessLogic: BusinessLogic) -> Void) {
+        public func sendRequest(requestBlock: @escaping (_ businessLogic: BusinessLogic) -> Void) {
             self.queue.async {
                 requestBlock(self.businessLogic)
             }
         }
         
-        func sendSyncRequest<ReturnType: Any>(
+        public func sendSyncRequest<ReturnType: Any>(
             requestBlock: @escaping (_ businessLogic: BusinessLogic) -> ReturnType
             ) -> ReturnType {
             return requestBlock(self.businessLogic)
         }
     }
     
-    class PresenterDispatch {
+    @objc(SendPaymentDestinationPresenterDispatch)
+    public class PresenterDispatch: NSObject {
         
         private weak var displayLogic: DisplayLogic?
         
-        init(displayLogic: DisplayLogic) {
+        public init(displayLogic: DisplayLogic) {
             self.displayLogic = displayLogic
         }
         
-        func display(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
+        public func display(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
             guard let displayLogic = self.displayLogic else { return }
             
             DispatchQueue.main.async {
@@ -69,7 +79,7 @@ extension RegisterScene {
             }
         }
         
-        func displaySync(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
+        public func displaySync(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
             guard let displayLogic = self.displayLogic else { return }
             
             displayBlock(displayLogic)

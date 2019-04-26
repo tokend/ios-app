@@ -191,7 +191,17 @@ class SettingsFlowController: BaseSignedInFlowController {
     
     private func showChangePasswordScreen() {
         let vc = self.setupChangePasswordScreen(onSuccess: { [weak self] in
-            self?.navigationController.popViewController(true)
+            guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                return
+            }
+            self?.showSuccessMessage(
+                title: Localized(.success),
+                message: Localized(.password_has_been_successfully_changed),
+                completion: { [weak self] in
+                    self?.navigationController.popViewController(true)
+                },
+                presentViewController: present
+            )
         })
         
         self.navigationController.pushViewController(vc, animated: true)
@@ -203,13 +213,15 @@ class SettingsFlowController: BaseSignedInFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.ChangePasswordWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.managersController.keychainManager,
             userDataManager: self.managersController.userDataManager,
             userDataProvider: self.userDataProvider,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()

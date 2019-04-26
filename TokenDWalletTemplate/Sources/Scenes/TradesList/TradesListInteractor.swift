@@ -6,6 +6,7 @@ public protocol TradesListBusinessLogic {
     typealias Event = TradesList.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
+    func onPullToRefresh(request: Event.PullToRefresh.Request)
     func onQuoteAssetSelected(request: Event.QuoteAssetSelected.Request)
 }
 
@@ -115,6 +116,7 @@ extension TradesList {
 }
 
 extension TradesList.Interactor: TradesList.BusinessLogic {
+    
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         self.assetPairsFetcher.observeAssetPairs()
             .subscribe(onNext: { [weak self] (assetPairs) in
@@ -133,6 +135,12 @@ extension TradesList.Interactor: TradesList.BusinessLogic {
                 self?.presenter.presentError(response: .init(error: error))
             })
             .disposed(by: self.disposeBag)
+        
+        self.assetPairsFetcher.updateAssetPairs()
+    }
+    
+    public func onPullToRefresh(request: Event.PullToRefresh.Request) {
+        self.assetPairsFetcher.updateAssetPairs()
     }
     
     public func onQuoteAssetSelected(request: Event.QuoteAssetSelected.Request) {

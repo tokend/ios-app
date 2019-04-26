@@ -266,6 +266,29 @@ class BaseFlowController {
         presentViewController(alert, true, nil)
     }
     
+    func showSuccessMessage(
+        title: String?,
+        message: String?,
+        completion: (() -> Void)?,
+        presentViewController: PresentViewControllerClosure
+        ) {
+        
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(
+            title: Localized(.ok),
+            style: .default,
+            handler: { _ in
+                completion?()
+        }))
+        
+        presentViewController(alert, true, nil)
+    }
+    
     // MARK: - Private
     
     private func onDefaultTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
@@ -292,7 +315,7 @@ class BaseFlowController {
                         .source_replace_source: source
                     ]
                 )
-  
+                
             case .totp:
                 alertTitle = Localized(.input_2fa_code)
                 alertMessage = Localized(.input_code_from_google_authenticator_or_similar_app)

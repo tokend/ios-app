@@ -1,18 +1,16 @@
 import Foundation
 
-extension SendPayment {
+extension SendPaymentAmount {
     
     enum Configurator {
         static func configure(
             viewController: ViewController,
             senderAccountId: String,
             selectedBalanceId: String?,
+            sceneModel: Model.SceneModel,
             balanceDetailsLoader: BalanceDetailsLoader,
             amountFormatter: AmountFormatterProtocol,
-            recipientAddressResolver: RecipientAddressResolver,
             feeLoader: FeeLoaderProtocol,
-            feeType: Model.FeeType,
-            operation: Model.Operation,
             viewConfig: Model.ViewConfig,
             routing: Routing?
             ) {
@@ -30,11 +28,10 @@ extension SendPayment {
             let interactor = Interactor(
                 presenter: presenter,
                 queue: queue,
-                sceneModel: Model.SceneModel(feeType: feeType, operation: operation),
+                sceneModel: sceneModel,
                 senderAccountId: senderAccountId,
                 selectedBalanceId: selectedBalanceId,
                 balanceDetailsLoader: balanceDetailsLoader,
-                recipientAddressResolver: recipientAddressResolver,
                 feeLoader: feeLoader
             )
             let interactorDispatch = InteractorDispatch(
@@ -43,14 +40,14 @@ extension SendPayment {
             )
             viewController.inject(
                 interactorDispatch: interactorDispatch,
-                routing: routing,
-                viewConfig: viewConfig
+                viewConfig: viewConfig,
+                routing: routing
             )
         }
     }
 }
 
-extension SendPayment {
+extension SendPaymentAmount {
     
     class InteractorDispatch {
         

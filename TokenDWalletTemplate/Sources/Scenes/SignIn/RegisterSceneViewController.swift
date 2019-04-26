@@ -149,6 +149,9 @@ extension RegisterScene {
             case .emptyConfirmPassword:
                 self.focusFields([.confirmPassword])
                 
+            case .passwordInvalid:
+                self.focusFields([.password])
+                
             case .passwordsDontMatch:
                 self.focusFields([.password, .confirmPassword])
                 

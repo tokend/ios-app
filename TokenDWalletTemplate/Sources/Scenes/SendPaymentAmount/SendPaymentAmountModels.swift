@@ -1,101 +1,94 @@
 import Foundation
 
-enum SendPayment {
-    
-    // MARK: - Typealiases
-    
-    typealias QRCodeReaderCompletion = (_ result: Model.QRCodeReaderResult) -> Void
-    typealias SelectContactEmailCompletion = (_ email: String) -> Void
+public enum SendPaymentAmount {
     
     // MARK: -
     
-    enum Model {}
-    enum Event {}
+    public enum Model {}
+    public enum Event {}
 }
 
 // MARK: - Models
 
-extension SendPayment.Model {
+public extension SendPaymentAmount.Model {
     
-    class SceneModel {
-        var selectedBalance: BalanceDetails?
-        var recipientAddress: String?
-        var resolvedRecipientId: String?
-        var amount: Decimal = 0.0
-        let operation: Operation
-        let feeType: FeeType
+   public class SceneModel {
+        public var selectedBalance: BalanceDetails?
+        public var senderFee: FeeModel?
+        public var recipientAddress: String?
+        public var resolvedRecipientId: String?
+        public var description: String?
+        public var amount: Decimal = 0.0
+        public let operation: Operation
+        public let feeType: FeeType
+    
         init(
             feeType: FeeType,
             operation: Operation,
             recipientAddress: String? = nil
             ) {
+            
             self.operation = operation
             self.recipientAddress = recipientAddress
             self.feeType = feeType
         }
     }
     
-    struct SceneViewModel {
+    public struct ViewConfig {
+        let descriptionIsHidden: Bool
+        let actionButtonTitle: NSAttributedString
+    }
+    
+    public struct SceneViewModel {
         let selectedBalance: BalanceDetailsViewModel?
         let recipientAddress: String?
         let amount: Decimal
         let amountValid: Bool
     }
     
-    struct ViewConfig {
-        let recipientAddressFieldTitle: String
-        let recipientAddressFieldPlaceholder: String?
+    public struct BalanceDetails {
+        public let asset: String
+        public let balance: Decimal
+        public let balanceId: String
     }
     
-    struct BalanceDetails {
-        let asset: String
-        let balance: Decimal
-        let balanceId: String
+    public struct BalanceDetailsViewModel {
+        public let asset: String
+        public let balance: String
+        public let balanceId: String
     }
     
-    struct BalanceDetailsViewModel {
-        let asset: String
-        let balance: String
-        let balanceId: String
+    public struct FeeModel {
+        public let asset: String
+        public let fixed: Decimal
+        public let percent: Decimal
     }
     
-    struct FeeModel {
-        let asset: String
-        let fixed: Decimal
-        let percent: Decimal
+    public struct SendPaymentModel {
+        public let senderBalanceId: String
+        public let asset: String
+        public let amount: Decimal
+        public let recipientNickname: String
+        public let recipientAccountId: String
+        public let senderFee: FeeModel
+        public let recipientFee: FeeModel
+        public let description: String
+        public let reference: String
     }
     
-    enum QRCodeReaderResult {
-        case canceled
-        case success(value: String, metadataType: String)
+    public struct SendWithdrawModel {
+        public let senderBalance: BalanceDetails
+        public let asset: String
+        public let amount: Decimal
+        public let senderFee: FeeModel
     }
     
-    struct SendPaymentModel {
-        let senderBalanceId: String
-        let asset: String
-        let amount: Decimal
-        let recipientNickname: String
-        let recipientAccountId: String
-        let senderFee: FeeModel
-        let recipientFee: FeeModel
-        let reference: String
-    }
-    
-    struct SendWithdrawModel {
-        let senderBalanceId: String
-        let asset: String
-        let amount: Decimal
-        let recipientNickname: String
-        let recipientAddress: String
-        let senderFee: FeeModel
-    }
-    
-    enum Operation {
+    public enum Operation {
         case handleSend
         case handleWithdraw
     }
     
-    enum FeeType {
+    public enum FeeType {
         case payment
         case offer
         case withdraw
@@ -104,9 +97,9 @@ extension SendPayment.Model {
 
 // MARK: - Events
 
-extension SendPayment.Event {
+extension SendPaymentAmount.Event {
     
-    typealias Model = SendPayment.Model
+    public typealias Model = SendPaymentAmount.Model
     
     struct ViewDidLoad {
         struct Request {}
@@ -165,45 +158,6 @@ extension SendPayment.Event {
         }
     }
     
-    struct EditRecipientAddress {
-        struct Request {
-            let address: String?
-        }
-    }
-    
-    struct SelectedContact {
-        struct Request {
-            let email: String
-        }
-        
-        struct Response {
-            let sceneModel: Model.SceneModel
-            let amountValid: Bool
-        }
-        
-        struct ViewModel {
-            let sceneModel: Model.SceneViewModel
-        }
-    }
-    
-    struct ScanRecipientQRAddress {
-        struct Request {
-            let qrResult: Model.QRCodeReaderResult
-        }
-        
-        enum Response {
-            case canceled
-            case failed(FailedReason)
-            case succeeded(sceneModel: Model.SceneModel, amountValid: Bool)
-        }
-        
-        enum ViewModel {
-            case canceled
-            case failed(errorMessage: String)
-            case succeeded(Model.SceneViewModel)
-        }
-    }
-    
     struct EditAmount {
         struct Request {
             let amount: Decimal
@@ -215,6 +169,12 @@ extension SendPayment.Event {
         
         struct ViewModel {
             let amountValid: Bool
+        }
+    }
+    
+    struct DescriptionUpdated {
+        struct Request {
+            let description: String?
         }
     }
     
@@ -255,12 +215,12 @@ extension SendPayment.Event {
     }
 }
 
-extension SendPayment.Event.PaymentAction {
+extension SendPaymentAmount.Event.PaymentAction {
     
     enum SendError: Error, LocalizedError {
         case emptyAmount
         case emptyRecipientAddress
-        case failedToLoadFees(SendPaymentFeeLoaderResult.FeeLoaderError)
+        case failedToLoadFees(SendPaymentAmountFeeLoaderResult.FeeLoaderError)
         case failedToResolveRecipientAddress(RecipientAddressResolverResult.AddressResolveError)
         case insufficientFunds
         case noBalance
@@ -309,59 +269,47 @@ extension SendPayment.Event.PaymentAction {
     }
 }
 
-extension SendPayment.Event.ScanRecipientQRAddress {
-    
-    enum FailedReason: Error, LocalizedError {
-        case invalidAccountId
-        case other(Error)
-        case permissionDenied
-        
-        // MARK: - LocalizedError
-        
-        var errorDescription: String? {
-            switch self {
-            case .invalidAccountId:
-                return Localized(.invalid_account_id)
-            case .other(let error):
-                let message = error.localizedDescription
-                return Localized(
-                    .request_error,
-                    replace: [
-                        .request_error_replace_message: message
-                    ]
-                )
-            case .permissionDenied:
-                return Localized(.permission_denied)
-            }
-        }
-    }
-}
-
 // MARK: -
 
-extension SendPayment.Model.ViewConfig {
-    
-    static func sendPayment() -> SendPayment.Model.ViewConfig {
-        return SendPayment.Model.ViewConfig(
-            recipientAddressFieldTitle: Localized(.account_id_or_email_colon),
-            recipientAddressFieldPlaceholder: Localized(.enter_account_id_or_email)
-        )
-    }
-    
-    static func sendWithdraw() -> SendPayment.Model.ViewConfig {
-        return SendPayment.Model.ViewConfig(
-            recipientAddressFieldTitle: Localized(.destination_address),
-            recipientAddressFieldPlaceholder: Localized(.enter_destination_address)
-        )
-    }
-}
-
-extension SendPayment.Model.BalanceDetails: Equatable {
-    static func ==(
-        left: SendPayment.Model.BalanceDetails,
-        right: SendPayment.Model.BalanceDetails
+extension SendPaymentAmount.Model.BalanceDetails: Equatable {
+    public static func ==(
+        left: SendPaymentAmount.Model.BalanceDetails,
+        right: SendPaymentAmount.Model.BalanceDetails
         ) -> Bool {
         
         return left.balanceId == right.balanceId
+    }
+}
+
+extension SendPaymentAmount.Model.ViewConfig {
+    
+    static func sendPaymentViewConfig() -> SendPaymentAmount.Model.ViewConfig {
+        let actionButtonTitle = NSAttributedString(
+            string: Localized(.confirm),
+            attributes: [
+                .font: Theme.Fonts.actionButtonFont,
+                .foregroundColor: Theme.Colors.textOnMainColor
+            ]
+        )
+        
+        return SendPaymentAmount.Model.ViewConfig(
+            descriptionIsHidden: false,
+            actionButtonTitle: actionButtonTitle
+        )
+    }
+    
+    static func withdrawViewConfig() -> SendPaymentAmount.Model.ViewConfig {
+        let actionButtonTitle = NSAttributedString(
+            string: Localized(.next),
+            attributes: [
+                .font: Theme.Fonts.actionButtonFont,
+                .foregroundColor: Theme.Colors.textOnMainColor
+            ]
+        )
+        
+        return SendPaymentAmount.Model.ViewConfig(
+            descriptionIsHidden: true,
+            actionButtonTitle: actionButtonTitle
+        )
     }
 }
