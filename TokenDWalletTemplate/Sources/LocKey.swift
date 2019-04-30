@@ -5,6 +5,7 @@ import Foundation
 enum LocKey: String {
     case access_revoked_sign_in_required
     case account
+    case account_has_been_successfully_recovered
     case account_id
     case account_id_or_email_colon
     case acknowledgements
@@ -76,6 +77,7 @@ enum LocKey: String {
     case confirm_password
     case confirm_password_lowercased
     case confirmation
+    case contacts
     case copied
     case copy
     case corrupted_keychain_data
@@ -154,6 +156,7 @@ enum LocKey: String {
     case failed_to_decode_quote_balance_id
     case failed_to_encode_destination_address
     case failed_to_encode_destination_data
+    case failed_to_fetch_fees
     case failed_to_fetch_network_info
     case failed_to_generate_key_pair
     case failed_to_generate_new_key_pair
@@ -240,12 +243,14 @@ enum LocKey: String {
     case network_info_error_replace_message
     case new_password
     case new_password_lowercased
+    case next
     case no_asks
     case no_assets_can_be_deposited
     case no_available_periods
     case no_balance
     case no_balances
     case no_bids
+    case no_fees
     case no_fees_to_overview
     case no_growth
     case no_investments
@@ -263,6 +268,7 @@ enum LocKey: String {
     case not_enough_money_on_balance_replace_asset
     case offer
     case offers_cap
+    case ok
     case old_password
     case old_password_lowercased
     case one_equals
@@ -285,8 +291,13 @@ enum LocKey: String {
     case paid
     case password
     case passwords_dont_match
+    case password_has_been_successfully_changed
+    case password_should_contain_at_least_characters
+    case password_should_contain_at_least_characters_replace_minimal_length
     case pay_recipients_fee
     case payment
+    case payment_amount
+    case payment_destination
     case payout
     case pending
     case pending_investment
@@ -458,6 +469,8 @@ enum LocKey: String {
     case withdraw
     case withdrawal
     case withdrawn
+    case withdraw_amount
+    case withdraw_destination
     case wrong_email
     case wrong_old_password
     case wrong_password

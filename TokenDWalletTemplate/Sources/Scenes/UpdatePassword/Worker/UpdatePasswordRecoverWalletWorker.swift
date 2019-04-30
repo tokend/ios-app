@@ -53,11 +53,11 @@ extension UpdatePassword {
                 onSignRequest: onSignRequest,
                 networkInfo: networkInfo,
                 completion: { [weak self] (result) in
-                    stopLoading()
-
+                    
                     switch result {
                         
                     case .failure(let error):
+                        stopLoading()
                         completion(.failed(.submitError(error)))
                         
                     case .success(let components):
@@ -133,6 +133,17 @@ extension UpdatePassword.RecoverWalletWorker: UpdatePassword.SubmitPasswordHandl
         guard let newPassword = self.getNewPassword(fields: fields), newPassword.count > 0 else {
             completion(.failed(.emptyField(.newPassword)))
             return
+        }
+        
+        let passwordValidationResult = self.passwordValidator.validate(password: newPassword)
+        switch passwordValidationResult {
+            
+        case .error(let message):
+            completion(.failed(.passwordInvalid(message)))
+            return
+            
+        default:
+            break
         }
         
         guard let confirmPassword = self.getConfirmPassword(fields: fields), confirmPassword.count > 0 else {

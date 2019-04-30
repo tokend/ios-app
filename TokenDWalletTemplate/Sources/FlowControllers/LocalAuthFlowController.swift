@@ -141,6 +141,8 @@ class LocalAuthFlowController: BaseFlowController {
             keychainManager: self.keychainManager
         )
         
+        let passwordValidator = PasswordValidator()
+        
         let routing = RegisterScene.Routing(
             showProgress: { [weak self] in
                 self?.navigationController.showProgress()
@@ -186,6 +188,7 @@ class LocalAuthFlowController: BaseFlowController {
             viewController: vc,
             sceneModel: sceneModel,
             registerWorker: localAuthWorker,
+            passwordValidator: passwordValidator,
             routing: routing
         )
         
@@ -196,7 +199,17 @@ class LocalAuthFlowController: BaseFlowController {
     
     private func showRecoveryScreen() {
         let vc = self.setupRecoveryScreen(onSuccess: { [weak self] in
-            self?.onRecoverySucceeded()
+            guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                return
+            }
+            self?.showSuccessMessage(
+                title: Localized(.success),
+                message: Localized(.account_has_been_successfully_recovered),
+                completion: {
+                    self?.onRecoverySucceeded()
+            },
+                presentViewController: present
+            )
         })
         
         self.navigationController.pushViewController(vc, animated: true)
@@ -208,12 +221,14 @@ class LocalAuthFlowController: BaseFlowController {
         let updateRequestBuilder = UpdatePasswordRequestBuilder(
             keyServerApi: self.flowControllerStack.keyServerApi
         )
+        let passwordValidator = PasswordValidator()
         let submitPasswordHandler = UpdatePassword.RecoverWalletWorker(
             keyserverApi: self.flowControllerStack.keyServerApi,
             keychainManager: self.keychainManager,
             userDataManager: self.userDataManager,
             networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            updateRequestBuilder: updateRequestBuilder
+            updateRequestBuilder: updateRequestBuilder,
+            passwordValidator: passwordValidator
         )
         
         let fields = submitPasswordHandler.getExpectedFields()

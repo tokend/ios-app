@@ -42,7 +42,9 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        
+        self.commonInit()
     }
     
     // MARK: - Private
@@ -84,6 +86,7 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
+        
         self.emptyLabel.snp.makeConstraints { (make) in
             make.centerY.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(8)

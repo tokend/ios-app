@@ -2,7 +2,7 @@ import UIKit
 
 protocol RegisterScenePresentationLogic {
     typealias Event = RegisterScene.Event
-
+    
     func presentSetupScene(response: Event.SetupScene.Response)
     func presentScanServerInfoSync(response: Event.ScanServerInfoSync.Response)
     func presentSignAction(response: Event.SignAction.Response)
@@ -233,6 +233,12 @@ extension RegisterScene {
                 error = SignError(
                     message: Localized(.enter_password),
                     type: .wrongPassword
+                )
+                
+            case .passwordInvalid(let message):
+                error = SignError(
+                    message: message,
+                    type: .passwordInvalid
                 )
                 
             case .passwordsDontMatch:

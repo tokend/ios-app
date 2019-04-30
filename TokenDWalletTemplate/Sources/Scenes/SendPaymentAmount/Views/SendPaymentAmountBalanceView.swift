@@ -1,12 +1,13 @@
 import UIKit
 
-extension SendPayment {
+extension SendPaymentAmount {
     class BalanceView: UIView {
         
         // MARK: - Public properties
         
         // MARK: - Private properties
         
+        private let containerView: UIView = UIView()
         private let titleLabel: UILabel = UILabel()
         private let amountLabel: UILabel = UILabel()
         
@@ -26,6 +27,7 @@ extension SendPayment {
         
         private func customInit() {
             self.setupView()
+            self.setupContainerView()
             self.setupTitleLabel()
             self.setupAmountLabel()
             self.setupLayout()
@@ -45,7 +47,7 @@ extension SendPayment {
         func set(balanceHighlighted: Bool) {
             self.amountLabel.textColor = balanceHighlighted
                 ? Theme.Colors.negativeColor
-                : Theme.Colors.textOnContentBackgroundColor
+                : Theme.Colors.separatorOnContentBackgroundColor
         }
         
         // MARK: - Private
@@ -54,18 +56,27 @@ extension SendPayment {
             self.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
+        private func setupContainerView() {
+            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
         private func setupTitleLabel() {
+            self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.titleLabel.font = Theme.Fonts.smallTextFont
             self.titleLabel.text = Localized(.balance_colon)
-            SharedViewsBuilder.configureInputForm(titleLabel: self.titleLabel)
+            self.titleLabel.textColor = Theme.Colors.separatorOnContentBackgroundColor
         }
         
         private func setupAmountLabel() {
-            SharedViewsBuilder.configureInputForm(valueLabel: self.amountLabel)
+            self.amountLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.amountLabel.font = Theme.Fonts.smallTextFont
+            self.amountLabel.textColor = Theme.Colors.separatorOnContentBackgroundColor
         }
         
         private func setupLayout() {
-            self.addSubview(self.titleLabel)
-            self.addSubview(self.amountLabel)
+            self.addSubview(self.containerView)
+            self.containerView.addSubview(self.titleLabel)
+            self.containerView.addSubview(self.amountLabel)
             
             self.titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             self.amountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
@@ -73,10 +84,14 @@ extension SendPayment {
             self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             self.amountLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
             
+            self.containerView.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.top.bottom.equalToSuperview().inset(14.0)
+            }
+            
             self.titleLabel.snp.makeConstraints { (make) in
                 make.leading.equalToSuperview().inset(20.0)
                 make.centerY.equalToSuperview()
-                make.top.bottom.equalToSuperview().inset(14.0)
             }
             
             self.amountLabel.snp.makeConstraints { (make) in

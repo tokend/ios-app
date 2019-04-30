@@ -165,7 +165,12 @@ extension TradeOffers {
         }
         
         private func setupTradesView() {
-            
+            self.tradesView.onPullToRefresh = { [weak self] in
+                let request = Event.PullToRefresh.Request.trades
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onPullToRefresh(request: request)
+                })
+            }
         }
         
         private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {

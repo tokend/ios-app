@@ -75,6 +75,12 @@ extension UpdatePassword {
                     error: submitActionError
                 )
                 
+            case .passwordInvalid(let message):
+                error = SubmitError(
+                    message: message,
+                    error: submitActionError
+                )
+                
             case .passwordsDontMatch:
                 error = SubmitError(
                     message: Localized(.passwords_dont_match),
