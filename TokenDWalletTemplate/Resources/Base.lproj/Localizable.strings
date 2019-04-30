@@ -17,6 +17,8 @@
 "app_name" = "TokenD Real Estate";
 "are_you_sure_you_want_to_cancel_investment" = "Are you sure you want to cancel investment?";
 "are_you_sure_you_want_to_sign_out" = "Are you sure you want to Sign Out and Erase All Data from device?";
+"ask_base" = "Ask ($(base))";
+"ask_base_replace_base" = "base";
 "asset" = "Asset";
 "asset_balance_is_not_found" = "Asset balance is not found";
 "asset_pair" = "Asset pair";
@@ -39,11 +41,11 @@
 "base_for_price" = "$(base_amount) for $(price_amount)";
 "base_for_price_replace_base_amount" = "base_amount";
 "base_for_price_replace_price_amount" = "price_amount";
+"bid_base" = "Bid ($(base))";
+"bid_base_replace_base" = "base";
 "bought" = "Bought";
 "bounds" = "bounds";
 "buy" = "Buy";
-"bid_base" = "Bid ($(base))";
-"bid_base_replace_base" = "base";
 "can_be_traded_on_secondary_market" = " - Can be traded on secondary market";
 "can_be_transfered" = " - Can be transfered";
 "can_be_withdrawn" = " - Can be withdrawn";
@@ -247,6 +249,7 @@
 "no_balance" = "No balance";
 "no_balances" = "No balances";
 "no_bids" = "No bids";
+"no_chart_entries" = "No chart entries";
 "no_fees" = "No fees";
 "no_fees_to_overview" = "No fees to overview";
 "no_growth" = "No growth";
@@ -287,10 +290,10 @@
 "overview" = "Overview";
 "paid" = "Paid";
 "password" = "Password";
-"passwords_dont_match" = "Passwords don't match";
 "password_has_been_successfully_changed" = "Password has been successfully changed";
 "password_should_contain_at_least_characters" = "Password should contain at least $(minimal_length) characters";
 "password_should_contain_at_least_characters_replace_minimal_length" = "minimal_length";
+"passwords_dont_match" = "Passwords don't match";
 "pay_recipients_fee" = "Pay recipient's fee";
 "payment" = "Payment";
 "payment_amount" = "Payment amount";
@@ -362,8 +365,6 @@
 "selected_file_replace_file_name" = "file_name";
 "selfie_with_verification_code" = "Selfie with verification code";
 "sell" = "Sell";
-"ask_base" = "Ask ($(base))";
-"ask_base_replace_base" = "base";
 "send" = "Send";
 "send_transaction_error" = "Send transaction error: $(message)";
 "send_transaction_error_replace_message" = "message";
@@ -464,10 +465,10 @@
 "wallet" = "Wallet";
 "week" = "Week";
 "withdraw" = "Withdraw";
-"withdrawal" = "Withdrawal";
-"withdrawn" = "Withdrawn";
 "withdraw_amount" = "Withdraw amount";
 "withdraw_destination" = "Withdraw destination";
+"withdrawal" = "Withdrawal";
+"withdrawn" = "Withdrawn";
 "wrong_email" = "Wrong email";
 "wrong_old_password" = "Wrong old password";
 "wrong_password" = "Wrong password";

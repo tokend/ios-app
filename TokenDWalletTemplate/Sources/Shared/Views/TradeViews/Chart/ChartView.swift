@@ -16,12 +16,12 @@ class ChartView: UIView {
         get { return self.yAxis.valueFormatter }
         set { self.yAxis.valueFormatter = newValue }
     }
-    public var entries: [ChartDataEntry]? = nil {
+    public var entries: [ChartDataEntry] = [] {
         didSet {
-            if let data = self.entries {
-                self.setDataWithEntries(data)
-            } else {
+            if self.entries.isEmpty {
                 self.chart.clear()
+            } else {
+                self.setDataWithEntries(self.entries)
             }
             self.chart.notifyDataSetChanged()
         }

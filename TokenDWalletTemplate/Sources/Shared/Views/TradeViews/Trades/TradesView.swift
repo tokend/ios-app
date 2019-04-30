@@ -174,7 +174,10 @@ public class TradesView: UIView {
     }
     
     private func setupEmptyViewLabel() {
+        self.emptyViewLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
+        self.emptyViewLabel.font = Theme.Fonts.smallTextFont
         self.emptyViewLabel.textAlignment = .center
+        self.emptyViewLabel.numberOfLines = 0
     }
     
     private func setupLayout() {
@@ -233,7 +236,6 @@ public class TradesView: UIView {
         let hasTradesEntries = self.trades.count > 0
         
         self.emptyViewLabel.isHidden = hasTradesEntries
-        self.tableView.isHidden = !hasTradesEntries
     }
 }
 

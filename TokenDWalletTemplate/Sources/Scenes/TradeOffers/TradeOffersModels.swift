@@ -460,22 +460,16 @@ extension TradeOffers.Event {
     
     public enum ChartDidUpdate {
         
-        public struct Response {
+        public enum Response {
             
-            public let charts: [Model.Chart]?
-            
-            public init(charts: [Model.Chart]?) {
-                self.charts = charts
-            }
+            case charts([Model.Chart])
+            case error(Swift.Error)
         }
         
-        public struct ViewModel {
+        public enum ViewModel {
             
-            public let chartEntries: [ChartDataEntry]?
-            
-            public init(chartEntries: [ChartDataEntry]?) {
-                self.chartEntries = chartEntries
-            }
+            case charts([ChartDataEntry])
+            case error(String)
         }
     }
     

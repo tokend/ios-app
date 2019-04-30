@@ -378,7 +378,20 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
     }
     
     public func displayChartDidUpdate(viewModel: Event.ChartDidUpdate.ViewModel) {
-        self.chartView.chartEntries = viewModel.chartEntries
+        switch viewModel {
+            
+        case .charts(let chartEntries):
+            if chartEntries.isEmpty {
+                self.chartView.emptyMessage = Localized(.no_chart_entries)
+            } else {
+                self.chartView.emptyMessage = ""
+            }
+            self.chartView.chartEntries = chartEntries
+            
+        case .error(let error):
+            self.chartView.chartEntries = []
+            self.chartView.emptyMessage = error
+        }
     }
     
     public func displayOffersDidUpdate(viewModel: Event.OffersDidUpdate.ViewModel) {

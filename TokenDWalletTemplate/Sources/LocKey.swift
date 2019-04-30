@@ -20,6 +20,8 @@ enum LocKey: String {
     case app_name
     case are_you_sure_you_want_to_cancel_investment
     case are_you_sure_you_want_to_sign_out
+    case ask_base
+    case ask_base_replace_base
     case asset
     case asset_balance_is_not_found
     case asset_pair
@@ -42,11 +44,11 @@ enum LocKey: String {
     case base_for_price
     case base_for_price_replace_base_amount
     case base_for_price_replace_price_amount
+    case bid_base
+    case bid_base_replace_base
     case bought
     case bounds
     case buy
-    case bid_base
-    case bid_base_replace_base
     case can_be_traded_on_secondary_market
     case can_be_transfered
     case can_be_withdrawn
@@ -250,6 +252,7 @@ enum LocKey: String {
     case no_balance
     case no_balances
     case no_bids
+    case no_chart_entries
     case no_fees
     case no_fees_to_overview
     case no_growth
@@ -290,10 +293,10 @@ enum LocKey: String {
     case overview
     case paid
     case password
-    case passwords_dont_match
     case password_has_been_successfully_changed
     case password_should_contain_at_least_characters
     case password_should_contain_at_least_characters_replace_minimal_length
+    case passwords_dont_match
     case pay_recipients_fee
     case payment
     case payment_amount
@@ -365,8 +368,6 @@ enum LocKey: String {
     case selected_file_replace_file_name
     case selfie_with_verification_code
     case sell
-    case ask_base
-    case ask_base_replace_base
     case send
     case send_transaction_error
     case send_transaction_error_replace_message
@@ -467,10 +468,10 @@ enum LocKey: String {
     case wallet
     case week
     case withdraw
-    case withdrawal
-    case withdrawn
     case withdraw_amount
     case withdraw_destination
+    case withdrawal
+    case withdrawn
     case wrong_email
     case wrong_old_password
     case wrong_password

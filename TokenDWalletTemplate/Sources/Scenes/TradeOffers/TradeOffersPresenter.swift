@@ -236,15 +236,23 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     }
     
     public func presentChartDidUpdate(response: Event.ChartDidUpdate.Response) {
-        let chartEntries = response.charts?.map({ (chart) -> ChartDataEntry in
-            ChartDataEntry(
-                x: chart.date.timeIntervalSince1970,
-                y: (chart.value as NSDecimalNumber).doubleValue
-            )
-        })
-        let viewModel = Event.ChartDidUpdate.ViewModel(
-            chartEntries: chartEntries
-        )
+        let viewModel: Event.ChartDidUpdate.ViewModel
+        
+        switch response {
+            
+        case .charts(let charts):
+            let chartEntries = charts.map({ (chart) -> ChartDataEntry in
+                ChartDataEntry(
+                    x: chart.date.timeIntervalSince1970,
+                    y: (chart.value as NSDecimalNumber).doubleValue
+                )
+            })
+            viewModel = .charts(chartEntries)
+            
+        case .error(let error):
+            viewModel = .error(error.localizedDescription)
+        }
+        
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayChartDidUpdate(viewModel: viewModel)
         }

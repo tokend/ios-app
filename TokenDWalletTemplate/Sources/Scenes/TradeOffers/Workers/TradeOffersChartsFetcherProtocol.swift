@@ -1,8 +1,8 @@
 import UIKit
 
 public enum TradeOffersChartsFetcherGetChartsResult {
+    case failure(Swift.Error)
     case success(charts: TradeOffers.Model.Charts)
-    case failure
 }
 
 public protocol TradeOffersChartsFetcherProtocol {

@@ -76,7 +76,12 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             .disposed(by: self.disposeBag)
     }
     
-    private func setupEmptyLabel() { }
+    private func setupEmptyLabel() {
+        self.emptyLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
+        self.emptyLabel.font = Theme.Fonts.smallTextFont
+        self.emptyLabel.textAlignment = .center
+        self.emptyLabel.numberOfLines = 0
+    }
     
     private func setupLayout() {
         self.addSubview(self.tableView)

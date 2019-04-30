@@ -46,8 +46,8 @@ extension TradeOffers.ChartsFetcher: TradeOffers.ChartsFetcherProtocol {
                     
                     completion(.success(charts: charts))
                     
-                case .failure:
-                    completion(.failure)
+                case .failure(let error):
+                    completion(.failure(error))
                 }
         })
     }

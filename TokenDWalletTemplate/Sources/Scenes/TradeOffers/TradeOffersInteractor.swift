@@ -67,8 +67,37 @@ extension TradeOffers {
             self.observeOffers(isBuy: false, pageSize: pageSize)
         }
         
-        private func observeCharts() {
+        private func loadCharts() {
+            let baseAsset = self.sceneModel.assetPair.baseAsset
+            let quoteAsset = self.sceneModel.assetPair.quoteAsset
             
+            let response = Event.Loading.Response(
+                isLoading: true,
+                contentList: .charts
+            )
+            self.presenter.presentLoading(response: response)
+            
+            self.chartsFetcher.getChartsForBaseAsset(
+                baseAsset,
+                quoteAsset: quoteAsset,
+                completion: { [weak self] (result) in
+                    let response = Event.Loading.Response(
+                        isLoading: false,
+                        contentList: .charts
+                    )
+                    self?.presenter.presentLoading(response: response)
+                    
+                    switch result {
+                        
+                    case .failure(let error):
+                        let response = Event.ChartDidUpdate.Response.error(error)
+                        self?.presenter.presentChartDidUpdate(response: response)
+                        
+                    case .success(let charts):
+                        self?.sceneModel.charts = charts
+                        self?.onChartsDidChange()
+                    }
+            })
         }
         
         private func observeTrades(pageSize: Int) {
@@ -143,6 +172,20 @@ extension TradeOffers {
         private func updatedSelectedContent(_ tab: Model.ContentTab) {
             self.sceneModel.selectedTab = tab
             
+            switch tab {
+                
+            case .orderBook:
+                break
+                
+            case .chart:
+                if self.sceneModel.charts?.isEmpty ?? true {
+                    self.loadCharts()
+                }
+                
+            case .trades:
+                break
+            }
+            
             let response = Event.ContentTabSelected.Response(selectedTab: self.sceneModel.selectedTab)
             self.presenter.presentContentTabSelected(response: response)
         }
@@ -166,14 +209,18 @@ extension TradeOffers {
         }
         
         private func onChartsDidChange() {
+            self.sceneModel.periods = self.sceneModel.charts?.keys.sorted() ?? []
+            self.onChartPriceDidChange()
             self.onChartPeriodsDidChange()
             
-            var periodCharts: [Model.Chart]?
+            let periodCharts: [Model.Chart]
             if let period = self.sceneModel.selectedPeriod {
-                periodCharts = self.sceneModel.charts?[period]
+                periodCharts = self.sceneModel.charts?[period] ?? []
+            } else {
+                periodCharts = []
             }
             
-            let response = Event.ChartDidUpdate.Response(charts: periodCharts)
+            let response = Event.ChartDidUpdate.Response.charts(periodCharts)
             self.presenter.presentChartDidUpdate(response: response)
         }
         
@@ -253,7 +300,7 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
         self.presenter.presentViewDidLoad(response: response)
         
         self.observeOffers(pageSize: request.offersPageSize)
-        self.observeCharts()
+        self.loadCharts()
         self.observeTrades(pageSize: request.tradesPageSize)
     }
     

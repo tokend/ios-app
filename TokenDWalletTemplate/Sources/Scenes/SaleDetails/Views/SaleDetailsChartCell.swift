@@ -146,9 +146,9 @@ extension SaleDetails {
                 set { self.growthSinceDateLabel.text = newValue}
             }
             
-            public var chartEntries: [Model.ChartDataEntry]? {
+            public var chartEntries: [Model.ChartDataEntry] = [] {
                 didSet {
-                    self.chartView.entries = self.chartEntries?.map({ (chartEntry) -> ChartDataEntry in
+                    self.chartView.entries = self.chartEntries.map({ (chartEntry) -> ChartDataEntry in
                         return ChartDataEntry(x: chartEntry.x, y: chartEntry.y)
                     })
                 }
