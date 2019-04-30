@@ -156,11 +156,11 @@ extension TradeOffers {
                 offers = self.sceneModel.sellOffers
             }
             
-            let isLoadingMore = self.offersFetcher.getLoadingMoreStatusValue(isBuy)
+            let hasMoreItems = self.offersFetcher.getHasMoreItems(isBuy)
             let response = Event.OffersDidUpdate.Response.offers(
                 isBuy: isBuy,
                 offers: offers,
-                isLoadingMore: isLoadingMore
+                hasMoreItems: hasMoreItems
             )
             self.presenter.presentOffersDidUpdate(response: response)
         }
@@ -223,7 +223,11 @@ extension TradeOffers {
         
         private func onTradesDidUpdate() {
             let trades: [Model.Trade] = self.sceneModel.trades
-            let response = Event.TradesDidUpdate.Response.trades(trades)
+            let hasMoreItems = self.tradesFetcher.getHasMoreItems()
+            let response = Event.TradesDidUpdate.Response.trades(
+                trades: trades,
+                hasMoreItems: hasMoreItems
+            )
             self.presenter.presentTradesDidUpdate(response: response)
         }
     }

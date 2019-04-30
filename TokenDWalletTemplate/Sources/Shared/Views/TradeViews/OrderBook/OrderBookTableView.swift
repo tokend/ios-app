@@ -123,8 +123,18 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
 extension OrderBookTableView {
     fileprivate class DelegateDatasource: NSObject, UITableViewDataSource, UITableViewDelegate {
         
-        public var cells: [OrderBookTableViewCellModel<CellType>] = []
+        // MARK: - Public properties
+        
+        public var cells: [OrderBookTableViewCellModel<CellType>] = [] {
+            didSet {
+                self.everScrolled = false
+            }
+        }
         public var onScrolledToBottom: (() -> Void)?
+        
+        // MARK: - Private properties
+        
+        private var everScrolled: Bool = false
         
         // MARK: -
         
@@ -146,13 +156,17 @@ extension OrderBookTableView {
             }
         }
         
+        public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            self.everScrolled = true
+        }
+        
         func tableView(
             _ tableView: UITableView,
             willDisplay cell: UITableViewCell,
             forRowAt indexPath: IndexPath
             ) {
             
-            if indexPath.row == self.cells.count - 1 {
+            if indexPath.row == self.cells.count - 1, self.everScrolled {
                 self.onScrolledToBottom?()
             }
         }

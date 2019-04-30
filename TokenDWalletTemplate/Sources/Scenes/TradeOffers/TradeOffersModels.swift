@@ -199,18 +199,21 @@ extension TradeOffers.Model {
         public let amount: String
         public let time: String
         public let priceGrowth: Bool
+        public let isLoading: Bool
         
         public init(
             price: String,
             amount: String,
             time: String,
-            priceGrowth: Bool
+            priceGrowth: Bool,
+            isLoading: Bool
             ) {
             
             self.price = price
             self.amount = amount
             self.time = time
             self.priceGrowth = priceGrowth
+            self.isLoading = isLoading
         }
     }
     
@@ -480,7 +483,7 @@ extension TradeOffers.Event {
         
         public enum Response {
             case error(isBuy: Bool, error: Swift.Error)
-            case offers(isBuy: Bool, offers: [Model.Offer], isLoadingMore: Bool)
+            case offers(isBuy: Bool, offers: [Model.Offer], hasMoreItems: Bool)
         }
         
         public enum ViewModel {
@@ -494,12 +497,12 @@ extension TradeOffers.Event {
         
         public enum Response {
             case error(Swift.Error)
-            case trades([Model.Trade])
+            case trades(trades: [Model.Trade], hasMoreItems: Bool)
         }
         
         public enum ViewModel {
             case error(String)
-            case trades([Model.TradeViewModel])
+            case trades(trades: [Model.TradeViewModel])
         }
     }
     

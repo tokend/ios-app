@@ -171,6 +171,12 @@ extension TradeOffers {
                     businessLogic.onPullToRefresh(request: request)
                 })
             }
+            self.tradesView.onScrolledToBottom = { [weak self] in
+                let request = Event.LoadMore.Request.trades
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onLoadMore(request: request)
+                })
+            }
         }
         
         private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {
@@ -414,12 +420,13 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
             
             if trades.count > 0 {
                 emptyMessage = nil
-                tradesModels = trades.map { (tradeViewMoedl) -> TradesView.Trade in
+                tradesModels = trades.map { (tradeViewModel) -> TradesView.Trade in
                     return TradesView.Trade(
-                        amount: tradeViewMoedl.amount,
-                        price: tradeViewMoedl.price,
-                        time: tradeViewMoedl.time,
-                        priceGrowth: tradeViewMoedl.priceGrowth
+                        amount: tradeViewModel.amount,
+                        price: tradeViewModel.price,
+                        time: tradeViewModel.time,
+                        priceGrowth: tradeViewModel.priceGrowth,
+                        isLoading: tradeViewModel.isLoading
                     )
                 }
             } else {
@@ -446,7 +453,7 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
             self.chartView.showChartLoading(show)
             
         case .trades:
-            break
+            self.tradesView.showTradesLoading(show)
         }
     }
     

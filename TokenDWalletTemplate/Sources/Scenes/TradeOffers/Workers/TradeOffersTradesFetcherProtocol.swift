@@ -14,7 +14,7 @@ public protocol TradeOffersTradesFetcherProtocol {
     
     func getItemsValue() -> [Item]
     func getLoadingStatusValue() -> LoadingStatus
-    func getLoadingMoreStatusValue() -> Bool
+    func getHasMoreItems() -> Bool
     
     func observeItems(pageSize: Int) -> Observable<[Item]>
     func reloadItems()

@@ -122,20 +122,23 @@ extension TradeOffers {
             )
         }
         
-        private func getTradeViewModels(_ trades: [Model.Trade]) -> [Model.TradeViewModel] {
-            return trades.map({ (trade) -> Model.TradeViewModel in
-                let price = self.amountFormatter.assetAmountToString(trade.price)
-                let amount = self.amountFormatter.assetAmountToString(trade.amount)
-                let time = self.dateFormatter.dateToString(trade.date)
-                let priceGrowth = trade.priceGrows
-                
-                return Model.TradeViewModel(
-                    price: price,
-                    amount: amount,
-                    time: time,
-                    priceGrowth: priceGrowth
-                )
-            })
+        private func getTradeViewModel(
+            _ trade: Model.Trade,
+            isLoading: Bool
+            ) -> Model.TradeViewModel {
+            
+            let price = self.amountFormatter.assetAmountToString(trade.price)
+            let amount = self.amountFormatter.assetAmountToString(trade.amount)
+            let time = self.dateFormatter.dateToString(trade.date)
+            let priceGrowth = trade.priceGrows
+            
+            return Model.TradeViewModel(
+                price: price,
+                amount: amount,
+                time: time,
+                priceGrowth: priceGrowth,
+                isLoading: isLoading
+            )
         }
     }
 }
@@ -254,12 +257,12 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         case .error(let isBuy, let error):
             viewModel = .error(isBuy: isBuy, error: error.localizedDescription)
             
-        case .offers(let isBuy, let offers, let isLoadingMore):
+        case .offers(let isBuy, let offers, let hasMoreItems):
             if isBuy {
                 var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
                     return self.cellModelFrom(offer, isLoading: false)
                 }
-                if isLoadingMore, let anyOffer = offers.first {
+                if hasMoreItems, let anyOffer = offers.first {
                     cells.append(self.cellModelFrom(anyOffer, isLoading: true))
                 }
                 viewModel = .buyOffers(cells: cells)
@@ -267,7 +270,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
                 var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
                     return self.cellModelFrom(offer, isLoading: false)
                 }
-                if isLoadingMore, let anyOffer = offers.first {
+                if hasMoreItems, let anyOffer = offers.first {
                     cells.append(self.cellModelFrom(anyOffer, isLoading: true))
                 }
                 viewModel = .sellOffers(cells: cells)
@@ -286,8 +289,14 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         case .error(let error):
             viewModel = .error(error.localizedDescription)
             
-        case .trades(let trades):
-            viewModel = .trades(self.getTradeViewModels(trades))
+        case .trades(let trades, let hasMoreItems):
+            var tradeViewModels = trades.map { (trade) -> Model.TradeViewModel in
+                return self.getTradeViewModel(trade, isLoading: false)
+            }
+            if hasMoreItems, let anyTrade = trades.first {
+                tradeViewModels.append(self.getTradeViewModel(anyTrade, isLoading: true))
+            }
+            viewModel = .trades(trades: tradeViewModels)
         }
         
         self.presenterDispatch.display { (displayLogic) in

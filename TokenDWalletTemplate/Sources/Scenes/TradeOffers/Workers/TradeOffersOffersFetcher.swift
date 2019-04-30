@@ -118,7 +118,6 @@ extension TradeOffers {
         
         private func loadMoreOffers(request: RequestModel) {
             guard
-                self.getLoadingStatusValue(request.isBuy) == .loaded,
                 let prevRequest = request.prevRequest,
                 let links = request.prevLinks,
                 links.next != nil,
@@ -132,7 +131,6 @@ extension TradeOffers {
             }
             
             request.isLoadingMore = true
-            request.loadingStatus.accept(.loading)
             
             self.orderBookApiV3.loadPageForLinks(
                 OrderBookEntryResource.self,
@@ -145,7 +143,6 @@ extension TradeOffers {
             },
                 completion: { [weak self] (result) in
                     request.isLoadingMore = false
-                    request.loadingStatus.accept(.loaded)
                     
                     switch result {
                         
@@ -202,8 +199,8 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
         return self.getRequestModel(isBuy).loadingStatus.value
     }
     
-    public func getLoadingMoreStatusValue(_ isBuy: Bool) -> Bool {
-        return self.getRequestModel(isBuy).isLoadingMore
+    public func getHasMoreItems(_ isBuy: Bool) -> Bool {
+        return self.getRequestModel(isBuy).hasMoreItems
     }
     
     public func observeItems(_ isBuy: Bool, pageSize: Int) -> Observable<[TradeOffers.Model.Offer]> {

@@ -80,10 +80,7 @@ extension TradeOffers {
         
         private func loadMoreTrades() {
             guard
-                self.getLoadingStatusValue() == .loaded,
-                //                let prevRequest = request.prevRequest,
-                //                let links = request.prevLinks,
-                //                links.next != nil,
+                let prevCursor = self.prevCursor,
                 !self.isLoadingMore else {
                     return
             }
@@ -94,7 +91,6 @@ extension TradeOffers {
             }
             
             self.isLoadingMore = true
-            self.loadingStatus.accept(.loading)
             
             let parameters = TradesRequestParameters(
                 baseAsset: self.baseAsset,
@@ -106,10 +102,9 @@ extension TradeOffers {
                 parameters: parameters,
                 orderDescending: true,
                 limit: self.pageSize,
-                cursor: nil,
+                cursor: prevCursor,
                 completion: { [weak self] (result) in
                     self?.isLoadingMore = false
-                    self?.loadingStatus.accept(.loaded)
                     
                     switch result {
                         
@@ -175,8 +170,8 @@ extension TradeOffers.TradesFetcher: TradeOffers.TradesFetcherProtocol {
         return self.loadingStatus.value
     }
     
-    public func getLoadingMoreStatusValue() -> Bool {
-        return self.isLoadingMore
+    public func getHasMoreItems() -> Bool {
+        return self.hasMoreItems
     }
     
     public func observeItems(pageSize: Int) -> Observable<[Item]> {

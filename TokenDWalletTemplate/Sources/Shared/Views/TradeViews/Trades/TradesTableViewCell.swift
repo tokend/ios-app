@@ -30,11 +30,26 @@ public class TradesTableViewCell: UITableViewCell {
         }
     }
     
+    public var isLoading: Bool = false {
+        didSet {
+            self.priceLabel.isHidden = self.isLoading
+            self.amountLabel.isHidden = self.isLoading
+            self.timeLabel.isHidden = self.isLoading
+            
+            if self.isLoading {
+                self.loadingIndicator.startAnimating()
+            } else {
+                self.loadingIndicator.stopAnimating()
+            }
+        }
+    }
+    
     // MARK: - Private properties
     
     private let priceLabel: UILabel = UILabel()
     private let amountLabel: UILabel = UILabel()
     private let timeLabel: UILabel = UILabel()
+    private let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
     
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,6 +68,8 @@ public class TradesTableViewCell: UITableViewCell {
         self.setupPriceLabel()
         self.setupAmountLabel()
         self.setupTimeLabel()
+        self.setupLoadingIndicator()
+        
         self.setupLayout()
     }
     
@@ -77,10 +94,15 @@ public class TradesTableViewCell: UITableViewCell {
         self.amountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
     }
     
+    private func setupLoadingIndicator() {
+        self.loadingIndicator.hidesWhenStopped = true
+    }
+    
     private func setupLayout() {
         self.contentView.addSubview(self.priceLabel)
         self.contentView.addSubview(self.amountLabel)
         self.contentView.addSubview(self.timeLabel)
+        self.contentView.addSubview(self.loadingIndicator)
         
         self.priceLabel.snp.makeConstraints { (make) in
             make.leading.equalToSuperview().inset(TradesTableViewCell.horizontalInset)
@@ -94,6 +116,10 @@ public class TradesTableViewCell: UITableViewCell {
         self.timeLabel.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().inset(TradesTableViewCell.horizontalInset)
             make.centerY.equalToSuperview()
+        }
+        
+        self.loadingIndicator.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
         }
     }
 }
