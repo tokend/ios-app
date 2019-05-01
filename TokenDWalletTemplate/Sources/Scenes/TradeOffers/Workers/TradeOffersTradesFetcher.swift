@@ -98,25 +98,27 @@ extension TradeOffers {
                 orderBookId: "0"
             )
             
-            self.orderBookApi.requestTrades(
-                parameters: parameters,
-                orderDescending: true,
-                limit: self.pageSize,
-                cursor: prevCursor,
-                completion: { [weak self] (result) in
-                    self?.isLoadingMore = false
-                    
-                    switch result {
+            DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+                self.orderBookApi.requestTrades(
+                    parameters: parameters,
+                    orderDescending: true,
+                    limit: self.pageSize,
+                    cursor: prevCursor,
+                    completion: { [weak self] (result) in
+                        self?.isLoadingMore = false
                         
-                    case .success(let trades):
-                        if let id = trades.last?.id {
-                            self?.prevCursor = "\(id)"
+                        switch result {
+                            
+                        case .success(let trades):
+                            if let id = trades.last?.id {
+                                self?.prevCursor = "\(id)"
+                            }
+                            self?.onItemsLoaded(responses: trades, shouldAppend: true)
+                            
+                        case .failure(let error):
+                            self?.errorStatus.accept(error)
                         }
-                        self?.onItemsLoaded(responses: trades, shouldAppend: true)
-                        
-                    case .failure(let error):
-                        self?.errorStatus.accept(error)
-                    }
+                })
             })
         }
         

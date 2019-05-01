@@ -204,6 +204,7 @@
 		7FABEA6920FD08B30005E751 /* ValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA6620FD08B30005E751 /* ValueFormatter.swift */; };
 		7FABEA842100D44E0005E751 /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA832100D44E0005E751 /* ScrollableStackView.swift */; };
 		7FABEA90210211170005E751 /* SendPaymentFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */; };
+		7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432B82279CED700422746 /* UITableView+LastCell.swift */; };
 		7FB9E46C20BEB3E2005BFE0E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46B20BEB3E2005BFE0E /* Theme.swift */; };
 		7FB9E46F20BEB6B7005BFE0E /* BaseFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */; };
 		7FB9E47120BEB6D2005BFE0E /* LaunchFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */; };
@@ -704,6 +705,7 @@
 		7FABEA6620FD08B30005E751 /* ValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueFormatter.swift; sourceTree = "<group>"; };
 		7FABEA832100D44E0005E751 /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
 		7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentFlowController.swift; sourceTree = "<group>"; };
+		7FB432B82279CED700422746 /* UITableView+LastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+LastCell.swift"; sourceTree = "<group>"; };
 		7FB9E46B20BEB3E2005BFE0E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFlowController.swift; sourceTree = "<group>"; };
 		7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchFlowController.swift; sourceTree = "<group>"; };
@@ -1914,6 +1916,7 @@
 				7FB9E47A20C01455005BFE0E /* UIImage+ButtonImage.swift */,
 				DBA0EFAF21C0041700A99325 /* UIResponder+First.swift */,
 				E980D86B20D1323000C53841 /* UISegmentedControl+FillWithSegments.swift */,
+				7FB432B82279CED700422746 /* UITableView+LastCell.swift */,
 				E91131F920C56FC700A8AC4D /* UIView+Loading.swift */,
 				E9063E8B20F640E600A5B343 /* UIViewController+ChildViewController.swift */,
 				E91131EF20C5485900A8AC4D /* UIViewController+Nib.swift */,
@@ -3108,6 +3111,7 @@
 				E9A5CBDF211B34A6009112CA /* DashboardFlowController.swift in Sources */,
 				E92F1C042139B77D00D4695E /* SharedAmountFormatter.swift in Sources */,
 				E9A5CBF5211DBCCB009112CA /* DashboardPaymentsPlugInInteractor.swift in Sources */,
+				7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */,
 				E9063E9D20F7679600A5B343 /* BalanceHeaderWithPickerBalancesFetcherProtocol.swift in Sources */,
 				7FF6760020BD98630074E9A8 /* AppDelegate.swift in Sources */,
 				DB0E51D32164E99F00DDA88C /* SaleInfoInteractor.swift in Sources */,

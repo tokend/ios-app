@@ -55,6 +55,7 @@ public class TradesView: UIView {
     public var trades: [Trade] = [] {
         didSet {
             self.everScrolled = false
+            self.lastIndexPath = IndexPath(row: self.trades.count - 1, section: 0)
             self.reloadData()
             self.updateEmptyState()
         }
@@ -83,6 +84,7 @@ public class TradesView: UIView {
     private let emptyViewLabel: UILabel = UILabel()
     
     private var everScrolled: Bool = false
+    private var lastIndexPath: IndexPath?
     
     private let disposeBag = DisposeBag()
     
@@ -271,6 +273,12 @@ extension TradesView: UITableViewDataSource {
 
 extension TradesView: UITableViewDelegate {
     
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if self.everScrolled, self.tableView.isLastCellVisible(lastCellIndexPath: self.lastIndexPath) {
+            self.onScrolledToBottom?()
+        }
+    }
+    
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.everScrolled = true
     }
@@ -281,7 +289,7 @@ extension TradesView: UITableViewDelegate {
         forRowAt indexPath: IndexPath
         ) {
         
-        if indexPath.row == self.trades.count - 1, self.everScrolled {
+        if self.everScrolled, indexPath.row == self.trades.count - 1 {
             self.onScrolledToBottom?()
         }
     }

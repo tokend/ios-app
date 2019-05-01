@@ -132,31 +132,33 @@ extension TradeOffers {
             
             request.isLoadingMore = true
             
-            self.orderBookApiV3.loadPageForLinks(
-                OrderBookEntryResource.self,
-                links: links,
-                page: .next,
-                previousRequest: prevRequest,
-                shouldSign: true,
-                onRequestBuilt: { (prevRequest) in
-                    request.prevRequest = prevRequest
-            },
-                completion: { [weak self] (result) in
-                    request.isLoadingMore = false
-                    
-                    switch result {
+            DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+                self.orderBookApiV3.loadPageForLinks(
+                    OrderBookEntryResource.self,
+                    links: links,
+                    page: .next,
+                    previousRequest: prevRequest,
+                    shouldSign: true,
+                    onRequestBuilt: { (prevRequest) in
+                        request.prevRequest = prevRequest
+                },
+                    completion: { [weak self] (result) in
+                        request.isLoadingMore = false
                         
-                    case .failure(let error):
-                        request.errorStatus.accept(error)
-                        
-                    case .success(let document):
-                        request.prevLinks = document.links
-                        self?.onItemsLoaded(
-                            request: request,
-                            resources: document.data,
-                            shouldAppend: true
-                        )
-                    }
+                        switch result {
+                            
+                        case .failure(let error):
+                            request.errorStatus.accept(error)
+                            
+                        case .success(let document):
+                            request.prevLinks = document.links
+                            self?.onItemsLoaded(
+                                request: request,
+                                resources: document.data,
+                                shouldAppend: true
+                            )
+                        }
+                })
             })
         }
         
