@@ -17,7 +17,7 @@ extension SaleDetails {
         
         public init() {
             self.dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm, dd MMM yy"
+            self.dateFormatter.dateFormat = "HH:mm, dd MMM yy"
         }
         
         // MARK: - DateFormatterProtocol
