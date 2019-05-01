@@ -9,8 +9,9 @@ extension TradeOffers {
             sceneModel: Model.SceneModel,
             amountFormatter: AmountFormatterProtocol,
             dateFormatter: DateFormatterProtocol,
-            chartsFetcher: ChartsFetcherProtocol,
             offersFetcher: OffersFetcherProtocol,
+            chartsFetcher: ChartsFetcherProtocol,
+            tradesFetcher: TradesFetcherProtocol,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
@@ -24,8 +25,9 @@ extension TradeOffers {
             let interactor = Interactor(
                 presenter: presenter,
                 sceneModel: sceneModel,
+                offersFetcher: offersFetcher,
                 chartsFetcher: chartsFetcher,
-                offersFetcher: offersFetcher
+                tradesFetcher: tradesFetcher
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

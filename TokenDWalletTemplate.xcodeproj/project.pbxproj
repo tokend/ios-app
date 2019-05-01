@@ -82,6 +82,8 @@
 		71C74EBD2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C74EBC2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift */; };
 		71C9F89521074F9900A59207 /* ReceiveAddressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C9F89421074F9900A59207 /* ReceiveAddressManager.swift */; };
 		71EE11972126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE11962126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift */; };
+		7F066F55226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F066F54226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift */; };
+		7F066F57226E15F600BBA155 /* TradeOffersTradesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F066F56226E15F600BBA155 /* TradeOffersTradesFetcher.swift */; };
 		7F0F36B720E2696500E906D5 /* WalletRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0F36B120E2696500E906D5 /* WalletRecoveryPresenter.swift */; };
 		7F0F36B820E2696500E906D5 /* WalletRecoveryRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0F36B220E2696500E906D5 /* WalletRecoveryRouting.swift */; };
 		7F0F36B920E2696500E906D5 /* WalletRecoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0F36B320E2696500E906D5 /* WalletRecoveryModels.swift */; };
@@ -202,6 +204,7 @@
 		7FABEA6920FD08B30005E751 /* ValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA6620FD08B30005E751 /* ValueFormatter.swift */; };
 		7FABEA842100D44E0005E751 /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA832100D44E0005E751 /* ScrollableStackView.swift */; };
 		7FABEA90210211170005E751 /* SendPaymentFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */; };
+		7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432B82279CED700422746 /* UITableView+LastCell.swift */; };
 		7FB9E46C20BEB3E2005BFE0E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46B20BEB3E2005BFE0E /* Theme.swift */; };
 		7FB9E46F20BEB6B7005BFE0E /* BaseFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */; };
 		7FB9E47120BEB6D2005BFE0E /* LaunchFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */; };
@@ -403,7 +406,7 @@
 		E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF52139B77C00D4695E /* OrderBookCard.swift */; };
 		E92F1C0E2139B77D00D4695E /* OrderBookTableViewBuyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF62139B77C00D4695E /* OrderBookTableViewBuyCell.swift */; };
 		E92F1C0F2139B77D00D4695E /* OrderBookTableViewSellCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF72139B77C00D4695E /* OrderBookTableViewSellCell.swift */; };
-		E92F1C102139B77D00D4695E /* OrderBookTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF82139B77C00D4695E /* OrderBookTableViewCell.swift */; };
+		E92F1C102139B77D00D4695E /* OrderBookTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF82139B77C00D4695E /* OrderBookTableViewCellModel.swift */; };
 		E92F1C112139B77D00D4695E /* OrderBookTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92F1BF92139B77C00D4695E /* OrderBookTableView.swift */; };
 		E92F1C122139B7DA00D4695E /* CreateOfferModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA5B20FD088E0005E751 /* CreateOfferModels.swift */; };
 		E92F1C132139B7F100D4695E /* VerifyEmailWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEB45C920DD5FC4001CA31C /* VerifyEmailWorker.swift */; };
@@ -580,6 +583,8 @@
 		71C74EBC2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSectionsProviderProtocol.swift; sourceTree = "<group>"; };
 		71C9F89421074F9900A59207 /* ReceiveAddressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveAddressManager.swift; sourceTree = "<group>"; };
 		71EE11962126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentConfirmationSectionsProvider.swift; sourceTree = "<group>"; };
+		7F066F54226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOffersTradesFetcherProtocol.swift; sourceTree = "<group>"; };
+		7F066F56226E15F600BBA155 /* TradeOffersTradesFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeOffersTradesFetcher.swift; sourceTree = "<group>"; };
 		7F0F36B120E2696500E906D5 /* WalletRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoveryPresenter.swift; sourceTree = "<group>"; };
 		7F0F36B220E2696500E906D5 /* WalletRecoveryRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoveryRouting.swift; sourceTree = "<group>"; };
 		7F0F36B320E2696500E906D5 /* WalletRecoveryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoveryModels.swift; sourceTree = "<group>"; };
@@ -700,6 +705,7 @@
 		7FABEA6620FD08B30005E751 /* ValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueFormatter.swift; sourceTree = "<group>"; };
 		7FABEA832100D44E0005E751 /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
 		7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentFlowController.swift; sourceTree = "<group>"; };
+		7FB432B82279CED700422746 /* UITableView+LastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+LastCell.swift"; sourceTree = "<group>"; };
 		7FB9E46B20BEB3E2005BFE0E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFlowController.swift; sourceTree = "<group>"; };
 		7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchFlowController.swift; sourceTree = "<group>"; };
@@ -908,7 +914,7 @@
 		E92F1BF52139B77C00D4695E /* OrderBookCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookCard.swift; sourceTree = "<group>"; };
 		E92F1BF62139B77C00D4695E /* OrderBookTableViewBuyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewBuyCell.swift; sourceTree = "<group>"; };
 		E92F1BF72139B77C00D4695E /* OrderBookTableViewSellCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewSellCell.swift; sourceTree = "<group>"; };
-		E92F1BF82139B77C00D4695E /* OrderBookTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewCell.swift; sourceTree = "<group>"; };
+		E92F1BF82139B77C00D4695E /* OrderBookTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableViewCellModel.swift; sourceTree = "<group>"; };
 		E92F1BF92139B77C00D4695E /* OrderBookTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderBookTableView.swift; sourceTree = "<group>"; };
 		E93F074020D306F1000C0991 /* DepositSceneAddressManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneAddressManagerProtocol.swift; sourceTree = "<group>"; };
 		E93F074220D30716000C0991 /* DepositSceneAddressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneAddressManager.swift; sourceTree = "<group>"; };
@@ -1451,6 +1457,8 @@
 				7F7496222260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift */,
 				7F7496242260A1D40065EE8E /* TradeOffersOffersFetcher.swift */,
 				7F7496262260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift */,
+				7F066F56226E15F600BBA155 /* TradeOffersTradesFetcher.swift */,
+				7F066F54226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -1908,6 +1916,7 @@
 				7FB9E47A20C01455005BFE0E /* UIImage+ButtonImage.swift */,
 				DBA0EFAF21C0041700A99325 /* UIResponder+First.swift */,
 				E980D86B20D1323000C53841 /* UISegmentedControl+FillWithSegments.swift */,
+				7FB432B82279CED700422746 /* UITableView+LastCell.swift */,
 				E91131F920C56FC700A8AC4D /* UIView+Loading.swift */,
 				E9063E8B20F640E600A5B343 /* UIViewController+ChildViewController.swift */,
 				E91131EF20C5485900A8AC4D /* UIViewController+Nib.swift */,
@@ -2308,7 +2317,7 @@
 				E92F1BF52139B77C00D4695E /* OrderBookCard.swift */,
 				E92F1BF92139B77C00D4695E /* OrderBookTableView.swift */,
 				E92F1BF62139B77C00D4695E /* OrderBookTableViewBuyCell.swift */,
-				E92F1BF82139B77C00D4695E /* OrderBookTableViewCell.swift */,
+				E92F1BF82139B77C00D4695E /* OrderBookTableViewCellModel.swift */,
 				E92F1BF72139B77C00D4695E /* OrderBookTableViewSellCell.swift */,
 			);
 			path = OrderBook;
@@ -2981,7 +2990,7 @@
 				DB593825226DD77500C8997C /* SendPaymentAmountViewController.swift in Sources */,
 				710E86332105FA95007204D4 /* BXFInteractiveLabel.swift in Sources */,
 				710D30AA2114A3B1007BCCB0 /* Hashable+Iterate.swift in Sources */,
-				E92F1C102139B77D00D4695E /* OrderBookTableViewCell.swift in Sources */,
+				E92F1C102139B77D00D4695E /* OrderBookTableViewCellModel.swift in Sources */,
 				E980D87420D1830800C53841 /* DepositSceneAssetsFetcher.swift in Sources */,
 				710E86102105E1AB007204D4 /* ReceiveAddressQRCell.swift in Sources */,
 				7F7495F7225CF9C00065EE8E /* TradesListViewController.swift in Sources */,
@@ -3046,6 +3055,7 @@
 				E91131F820C5610700A8AC4D /* ExploreTokensSceneTokensFetcher.swift in Sources */,
 				7F0F36BB20E2696500E906D5 /* WalletRecoveryInteractor.swift in Sources */,
 				DB0E51D02164E99F00DDA88C /* SaleInfoPresenter.swift in Sources */,
+				7F066F57226E15F600BBA155 /* TradeOffersTradesFetcher.swift in Sources */,
 				7FEB45C620DD5C6B001CA31C /* VerifyEmailVerifyWorkerProtocol.swift in Sources */,
 				7FABEA842100D44E0005E751 /* ScrollableStackView.swift in Sources */,
 				E91131F620C55E7A00A8AC4D /* ExploreTokensSceneTokensFetcherProtocol.swift in Sources */,
@@ -3101,6 +3111,7 @@
 				E9A5CBDF211B34A6009112CA /* DashboardFlowController.swift in Sources */,
 				E92F1C042139B77D00D4695E /* SharedAmountFormatter.swift in Sources */,
 				E9A5CBF5211DBCCB009112CA /* DashboardPaymentsPlugInInteractor.swift in Sources */,
+				7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */,
 				E9063E9D20F7679600A5B343 /* BalanceHeaderWithPickerBalancesFetcherProtocol.swift in Sources */,
 				7FF6760020BD98630074E9A8 /* AppDelegate.swift in Sources */,
 				DB0E51D32164E99F00DDA88C /* SaleInfoInteractor.swift in Sources */,
@@ -3190,6 +3201,7 @@
 				716B27EE2111F2E000C4F515 /* WithdrawFlowController.swift in Sources */,
 				7FF896EC21ADAF60001A5D48 /* UIColor+Hex.swift in Sources */,
 				E93F075E20D7F2DC000C0991 /* TransactionsListSceneDateFormatterProtocol.swift in Sources */,
+				7F066F55226E110D00BBA155 /* TradeOffersTradesFetcherProtocol.swift in Sources */,
 				E93F074120D306F1000C0991 /* DepositSceneAddressManagerProtocol.swift in Sources */,
 				7FEB45C820DD5D94001CA31C /* VerifyEmailResendWorkerProtocol.swift in Sources */,
 				7FEC94942148170500F41EE6 /* SaleDetailsDateFormatter.swift in Sources */,

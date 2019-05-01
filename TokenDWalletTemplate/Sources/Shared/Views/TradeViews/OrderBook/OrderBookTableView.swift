@@ -17,9 +17,12 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             self.tableView.reloadData()
         }
     }
-    public var onContentSizeChanged: ContentSizeDidChange?
     
     public var onPullToRefresh: (() -> Void)?
+    public var onScrolledToBottom: (() -> Void)? {
+        get { return self.delegateDatasource.onScrolledToBottom }
+        set { self.delegateDatasource.onScrolledToBottom = newValue }
+    }
     
     // MARK: - Private properties
     
@@ -44,25 +47,6 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         self.commonInit()
     }
     
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey: Any]?,
-        context: UnsafeMutableRawPointer?
-        ) {
-        
-        guard let tableObject = object as? UITableView,
-            tableObject == self.tableView
-            else {
-                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-                return
-        }
-        
-        if let newSize = change?[.newKey] as? CGSize {
-            self.onContentSizeChanged?(newSize)
-        }
-    }
-    
     // MARK: - Private
     
     private func commonInit() {
@@ -78,15 +62,8 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         self.tableView.delegate = self.delegateDatasource
         self.tableView.separatorColor = Theme.Colors.separatorOnMainColor
         self.tableView.separatorInset = .zero
-        self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.rowHeight = 44
         self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        
-        self.tableView.addObserver(
-            self,
-            forKeyPath: "contentSize",
-            options: [.new],
-            context: nil)
     }
     
     private func setupRefreshControl() {
@@ -95,10 +72,16 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
             .asDriver()
             .drive(onNext: { [weak self] in
                 self?.onPullToRefresh?()
-            }).disposed(by: self.disposeBag)
+            })
+            .disposed(by: self.disposeBag)
     }
     
-    private func setupEmptyLabel() { }
+    private func setupEmptyLabel() {
+        self.emptyLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
+        self.emptyLabel.font = Theme.Fonts.smallTextFont
+        self.emptyLabel.textAlignment = .center
+        self.emptyLabel.numberOfLines = 0
+    }
     
     private func setupLayout() {
         self.addSubview(self.tableView)
@@ -110,13 +93,27 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
         }
         
         self.emptyLabel.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-            make.top.leading.greaterThanOrEqualToSuperview().inset(8)
-            make.trailing.bottom.lessThanOrEqualToSuperview().inset(8)
+            make.centerY.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(8)
         }
     }
     
     // MARK: - Public
+    
+    public func showDataLoading(_ show: Bool) {
+        if show {
+            self.emptyLabel.alpha = 0.0
+            if self.cells.isEmpty {
+                self.showLoading()
+            } else {
+                self.refreshControl.beginRefreshing()
+            }
+        } else {
+            self.emptyLabel.alpha = 1.0
+            self.hideLoading()
+            self.refreshControl.endRefreshing()
+        }
+    }
     
     public func showEmptyStateWithText(_ text: String) {
         self.emptyLabel.text = text
@@ -126,19 +123,25 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     public func hideEmptyState() {
         self.emptyLabel.isHidden = true
     }
-    
-    public func showDataLoading(_ show: Bool) {
-        if show {
-            self.refreshControl.beginRefreshing()
-        } else {
-            self.refreshControl.endRefreshing()
-        }
-    }
 }
 
 extension OrderBookTableView {
     fileprivate class DelegateDatasource: NSObject, UITableViewDataSource, UITableViewDelegate {
-        public var cells: [OrderBookTableViewCellModel<CellType>] = []
+        
+        // MARK: - Public properties
+        
+        public var cells: [OrderBookTableViewCellModel<CellType>] = [] {
+            didSet {
+                self.everScrolled = false
+            }
+        }
+        public var onScrolledToBottom: (() -> Void)?
+        
+        // MARK: - Private properties
+        
+        private var everScrolled: Bool = false
+        
+        // MARK: -
         
         func numberOfSections(in tableView: UITableView) -> Int {
             return 1
@@ -155,6 +158,21 @@ extension OrderBookTableView {
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             if let cell = tableView.cellForRow(at: indexPath) as? CellType {
                 self.cells[indexPath.row].onClick?(cell)
+            }
+        }
+        
+        public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            self.everScrolled = true
+        }
+        
+        func tableView(
+            _ tableView: UITableView,
+            willDisplay cell: UITableViewCell,
+            forRowAt indexPath: IndexPath
+            ) {
+            
+            if indexPath.row == self.cells.count - 1, self.everScrolled {
+                self.onScrolledToBottom?()
             }
         }
     }

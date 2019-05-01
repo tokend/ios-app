@@ -35,6 +35,8 @@ extension SendPaymentAmount {
         
         private let buttonHeight: CGFloat = 45.0
         
+        private var viewDidAppear: Bool = false
+        
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
@@ -75,6 +77,8 @@ extension SendPaymentAmount {
         
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
+            
+            self.viewDidAppear = true
             
             let request = Event.LoadBalances.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
@@ -183,9 +187,11 @@ extension SendPaymentAmount {
                         }
                     }
                     
-                    UIView.animate(withKeyboardAttributes: attributes, animations: {
-                        self.view.layoutIfNeeded()
-                    })
+                    if self.viewDidAppear {
+                        UIView.animate(withKeyboardAttributes: attributes, animations: {
+                            self.view.layoutIfNeeded()
+                        })
+                    }
             })
             KeyboardController.shared.add(observer: keyboardObserver)
         }

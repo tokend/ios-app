@@ -2,10 +2,26 @@ import UIKit
 
 public class OrderBookTableViewBuyCell: UITableViewCell {
     
+    // MARK: - Public properties
+    
+    public var isLoading: Bool = false {
+        didSet {
+            self.priceLabel.isHidden = self.isLoading
+            self.amountLabel.isHidden = self.isLoading
+            
+            if self.isLoading {
+                self.loadingIndicator.startAnimating()
+            } else {
+                self.loadingIndicator.stopAnimating()
+            }
+        }
+    }
+    
     // MARK: - Private properties
     
     private let priceLabel: UILabel = UILabel()
     private let amountLabel: UILabel = UILabel()
+    private let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
     
     // MARK: - Overridden methods
     
@@ -25,57 +41,48 @@ public class OrderBookTableViewBuyCell: UITableViewCell {
         self.selectionStyle = .none
         self.setupPriceLabel()
         self.setupAmountLabel()
+        self.setupLoadingIndicator()
         
         self.setupLayout()
     }
     
     private func setupPriceLabel() {
         self.priceLabel.numberOfLines = 1
-        self.priceLabel.setContentHuggingPriority(.required, for: .horizontal)
-        self.priceLabel.setContentHuggingPriority(.required, for: .vertical)
-        self.priceLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        self.priceLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         self.priceLabel.textColor = Theme.Colors.positiveAmountColor
         self.priceLabel.font = Theme.Fonts.smallTextFont
-        self.priceLabel.textAlignment = .right
-        self.priceLabel.backgroundColor = Theme.Colors.contentBackgroundColor
-        self.priceLabel.layer.shadowColor = Theme.Colors.contentBackgroundColor.cgColor
-        self.priceLabel.layer.shadowRadius = 2
-        self.priceLabel.layer.shadowOpacity = 1
-        self.priceLabel.layer.shadowOffset = CGSize(width: -6, height: 0)
+        self.priceLabel.textAlignment = .left
     }
     
     private func setupAmountLabel() {
         self.amountLabel.numberOfLines = 1
-        self.amountLabel.setContentHuggingPriority(.required, for: .horizontal)
-        self.amountLabel.setContentHuggingPriority(.required, for: .vertical)
-        self.amountLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        self.amountLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         self.amountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
         self.amountLabel.font = Theme.Fonts.smallTextFont
-        self.amountLabel.textAlignment = .left
-        self.amountLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+        self.amountLabel.textAlignment = .right
+    }
+    
+    private func setupLoadingIndicator() {
+        self.loadingIndicator.hidesWhenStopped = true
     }
     
     private func setupLayout() {
-        self.addSubview(self.amountLabel)
-        self.addSubview(self.priceLabel)
+        self.contentView.addSubview(self.amountLabel)
+        self.contentView.addSubview(self.priceLabel)
+        self.contentView.addSubview(self.loadingIndicator)
         
-        let sideInset: CGFloat = 16
-        let betweenDistance: CGFloat = 12
-        let topBottomInset: CGFloat = 8
-        
-        self.amountLabel.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().inset(topBottomInset)
-            make.bottom.equalToSuperview().inset(topBottomInset + 1)
-            make.leading.equalToSuperview().inset(sideInset)
-        }
+        let sideInset: CGFloat = 14
         
         self.priceLabel.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().inset(topBottomInset)
-            make.bottom.equalToSuperview().inset(topBottomInset + 1)
-            make.trailing.equalToSuperview().inset(betweenDistance)
-            make.leading.lessThanOrEqualTo(self.amountLabel.snp.trailing)
+            make.leading.equalToSuperview().inset(sideInset)
+            make.centerY.equalToSuperview()
+        }
+        
+        self.amountLabel.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview().inset(sideInset)
+            make.centerY.equalToSuperview()
+        }
+        
+        self.loadingIndicator.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
         }
     }
 }
@@ -88,5 +95,9 @@ extension OrderBookTableViewBuyCell: OrderBookTableViewCellProtocol {
     
     public func setAmount(_ amount: String) {
         self.amountLabel.text = amount
+    }
+    
+    public func setLoading(_ isLoading: Bool) {
+        self.isLoading = isLoading
     }
 }

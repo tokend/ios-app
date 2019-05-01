@@ -7,15 +7,13 @@ public protocol TradeOffersPresentationLogic {
     func presentViewDidLoad(response: Event.ViewDidLoad.Response)
     func presentScreenTitleUpdated(response: Event.ScreenTitleUpdated.Response)
     func presentContentTabSelected(response: Event.ContentTabSelected.Response)
-    func presentPeriodsDidChange(response: Event.PeriodsDidChange.Response)
-    func presentPairPriceDidChange(response: Event.PairPriceDidChange.Response)
+    func presentChartPeriodsDidChange(response: Event.ChartPeriodsDidChange.Response)
+    func presentChartPairPriceDidChange(response: Event.ChartPairPriceDidChange.Response)
     func presentChartDidUpdate(response: Event.ChartDidUpdate.Response)
-    func presentSellOffersDidUpdate(response: Event.SellOffersDidUpdate.Response)
-    func presentBuyOffersDidUpdate(response: Event.BuyOffersDidUpdate.Response)
+    func presentOffersDidUpdate(response: Event.OffersDidUpdate.Response)
     func presentTradesDidUpdate(response: Event.TradesDidUpdate.Response)
     func presentLoading(response: Event.Loading.Response)
     func presentChartFormatterDidChange(response: Event.ChartFormatterDidChange.Response)
-    func presentError(response: Event.Error.Response)
     func presentCreateOffer(response: Event.CreateOffer.Response)
 }
 
@@ -48,41 +46,6 @@ extension TradeOffers {
         }
         
         // MARK: - Private
-        
-        private func createBuyOffersDidUpdateViewModel(
-            cells: [OrderBookTableViewCellModel<OrderBookTableViewBuyCell>]?
-            ) -> Event.BuyOffersDidUpdate.ViewModel {
-            
-            if let cells = self.processCells(cells) {
-                return .cells(cells)
-            }
-            return .empty
-        }
-        
-        private func createSellOffersDidUpdateViewModel(
-            cells: [OrderBookTableViewCellModel<OrderBookTableViewSellCell>]?
-            ) -> Event.SellOffersDidUpdate.ViewModel {
-            
-            if let cells = self.processCells(cells) {
-                return .cells(cells)
-            }
-            return .empty
-        }
-        
-        private func processCells<CellType: OrderBookTableViewCell>(
-            _ cells: [OrderBookTableViewCellModel<CellType>]?
-            ) -> [OrderBookTableViewCellModel<CellType>]? {
-            
-            if let cells = cells {
-                if cells.isEmpty {
-                    return nil
-                } else {
-                    return cells
-                }
-            } else {
-                return []
-            }
-        }
         
         private func setupAxisFormatters(
             periods: [Model.Period],
@@ -141,7 +104,8 @@ extension TradeOffers {
         }
         
         private func cellModelFrom<CellType: OrderBookTableViewCell>(
-            _ offer: Model.Offer
+            _ offer: Model.Offer,
+            isLoading: Bool
             ) -> OrderBookTableViewCellModel<CellType> {
             
             let anOffer = offer.getOffer(CellType.self)
@@ -153,24 +117,28 @@ extension TradeOffers {
                 amountCurrency: offer.amount.currency,
                 isBuy: offer.isBuy,
                 offer: anOffer,
+                isLoading: isLoading,
                 onClick: nil
             )
         }
         
-        private func getTradeViewModels(_ trades: [Model.Trade]) -> [Model.TradeViewModel] {
-            return trades.map({ (trade) -> Model.TradeViewModel in
-                let price = self.amountFormatter.assetAmountToString(trade.price)
-                let amount = self.amountFormatter.assetAmountToString(trade.amount)
-                let time = self.dateFormatter.dateToString(trade.date)
-                let priceGrowth = trade.priceGrows
-                
-                return Model.TradeViewModel(
-                    price: price,
-                    amount: amount,
-                    time: time,
-                    priceGrowth: priceGrowth
-                )
-            })
+        private func getTradeViewModel(
+            _ trade: Model.Trade,
+            isLoading: Bool
+            ) -> Model.TradeViewModel {
+            
+            let price = self.amountFormatter.assetAmountToString(trade.price)
+            let amount = self.amountFormatter.assetAmountToString(trade.amount)
+            let time = self.dateFormatter.dateToString(trade.date, relative: true)
+            let priceGrowth = trade.priceGrows
+            
+            return Model.TradeViewModel(
+                price: price,
+                amount: amount,
+                time: time,
+                priceGrowth: priceGrowth,
+                isLoading: isLoading
+            )
         }
     }
 }
@@ -217,7 +185,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         }
     }
     
-    public func presentPeriodsDidChange(response: Event.PeriodsDidChange.Response) {
+    public func presentChartPeriodsDidChange(response: Event.ChartPeriodsDidChange.Response) {
         var periods = self.getPeriodViewModels(response.periods)
         if periods.isEmpty {
             periods = [Model.PeriodViewModel(
@@ -226,18 +194,18 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
                 period: nil
                 )]
         }
-        let viewModel = Event.PeriodsDidChange.ViewModel(
+        let viewModel = Event.ChartPeriodsDidChange.ViewModel(
             periods: periods,
             selectedPeriodIndex: response.selectedPeriodIndex
         )
         
         self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayPeriodsDidChange(viewModel: viewModel)
+            displayLogic.displayChartPeriodsDidChange(viewModel: viewModel)
         }
     }
     
-    public func presentPairPriceDidChange(response: Event.PairPriceDidChange.Response) {
-        let viewModel: Event.PairPriceDidChange.ViewModel
+    public func presentChartPairPriceDidChange(response: Event.ChartPairPriceDidChange.Response) {
+        let viewModel: Event.ChartPairPriceDidChange.ViewModel
         if let price = response.price,
             let per = response.per {
             
@@ -245,7 +213,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
             var perString =  self.amountFormatter.formatToken(per)
             
             if let timestamp = response.timestamp {
-                let date = self.dateFormatter.dateToString(timestamp)
+                let date = self.dateFormatter.dateToString(timestamp, relative: false)
                 perString += Localized(
                     .at_date,
                     replace: [
@@ -254,55 +222,70 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
                 )
             }
             
-            viewModel = Event.PairPriceDidChange.ViewModel(
+            viewModel = Event.ChartPairPriceDidChange.ViewModel(
                 price: priceString,
                 per: perString
             )
         } else {
-            viewModel = Event.PairPriceDidChange.ViewModel(price: nil, per: nil)
+            viewModel = Event.ChartPairPriceDidChange.ViewModel(price: nil, per: nil)
         }
         
         self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayPairPriceDidChange(viewModel: viewModel)
+            displayLogic.displayChartPairPriceDidChange(viewModel: viewModel)
         }
     }
     
     public func presentChartDidUpdate(response: Event.ChartDidUpdate.Response) {
-        let chartEntries = response.charts?.map({ (chart) -> ChartDataEntry in
-            ChartDataEntry(
-                x: chart.date.timeIntervalSince1970,
-                y: (chart.value as NSDecimalNumber).doubleValue
-            )
-        })
-        let viewModel = Event.ChartDidUpdate.ViewModel(
-            chartEntries: chartEntries
-        )
+        let viewModel: Event.ChartDidUpdate.ViewModel
+        
+        switch response {
+            
+        case .charts(let charts):
+            let chartEntries = charts.map({ (chart) -> ChartDataEntry in
+                ChartDataEntry(
+                    x: chart.date.timeIntervalSince1970,
+                    y: (chart.value as NSDecimalNumber).doubleValue
+                )
+            })
+            viewModel = .charts(chartEntries)
+            
+        case .error(let error):
+            viewModel = .error(error.localizedDescription)
+        }
+        
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayChartDidUpdate(viewModel: viewModel)
         }
     }
     
-    public func presentSellOffersDidUpdate(response: Event.SellOffersDidUpdate.Response) {
-        let cells = response.offers?.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
-            return self.cellModelFrom(offer)
+    public func presentOffersDidUpdate(response: Event.OffersDidUpdate.Response) {
+        let viewModel: Event.OffersDidUpdate.ViewModel
+        switch response {
+            
+        case .error(let isBuy, let error):
+            viewModel = .error(isBuy: isBuy, error: error.localizedDescription)
+            
+        case .offers(let isBuy, let offers, let hasMoreItems):
+            if isBuy {
+                var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
+                    return self.cellModelFrom(offer, isLoading: false)
+                }
+                if hasMoreItems, let anyOffer = offers.first {
+                    cells.append(self.cellModelFrom(anyOffer, isLoading: true))
+                }
+                viewModel = .buyOffers(cells: cells)
+            } else {
+                var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
+                    return self.cellModelFrom(offer, isLoading: false)
+                }
+                if hasMoreItems, let anyOffer = offers.first {
+                    cells.append(self.cellModelFrom(anyOffer, isLoading: true))
+                }
+                viewModel = .sellOffers(cells: cells)
+            }
         }
-        let viewModel: Event.SellOffersDidUpdate.ViewModel = {
-            return self.createSellOffersDidUpdateViewModel(cells: cells)
-        }()
         self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displaySellOffersDidUpdate(viewModel: viewModel)
-        }
-    }
-    
-    public func presentBuyOffersDidUpdate(response: Event.BuyOffersDidUpdate.Response) {
-        let cells = response.offers?.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
-            return self.cellModelFrom(offer)
-        }
-        let viewModel: Event.BuyOffersDidUpdate.ViewModel = {
-            return self.createBuyOffersDidUpdateViewModel(cells: cells)
-        }()
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayBuyOffersDidUpdate(viewModel: viewModel)
+            displayLogic.displayOffersDidUpdate(viewModel: viewModel)
         }
     }
     
@@ -314,8 +297,14 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         case .error(let error):
             viewModel = .error(error.localizedDescription)
             
-        case .trades(let trades):
-            viewModel = .trades(self.getTradeViewModels(trades))
+        case .trades(let trades, let hasMoreItems):
+            var tradeViewModels = trades.map { (trade) -> Model.TradeViewModel in
+                return self.getTradeViewModel(trade, isLoading: false)
+            }
+            if hasMoreItems, let anyTrade = trades.first {
+                tradeViewModels.append(self.getTradeViewModel(anyTrade, isLoading: true))
+            }
+            viewModel = .trades(trades: tradeViewModels)
         }
         
         self.presenterDispatch.display { (displayLogic) in
@@ -324,12 +313,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
     }
     
     public func presentLoading(response: Event.Loading.Response) {
-        let viewModel = Event.Loading.ViewModel(
-            showForChart: response.showForChart,
-            showForBuyTable: response.showForBuyTable,
-            showForSellTable: response.showForSellTable,
-            showForTrades: response.showForTrades
-        )
+        let viewModel = response
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayLoading(viewModel: viewModel)
         }
@@ -350,13 +334,6 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayChartFormatterDidChange(viewModel: viewModel)
-        }
-    }
-    
-    public func presentError(response: Event.Error.Response) {
-        let viewModel = Event.Error.ViewModel(message: response.error.localizedDescription)
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayError(viewModel: viewModel)
         }
     }
     

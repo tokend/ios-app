@@ -10,18 +10,21 @@ public class TradesView: UIView {
         public let price: String
         public let time: String
         public let priceGrowth: Bool
+        public let isLoading: Bool
         
         public init(
             amount: String,
             price: String,
             time: String,
-            priceGrowth: Bool
+            priceGrowth: Bool,
+            isLoading: Bool
             ) {
             
             self.amount = amount
             self.price = price
             self.time = time
             self.priceGrowth = priceGrowth
+            self.isLoading = isLoading
         }
     }
     
@@ -51,6 +54,8 @@ public class TradesView: UIView {
     
     public var trades: [Trade] = [] {
         didSet {
+            self.everScrolled = false
+            self.lastIndexPath = IndexPath(row: self.trades.count - 1, section: 0)
             self.reloadData()
             self.updateEmptyState()
         }
@@ -65,6 +70,7 @@ public class TradesView: UIView {
     }
     
     public var onPullToRefresh: (() -> Void)?
+    public var onScrolledToBottom: (() -> Void)?
     
     // MARK: - Private properties
     
@@ -76,6 +82,9 @@ public class TradesView: UIView {
     private let tableView: UITableView = UITableView()
     private let refreshControl: UIRefreshControl = UIRefreshControl()
     private let emptyViewLabel: UILabel = UILabel()
+    
+    private var everScrolled: Bool = false
+    private var lastIndexPath: IndexPath?
     
     private let disposeBag = DisposeBag()
     
@@ -167,7 +176,10 @@ public class TradesView: UIView {
     }
     
     private func setupEmptyViewLabel() {
+        self.emptyViewLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
+        self.emptyViewLabel.font = Theme.Fonts.smallTextFont
         self.emptyViewLabel.textAlignment = .center
+        self.emptyViewLabel.numberOfLines = 0
     }
     
     private func setupLayout() {
@@ -226,7 +238,6 @@ public class TradesView: UIView {
         let hasTradesEntries = self.trades.count > 0
         
         self.emptyViewLabel.isHidden = hasTradesEntries
-        self.tableView.isHidden = !hasTradesEntries
     }
 }
 
@@ -252,6 +263,7 @@ extension TradesView: UITableViewDataSource {
         cell.amount = trade.amount
         cell.time = trade.time
         cell.priceGrowth = trade.priceGrowth
+        cell.isLoading = trade.isLoading
         
         return cell
     }
@@ -261,4 +273,24 @@ extension TradesView: UITableViewDataSource {
 
 extension TradesView: UITableViewDelegate {
     
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if self.everScrolled, self.tableView.isLastCellVisible(lastCellIndexPath: self.lastIndexPath) {
+            self.onScrolledToBottom?()
+        }
+    }
+    
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.everScrolled = true
+    }
+    
+    public func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+        ) {
+        
+        if self.everScrolled, indexPath.row == self.trades.count - 1 {
+            self.onScrolledToBottom?()
+        }
+    }
 }

@@ -3,6 +3,7 @@ import UIKit
 public protocol OrderBookTableViewCellProtocol {
     func setPrice(_ price: String)
     func setAmount(_ amount: String)
+    func setLoading(_ isLoading: Bool)
 }
 
 public typealias OrderBookTableViewCell = OrderBookTableViewCellProtocol & UIView
@@ -48,6 +49,7 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
     public let amountCurrency: String
     public let isBuy: Bool
     public let offer: Offer
+    public let isLoading: Bool
     public var onClick: ((CellType) -> Void)?
     
     public init(
@@ -57,6 +59,7 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
         amountCurrency: String,
         isBuy: Bool,
         offer: Offer,
+        isLoading: Bool,
         onClick: ((CellType) -> Void)?
         ) {
         
@@ -66,11 +69,13 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
         self.amountCurrency = amountCurrency
         self.isBuy = isBuy
         self.offer = offer
+        self.isLoading = isLoading
         self.onClick = onClick
     }
     
     public func setup(cell: CellType) {
         cell.setPrice(self.price)
         cell.setAmount(self.amount)
+        cell.setLoading(self.isLoading)
     }
 }

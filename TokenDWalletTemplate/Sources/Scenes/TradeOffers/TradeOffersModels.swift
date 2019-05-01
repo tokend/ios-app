@@ -17,15 +17,38 @@ public enum TradeOffers {
             case trades
         }
         
-        public enum Period: String, Hashable {
+        public enum ContentList {
+            case buyOffers
+            case sellOffers
+            case charts
+            case trades
+        }
+        
+        public enum Period: String, Hashable, Comparable {
             case hour
             case day
             case week
             case month
             case year
+            
+            // MARK: - Public
+            
+            public var weight: Int {
+                switch self {
+                case .hour: return 1
+                case .day: return 2
+                case .week: return 3
+                case .month: return 4
+                case .year: return 5
+                }
+            }
+            
+            public static func < (left: Period, right: Period) -> Bool {
+                return left.weight < right.weight
+            }
         }
         
-        public struct Offer {
+        public struct Offer: Equatable {
             
             public let amount: Amount
             public let price: Amount
@@ -43,7 +66,7 @@ public enum TradeOffers {
             }
         }
         
-        public struct Trade {
+        public struct Trade: Equatable {
             
             public let amount: Decimal
             public let price: Decimal
@@ -79,13 +102,13 @@ extension TradeOffers.Model {
         
         public let assetPair: AssetPair
         public let tabs: [ContentTab]
-        public var buyOffers: [Offer]?
+        public var selectedTab: ContentTab
+        public var buyOffers: [Offer] = []
+        public var sellOffers: [Offer] = []
+        public var selectedPeriod: Period?
         public var charts: Charts?
         public var periods: [Period] = []
-        public var selectedPeriod: Period?
-        public var selectedTab: ContentTab
-        public var sellOffers: [Offer]?
-        public var trades: [Trade]?
+        public var trades: [Trade] = []
         
         public init(
             assetPair: AssetPair,
@@ -137,7 +160,7 @@ extension TradeOffers.Model {
         }
     }
     
-    public struct Amount {
+    public struct Amount: Equatable {
         
         public let value: Decimal
         public let currency: String
@@ -176,18 +199,21 @@ extension TradeOffers.Model {
         public let amount: String
         public let time: String
         public let priceGrowth: Bool
+        public let isLoading: Bool
         
         public init(
             price: String,
             amount: String,
             time: String,
-            priceGrowth: Bool
+            priceGrowth: Bool,
+            isLoading: Bool
             ) {
             
             self.price = price
             self.amount = amount
             self.time = time
             self.priceGrowth = priceGrowth
+            self.isLoading = isLoading
         }
     }
     
@@ -216,20 +242,33 @@ extension TradeOffers.Event {
     
     public enum ViewDidLoad {
         
-        public struct Request { public init() {} }
+        public struct Request {
+            
+            public let offersPageSize: Int
+            public let tradesPageSize: Int
+            
+            public init(
+                offersPageSize: Int,
+                tradesPageSize: Int
+                ) {
+                
+                self.offersPageSize = offersPageSize
+                self.tradesPageSize = tradesPageSize
+            }
+        }
         
         public struct Response {
             
             public let assetPair: Model.AssetPair
             public let tabs: [Model.ContentTab]
-            public let selectedIndex: Int
+            public let selectedIndex: Int?
             public let periods: [Model.Period]
             public let selectedPeriodIndex: Int?
             
             public init(
                 assetPair: Model.AssetPair,
                 tabs: [Model.ContentTab],
-                selectedIndex: Int,
+                selectedIndex: Int?,
                 periods: [Model.Period],
                 selectedPeriodIndex: Int?
                 ) {
@@ -246,7 +285,7 @@ extension TradeOffers.Event {
             
             public let assetPair: Model.AssetPair
             public let tabs: [(title: String, tab: Model.ContentTab)]
-            public let selectedIndex: Int
+            public let selectedIndex: Int?
             public let periods: [Model.PeriodViewModel]
             public let selectedPeriodIndex: Int?
             public let axisFomatters: Model.AxisFormatters
@@ -254,7 +293,7 @@ extension TradeOffers.Event {
             public init(
                 assetPair: Model.AssetPair,
                 tabs: [(title: String, tab: Model.ContentTab)],
-                selectedIndex: Int,
+                selectedIndex: Int?,
                 periods: [Model.PeriodViewModel],
                 selectedPeriodIndex: Int?,
                 axisFomatters: Model.AxisFormatters
@@ -338,7 +377,7 @@ extension TradeOffers.Event {
         }
     }
     
-    public enum PairPriceDidChange {
+    public enum ChartPairPriceDidChange {
         
         public struct Response {
             
@@ -386,7 +425,7 @@ extension TradeOffers.Event {
         }
     }
     
-    public enum PeriodsDidChange {
+    public enum ChartPeriodsDidChange {
         
         public struct Response {
             
@@ -421,56 +460,30 @@ extension TradeOffers.Event {
     
     public enum ChartDidUpdate {
         
-        public struct Response {
+        public enum Response {
             
-            public let charts: [Model.Chart]?
-            
-            public init(charts: [Model.Chart]?) {
-                self.charts = charts
-            }
-        }
-        
-        public struct ViewModel {
-            
-            public let chartEntries: [ChartDataEntry]?
-            
-            public init(chartEntries: [ChartDataEntry]?) {
-                self.chartEntries = chartEntries
-            }
-        }
-    }
-    
-    public enum SellOffersDidUpdate {
-        
-        public struct Response {
-            
-            public let offers: [Model.Offer]?
-            
-            public init(offers: [Model.Offer]?) {
-                self.offers = offers
-            }
+            case charts([Model.Chart])
+            case error(Swift.Error)
         }
         
         public enum ViewModel {
-            case empty
-            case cells([OrderBookTableViewCellModel<OrderBookTableViewSellCell>])
+            
+            case charts([ChartDataEntry])
+            case error(String)
         }
     }
     
-    public enum BuyOffersDidUpdate {
+    public enum OffersDidUpdate {
         
-        public struct Response {
-            
-            public let offers: [Model.Offer]?
-            
-            public init(offers: [Model.Offer]?) {
-                self.offers = offers
-            }
+        public enum Response {
+            case error(isBuy: Bool, error: Swift.Error)
+            case offers(isBuy: Bool, offers: [Model.Offer], hasMoreItems: Bool)
         }
         
         public enum ViewModel {
-            case empty
-            case cells([OrderBookTableViewCellModel<OrderBookTableViewBuyCell>])
+            case error(isBuy: Bool, error: String)
+            case buyOffers(cells: [OrderBookTableViewCellModel<OrderBookTableViewBuyCell>])
+            case sellOffers(cells: [OrderBookTableViewCellModel<OrderBookTableViewSellCell>])
         }
     }
     
@@ -478,53 +491,43 @@ extension TradeOffers.Event {
         
         public enum Response {
             case error(Swift.Error)
-            case trades([Model.Trade])
+            case trades(trades: [Model.Trade], hasMoreItems: Bool)
         }
         
         public enum ViewModel {
             case error(String)
-            case trades([Model.TradeViewModel])
+            case trades(trades: [Model.TradeViewModel])
         }
     }
     
     public enum Loading {
         
-        public struct Model {
+        public struct Response {
             
-            // nil if should not change current state
-            public let showForChart: Bool?
-            public let showForBuyTable: Bool?
-            public let showForSellTable: Bool?
-            public let showForTrades: Bool?
+            public let isLoading: Bool
+            public let contentList: Model.ContentList
             
             public init(
-                showForChart: Bool?,
-                showForBuyTable: Bool?,
-                showForSellTable: Bool?,
-                showForTrades: Bool?
+                isLoading: Bool,
+                contentList: Model.ContentList
                 ) {
                 
-                self.showForChart = showForChart
-                self.showForBuyTable = showForBuyTable
-                self.showForSellTable = showForSellTable
-                self.showForTrades = showForTrades
+                self.isLoading = isLoading
+                self.contentList = contentList
             }
         }
         
-        public typealias Response = Model
-        public typealias ViewModel = Model
+        public typealias ViewModel = Response
     }
     
     public enum PullToRefresh {
         
-        public struct Request {
-            
-            public let tab: Model.ContentTab
-            
-            public init(tab: Model.ContentTab) {
-                self.tab = tab
-            }
-        }
+        public typealias Request = Model.ContentList
+    }
+    
+    public enum LoadMore {
+        
+        public typealias Request = Model.ContentList
     }
     
     public enum CreateOffer {
@@ -584,27 +587,6 @@ extension TradeOffers.Event {
             
             public init(axisFormatters: Model.AxisFormatters) {
                 self.axisFormatters = axisFormatters
-            }
-        }
-    }
-    
-    public enum Error {
-        
-        public struct Response {
-            
-            public let error: Swift.Error
-            
-            public init(error: Swift.Error) {
-                self.error = error
-            }
-        }
-        
-        public struct ViewModel {
-            
-            public let message: String
-            
-            public init(message: String) {
-                self.message = message
             }
         }
     }

@@ -10,11 +10,27 @@ extension SaleDetails {
 }
 
 extension SaleDetails {
+    
     class ChartDateFormatter: ChartDateFormatterProtocol {
+        
+        // MARK: - Private properties
+        
+        private let dateFormatter: Foundation.DateFormatter
+        private let axisDateFormatter: DateFormatter
+        
+        // MARK: -
+        
+        init() {
+            self.dateFormatter = Foundation.DateFormatter()
+            self.dateFormatter.dateFormat = "HH:mm, dd MMM yy"
+            
+            self.axisDateFormatter = DateFormatter()
+        }
+        
+        // MARK: - ChartDateFormatterProtocol
+        
         func dateToString(_ date: Date) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm dd MMM yy"
-            return dateFormatter.string(from: date)
+            return self.dateFormatter.string(from: date)
         }
         
         func formatDateForXAxis(
@@ -22,21 +38,25 @@ extension SaleDetails {
             type: Model.Period
             ) -> String {
             
-            let dateFormatter = DateFormatter()
-            
             switch type {
+                
             case .hour:
-                dateFormatter.dateFormat = "HH:mm"
+                self.axisDateFormatter.dateFormat = "HH:mm"
+                
             case .day:
-                dateFormatter.dateFormat = "HH:mm"
+                self.axisDateFormatter.dateFormat = "HH:mm"
+                
             case .week:
-                dateFormatter.dateFormat = "dd MMM"
+                self.axisDateFormatter.dateFormat = "dd MMM"
+                
             case .month:
-                dateFormatter.dateFormat = "dd MMM"
+                self.axisDateFormatter.dateFormat = "dd MMM"
+                
             case .year:
-                dateFormatter.dateFormat = "MMM yyyy"
+                self.axisDateFormatter.dateFormat = "MMM yyyy"
             }
-            return dateFormatter.string(from: date)
+            
+            return self.axisDateFormatter.string(from: date)
         }
     }
 }

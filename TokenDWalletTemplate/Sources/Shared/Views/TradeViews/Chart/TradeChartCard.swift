@@ -5,15 +5,6 @@ class TradeChartCard: UIView {
     
     typealias DidSelectItemAtIndex = (_ index: Int?, _ card: TradeChartCard) -> Void
     
-    // MARK: - Private properties
-    
-    private let titleStackView: UIStackView = UIStackView()
-    private let mainTitleLabel: UILabel = UILabel()
-    private let sideTitleLabel: UILabel = UILabel()
-    
-    private let periodPicker: HorizontalPicker = HorizontalPicker()
-    private let chartView: ChartView = ChartView()
-    
     // MARK: - Public properties
     
     public var xAxisValueFormatter: IAxisValueFormatter? {
@@ -27,9 +18,12 @@ class TradeChartCard: UIView {
     
     public var didSelectItemAtIndex: DidSelectItemAtIndex?
     
-    public var chartEntries: [ChartDataEntry]? {
+    public var chartEntries: [ChartDataEntry] {
         get { return self.chartView.entries }
-        set { self.chartView.entries = newValue }
+        set {
+            self.chartView.entries = newValue
+            self.updateEmptyMessage()
+        }
     }
     
     public var periods: [HorizontalPicker.Item] {
@@ -46,7 +40,25 @@ class TradeChartCard: UIView {
         set { self.sideTitleLabel.text = newValue }
     }
     
-    // MARK: - Overridden methods
+    public var emptyMessage: String? {
+        get { return self.emptyMessageLabel.text }
+        set {
+            self.emptyMessageLabel.text = newValue
+            self.updateEmptyMessage()
+        }
+    }
+    
+    // MARK: - Private properties
+    
+    private let titleStackView: UIStackView = UIStackView()
+    private let mainTitleLabel: UILabel = UILabel()
+    private let sideTitleLabel: UILabel = UILabel()
+    private let emptyMessageLabel: UILabel = UILabel()
+    
+    private let periodPicker: HorizontalPicker = HorizontalPicker()
+    private let chartView: ChartView = ChartView()
+    
+    // MARK: -
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,6 +70,20 @@ class TradeChartCard: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public
+    
+    public func showChartLoading(_ show: Bool) {
+        if show {
+            self.chartView.showLoading()
+        } else {
+            self.chartView.hideLoading()
+        }
+    }
+    
+    public func selectPeriodAtIndex(_ index: Int) {
+        self.periodPicker.setSelectedItemAtIndex(index, animated: false)
+    }
+    
     // MARK: - Private
     
     private func commonInit() {
@@ -66,6 +92,7 @@ class TradeChartCard: UIView {
         self.setupTitleStackView()
         self.setupMainTitleLabel()
         self.setupSideTitleLabel()
+        self.setupEmptyMessageLabel()
         self.setupChart()
         self.setupLayout()
     }
@@ -102,6 +129,13 @@ class TradeChartCard: UIView {
         self.sideTitleLabel.text = Localized(.side_title)
     }
     
+    private func setupEmptyMessageLabel() {
+        self.emptyMessageLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
+        self.emptyMessageLabel.font = Theme.Fonts.smallTextFont
+        self.emptyMessageLabel.textAlignment = .center
+        self.emptyMessageLabel.numberOfLines = 0
+    }
+    
     private func setupChart() {
         self.chartView.onDidSelectEntry = { [weak self] (dataSetIndex, entryIndex, chart) in
             guard let strongSelf = self else { return }
@@ -113,6 +147,7 @@ class TradeChartCard: UIView {
         self.addSubview(self.titleStackView)
         self.addSubview(self.periodPicker)
         self.addSubview(self.chartView)
+        self.addSubview(self.emptyMessageLabel)
         
         self.titleStackView.addArrangedSubview(self.mainTitleLabel)
         self.titleStackView.addArrangedSubview(self.sideTitleLabel)
@@ -136,19 +171,19 @@ class TradeChartCard: UIView {
             make.top.equalTo(self.periodPicker.snp.bottom).offset(16.0)
             make.bottom.equalToSuperview()
         }
-    }
-    
-    // MARK: - Public
-    
-    public func showChartLoading(_ show: Bool) {
-        if show {
-            self.chartView.showLoading()
-        } else {
-            self.chartView.hideLoading()
+        
+        self.emptyMessageLabel.snp.makeConstraints { (make) in
+            make.leading.trailing.equalToSuperview().inset(15.0)
+            make.centerY.equalToSuperview()
         }
     }
     
-    public func selectPeriodAtIndex(_ index: Int) {
-        self.periodPicker.setSelectedItemAtIndex(index, animated: false)
+    private func updateEmptyMessage() {
+        let chartsHidden = self.chartEntries.isEmpty
+        
+        self.titleStackView.isHidden = chartsHidden
+        self.periodPicker.isHidden = chartsHidden
+        self.chartView.isHidden = chartsHidden
+        self.emptyMessageLabel.isHidden = !chartsHidden
     }
 }

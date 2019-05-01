@@ -1,39 +1,26 @@
 import Foundation
+import RxCocoa
+import RxSwift
 
-public enum TradeOffersOffersFetchResult {
-    case succeeded([TradeOffers.Model.Offer])
-    case failed
-}
-
-public enum TradeOffersTradesFetchResult {
-    case failed(Swift.Error)
-    case succeeded([TradeOffers.Model.Trade])
+public enum TradeOffersOffersFetcherLoadingStatus {
+    case loaded
+    case loading
 }
 
 public protocol TradeOffersOffersFetcherProtocol {
     
-    typealias OffersFetchResult = TradeOffersOffersFetchResult
+    typealias LoadingStatus = TradeOffersOffersFetcherLoadingStatus
+    typealias Item = TradeOffers.Model.Offer
     
-    func getOffers(
-        forBuy: Bool,
-        base: String,
-        quote: String,
-        limit: Int,
-        cursor: String?,
-        completion: @escaping (OffersFetchResult) -> Void
-    )
-    func cancelOffersRequests()
+    func getItemsValue(_ isBuy: Bool) -> [Item]
+    func getLoadingStatusValue(_ isBuy: Bool) -> LoadingStatus
+    func getHasMoreItems(_ isBuy: Bool) -> Bool
     
-    typealias TradesFetchResult = TradeOffersTradesFetchResult
-    
-    func getTrades(
-        base: String,
-        quote: String,
-        limit: Int,
-        cursor: String?,
-        completion: @escaping (TradesFetchResult) -> Void
-    )
-    func cancelTradesRequests()
+    func observeItems(_ isBuy: Bool, pageSize: Int) -> Observable<[Item]>
+    func reloadItems(_ isBuy: Bool)
+    func loadMoreItems(_ isBuy: Bool)
+    func observeLoadingStatus(_ isBuy: Bool) -> Observable<LoadingStatus>
+    func observeErrorStatus(_ isBuy: Bool) -> Observable<Swift.Error>
 }
 
 extension TradeOffers {
