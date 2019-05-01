@@ -41,6 +41,8 @@ extension TradeOffers {
             return self.sceneModel.periods.index(of: selectedPeriod)
         }
         
+        private var skipViewWillAppear: Bool = true
+        
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
@@ -305,7 +307,13 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
     }
     
     public func onViewWillAppear(request: Event.ViewWillAppear.Request) {
+        if self.skipViewWillAppear {
+            self.skipViewWillAppear = false
+            return
+        }
         
+        self.offersFetcher.reloadItems(true)
+        self.offersFetcher.reloadItems(false)
     }
     
     public func onContentTabSelected(request: Event.ContentTabSelected.Request) {
