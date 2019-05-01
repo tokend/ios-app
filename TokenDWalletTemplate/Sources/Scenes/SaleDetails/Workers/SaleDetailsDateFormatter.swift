@@ -8,10 +8,22 @@ extension SaleDetails {
     typealias DateFormatterProtocol = SaleDetailsDateFormatterProtocol
     
     class SaleDetailsDateFormatter: DateFormatterProtocol {
+        
+        // MARK: - Private properties
+        
+        private let dateFormatter: DateFormatter
+        
+        // MARK: -
+        
+        public init() {
+            self.dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm, dd MMM yy"
+        }
+        
+        // MARK: - DateFormatterProtocol
+        
         func dateToString(_ date: Date) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm dd MMM yy"
-            return dateFormatter.string(from: date)
+            return self.dateFormatter.string(from: date)
         }
     }
 }

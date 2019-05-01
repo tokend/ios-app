@@ -129,7 +129,7 @@ extension TradeOffers {
             
             let price = self.amountFormatter.assetAmountToString(trade.price)
             let amount = self.amountFormatter.assetAmountToString(trade.amount)
-            let time = self.dateFormatter.dateToString(trade.date)
+            let time = self.dateFormatter.dateToString(trade.date, relative: true)
             let priceGrowth = trade.priceGrows
             
             return Model.TradeViewModel(
@@ -213,7 +213,7 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
             var perString =  self.amountFormatter.formatToken(per)
             
             if let timestamp = response.timestamp {
-                let date = self.dateFormatter.dateToString(timestamp)
+                let date = self.dateFormatter.dateToString(timestamp, relative: false)
                 perString += Localized(
                     .at_date,
                     replace: [
