@@ -1,16 +1,20 @@
 import Foundation
 
 protocol CreateOfferPresentationLogic {
-    func presentViewDidLoadSync(response: CreateOffer.Event.ViewDidLoadSync.Response)
-    func presentFieldEditing(response: CreateOffer.Event.FieldEditing.Response)
-    func presentButtonAction(response: CreateOffer.Event.ButtonAction.Response)
-    func presentFieldStateDidChange(response: CreateOffer.Event.FieldStateDidChange.Response)
+    typealias Event = CreateOffer.Event
+    
+    func presentViewDidLoadSync(response: Event.ViewDidLoadSync.Response)
+    func presentFieldEditing(response: Event.FieldEditing.Response)
+    func presentButtonAction(response: Event.ButtonAction.Response)
+    func presentFieldStateDidChange(response: Event.FieldStateDidChange.Response)
+    func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
 }
 
 extension CreateOffer {
     typealias PresentationLogic = CreateOfferPresentationLogic
     
     struct Presenter {
+        typealias Event = CreateOffer.Event
         
         private let presenterDispatch: PresenterDispatch
         private let amountFormatter: AmountFormatterProtocol
@@ -34,8 +38,8 @@ extension CreateOffer {
 }
 
 extension CreateOffer.Presenter: CreateOffer.PresentationLogic {
-    func presentViewDidLoadSync(response: CreateOffer.Event.ViewDidLoadSync.Response) {
-        let viewModel = CreateOffer.Event.ViewDidLoadSync.ViewModel(
+    func presentViewDidLoadSync(response: Event.ViewDidLoadSync.Response) {
+        let viewModel = Event.ViewDidLoadSync.ViewModel(
             price: response.price,
             amount: response.amount,
             total: self.stringFromTotal(response.total)
@@ -45,8 +49,8 @@ extension CreateOffer.Presenter: CreateOffer.PresentationLogic {
         }
     }
     
-    func presentFieldEditing(response: CreateOffer.Event.FieldEditing.Response) {
-        let viewModel = CreateOffer.Event.FieldEditing.ViewModel(
+    func presentFieldEditing(response: Event.FieldEditing.Response) {
+        let viewModel = Event.FieldEditing.ViewModel(
             total: self.stringFromTotal(response.total)
         )
         self.presenterDispatch.display { (displayLogic) in
@@ -54,15 +58,15 @@ extension CreateOffer.Presenter: CreateOffer.PresentationLogic {
         }
     }
     
-    func presentButtonAction(response: CreateOffer.Event.ButtonAction.Response) {
+    func presentButtonAction(response: Event.ButtonAction.Response) {
         let viewModel = response
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayButtonAction(viewModel: viewModel)
         }
     }
     
-    func presentFieldStateDidChange(response: CreateOffer.Event.FieldStateDidChange.Response) {
-        let viewModel = CreateOffer.Event.FieldStateDidChange.ViewModel(
+    func presentFieldStateDidChange(response: Event.FieldStateDidChange.Response) {
+        let viewModel = Event.FieldStateDidChange.ViewModel(
             priceTextFieldState: self.loadTextFieldState(isFilled: response.priceFieldIsFilled),
             amountTextFieldState: self.loadTextFieldState(isFilled: response.amountFieldIsFilled)
         )
@@ -70,10 +74,17 @@ extension CreateOffer.Presenter: CreateOffer.PresentationLogic {
             displayLogic.displayFieldStateDidChange(viewModel: viewModel)
         }
     }
+    
+    public func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayLoadingStatusDidChange(viewModel: viewModel)
+        }
+    }
 }
 
 extension CreateOffer.Presenter {
-    typealias TextFieldState = CreateOffer.Event.FieldStateDidChange.ViewModel.TextFieldState
+    typealias TextFieldState = Event.FieldStateDidChange.ViewModel.TextFieldState
     
     func loadTextFieldState(isFilled: Bool) -> TextFieldState {
         if isFilled {

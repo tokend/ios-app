@@ -9,6 +9,7 @@ public protocol SendPaymentDestinationPresentationLogic {
     func presentScanRecipientQRAddress(response: Event.ScanRecipientQRAddress.Response)
     func presentPaymentAction(response: Event.PaymentAction.Response)
     func presentWithdrawAction(response: Event.WithdrawAction.Response)
+    func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
 }
 
 extension SendPaymentDestination {
@@ -110,6 +111,13 @@ extension SendPaymentDestination.Presenter: SendPaymentDestination.PresentationL
         
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayWithdrawAction(viewModel: viewModel)
+        }
+    }
+    
+    public func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayLoadingStatusDidChange(viewModel: viewModel)
         }
     }
 }

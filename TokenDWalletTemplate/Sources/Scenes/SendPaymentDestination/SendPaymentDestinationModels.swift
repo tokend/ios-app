@@ -63,6 +63,11 @@ public extension SendPaymentDestination.Model {
         let actionButtonTitle: NSAttributedString
         let contactsAreHidden: Bool
     }
+    
+    public enum LoadingStatus {
+        case loaded
+        case loading
+    }
 }
 
 // MARK: - Events
@@ -151,6 +156,11 @@ extension SendPaymentDestination.Event {
             case sections([Model.SectionViewModel])
             case error(String)
         }
+    }
+    
+    public struct LoadingStatusDidChange {
+        public typealias Response =  Model.LoadingStatus
+        public typealias ViewModel = Response
     }
 }
 

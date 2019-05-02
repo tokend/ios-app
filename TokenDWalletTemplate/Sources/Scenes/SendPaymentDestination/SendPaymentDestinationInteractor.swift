@@ -1,8 +1,9 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 public protocol SendPaymentDestinationBusinessLogic {
     typealias Event = SendPaymentDestination.Event
-    typealias Model = SendPaymentDestination.Model
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onEditRecipientAddress(request: Event.EditRecipientAddress.Request)
@@ -17,12 +18,18 @@ extension SendPaymentDestination {
     @objc(SendPaymentDestinationInteractor)
     public class Interactor: NSObject {
         
+        public typealias Event = SendPaymentDestination.Event
+        public typealias Model = SendPaymentDestination.Model
+        
         // MARK: - Private properties
         
         private let presenter: PresentationLogic
         private let recipientAddressResolver: RecipientAddressResolver
         private let contactsFetcher: ContactsFetcherProtocol
         private var sceneModel: Model.SceneModel
+        
+        private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
+        private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
@@ -88,7 +95,7 @@ extension SendPaymentDestination {
                         response = .success(recipientAddress)
                     }
                     self?.presenter.presentSelectedContact(response: response)
-                })
+            })
         }
         
         private func handleSendAction() {
@@ -98,9 +105,11 @@ extension SendPaymentDestination {
                     return
             }
             
+            self.loadingStatus.accept(.loading)
             self.recipientAddressResolver.resolve(
                 recipientAddress: recipientAddress,
                 completion: { [weak self] (result) in
+                    self?.loadingStatus.accept(.loaded)
                     switch result {
                         
                     case .failed(let error):
@@ -172,12 +181,22 @@ extension SendPaymentDestination {
                 self?.presenter.presentContactsUpdated(response: response)
             })
         }
+        
+        private func observeLoadingStatus() {
+            self.loadingStatus
+                .subscribe(onNext: { [weak self] (status) in
+                    let response = status
+                    self?.presenter.presentLoadingStatusDidChange(response: response)
+                })
+                .disposed(by: self.disposeBag)
+        }
     }
 }
 
 extension SendPaymentDestination.Interactor: SendPaymentDestination.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        self.observeLoadingStatus()
         switch self.sceneModel.operation {
             
         case .handleSend:
