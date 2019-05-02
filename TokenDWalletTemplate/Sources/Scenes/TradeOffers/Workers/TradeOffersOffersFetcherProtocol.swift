@@ -12,15 +12,13 @@ public protocol TradeOffersOffersFetcherProtocol {
     typealias LoadingStatus = TradeOffersOffersFetcherLoadingStatus
     typealias Item = TradeOffers.Model.Offer
     
-    func getItemsValue(_ isBuy: Bool) -> [Item]
-    func getLoadingStatusValue(_ isBuy: Bool) -> LoadingStatus
-    func getHasMoreItems(_ isBuy: Bool) -> Bool
+    func getItemsValue() -> (buyItems: [Item], sellItems: [Item])
+    func getLoadingStatusValue() -> LoadingStatus
     
-    func observeItems(_ isBuy: Bool, pageSize: Int) -> Observable<[Item]>
-    func reloadItems(_ isBuy: Bool)
-    func loadMoreItems(_ isBuy: Bool)
-    func observeLoadingStatus(_ isBuy: Bool) -> Observable<LoadingStatus>
-    func observeErrorStatus(_ isBuy: Bool) -> Observable<Swift.Error>
+    func observeItems(pageSize: Int) -> Observable<(buyItems: [Item], sellItems: [Item])>
+    func reloadItems()
+    func observeLoadingStatus() -> Observable<LoadingStatus>
+    func observeErrorStatus() -> Observable<Swift.Error>
 }
 
 extension TradeOffers {

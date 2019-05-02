@@ -8,35 +8,7 @@ extension TradeOffers {
     
     public class OffersFetcher {
         
-        private class RequestModel {
-            
-            public let isBuy: Bool
-            public var pageSize: Int = 10
-            public var cancelable: TokenDSDK.Cancelable?
-            public var prevRequest: JSONAPI.RequestModel?
-            public var prevLinks: Links?
-            public var hasMoreItems: Bool = true
-            public var isLoadingMore: Bool = false
-            
-            public let items: BehaviorRelay<[Model.Offer]> = BehaviorRelay(value: [])
-            public let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
-            public let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
-            
-            // MARK: -
-            
-            public init(isBuy: Bool) {
-                self.isBuy = isBuy
-            }
-            
-            // MARK: - Public
-            
-            public func cancel() {
-                self.cancelable?.cancel()
-                self.cancelable = nil
-                self.loadingStatus.accept(.loaded)
-                self.isLoadingMore = false
-            }
-        }
+        public typealias Item = TradeOffers.Model.Offer
         
         // MARK: - Private properties
         
@@ -44,8 +16,13 @@ extension TradeOffers {
         private let baseAsset: String
         private let quoteAsset: String
         
-        private var buyRequest: RequestModel = RequestModel(isBuy: true)
-        private var sellRequest: RequestModel = RequestModel(isBuy: false)
+        private var pageSize: Int = 10
+        private var cancelable: TokenDSDK.Cancelable?
+        
+        private let items: BehaviorRelay<(buyItems: [Item], sellItems: [Item])> =
+            BehaviorRelay(value: (buyItems: [], sellItems: []))
+        private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+        private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
         
         // MARK: -
         
@@ -62,126 +39,53 @@ extension TradeOffers {
         
         // MARK: - Private
         
-        private func getRequestModel(_ isBuy: Bool) -> RequestModel {
-            return isBuy ? self.buyRequest : self.sellRequest
-        }
-        
-        private func loadOffers(request: RequestModel, pageSize: Int) {
-            request.pageSize = pageSize
+        private func loadOffers(pageSize: Int) {
+            self.pageSize = pageSize
             
-            let filters = OrderBookRequestFiltersV3
-                .with(.isBuy(request.isBuy))
-                .addFilter(.baseAsset(self.baseAsset))
-                .addFilter(.quoteAsset(self.quoteAsset))
-            
-            let paginationStrategy = IndexedPaginationStrategy(
-                index: nil,
-                limit: pageSize,
-                order: request.isBuy ? .descending : .ascending
-            )
-            let pagination = RequestPagination(.strategy(paginationStrategy))
-            
-            request.loadingStatus.accept(.loading)
-            
-            request.cancelable = self.orderBookApiV3.requestOffers(
-                orderBookId: "0",
-                filters: filters,
-                include: ["base_asset", "quote_asset"],
-                pagination: pagination,
-                onRequestBuilt: { (requestModel) in
-                    request.prevRequest = requestModel
-            },
-                completion: { [weak self] (result) in
-                    request.loadingStatus.accept(.loaded)
-                    
-                    switch result {
-                        
-                    case .failure(let error):
-                        request.errorStatus.accept(error)
-                        
-                    case .success(let document):
-                        request.prevLinks = document.links
-                        self?.onItemsLoaded(
-                            request: request,
-                            resources: document.data,
-                            shouldAppend: false
-                        )
-                    }
-            })
-        }
-        
-        private func reloadOffers(request: RequestModel) {
-            request.cancel()
-            
-            self.loadOffers(request: request, pageSize: request.pageSize)
-        }
-        
-        private func loadMoreOffers(request: RequestModel) {
-            guard
-                let prevRequest = request.prevRequest,
-                let links = request.prevLinks,
-                links.next != nil,
-                !request.isLoadingMore else {
-                    return
-            }
-            
-            guard request.hasMoreItems else {
-                print("no more items")
-                return
-            }
-            
-            request.isLoadingMore = true
+            self.loadingStatus.accept(.loading)
             
             DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500), execute: {
-                self.orderBookApiV3.loadPageForLinks(
-                    OrderBookEntryResource.self,
-                    links: links,
-                    page: .next,
-                    previousRequest: prevRequest,
-                    shouldSign: true,
-                    onRequestBuilt: { (prevRequest) in
-                        request.prevRequest = prevRequest
-                },
+                self.cancelable = self.orderBookApiV3.requestOffers(
+                    baseAsset: self.baseAsset,
+                    quoteAsset: self.quoteAsset,
+                    orderBookId: "0",
+                    maxEntries: pageSize,
+                    include: self.orderBookApiV3.requestBuilder.offersIncludeAll,
                     completion: { [weak self] (result) in
-                        request.isLoadingMore = false
+                        self?.loadingStatus.accept(.loaded)
                         
                         switch result {
                             
                         case .failure(let error):
-                            request.errorStatus.accept(error)
+                            self?.errorStatus.accept(error)
                             
                         case .success(let document):
-                            request.prevLinks = document.links
-                            self?.onItemsLoaded(
-                                request: request,
-                                resources: document.data,
-                                shouldAppend: true
-                            )
+                            self?.onItemsLoaded(resource: document.data)
                         }
                 })
             })
         }
         
-        private func onItemsLoaded(
-            request: RequestModel,
-            resources: [OrderBookEntryResource]?,
-            shouldAppend: Bool
-            ) {
-            
-            request.hasMoreItems = (resources?.count ?? 0) >= request.pageSize
-            
-            let newOffers: [Model.Offer] = self.mapItems(resources ?? [])
-            
-            if shouldAppend {
-                var prevOffers = self.getItemsValue(request.isBuy)
-                prevOffers.appendUniques(contentsOf: newOffers)
-                request.items.accept(prevOffers)
-            } else {
-                request.items.accept(newOffers)
+        private func reloadOffers() {
+            guard self.getLoadingStatusValue() == .loaded else {
+                return
             }
+            
+            self.loadOffers(pageSize: self.pageSize)
         }
         
-        private func mapItems(_ items: [OrderBookEntryResource]) -> [Model.Offer] {
+        private func onItemsLoaded(resource: OrderBookResource?) {
+            let buyItems = self.mapItems(resource?.buyEntries)
+            let sellItems = self.mapItems(resource?.sellEntries)
+            
+            self.items.accept((buyItems: buyItems, sellItems: sellItems))
+        }
+        
+        private func mapItems(_ items: [OrderBookEntryResource]?) -> [Model.Offer] {
+            guard let items = items else {
+                return []
+            }
+            
             let models: [Model.Offer] = items.compactMap { (item) -> Model.Offer? in
                 return item.offer
             }
@@ -193,38 +97,30 @@ extension TradeOffers {
 
 extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
     
-    public func getItemsValue(_ isBuy: Bool) -> [TradeOffers.Model.Offer] {
-        return self.getRequestModel(isBuy).items.value
+    public func getItemsValue() -> (buyItems: [Item], sellItems: [Item]) {
+        return self.items.value
     }
     
-    public func getLoadingStatusValue(_ isBuy: Bool) -> LoadingStatus {
-        return self.getRequestModel(isBuy).loadingStatus.value
+    public func getLoadingStatusValue() -> LoadingStatus {
+        return self.loadingStatus.value
     }
     
-    public func getHasMoreItems(_ isBuy: Bool) -> Bool {
-        return self.getRequestModel(isBuy).hasMoreItems
-    }
-    
-    public func observeItems(_ isBuy: Bool, pageSize: Int) -> Observable<[TradeOffers.Model.Offer]> {
-        self.loadOffers(request: self.getRequestModel(isBuy), pageSize: pageSize)
+    public func observeItems(pageSize: Int) -> Observable<(buyItems: [Item], sellItems: [Item])> {
+        self.loadOffers(pageSize: pageSize)
         
-        return self.getRequestModel(isBuy).items.asObservable()
+        return self.items.asObservable()
     }
     
-    public func reloadItems(_ isBuy: Bool) {
-        self.reloadOffers(request: self.getRequestModel(isBuy))
+    public func reloadItems() {
+        self.reloadOffers()
     }
     
-    public func loadMoreItems(_ isBuy: Bool) {
-        self.loadMoreOffers(request: self.getRequestModel(isBuy))
+    public func observeLoadingStatus() -> Observable<LoadingStatus> {
+        return self.loadingStatus.asObservable()
     }
     
-    public func observeLoadingStatus(_ isBuy: Bool) -> Observable<LoadingStatus> {
-        return self.getRequestModel(isBuy).loadingStatus.asObservable()
-    }
-    
-    public func observeErrorStatus(_ isBuy: Bool) -> Observable<Swift.Error> {
-        return self.getRequestModel(isBuy).errorStatus.asObservable()
+    public func observeErrorStatus() -> Observable<Swift.Error> {
+        return self.errorStatus.asObservable()
     }
 }
 
@@ -241,7 +137,7 @@ extension OrderBookEntryResource {
         }
         
         let amount = Amount(
-            value: self.baseAmount,
+            value: self.cumulativeBaseAmount,
             currency: baseAsset
         )
         let price = Amount(
