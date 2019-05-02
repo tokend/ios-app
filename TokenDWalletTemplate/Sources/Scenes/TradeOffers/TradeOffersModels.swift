@@ -17,13 +17,6 @@ public enum TradeOffers {
             case trades
         }
         
-        public enum ContentList {
-            case buyOffers
-            case sellOffers
-            case charts
-            case trades
-        }
-        
         public enum Period: String, Hashable, Comparable {
             case hour
             case day
@@ -476,14 +469,19 @@ extension TradeOffers.Event {
     public enum OffersDidUpdate {
         
         public enum Response {
-            case error(isBuy: Bool, error: Swift.Error)
-            case offers(isBuy: Bool, offers: [Model.Offer], hasMoreItems: Bool)
+            case error(error: Swift.Error)
+            case offers(
+                buy: [Model.Offer],
+                sell: [Model.Offer]
+            )
         }
         
         public enum ViewModel {
-            case error(isBuy: Bool, error: String)
-            case buyOffers(cells: [OrderBookTableViewCellModel<OrderBookTableViewBuyCell>])
-            case sellOffers(cells: [OrderBookTableViewCellModel<OrderBookTableViewSellCell>])
+            case error(error: String)
+            case cells(
+                buy: [OrderBookTableViewCellModel<OrderBookTableViewBuyCell>],
+                sell: [OrderBookTableViewCellModel<OrderBookTableViewSellCell>]
+            )
         }
     }
     
@@ -505,15 +503,15 @@ extension TradeOffers.Event {
         public struct Response {
             
             public let isLoading: Bool
-            public let contentList: Model.ContentList
+            public let content: Model.ContentTab
             
             public init(
                 isLoading: Bool,
-                contentList: Model.ContentList
+                content: Model.ContentTab
                 ) {
                 
                 self.isLoading = isLoading
-                self.contentList = contentList
+                self.content = content
             }
         }
         
@@ -522,12 +520,12 @@ extension TradeOffers.Event {
     
     public enum PullToRefresh {
         
-        public typealias Request = Model.ContentList
+        public typealias Request = Model.ContentTab
     }
     
     public enum LoadMore {
         
-        public typealias Request = Model.ContentList
+        public typealias Request = Model.ContentTab
     }
     
     public enum CreateOffer {

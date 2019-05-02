@@ -62,18 +62,13 @@ extension TradeOffers {
         
         // MARK: - Private
         
-        private func observeOffers(pageSize: Int) {
-            self.observeOffers(isBuy: true, pageSize: pageSize)
-            self.observeOffers(isBuy: false, pageSize: pageSize)
-        }
-        
         private func loadCharts() {
             let baseAsset = self.sceneModel.assetPair.baseAsset
             let quoteAsset = self.sceneModel.assetPair.quoteAsset
             
             let response = Event.Loading.Response(
                 isLoading: true,
-                contentList: .charts
+                content: .chart
             )
             self.presenter.presentLoading(response: response)
             
@@ -83,7 +78,7 @@ extension TradeOffers {
                 completion: { [weak self] (result) in
                     let response = Event.Loading.Response(
                         isLoading: false,
-                        contentList: .charts
+                        content: .chart
                     )
                     self?.presenter.presentLoading(response: response)
                     
@@ -112,7 +107,7 @@ extension TradeOffers {
                 .subscribe(onNext: { [weak self] (status) in
                     let response = Event.Loading.Response(
                         isLoading: status == .loading,
-                        contentList: .trades
+                        content: .trades
                     )
                     self?.presenter.presentLoading(response: response)
                 })
@@ -126,36 +121,30 @@ extension TradeOffers {
                 .disposed(by: self.disposeBag)
         }
         
-        private func observeOffers(isBuy: Bool, pageSize: Int) {
-            self.offersFetcher.observeErrorStatus(isBuy)
+        private func observeOffers(pageSize: Int) {
+            self.offersFetcher.observeErrorStatus()
                 .subscribe(onNext: { [weak self] (error) in
-                    let response = Event.OffersDidUpdate.Response.error(
-                        isBuy: isBuy,
-                        error: error
-                    )
+                    let response = Event.OffersDidUpdate.Response.error(error: error)
                     self?.presenter.presentOffersDidUpdate(response: response)
                 })
                 .disposed(by: self.disposeBag)
             
-            self.offersFetcher.observeLoadingStatus(isBuy)
+            self.offersFetcher.observeLoadingStatus()
                 .subscribe(onNext: { [weak self] (status) in
                     let response = Event.Loading.Response(
                         isLoading: status == .loading,
-                        contentList: isBuy ? .buyOffers : .sellOffers
+                        content: .orderBook
                     )
                     self?.presenter.presentLoading(response: response)
                 })
                 .disposed(by: self.disposeBag)
             
-            self.offersFetcher.observeItems(isBuy, pageSize: pageSize)
+            self.offersFetcher.observeItems(pageSize: pageSize)
                 .subscribe(onNext: { [weak self] (offers) in
-                    if isBuy {
-                        self?.sceneModel.buyOffers = offers
-                    } else {
-                        self?.sceneModel.sellOffers = offers
-                    }
+                    self?.sceneModel.buyOffers = offers.buyItems
+                    self?.sceneModel.sellOffers = offers.sellItems
                     
-                    self?.onOffersDidUpdate(isBuy: isBuy)
+                    self?.onOffersDidUpdate()
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -190,20 +179,10 @@ extension TradeOffers {
             self.presenter.presentContentTabSelected(response: response)
         }
         
-        private func onOffersDidUpdate(isBuy: Bool) {
-            let offers: [Model.Offer]
-            
-            if isBuy {
-                offers = self.sceneModel.buyOffers
-            } else {
-                offers = self.sceneModel.sellOffers
-            }
-            
-            let hasMoreItems = self.offersFetcher.getHasMoreItems(isBuy)
+        private func onOffersDidUpdate() {
             let response = Event.OffersDidUpdate.Response.offers(
-                isBuy: isBuy,
-                offers: offers,
-                hasMoreItems: hasMoreItems
+                buy: self.sceneModel.buyOffers,
+                sell: self.sceneModel.sellOffers
             )
             self.presenter.presentOffersDidUpdate(response: response)
         }
@@ -346,13 +325,10 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
     public func onPullToRefresh(request: Event.PullToRefresh.Request) {
         switch request {
             
-        case .buyOffers:
-            self.offersFetcher.reloadItems(true)
+        case .orderBook:
+            self.offersFetcher.reloadItems()
             
-        case .sellOffers:
-            self.offersFetcher.reloadItems(false)
-            
-        case .charts:
+        case .chart:
             break
             
         case .trades:
@@ -363,13 +339,7 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
     public func onLoadMore(request: Event.LoadMore.Request) {
         switch request {
             
-        case .buyOffers:
-            self.offersFetcher.loadMoreItems(true)
-            
-        case .sellOffers:
-            self.offersFetcher.loadMoreItems(false)
-            
-        case .charts:
+        case .orderBook, .chart:
             break
             
         case .trades:

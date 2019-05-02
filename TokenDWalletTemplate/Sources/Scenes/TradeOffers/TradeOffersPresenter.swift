@@ -262,27 +262,17 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         let viewModel: Event.OffersDidUpdate.ViewModel
         switch response {
             
-        case .error(let isBuy, let error):
-            viewModel = .error(isBuy: isBuy, error: error.localizedDescription)
+        case .error(let error):
+            viewModel = .error(error: error.localizedDescription)
             
-        case .offers(let isBuy, let offers, let hasMoreItems):
-            if isBuy {
-                var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
-                    return self.cellModelFrom(offer, isLoading: false)
-                }
-                if hasMoreItems, let anyOffer = offers.first {
-                    cells.append(self.cellModelFrom(anyOffer, isLoading: true))
-                }
-                viewModel = .buyOffers(cells: cells)
-            } else {
-                var cells = offers.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
-                    return self.cellModelFrom(offer, isLoading: false)
-                }
-                if hasMoreItems, let anyOffer = offers.first {
-                    cells.append(self.cellModelFrom(anyOffer, isLoading: true))
-                }
-                viewModel = .sellOffers(cells: cells)
+        case .offers(let buy, let sell):
+            let buyCells = buy.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
+                return self.cellModelFrom(offer, isLoading: false)
             }
+            let sellCells = sell.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
+                return self.cellModelFrom(offer, isLoading: false)
+            }
+            viewModel = .cells(buy: buyCells, sell: sellCells)
         }
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayOffersDidUpdate(viewModel: viewModel)
