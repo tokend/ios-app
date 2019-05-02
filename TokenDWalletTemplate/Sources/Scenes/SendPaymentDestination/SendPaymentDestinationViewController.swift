@@ -9,6 +9,7 @@ public protocol SendPaymentDestinationDisplayLogic: class {
     func displayScanRecipientQRAddress(viewModel: Event.ScanRecipientQRAddress.ViewModel)
     func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
     func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
 }
 
 extension SendPaymentDestination {
@@ -270,6 +271,17 @@ extension SendPaymentDestination.ViewController: SendPaymentDestination.DisplayL
             
         case .succeeded(let model):
             self.routing?.showWithdrawConformation(model)
+        }
+    }
+    
+    public func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
+        switch viewModel.status {
+            
+        case .loaded:
+            self.routing?.hideProgress()
+            
+        case .loading:
+            self.routing?.showProgress()
         }
     }
 }
