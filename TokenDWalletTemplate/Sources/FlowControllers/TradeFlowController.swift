@@ -100,7 +100,8 @@ class TradeFlowController: BaseSignedInFlowController {
         let offersFetcher = TradeOffers.OffersFetcher(
             orderBookApiV3: self.flowControllerStack.apiV3.orderBookApi,
             baseAsset: baseAsset,
-            quoteAsset: quoteAsset
+            quoteAsset: quoteAsset,
+            pendingOffersRepo: self.reposController.pendingOffersRepo
         )
         
         let chartsFetcher = TradeOffers.ChartsFetcher(

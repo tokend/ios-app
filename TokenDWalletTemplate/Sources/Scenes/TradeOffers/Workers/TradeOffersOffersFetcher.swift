@@ -15,6 +15,7 @@ extension TradeOffers {
         private let orderBookApiV3: TokenDSDK.OrderBookApiV3
         private let baseAsset: String
         private let quoteAsset: String
+        private let pendingOffersRepo: PendingOffersRepo
         
         private var pageSize: Int = 10
         private var cancelable: TokenDSDK.Cancelable?
@@ -24,17 +25,21 @@ extension TradeOffers {
         private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
         private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
         
+        private let disposeBag = DisposeBag()
+        
         // MARK: -
         
         public init(
             orderBookApiV3: TokenDSDK.OrderBookApiV3,
             baseAsset: String,
-            quoteAsset: String
+            quoteAsset: String,
+            pendingOffersRepo: PendingOffersRepo
             ) {
             
             self.orderBookApiV3 = orderBookApiV3
             self.baseAsset = baseAsset
             self.quoteAsset = quoteAsset
+            self.pendingOffersRepo = pendingOffersRepo
         }
         
         // MARK: - Private
@@ -107,6 +112,12 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
     
     public func observeItems(pageSize: Int) -> Observable<(buyItems: [Item], sellItems: [Item])> {
         self.loadOffers(pageSize: pageSize)
+        
+        self.pendingOffersRepo.observeOffers()
+            .subscribe(onNext: { [weak self] _ in
+                self?.reloadOffers()
+            })
+            .disposed(by: self.disposeBag)
         
         return self.items.asObservable()
     }
