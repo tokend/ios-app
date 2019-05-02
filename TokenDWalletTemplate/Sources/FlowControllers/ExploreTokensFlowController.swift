@@ -130,7 +130,11 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         let navigationController = self.navigationController
         let transactionsRouting = TransactionsListScene.Routing (
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
-                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+                self?.showTransactionDetailsScreen(
+                    navigationController: navigationController,
+                    transactionId: identifier,
+                    balanceId: balanceId
+                )
             },
             showSendPayment: { [weak self] (balanceId) in
                 self?.runSendPaymentFlow(
@@ -177,56 +181,6 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
 
         self.walletScene = container
         self.navigationController.pushViewController(container, animated: true)
-    }
-    
-    private func showTransactionDetailsScreen(
-        transactionId: UInt64,
-        balanceId: String
-        ) {
-        let vc = self.setupTransactionDetailsScreen(
-            transactionId: transactionId,
-            balanceId: balanceId
-        )
-        self.navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func setupTransactionDetailsScreen(
-        transactionId: UInt64,
-        balanceId: String
-        ) -> TransactionDetails.ViewController {
-        
-        let routing = TransactionDetails.Routing(
-            successAction: { [weak self] in
-                self?.navigationController.popViewController(true)
-            },
-            showProgress: { [weak self] in
-                self?.navigationController.showProgress()
-            },
-            hideProgress: { [weak self] in
-                self?.navigationController.hideProgress()
-            },
-            showError: { [weak self] (error) in
-                self?.navigationController.showErrorMessage(error, completion: nil)
-        })
-        
-        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
-        let emailFetcher = TransactionDetails.EmailFetcher(
-            generalApi: self.flowControllerStack.api.generalApi
-        )
-        let sectionsProvider = TransactionDetails.OperationSectionsProvider(
-            transactionsHistoryRepo: transactionsHistoryRepo,
-            emailFetcher: emailFetcher,
-            identifier: transactionId,
-            accountId: self.userDataProvider.walletData.accountId
-        )
-        let vc = SharedSceneBuilder.createTransactionDetailsScene(
-            sectionsProvider: sectionsProvider,
-            routing: routing
-        )
-        
-        vc.navigationItem.title = Localized(.transaction_details)
-        
-        return vc
     }
     
     private func openLink(_ link: URL) {

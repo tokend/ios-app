@@ -77,9 +77,14 @@ class DashboardFlowController: BaseSignedInFlowController {
             ),
             previewMaxLength: previewMaxLength
         )
+        let navigationController = self.navigationController
         let paymentsPreviewRouting = TransactionsListScene.Routing(
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
-                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+                self?.showTransactionDetailsScreen(
+                    navigationController: navigationController,
+                    transactionId: identifier,
+                    balanceId: balanceId
+                )
             },
             showSendPayment: { _ in },
             showWithdraw: { _ in },
@@ -167,7 +172,11 @@ class DashboardFlowController: BaseSignedInFlowController {
         let navigationController = self.navigationController
         let transactionsRouting = TransactionsListScene.Routing (
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
-                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+                self?.showTransactionDetailsScreen(
+                    navigationController: navigationController,
+                    transactionId: identifier,
+                    balanceId: balanceId
+                )
             },
             showSendPayment: { [weak self] (balanceId) in
                 self?.runSendPaymentFlow(
@@ -254,28 +263,6 @@ class DashboardFlowController: BaseSignedInFlowController {
         self.navigationController.pushViewController(viewController, animated: true)
     }
     
-    private func showTransactionDetailsScreen(
-        transactionId: UInt64,
-        balanceId: String
-        ) {
-        
-        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
-        let emailFetcher = TransactionDetails.EmailFetcher(
-            generalApi: self.flowControllerStack.api.generalApi
-        )
-        let sectionsProvider = TransactionDetails.OperationSectionsProvider(
-            transactionsHistoryRepo: transactionsHistoryRepo,
-            emailFetcher: emailFetcher,
-            identifier: transactionId,
-            accountId: self.userDataProvider.walletData.accountId
-        )
-        let vc = self.setupTransactionDetailsScreen(
-            sectionsProvider: sectionsProvider,
-            title: Localized(.transaction_details)
-        )
-        self.navigationController.pushViewController(vc, animated: true)
-    }
-    
     private func showPendingOfferDetailsScreen(
         offerId: UInt64
         ) {
@@ -289,38 +276,10 @@ class DashboardFlowController: BaseSignedInFlowController {
             identifier: offerId
         )
         let vc = self.setupTransactionDetailsScreen(
+            navigationController: self.navigationController,
             sectionsProvider: sectionsProvider,
             title: Localized(.pending_offer_details)
         )
         self.navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func setupTransactionDetailsScreen(
-        sectionsProvider: TransactionDetails.SectionsProviderProtocol,
-        title: String
-        ) -> TransactionDetails.ViewController {
-        
-        let routing = TransactionDetails.Routing(
-            successAction: { [weak self] in
-                self?.navigationController.popViewController(true)
-            },
-            showProgress: { [weak self] in
-                self?.navigationController.showProgress()
-            },
-            hideProgress: { [weak self] in
-                self?.navigationController.hideProgress()
-            },
-            showError: { [weak self] (error) in
-                self?.navigationController.showErrorMessage(error, completion: nil)
-        })
-        
-        let vc = SharedSceneBuilder.createTransactionDetailsScene(
-            sectionsProvider: sectionsProvider,
-            routing: routing
-        )
-        
-        vc.navigationItem.title = title
-        
-        return vc
     }
 }

@@ -123,31 +123,6 @@ class SalesFlowController: BaseSignedInFlowController {
         navigationController: NavigationControllerProtocol
         ) {
         
-        let vc = self.setupInvestmentDetailsScreen(
-            offerId: offerId,
-            navigationController: navigationController
-        )
-        navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func setupInvestmentDetailsScreen(
-        offerId: UInt64,
-        navigationController: NavigationControllerProtocol
-        ) -> TransactionDetails.ViewController {
-        
-        let routing = TransactionDetails.Routing(
-            successAction: {
-                navigationController.popViewController(true)
-        },
-            showProgress: {
-                navigationController.showProgress()
-        },
-            hideProgress: {
-                navigationController.hideProgress()
-        },
-            showError: { (error) in
-                navigationController.showErrorMessage(error, completion: nil)
-        })
         let sectionsProvider = TransactionDetails.InvestmentSectionsProvider(
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             transactionSender: self.managersController.transactionSender,
@@ -156,14 +131,14 @@ class SalesFlowController: BaseSignedInFlowController {
             userDataProvider: self.userDataProvider,
             identifier: offerId
         )
-        let vc = SharedSceneBuilder.createTransactionDetailsScene(
+        
+        let vc = self.setupTransactionDetailsScreen(
+            navigationController: navigationController,
             sectionsProvider: sectionsProvider,
-            routing: routing
+            title: Localized(.investment_details)
         )
         
-        vc.navigationItem.title = Localized(.investment_details)
-        
-        return vc
+        navigationController.pushViewController(vc, animated: true)
     }
     
     private func showSaleDetailsScreen(identifier: String) {

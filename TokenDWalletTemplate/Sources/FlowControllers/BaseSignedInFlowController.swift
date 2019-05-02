@@ -30,6 +30,30 @@ class BaseSignedInFlowController: BaseFlowController {
     
     // MARK: - Public
     
+    func showTransactionDetailsScreen(
+        navigationController: NavigationControllerProtocol,
+        transactionId: UInt64,
+        balanceId: String
+        ) {
+        
+        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
+        let emailFetcher = TransactionDetails.EmailFetcher(
+            generalApi: self.flowControllerStack.api.generalApi
+        )
+        let sectionsProvider = TransactionDetails.OperationSectionsProvider(
+            transactionsHistoryRepo: transactionsHistoryRepo,
+            emailFetcher: emailFetcher,
+            identifier: transactionId,
+            accountId: self.userDataProvider.walletData.accountId
+        )
+        let vc = self.setupTransactionDetailsScreen(
+            navigationController: navigationController,
+            sectionsProvider: sectionsProvider,
+            title: Localized(.transaction_details)
+        )
+        navigationController.pushViewController(vc, animated: true)
+    }
+    
     func runSendPaymentFlow(
         navigationController: NavigationControllerProtocol,
         balanceId: String?,
@@ -189,6 +213,36 @@ class BaseSignedInFlowController: BaseFlowController {
         
         vc.navigationItem.title = Localized(.receive)
         navigationController.pushViewController(vc, animated: true)
+    }
+    
+    func setupTransactionDetailsScreen(
+        navigationController: NavigationControllerProtocol,
+        sectionsProvider: TransactionDetails.SectionsProviderProtocol,
+        title: String
+        ) -> TransactionDetails.ViewController {
+        
+        let routing = TransactionDetails.Routing(
+            successAction: {
+                navigationController.popViewController(true)
+        },
+            showProgress: {
+                navigationController.showProgress()
+        },
+            hideProgress: {
+                navigationController.hideProgress()
+        },
+            showError: { (error) in
+                navigationController.showErrorMessage(error, completion: nil)
+        })
+        
+        let vc = SharedSceneBuilder.createTransactionDetailsScene(
+            sectionsProvider: sectionsProvider,
+            routing: routing
+        )
+        
+        vc.navigationItem.title = title
+        
+        return vc
     }
     
     // MARK: - Private
