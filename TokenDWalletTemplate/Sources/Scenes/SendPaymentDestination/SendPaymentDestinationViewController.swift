@@ -275,7 +275,7 @@ extension SendPaymentDestination.ViewController: SendPaymentDestination.DisplayL
     }
     
     public func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
-        switch viewModel.status {
+        switch viewModel {
             
         case .loaded:
             self.routing?.hideProgress()

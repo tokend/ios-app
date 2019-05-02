@@ -138,9 +138,7 @@ extension CreateOffer.Event {
     }
     
     public struct LoadingStatusDidChange {
-        public struct Response {
-            let status: Model.LoadingStatus
-        }
+        public typealias Response =  Model.LoadingStatus
         public typealias ViewModel = Response
     }
 }

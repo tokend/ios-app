@@ -111,7 +111,7 @@ extension CreateOffer {
         private func observeLoadingStatus() {
             self.loadingStatus
                 .subscribe(onNext: { [weak self] (status) in
-                    let response = Event.LoadingStatusDidChange.Response(status: status)
+                    let response = status
                     self?.presenter.presentLoadingStatusDidChange(response: response)
                 })
                 .disposed(by: self.disposeBag)

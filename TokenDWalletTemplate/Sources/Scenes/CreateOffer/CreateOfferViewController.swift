@@ -206,7 +206,7 @@ extension CreateOffer.ViewController: CreateOffer.DisplayLogic {
     }
     
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
-        switch viewModel.status {
+        switch viewModel {
             
         case .loaded:
             self.routing?.hideProgress()
