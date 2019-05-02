@@ -62,6 +62,11 @@ extension CreateOffer.Model {
             self.price = price
         }
     }
+    
+    public enum LoadingStatus {
+        case loaded
+        case loading
+    }
 }
 
 extension CreateOffer.Model.Button {
@@ -81,6 +86,8 @@ extension CreateOffer.Model.Field {
 // MARK: - Events
 
 extension CreateOffer.Event {
+    typealias Model = CreateOffer.Model
+    
     enum ViewDidLoadSync {
         struct Request {}
         struct Response {
@@ -128,6 +135,13 @@ extension CreateOffer.Event {
             let priceTextFieldState: TextFieldState
             let amountTextFieldState: TextFieldState
         }
+    }
+    
+    public struct LoadingStatusDidChange {
+        public struct Response {
+            let status: Model.LoadingStatus
+        }
+        public typealias ViewModel = Response
     }
 }
 

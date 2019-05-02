@@ -4,16 +4,20 @@ import SnapKit
 import UIKit
 
 protocol CreateOfferDisplayLogic: class {
-    func displayViewDidLoadSync(viewModel: CreateOffer.Event.ViewDidLoadSync.ViewModel)
-    func displayFieldEditing(viewModel: CreateOffer.Event.FieldEditing.ViewModel)
-    func displayButtonAction(viewModel: CreateOffer.Event.ButtonAction.ViewModel)
-    func displayFieldStateDidChange(viewModel: CreateOffer.Event.FieldStateDidChange.ViewModel)
+    typealias Event = CreateOffer.Event
+    
+    func displayViewDidLoadSync(viewModel: Event.ViewDidLoadSync.ViewModel)
+    func displayFieldEditing(viewModel: Event.FieldEditing.ViewModel)
+    func displayButtonAction(viewModel: Event.ButtonAction.ViewModel)
+    func displayFieldStateDidChange(viewModel: Event.FieldStateDidChange.ViewModel)
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
 }
 
 extension CreateOffer {
     typealias DisplayLogic = CreateOfferDisplayLogic
     
     class ViewController: UIViewController {
+        typealias Event = CreateOffer.Event
         
         // MARK: - Private properties
         
@@ -29,7 +33,7 @@ extension CreateOffer {
         private let priceEnterAmountView = EnterAmountView()
         private let amountEnterAmountView = EnterAmountView()
         private let totalView = TotalView()
-
+        
         private let disposeBag = DisposeBag()
         
         // MARK: - Injections
@@ -173,7 +177,7 @@ extension CreateOffer {
 // MARK: - CreateOfferDisplayLogicProtocol
 
 extension CreateOffer.ViewController: CreateOffer.DisplayLogic {
-    func displayViewDidLoadSync(viewModel: CreateOffer.Event.ViewDidLoadSync.ViewModel) {
+    func displayViewDidLoadSync(viewModel: Event.ViewDidLoadSync.ViewModel) {
         self.priceEnterAmountView.amount = viewModel.price.value
         self.priceEnterAmountView.asset = viewModel.price.asset
         
@@ -183,11 +187,11 @@ extension CreateOffer.ViewController: CreateOffer.DisplayLogic {
         self.updateTotalLabelTitle(viewModel.total)
     }
     
-    func displayFieldEditing(viewModel: CreateOffer.Event.FieldEditing.ViewModel) {
+    func displayFieldEditing(viewModel: Event.FieldEditing.ViewModel) {
         self.updateTotalLabelTitle(viewModel.total)
     }
     
-    func displayButtonAction(viewModel: CreateOffer.Event.ButtonAction.ViewModel) {
+    func displayButtonAction(viewModel: Event.ButtonAction.ViewModel) {
         switch viewModel {
         case .offer(let offer):
             self.routing?.onAction(offer)
@@ -196,8 +200,19 @@ extension CreateOffer.ViewController: CreateOffer.DisplayLogic {
         }
     }
     
-    func displayFieldStateDidChange(viewModel: CreateOffer.Event.FieldStateDidChange.ViewModel) {
+    func displayFieldStateDidChange(viewModel: Event.FieldStateDidChange.ViewModel) {
         self.priceEnterAmountView.set(amountHighlighted: viewModel.priceTextFieldState == .error)
         self.amountEnterAmountView.set(amountHighlighted: viewModel.amountTextFieldState == .error)
+    }
+    
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
+        switch viewModel.status {
+            
+        case .loaded:
+            self.routing?.hideProgress()
+            
+        case .loading:
+            self.routing?.showProgress()
+        }
     }
 }

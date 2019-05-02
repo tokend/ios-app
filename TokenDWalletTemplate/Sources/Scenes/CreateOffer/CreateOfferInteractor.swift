@@ -4,15 +4,18 @@ import RxSwift
 import TokenDSDK
 
 protocol CreateOfferBusinessLogic {
-    func onViewDidLoadSync(request: CreateOffer.Event.ViewDidLoadSync.Request)
-    func onFieldEditing(request: CreateOffer.Event.FieldEditing.Request)
-    func onButtonAction(request: CreateOffer.Event.ButtonAction.Request)
+    typealias Event = CreateOffer.Event
+    
+    func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
+    func onFieldEditing(request: Event.FieldEditing.Request)
+    func onButtonAction(request: Event.ButtonAction.Request)
 }
 
 extension CreateOffer {
     typealias BusinessLogic = CreateOfferBusinessLogic
     
     class Interactor {
+        typealias Event = CreateOffer.Event
         
         // MARK: - Private properties
         
@@ -20,6 +23,8 @@ extension CreateOffer {
         private let presenter: PresentationLogic
         private let accountId: String
         private let feeLoader: FeeLoaderProtocol
+        
+        private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
         private let disposeBag: DisposeBag = DisposeBag()
         
         init(
@@ -102,11 +107,22 @@ extension CreateOffer {
                 }
             }
         }
+        
+        private func observeLoadingStatus() {
+            self.loadingStatus
+                .subscribe(onNext: { [weak self] (status) in
+                    let response = Event.LoadingStatusDidChange.Response(status: status)
+                    self?.presenter.presentLoadingStatusDidChange(response: response)
+                })
+                .disposed(by: self.disposeBag)
+        }
     }
 }
 
 extension CreateOffer.Interactor: CreateOffer.BusinessLogic {
-    func onViewDidLoadSync(request: CreateOffer.Event.ViewDidLoadSync.Request) {
+    func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
+        self.observeLoadingStatus()
+        
         let total = self.totalPrice()
         let price = CreateOffer.Model.Amount(
             value: self.sceneModel.price,
@@ -117,7 +133,7 @@ extension CreateOffer.Interactor: CreateOffer.BusinessLogic {
             asset: self.sceneModel.baseAsset
         )
         
-        let response = CreateOffer.Event.ViewDidLoadSync.Response(
+        let response = Event.ViewDidLoadSync.Response(
             price: price,
             amount: amount,
             total: total
@@ -125,7 +141,7 @@ extension CreateOffer.Interactor: CreateOffer.BusinessLogic {
         self.presenter.presentViewDidLoadSync(response: response)
     }
     
-    func onFieldEditing(request: CreateOffer.Event.FieldEditing.Request) {
+    func onFieldEditing(request: Event.FieldEditing.Request) {
         switch request.field.type {
             
         case .price:
@@ -136,17 +152,17 @@ extension CreateOffer.Interactor: CreateOffer.BusinessLogic {
         }
         
         let total = self.totalPrice()
-        let response = CreateOffer.Event.FieldEditing.Response(total: total)
+        let response = Event.FieldEditing.Response(total: total)
         self.presenter.presentFieldEditing(response: response)
         
-        let stateDidChangeResponse = CreateOffer.Event.FieldStateDidChange.Response(
+        let stateDidChangeResponse = Event.FieldStateDidChange.Response(
             priceFieldIsFilled: self.checkFieldValue(value: self.sceneModel.price),
             amountFieldIsFilled: self.checkFieldValue(value: self.sceneModel.amount)
         )
         self.presenter.presentFieldStateDidChange(response: stateDidChangeResponse)
     }
     
-    func onButtonAction(request: CreateOffer.Event.ButtonAction.Request) {
+    func onButtonAction(request: Event.ButtonAction.Request) {
         let isBuy: Bool = {
             switch request.type {
             case .buy:
@@ -156,15 +172,17 @@ extension CreateOffer.Interactor: CreateOffer.BusinessLogic {
             }
         }()
         
+        self.loadingStatus.accept(.loading)
         self.handleAction(
             isBuy: isBuy,
             completion: { [weak self] (result) in
+                self?.loadingStatus.accept(.loaded)
                 switch result {
                 case .offer(let offer):
-                    let response = CreateOffer.Event.ButtonAction.Response.offer(offer)
+                    let response = Event.ButtonAction.Response.offer(offer)
                     self?.presenter.presentButtonAction(response: response)
                 case .error(let error):
-                    let response = CreateOffer.Event.ButtonAction.Response.error(error)
+                    let response = Event.ButtonAction.Response.error(error)
                     self?.presenter.presentButtonAction(response: response)
                 }
         })
