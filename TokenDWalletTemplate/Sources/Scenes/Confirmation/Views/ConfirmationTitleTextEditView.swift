@@ -3,49 +3,77 @@ import RxSwift
 import RxCocoa
 
 extension ConfirmationScene.View {
-    class TitleTextEditViewModel: ConfirmationScene.Model.CellViewModel {
+    class TitleTextEditViewModel: ConfirmationScene.Model.CellViewModel, CellViewModel {
         
         // MARK: - Public properties
         
-        var value: String?
+        var title: String?
         var placeholder: String?
         var maxCharacters: Int
         
         // MARK: -
         
         init(
-            title: String,
+            hint: String?,
             cellType: ConfirmationScene.Model.CellModel.CellType,
             identifier: ConfirmationScene.CellIdentifier,
-            value: String?,
+            title: String?,
             placeholder: String?,
             maxCharacters: Int = 0
             ) {
             
-            self.value = value
+            self.title = title
             self.placeholder = placeholder
             self.maxCharacters = maxCharacters
             
             super.init(
-                title: title,
+                hint: hint,
                 cellType: cellType,
                 identifier: identifier
             )
         }
+        
+        func setup(cell: TitleTextEditView) {
+            cell.hint = self.hint
+            cell.title = self.title
+            cell.maxCharacters = self.maxCharacters
+            cell.placeholder = self.placeholder
+            cell.identifier = self.identifier
+        }
     }
     
-    class TitleTextEditView: UIView {
+    class TitleTextEditView: BaseCell {
         
         // MARK: - Public properties
         
-        var model: TitleTextEditViewModel? {
+        var hint: String? {
+            get { return self.titleLabel.text }
+            set { self.titleLabel.text = newValue }
+        }
+        
+        var title: String? {
+            get { return self.textView.text }
+            set { self.textView.text = newValue }
+        }
+        
+        var maxCharacters: Int = 0 {
             didSet {
-                self.updateFromModel()
+                self.updatePlaceholderLabel()
             }
         }
         
+        var placeholder: String? {
+            get { return self.placeholderLabel.text }
+            set {
+                self.placeholderLabel.text = newValue
+                self.updatePlaceholderLabel()
+            }
+        }
+        
+        var identifier: ConfirmationScene.CellIdentifier?
+        
         var onEdit: ((_ identifier: ConfirmationScene.CellIdentifier, _ value: String?) -> Void)?
-
+        
         // MARK: - Private properties
         
         private let titleLabel: UILabel = UILabel()
@@ -57,8 +85,8 @@ extension ConfirmationScene.View {
         
         // MARK: -
         
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
             
             self.customInit()
         }
@@ -82,39 +110,28 @@ extension ConfirmationScene.View {
         
         // MARK: - Private
         
-        private func updateFromModel() {
-            self.titleLabel.text = self.model?.title
-            self.textView.text = self.model?.value
-            self.updateMaxCharactersLabel()
-            self.updatePlaceholderLabel()
-        }
-        
         private func updateMaxCharactersLabel() {
-            guard let maxCharacters = self.model?.maxCharacters, maxCharacters > 0 else {
+            guard self.maxCharacters > 0 else {
                 self.maxCharactersLabel.isHidden = true
                 return
             }
             
             let charactersCount = self.textView.text.count
-            self.maxCharactersLabel.text = "\(charactersCount)/\(maxCharacters)"
-            self.maxCharactersLabel.textColor = charactersCount <= maxCharacters
+            self.maxCharactersLabel.text = "\(charactersCount)/\(self.maxCharacters)"
+            self.maxCharactersLabel.textColor = charactersCount <= self.maxCharacters
                 ? Theme.Colors.sideTextOnContentBackgroundColor
                 : Theme.Colors.negativeColor
             self.maxCharactersLabel.isHidden = false
         }
         
         private func updatePlaceholderLabel() {
-            self.placeholderLabel.text = self.model?.placeholder
+            self.placeholderLabel.text = self.placeholder
             
             let charactersCount = self.textView.text.count
             self.placeholderLabel.isHidden = charactersCount > 0
         }
         
         // MARK: - Setup
-        
-        private func setupView() {
-            self.backgroundColor = Theme.Colors.contentBackgroundColor
-        }
         
         private func setupTitleLabel() {
             SharedViewsBuilder.configureInputForm(titleLabel: self.titleLabel)
@@ -144,9 +161,8 @@ extension ConfirmationScene.View {
                     self?.updateMaxCharactersLabel()
                     self?.updatePlaceholderLabel()
                     
-                    guard let model = self?.model else { return }
-                    
-                    self?.onEdit?(model.identifier, text)
+                    guard let identifier = self?.identifier else { return }
+                    self?.onEdit?(identifier, text)
                 })
                 .disposed(by: self.disposeBag)
         }

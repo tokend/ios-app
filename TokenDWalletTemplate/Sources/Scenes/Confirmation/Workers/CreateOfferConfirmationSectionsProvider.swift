@@ -262,7 +262,7 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         let toPayString = self.amountFormatter.assetAmountToString(toPayAmount + (toPayFee ?? 0)) + " " + toPayAsset
         
         let toPayCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.to_pay),
+            hint: Localized(.to_pay),
             cellType: .text(value: toPayString),
             identifier: .toPay
         )
@@ -270,7 +270,7 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         
         let toPayAmountString = self.amountFormatter.assetAmountToString(toPayAmount) + " " + toPayAsset
         let toPayAmountCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.amount),
+            hint: Localized(.amount),
             cellType: .text(value: toPayAmountString),
             identifier: .toPayAmount
         )
@@ -279,14 +279,17 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         if let fee = toPayFee {
             let feeString = self.amountFormatter.assetAmountToString(fee) + " " + toPayAsset
             let feeCell = ConfirmationScene.Model.CellModel(
-                title: Localized(.fee),
+                hint: Localized(.fee),
                 cellType: .text(value: feeString),
                 identifier: .toPayFee
             )
             toPayCells.append(feeCell)
         }
         
-        sections.append(ConfirmationScene.Model.SectionModel(cells: toPayCells))
+        sections.append(ConfirmationScene.Model.SectionModel(
+            title: Localized(.to_pay),
+            cells: toPayCells
+        ))
         
         let toReceiveAmount = isBuy ? offer.amount : quoteAmount
         let toReceiveFee = isBuy ? nil : offer.fee
@@ -297,7 +300,7 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         let amountFormatted = self.amountFormatter.assetAmountToString(toReceiveAmount - (toReceiveFee ?? 0))
         let toReceiveString = amountFormatted + " " + toReceiveAsset
         let toReceiveCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.to_receive),
+            hint: Localized(.to_receive),
             cellType: .text(value: toReceiveString),
             identifier: .toReceive
         )
@@ -305,7 +308,7 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         
         let toReceiveAmountString = self.amountFormatter.assetAmountToString(toReceiveAmount) + " " + toReceiveAsset
         let toReceiveAmountCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.amount),
+            hint: Localized(.amount),
             cellType: .text(value: toReceiveAmountString),
             identifier: .toReceiveAmount
         )
@@ -314,14 +317,18 @@ extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: Confirmatio
         if let fee = toReceiveFee {
             let feeString = self.amountFormatter.assetAmountToString(fee) + " " + toPayAsset
             let feeCell = ConfirmationScene.Model.CellModel(
-                title: Localized(.fee),
+                hint: Localized(.fee),
                 cellType: .text(value: feeString),
                 identifier: .toReceiveFee
             )
             toReceiveCells.append(feeCell)
         }
         
-        sections.append(ConfirmationScene.Model.SectionModel(cells: toReceiveCells))
+        sections.append(ConfirmationScene.Model.SectionModel(
+            title: Localized(.to_receive),
+            cells: toReceiveCells
+            )
+        )
         
         self.sectionsRelay.accept(sections)
     }

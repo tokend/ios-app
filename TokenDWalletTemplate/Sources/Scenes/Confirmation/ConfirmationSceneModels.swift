@@ -26,6 +26,8 @@ enum ConfirmationScene {
         case destination
         case price
         case test
+        case sale
+        case total
     }
     
     enum Model {}
@@ -39,50 +41,62 @@ extension ConfirmationScene.Model {
     typealias CellIdentifier = ConfirmationScene.CellIdentifier
     
     class SectionModel {
+        let title: String
         var cells: [CellModel]
         
-        init(cells: [CellModel]) {
+        init(
+            title: String,
+            cells: [CellModel]
+            ) {
+            
+            self.title = title
             self.cells = cells
         }
     }
     
     class CellModel {
-        let title: String
+        let hint: String?
         var cellType: CellType
         let identifier: CellIdentifier
         
         init(
-            title: String,
+            hint: String?,
             cellType: CellType,
             identifier: CellIdentifier
             ) {
             
-            self.title = title
+            self.hint = hint
             self.cellType = cellType
             self.identifier = identifier
         }
     }
     
     class SectionViewModel {
-        var cells: [CellViewModel]
+        let title: String
+        var cells: [CellViewAnyModel]
         
-        init(cells: [CellViewModel]) {
+        init(
+            title: String,
+            cells: [CellViewAnyModel]
+            ) {
+            
+            self.title = title
             self.cells = cells
         }
     }
     
     class CellViewModel {
-        let title: String
+        let hint: String?
         var cellType: CellModel.CellType
         let identifier: CellIdentifier
         
         init(
-            title: String,
+            hint: String?,
             cellType: CellModel.CellType,
             identifier: CellIdentifier
             ) {
             
-            self.title = title
+            self.hint = hint
             self.cellType = cellType
             self.identifier = identifier
         }

@@ -3,40 +3,52 @@ import RxSwift
 import RxCocoa
 
 extension ConfirmationScene.View {
-    class TitleBoolSwitchViewModel: ConfirmationScene.Model.CellViewModel {
+    class TitleBoolSwitchViewModel: ConfirmationScene.Model.CellViewModel, CellViewModel {
         
         // MARK: - Public properties
         
-        var value: Bool = false
+        var switchedOn: Bool = false
         
         // MARK: -
         
         init(
-            title: String,
+            hint: String?,
             cellType: ConfirmationScene.Model.CellModel.CellType,
             identifier: ConfirmationScene.CellIdentifier,
-            value: Bool
+            switchedOn: Bool
             ) {
             
-            self.value = value
+            self.switchedOn = switchedOn
             
             super.init(
-                title: title,
+                hint: hint,
                 cellType: cellType,
                 identifier: identifier
             )
         }
+        
+        func setup(cell: TitleBoolSwitchView) {
+            cell.hint = self.hint
+            cell.switchedOn = self.switchedOn
+            cell.identifier = self.identifier
+        }
     }
     
-    class TitleBoolSwitchView: UIView {
+    class TitleBoolSwitchView: BaseCell {
         
         // MARK: - Public properties
         
-        var model: TitleBoolSwitchViewModel? {
-            didSet {
-                self.updateFromModel()
-            }
+        var hint: String? {
+            get { return self.titleLabel.text }
+            set { self.titleLabel.text = newValue }
         }
+        
+        var switchedOn: Bool {
+            get { return self.switchView.isOn }
+            set { self.switchView.isOn = newValue }
+        }
+        
+        var identifier: ConfirmationScene.CellIdentifier?
         
         var onSwitch: ((_ identifier: ConfirmationScene.CellIdentifier, _ value: Bool) -> Void)?
         
@@ -49,8 +61,8 @@ extension ConfirmationScene.View {
         
         // MARK: -
         
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
             
             self.customInit()
         }
@@ -68,23 +80,13 @@ extension ConfirmationScene.View {
             self.setupLayout()
         }
         
-        // MARK: - Public
-        
         // MARK: - Private
-        
-        private func updateFromModel() {
-            self.titleLabel.text = self.model?.title
-            self.switchView.isOn = self.model?.value ?? false
-        }
         
         // MARK: - Setup
         
-        private func setupView() {
-            self.backgroundColor = Theme.Colors.contentBackgroundColor
-        }
-        
         private func setupTitleLabel() {
-            SharedViewsBuilder.configureInputForm(titleLabel: self.titleLabel)
+            self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.titleLabel.font = Theme.Fonts.plainTextFont
         }
         
         private func setupSwitchView() {
@@ -93,9 +95,9 @@ extension ConfirmationScene.View {
                 .isOn
                 .asDriver()
                 .drive(onNext: { [weak self] value in
-                    guard let model = self?.model else { return }
+                    guard let identifier = self?.identifier else { return }
                     
-                    self?.onSwitch?(model.identifier, value)
+                    self?.onSwitch?(identifier, value)
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -111,7 +113,7 @@ extension ConfirmationScene.View {
             self.switchView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             
             self.titleLabel.snp.makeConstraints { (make) in
-                make.leading.equalToSuperview().inset(20.0)
+                make.leading.equalToSuperview().inset(self.sideInset * 2 + self.iconSize)
                 make.centerY.equalToSuperview()
                 make.top.bottom.equalToSuperview().inset(14.0)
             }
