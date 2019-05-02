@@ -3,9 +3,9 @@ import TokenDSDK
 import RxCocoa
 import RxSwift
 
-class PendingOffersRepo {
+public class PendingOffersRepo {
     
-    typealias Offer = TokenDSDK.OfferResponse
+    public typealias Offer = TokenDSDK.OfferResponse
     
     // MARK: - Private properties
     
@@ -33,7 +33,7 @@ class PendingOffersRepo {
     
     // MARK: -
     
-    init(
+    public init(
         api: TokenDSDK.OffersApi,
         originalAccountId: String
         ) {
@@ -148,7 +148,7 @@ class PendingOffersRepo {
 }
 
 extension PendingOffersRepo {
-    enum LoadingStatus {
+    public enum LoadingStatus {
         case loading
         case loaded
     }

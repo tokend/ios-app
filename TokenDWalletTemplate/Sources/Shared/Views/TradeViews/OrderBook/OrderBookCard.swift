@@ -164,12 +164,9 @@ class OrderBookCard: UIView {
     
     // MARK: - Public
     
-    func showTableLoading(isBuy: Bool, show: Bool) {
-        if isBuy {
-            self.buyTable.showDataLoading(show)
-        } else {
-            self.sellTable.showDataLoading(show)
-        }
+    func showTableLoading(show: Bool) {
+        self.buyTable.showDataLoading(show)
+        self.sellTable.showDataLoading(show)
     }
     
     func showEmptyTable(isBuy: Bool, text: String) {
@@ -190,18 +187,8 @@ class OrderBookCard: UIView {
         }
     }
     
-    func setCallbacks(
-        isBuy: Bool,
-        onPullToRefresh: (() -> Void)?,
-        onScrolledToBottom: (() -> Void)?
-        ) {
-        
-        if isBuy {
-            self.buyTable.onPullToRefresh = onPullToRefresh
-            self.buyTable.onScrolledToBottom = onScrolledToBottom
-        } else {
-            self.sellTable.onPullToRefresh = onPullToRefresh
-            self.sellTable.onScrolledToBottom = onScrolledToBottom
-        }
+    func setCallbacks(onPullToRefresh: (() -> Void)?) {
+        self.buyTable.onPullToRefresh = onPullToRefresh
+        self.sellTable.onPullToRefresh = onPullToRefresh
     }
 }

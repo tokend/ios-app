@@ -100,7 +100,8 @@ class TradeFlowController: BaseSignedInFlowController {
         let offersFetcher = TradeOffers.OffersFetcher(
             orderBookApiV3: self.flowControllerStack.apiV3.orderBookApi,
             baseAsset: baseAsset,
-            quoteAsset: quoteAsset
+            quoteAsset: quoteAsset,
+            pendingOffersRepo: self.reposController.pendingOffersRepo
         )
         
         let chartsFetcher = TradeOffers.ChartsFetcher(
@@ -298,13 +299,10 @@ class TradeFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showOfferConfirmation(
-        createOfferModel: CreateOffer.Model.CreateOfferModel
-        ) {
-        let vc = self.setupOfferConfirmation(
-            createOfferModel: createOfferModel
-        )
-        navigationController.pushViewController(vc, animated: true)
+    private func showOfferConfirmation(createOfferModel: CreateOffer.Model.CreateOfferModel) {
+        let vc = self.setupOfferConfirmation(createOfferModel: createOfferModel)
+        
+        self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func setupOfferConfirmation(
@@ -335,7 +333,8 @@ class TradeFlowController: BaseSignedInFlowController {
             amountFormatter: amountFormatter,
             amountConverter: amountConverter,
             balanceCreator: balanceCreator,
-            balancesRepo: self.reposController.balancesRepo
+            balancesRepo: self.reposController.balancesRepo,
+            pendingOffersRepo: self.reposController.pendingOffersRepo
         )
         
         let routing = ConfirmationScene.Routing(

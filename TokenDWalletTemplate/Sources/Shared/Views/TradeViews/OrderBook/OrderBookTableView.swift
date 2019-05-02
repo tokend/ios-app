@@ -19,10 +19,6 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     }
     
     public var onPullToRefresh: (() -> Void)?
-    public var onScrolledToBottom: (() -> Void)? {
-        get { return self.delegateDatasource.onScrolledToBottom }
-        set { self.delegateDatasource.onScrolledToBottom = newValue }
-    }
     
     // MARK: - Private properties
     

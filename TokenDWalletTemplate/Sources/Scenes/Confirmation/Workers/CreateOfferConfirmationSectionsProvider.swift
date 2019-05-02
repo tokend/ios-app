@@ -5,6 +5,7 @@ import RxSwift
 import RxCocoa
 
 extension ConfirmationScene {
+    
     class CreateOfferConfirmationSectionsProvider {
         
         // MARK: - Private properties
@@ -17,8 +18,11 @@ extension ConfirmationScene {
         private let amountConverter: AmountConverterProtocol
         private let balanceCreator: BalanceCreatorProtocol
         private let balancesRepo: BalancesRepo
+        private let pendingOffersRepo: PendingOffersRepo
         
-        private let sectionsRelay: BehaviorRelay<[ConfirmationScene.Model.SectionModel]> = BehaviorRelay(value: [])
+        private let sectionsRelay: BehaviorRelay<[Model.SectionModel]> = BehaviorRelay(value: [])
+        
+        // MARK: -
         
         init(
             createOfferModel: Model.CreateOfferModel,
@@ -28,7 +32,8 @@ extension ConfirmationScene {
             amountFormatter: AmountFormatterProtocol,
             amountConverter: AmountConverterProtocol,
             balanceCreator: BalanceCreatorProtocol,
-            balancesRepo: BalancesRepo
+            balancesRepo: BalancesRepo,
+            pendingOffersRepo: PendingOffersRepo
             ) {
             
             self.createOfferModel = createOfferModel
@@ -39,7 +44,10 @@ extension ConfirmationScene {
             self.amountConverter = amountConverter
             self.balanceCreator = balanceCreator
             self.balancesRepo = balancesRepo
+            self.pendingOffersRepo = pendingOffersRepo
         }
+        
+        // MARK: - Private
         
         private func confirmationCreateOffer(
             networkInfo: NetworkInfoModel,
@@ -173,9 +181,13 @@ extension ConfirmationScene {
                             transaction,
                             walletId: strongSelf.userDataProvider.walletId,
                             completion: { (result) in
+                                self?.pendingOffersRepo.reloadOffers()
+                                
                                 switch result {
+                                    
                                 case .succeeded:
                                     completion(.succeeded)
+                                    
                                 case .failed(let error):
                                     completion(.failed(.sendTransactionError(error)))
                                 }
@@ -227,6 +239,8 @@ extension ConfirmationScene {
         }
     }
 }
+
+// MARK: - ConfirmationScene.SectionsProvider
 
 extension ConfirmationScene.CreateOfferConfirmationSectionsProvider: ConfirmationScene.SectionsProvider {
     func observeConfirmationSections() -> Observable<[ConfirmationScene.Model.SectionModel]> {
