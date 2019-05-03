@@ -20,6 +20,7 @@
 "ask_base" = "Ask ($(base))";
 "ask_base_replace_base" = "base";
 "asset" = "Asset";
+"assets" = "Assets";
 "asset_balance_is_not_found" = "Asset balance is not found";
 "asset_pair" = "Asset pair";
 "at_date" = " at $(date)";
@@ -137,8 +138,6 @@
 "expected_revenue" = "Expected revenue";
 "expires_at" = "\n\nExpires at: $(date)";
 "expires_at_replace_date" = "date";
-"explore_sales" = "Explore sales";
-"explore_tokens" = "Explore Tokens";
 "export_seed" = "Export seed";
 "failed" = "Failed";
 "failed_to_build_kdf_params" = "Failed to build kdf params";
@@ -347,6 +346,7 @@
 "request_error_replace_message" = "message";
 "resend_email" = "Resend Email";
 "sale" = "Sale";
+"sales" = "Sales";
 "sale_details" = "Sale details";
 "sale_is_not_found" = "Sale is not found";
 "save_this_seed_in" = "Save this seed in a secure place:\n$(seed)\nIn case you lose your password you will be able to recover access to your account by using this seed.";

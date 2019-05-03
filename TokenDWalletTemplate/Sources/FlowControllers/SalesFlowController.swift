@@ -69,7 +69,7 @@ class SalesFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = Localized(.explore_sales)
+        vc.navigationItem.title = Localized(.sales)
         
         return vc
     }

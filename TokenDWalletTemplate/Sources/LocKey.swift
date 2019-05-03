@@ -23,6 +23,7 @@ enum LocKey: String {
     case ask_base
     case ask_base_replace_base
     case asset
+    case assets
     case asset_balance_is_not_found
     case asset_pair
     case at_date
@@ -140,8 +141,7 @@ enum LocKey: String {
     case expected_revenue
     case expires_at
     case expires_at_replace_date
-    case explore_sales
-    case explore_tokens
+    case sales
     case export_seed
     case failed
     case failed_to_build_kdf_params
