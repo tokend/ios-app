@@ -105,7 +105,7 @@ extension SendPaymentAmount {
                 make.leading.equalTo(self.iconView.snp.trailing).offset(20.0)
                 make.trailing.equalToSuperview().inset(20.0)
                 make.top.equalTo(self.separatorView.snp.bottom).inset(-10.0)
-                make.bottom.equalToSuperview().inset(10.0)
+                make.bottom.equalToSuperview().inset(15.0)
             }
             
             self.placeholderLabel.snp.makeConstraints { (make) in

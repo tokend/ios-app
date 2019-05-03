@@ -795,6 +795,11 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             self.presenter.presentInvestAction(response: response)
             return
         }
+        guard sale.ownerId != self.investorAccountId else {
+            let response = Event.InvestAction.Response.failed(.investInOwnSaleIsForbidden)
+            self.presenter.presentInvestAction(response: response)
+            return
+        }
         guard let selectedBalance = self.sceneModel.selectedBalance else {
             let response = Event.InvestAction.Response.failed(.quoteBalanceIsNotFound)
             self.presenter.presentInvestAction(response: response)

@@ -211,6 +211,7 @@
 "invested" = "$(amount)\ninvested";
 "invested_replace_amount" = "amount";
 "investing" = "Investing";
+"investing_in_own_sale_is_forbidden" = "Investing in own sale is forbidden";
 "investment" = "Investment";
 "investment_cancellation" = "Investment cancellation";
 "investment_details" = "Investment details";

@@ -72,6 +72,7 @@ extension SaleDetails.Model {
         let details: Details
         let endTime: Date
         let id: String
+        let ownerId: String
         let investorsCount: Int
         let quoteAssets: [QuoteAsset]
         let type: SaleType
@@ -503,6 +504,7 @@ extension SaleDetails.Event.InvestAction.Response {
         case formatError
         case inputIsEmpty
         case insufficientFunds
+        case investInOwnSaleIsForbidden
         case quoteAssetIsNotFound
         case quoteBalanceIsNotFound
         case saleIsNotFound
@@ -515,6 +517,8 @@ extension SaleDetails.Event.InvestAction.Response {
             switch self {
             case .inputIsEmpty:
                 return Localized(.empty_amount)
+            case .investInOwnSaleIsForbidden:
+                return Localized(.investing_in_own_sale_is_forbidden)
             case .quoteBalanceIsNotFound:
                 return Localized(.quote_balance_is_not_found)
             case .quoteAssetIsNotFound:

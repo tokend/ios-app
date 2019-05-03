@@ -141,7 +141,6 @@ enum LocKey: String {
     case expected_revenue
     case expires_at
     case expires_at_replace_date
-    case sales
     case export_seed
     case failed
     case failed_to_build_kdf_params
@@ -215,6 +214,7 @@ enum LocKey: String {
     case invested
     case invested_replace_amount
     case investing
+    case investing_in_own_sale_is_forbidden
     case investment
     case investment_cancellation
     case investment_details
@@ -350,6 +350,7 @@ enum LocKey: String {
     case request_error_replace_message
     case resend_email
     case sale
+    case sales
     case sale_details
     case sale_is_not_found
     case save_this_seed_in
