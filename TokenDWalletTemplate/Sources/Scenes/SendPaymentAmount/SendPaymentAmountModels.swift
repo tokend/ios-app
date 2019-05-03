@@ -110,6 +110,7 @@ extension SendPaymentAmount.Event {
         }
         
         struct ViewModel {
+            let recipientInfo: String
             let sceneModel: Model.SceneViewModel
         }
     }

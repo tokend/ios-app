@@ -12,6 +12,7 @@ extension SendPaymentAmount {
         
         // MARK: - Private properties
         
+        private let containerView: UIView = UIView()
         private let amountField: TextFieldView = SharedViewsBuilder.createTextFieldView()
         private var amountEditingContext: TextEditingContext<Decimal>?
         private let assetButton: UIButton = UIButton(type: .system)
@@ -34,6 +35,7 @@ extension SendPaymentAmount {
         
         private func customInit() {
             self.setupView()
+            self.setupContainerView()
             self.setupAmountField()
             self.setupAssetButton()
             self.setupLayout()
@@ -65,9 +67,13 @@ extension SendPaymentAmount {
             self.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
+        private func setupContainerView() {
+            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
         private func setupAmountField() {
             self.amountField.textAlignment = .right
-            self.amountField.font =  Theme.Fonts.hugeTitleFont
+            self.amountField.font = Theme.Fonts.hugeTitleFont
             self.amountField.attributedPlaceholder = NSAttributedString(
                 string: "0",
                 attributes: [
@@ -107,26 +113,32 @@ extension SendPaymentAmount {
         }
         
         private func setupLayout() {
-            self.addSubview(self.amountField)
-            self.addSubview(self.assetButton)
+            self.addSubview(self.containerView)
+            self.containerView.addSubview(self.amountField)
+            self.containerView.addSubview(self.assetButton)
             
+            self.containerView.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.leading.greaterThanOrEqualToSuperview().inset(10.0)
+                make.trailing.lessThanOrEqualToSuperview().inset(10.0)
+                make.top.bottom.equalToSuperview()
+            }
             self.amountField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             self.assetButton.setContentCompressionResistancePriority(.required, for: .horizontal)
             
             self.amountField.setContentHuggingPriority(.defaultLow, for: .horizontal)
             self.assetButton.setContentHuggingPriority(.required, for: .horizontal)
             
-            self.assetButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0)
-            self.assetButton.snp.makeConstraints { (make) in
+            self.amountField.snp.makeConstraints { (make) in
                 make.top.bottom.equalToSuperview()
-                make.leading.equalTo(self.amountField.snp.trailing)
-                make.trailing.lessThanOrEqualToSuperview()
+                make.leading.equalToSuperview()
             }
             
-            self.amountField.snp.makeConstraints { (make) in
-                make.top.bottom.equalToSuperview().inset(5.0)
-                make.leading.equalToSuperview().inset(10.0)
-                make.trailing.greaterThanOrEqualTo(self.snp.centerX)
+            self.assetButton.snp.makeConstraints { (make) in
+                make.centerY.equalToSuperview()
+                make.leading.equalTo(self.amountField.snp.trailing).offset(10.0)
+                make.trailing.equalToSuperview()
+                make.width.height.equalTo(45.0)
             }
         }
     }

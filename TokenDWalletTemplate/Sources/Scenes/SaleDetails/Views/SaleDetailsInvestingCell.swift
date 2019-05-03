@@ -14,6 +14,7 @@ extension SaleDetails {
             let maxInputAmount: Decimal
             let selectedAsset: String?
             let isCancellable: Bool
+            let actionTitle: String
             let identifier: TabIdentifier
             
             func setup(tab: InvestingTab.View) {
@@ -22,6 +23,7 @@ extension SaleDetails {
                 tab.maxInputAmount = self.maxInputAmount
                 tab.selectedAsset = self.selectedAsset
                 tab.isCancellable = self.isCancellable
+                tab.actionTitle = self.actionTitle
                 tab.identifier = self.identifier
             }
         }
@@ -62,6 +64,11 @@ extension SaleDetails {
             public var isCancellable: Bool {
                 get { return !self.cancelButton.isHidden }
                 set { self.cancelButton.isHidden = !newValue }
+            }
+            
+            public var actionTitle: String? {
+                get { return self.investButton.title(for: .normal) }
+                set { self.investButton.setTitle(newValue, for: .normal) }
             }
             
             public var identifier: TabIdentifier?

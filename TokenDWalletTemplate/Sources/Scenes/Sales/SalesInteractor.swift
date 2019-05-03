@@ -61,7 +61,7 @@ extension Sales.Interactor: Sales.BusinessLogic {
             .observeSections()
             .subscribe(onNext: { [weak self] (sections) in
                 if self?.getSalesCount(sections: sections) == 0 {
-                    self?.showEmptyView(message: Localized(.no_open_funds))
+                    self?.showEmptyView(message: Localized(.no_open_sales))
                 } else {
                     let response = Sales.Event.SectionsUpdated.Response(sections: sections)
                     self?.presenter.presentSectionsUpdated(response: response)
