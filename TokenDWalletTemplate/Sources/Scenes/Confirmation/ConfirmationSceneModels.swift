@@ -223,7 +223,6 @@ extension ConfirmationScene.Event {
 extension ConfirmationScene.Model.CellModel {
     enum CellType {
         case text(value: String?)
-        case textField(value: String?, placeholder: String?, maxCharacters: Int)
         case boolSwitch(value: Bool)
     }
 }

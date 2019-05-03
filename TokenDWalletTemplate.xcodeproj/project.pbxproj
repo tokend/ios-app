@@ -102,7 +102,6 @@
 		7F3D002D2181FD93002D7F53 /* Bundle+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3D002C2181FD92002D7F53 /* Bundle+Version.swift */; };
 		7F4F1194210B647F00651554 /* ConfirmationSectionsProviderDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4F1193210B647F00651554 /* ConfirmationSectionsProviderDummy.swift */; };
 		7F4F1196210B6F5200651554 /* ConfirmationTitleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4F1195210B6F5200651554 /* ConfirmationTitleTextView.swift */; };
-		7F4F1198210B6F6100651554 /* ConfirmationTitleTextEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4F1197210B6F6100651554 /* ConfirmationTitleTextEditView.swift */; };
 		7F4F119A210B6F7300651554 /* ConfirmationTitleBoolSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4F1199210B6F7300651554 /* ConfirmationTitleBoolSwitchView.swift */; };
 		7F6A845F2105F92100B7FE6B /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6A845E2105F92100B7FE6B /* TextFieldView.swift */; };
 		7F6A847D2108F34B00B7FE6B /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6A847C2108F34B00B7FE6B /* PermissionsManager.swift */; };
@@ -605,7 +604,6 @@
 		7F3D002C2181FD92002D7F53 /* Bundle+Version.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+Version.swift"; sourceTree = "<group>"; };
 		7F4F1193210B647F00651554 /* ConfirmationSectionsProviderDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSectionsProviderDummy.swift; sourceTree = "<group>"; };
 		7F4F1195210B6F5200651554 /* ConfirmationTitleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationTitleTextView.swift; sourceTree = "<group>"; };
-		7F4F1197210B6F6100651554 /* ConfirmationTitleTextEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationTitleTextEditView.swift; sourceTree = "<group>"; };
 		7F4F1199210B6F7300651554 /* ConfirmationTitleBoolSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationTitleBoolSwitchView.swift; sourceTree = "<group>"; };
 		7F6A845E2105F92100B7FE6B /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		7F6A847C2108F34B00B7FE6B /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
@@ -1347,7 +1345,6 @@
 			isa = PBXGroup;
 			children = (
 				7F4F1199210B6F7300651554 /* ConfirmationTitleBoolSwitchView.swift */,
-				7F4F1197210B6F6100651554 /* ConfirmationTitleTextEditView.swift */,
 				7F4F1195210B6F5200651554 /* ConfirmationTitleTextView.swift */,
 				DB59386D227B46EC00C8997C /* ConfirmationSceneBaseCell.swift */,
 			);
@@ -2904,7 +2901,6 @@
 				7FF896EF21AEBCA7001A5D48 /* TermsInfoProvider.swift in Sources */,
 				719AAFD32142AEEA00279B9D /* SalesViewController.swift in Sources */,
 				7F967FDF212DB69E005527EA /* BiometricsAuthWorker.swift in Sources */,
-				7F4F1198210B6F6100651554 /* ConfirmationTitleTextEditView.swift in Sources */,
 				7F6A847D2108F34B00B7FE6B /* PermissionsManager.swift in Sources */,
 				7FF6761E20BDA10C0074E9A8 /* String+QueueLabel.swift in Sources */,
 				713D684920FF9552009FEBA3 /* SettingsInteractor.swift in Sources */,

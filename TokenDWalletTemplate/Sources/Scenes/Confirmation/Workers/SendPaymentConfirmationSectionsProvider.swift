@@ -263,15 +263,15 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
                 cellType: .text(value: totalAmountCellText),
                 identifier: .total
             )
+            let payRecipientFeeCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.pay_recipients_fee),
+                cellType: .boolSwitch(value: self.payRecipientFeeCellState),
+                identifier: .payRecipientFee
+            )
             toReceiveCells.append(feeCell)
             toReceiveCells.append(totalCell)
+            toReceiveCells.append(payRecipientFeeCell)
         }
-        let payRecipientFeeCell = ConfirmationScene.Model.CellModel(
-            hint: Localized(.pay_recipients_fee),
-            cellType: .boolSwitch(value: self.payRecipientFeeCellState),
-            identifier: .payRecipientFee
-        )
-        toReceiveCells.append(payRecipientFeeCell)
         let toReceiveSection = ConfirmationScene.Model.SectionModel(
             title: Localized(.to_receive),
             cells: toReceiveCells

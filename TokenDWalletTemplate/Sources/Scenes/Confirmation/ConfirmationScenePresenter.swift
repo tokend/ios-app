@@ -57,16 +57,6 @@ extension ConfirmationScene {
                     title: title,
                     icon: icon
                 )
-                
-            case .textField(let title, let placeholder, let maxCharacters):
-                return View.TitleTextEditViewModel(
-                    hint: cellModel.hint,
-                    cellType: cellModel.cellType,
-                    identifier: cellModel.identifier,
-                    title: title,
-                    placeholder: placeholder,
-                    maxCharacters: maxCharacters
-                )
             }
         }
         

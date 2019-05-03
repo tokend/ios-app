@@ -58,7 +58,6 @@ extension ConfirmationScene {
             self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
             self.tableView.register(classes: [
                 View.TitleTextViewModel.self,
-                View.TitleTextEditViewModel.self,
                 View.TitleBoolSwitchViewModel.self
                 ])
             self.tableView.delegate = self
@@ -136,17 +135,7 @@ extension ConfirmationScene.ViewController: UITableViewDataSource {
         let model = self.sections[indexPath.section].cells[indexPath.row]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         
-        if let editTextCell = cell as? ConfirmationScene.View.TitleTextEditView {
-            editTextCell.onEdit = { [weak self] (identifier, value) in
-                let request = Event.TextFieldEdit.Request(
-                    identifier: identifier,
-                    text: value
-                )
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onTextFieldEdit(request: request)
-                })
-            }
-        } else if let boolSwitchCell = cell as? ConfirmationScene.View.TitleBoolSwitchView {
+        if let boolSwitchCell = cell as? ConfirmationScene.View.TitleBoolSwitchView {
             boolSwitchCell.onSwitch = { [weak self] (identifier, value) in
                 let request = Event.BoolSwitch.Request(
                     identifier: identifier,
