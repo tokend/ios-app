@@ -186,7 +186,7 @@ extension SendPaymentAmount {
                     if attributes.showingIn(view: self.view) {
                         self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
-                            make.bottom.equalTo(self.view.safeArea.bottom).inset(keyboardHeight)
+                            make.bottom.equalToSuperview().inset(keyboardHeight)
                             make.height.equalTo(self.buttonHeight)
                         }
                     } else {
