@@ -124,6 +124,7 @@ extension SaleDetails {
                     details: details,
                     endTime: sale.endTime,
                     id: sale.id,
+                    ownerId: sale.ownerId,
                     investorsCount: sale.statistics.investors,
                     quoteAssets: quoteAssets,
                     type: type,

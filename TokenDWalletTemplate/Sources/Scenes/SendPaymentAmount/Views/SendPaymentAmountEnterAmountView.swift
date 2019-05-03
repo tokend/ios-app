@@ -138,7 +138,6 @@ extension SendPaymentAmount {
                 make.centerY.equalToSuperview()
                 make.leading.equalTo(self.amountField.snp.trailing).offset(10.0)
                 make.trailing.equalToSuperview()
-                make.width.height.equalTo(45.0)
             }
         }
     }
