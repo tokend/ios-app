@@ -53,6 +53,7 @@ extension ConfirmationScene {
                     hint: cellModel.hint,
                     cellType: cellModel.cellType,
                     identifier: cellModel.identifier,
+                    isDisabled: cellModel.isDisabled,
                     title: title,
                     icon: icon
                 )

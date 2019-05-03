@@ -14,6 +14,7 @@ extension ConfirmationScene.View {
             hint: String?,
             cellType: ConfirmationScene.Model.CellModel.CellType,
             identifier: ConfirmationScene.CellIdentifier,
+            isDisabled: Bool,
             title: String?,
             icon: UIImage?
             ) {
@@ -24,7 +25,8 @@ extension ConfirmationScene.View {
             super.init(
                 hint: hint,
                 cellType: cellType,
-                identifier: identifier
+                identifier: identifier,
+                isDisabled: isDisabled
             )
         }
         
@@ -32,6 +34,7 @@ extension ConfirmationScene.View {
             cell.hint = self.hint
             cell.title = self.title
             cell.icon = self.icon
+            cell.isDisabled = self.isDisabled
         }
     }
     
@@ -57,6 +60,12 @@ extension ConfirmationScene.View {
             }
         }
         
+        public var isDisabled: Bool = false {
+            didSet {
+                self.updateDisability()
+            }
+        }
+        
         private let iconView: UIImageView = UIImageView()
         private let titleLabel: UILabel = UILabel()
         private let hintLabel: UILabel = UILabel()
@@ -74,6 +83,16 @@ extension ConfirmationScene.View {
         }
         
         // MARK: - Private
+        
+        private func updateDisability() {
+            if self.isDisabled {
+                self.titleLabel.textColor = Theme.Colors.textFieldForegroundDisabledColor
+                self.hintLabel.textColor = Theme.Colors.textFieldForegroundDisabledColor
+            } else {
+                self.titleLabel.textColor = Theme.Colors.textFieldForegroundColor
+                self.hintLabel.textColor = Theme.Colors.textFieldForegroundColor
+            }
+        }
         
         private func commonInit() {
             self.setupView()

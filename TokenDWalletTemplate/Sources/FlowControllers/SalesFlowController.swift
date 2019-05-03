@@ -274,6 +274,7 @@ class SalesFlowController: BaseSignedInFlowController {
             isBuy: saleInvestModel.isBuy,
             baseAmount: saleInvestModel.baseAmount,
             quoteAmount: saleInvestModel.quoteAmount,
+            baseAssetName: saleInvestModel.baseAssetName,
             price: saleInvestModel.price,
             fee: saleInvestModel.fee,
             type: saleInvestModel.type,

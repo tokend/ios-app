@@ -90,6 +90,7 @@ extension ConfirmationScene.View {
         }
         
         private func setupSwitchView() {
+            self.switchView.onTintColor = Theme.Colors.accentColor
             self.switchView
                 .rx
                 .isOn

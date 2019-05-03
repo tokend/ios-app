@@ -246,7 +246,8 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
             let feeCell = ConfirmationScene.Model.CellModel(
                 hint: Localized(.fee),
                 cellType: .text(value: feeCellText),
-                identifier: .fee
+                identifier: .fee,
+                isDisabled: self.payRecipientFeeCellState
             )
             
             var totalAmount = self.sendPaymentModel.amount

@@ -853,6 +853,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
                         isBuy: true,
                         baseAmount: baseAmount,
                         quoteAmount: investAmount,
+                        baseAssetName: sale.details.name,
                         price: quoteAsset.price,
                         fee: fee.percent,
                         type: sale.type.rawValue,

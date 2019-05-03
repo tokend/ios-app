@@ -58,16 +58,19 @@ extension ConfirmationScene.Model {
         let hint: String?
         var cellType: CellType
         let identifier: CellIdentifier
+        let isDisabled: Bool
         
         init(
             hint: String?,
             cellType: CellType,
-            identifier: CellIdentifier
+            identifier: CellIdentifier,
+            isDisabled: Bool = false
             ) {
             
             self.hint = hint
             self.cellType = cellType
             self.identifier = identifier
+            self.isDisabled = isDisabled
         }
     }
     
@@ -89,16 +92,19 @@ extension ConfirmationScene.Model {
         let hint: String?
         var cellType: CellModel.CellType
         let identifier: CellIdentifier
+        let isDisabled: Bool
         
         init(
             hint: String?,
             cellType: CellModel.CellType,
-            identifier: CellIdentifier
+            identifier: CellIdentifier,
+            isDisabled: Bool = false
             ) {
             
             self.hint = hint
             self.cellType = cellType
             self.identifier = identifier
+            self.isDisabled = isDisabled
         }
     }
     
@@ -130,6 +136,7 @@ extension ConfirmationScene.Model {
         let isBuy: Bool
         let baseAmount: Decimal
         let quoteAmount: Decimal
+        let baseAssetName: String
         let price: Decimal
         let fee: Decimal
         let type: Int

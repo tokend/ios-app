@@ -135,6 +135,7 @@ extension ConfirmationScene.WithdrawConfirmationSectionsProvider: ConfirmationSc
     
     func loadConfirmationSections() {
         let withdrawAmount = self.amountFormatter.assetAmountToString(self.withdrawModel.amount)
+        var cells: [ConfirmationScene.Model.CellModel] = []
         let amountCell = ConfirmationScene.Model.CellModel(
             hint: Localized(.amount),
             cellType: .text(
@@ -142,6 +143,31 @@ extension ConfirmationScene.WithdrawConfirmationSectionsProvider: ConfirmationSc
             ),
             identifier: .amount
         )
+        cells.append(amountCell)
+        
+        let senderFee = self.withdrawModel.senderFee.fixed + self.withdrawModel.senderFee.percent
+        if senderFee > 0 {
+            let senderFeeString = self.amountFormatter.assetAmountToString(senderFee)
+            let feeCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.fee),
+                cellType: .text(
+                    value: senderFeeString + " " + self.withdrawModel.senderFee.asset
+                ),
+                identifier: .fixedFee
+            )
+            cells.append(feeCell)
+            
+            let totalAmount = self.withdrawModel.amount + senderFee
+            let totalString = self.amountFormatter.assetAmountToString(totalAmount)
+            let totalAmountCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.total),
+                cellType: .text(
+                    value: totalString + " " + self.withdrawModel.senderFee.asset
+                ),
+                identifier: .total
+            )
+            cells.append(totalAmountCell)
+        }
         
         let info = Localized(
             .received_amount_may_be_lower_due_to_network_fees,
@@ -154,35 +180,21 @@ extension ConfirmationScene.WithdrawConfirmationSectionsProvider: ConfirmationSc
             cellType: .text(value: info),
             identifier: .toReceive
         )
+        cells.append(infoCell)
         
         let destinationCell = ConfirmationScene.Model.CellModel(
             hint: Localized(.destination_address),
             cellType: .text(value: self.withdrawModel.recipientAddress),
             identifier: .destination
         )
-        let destinationSection = ConfirmationScene.Model.SectionModel(
+        cells.append(destinationCell)
+        
+        let section = ConfirmationScene.Model.SectionModel(
             title: "",
-            cells: [amountCell, infoCell, destinationCell]
+            cells: cells
         )
         
-//        let senderFee = self.amountFormatter.assetAmountToString(
-//            self.withdrawModel.senderFee.fixed + self.withdrawModel.senderFee.percent
-//        )
-//
-//        let feeCell = ConfirmationScene.Model.CellModel(
-//            hint: Localized(.fee),
-//            cellType: .text(
-//                value: senderFee + " " + self.withdrawModel.senderFee.asset
-//            ),
-//            identifier: .fixedFee
-//        )
-//
-//        let toPaySection = ConfirmationScene.Model.SectionModel(
-//            title: "",
-//            cells: [amountCell, feeCell]
-//        )
-        
-        self.sectionsRelay.accept([destinationSection])
+        self.sectionsRelay.accept([section])
     }
     
     func handleTextEdit(
