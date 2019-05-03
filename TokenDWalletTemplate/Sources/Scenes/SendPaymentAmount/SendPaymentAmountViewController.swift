@@ -26,6 +26,7 @@ extension SendPaymentAmount {
         
         private let stackView: ScrollableStackView = ScrollableStackView()
         
+        private let recipientLabel: UILabel = UILabel()
         private let balanceView: BalanceView = BalanceView()
         private let enterAmountView: EnterAmountView = EnterAmountView()
         private let descritionTextView: DescriptionTextView = DescriptionTextView()
@@ -60,6 +61,7 @@ extension SendPaymentAmount {
             super.viewDidLoad()
             
             self.setupView()
+            self.setupRecipientLabel()
             self.setupStackView()
             self.setupBalanceView()
             self.setupEnterAmountView()
@@ -106,6 +108,14 @@ extension SendPaymentAmount {
         
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
+        private func setupRecipientLabel() {
+            self.recipientLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.recipientLabel.font = Theme.Fonts.plainTextFont
+            self.recipientLabel.textAlignment = .center
+            self.recipientLabel.numberOfLines = 1
+            self.recipientLabel.lineBreakMode = .byTruncatingMiddle
         }
         
         private func setupStackView() {
@@ -197,9 +207,15 @@ extension SendPaymentAmount {
         }
         
         private func setupLayout() {
+            self.view.addSubview(self.recipientLabel)
             self.view.addSubview(self.stackView)
             self.view.addSubview(self.descritionTextView)
             self.view.addSubview(self.actionButton)
+            
+            self.recipientLabel.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(20.0)
+                make.top.equalToSuperview().inset(15.0)
+            }
             
             self.stackView.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
@@ -229,7 +245,9 @@ extension SendPaymentAmount {
 // MARK: - DisplayLogic
 
 extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
+    
     func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel) {
+        self.recipientLabel.text = viewModel.recipientInfo
         self.updateWithSceneModel(viewModel.sceneModel)
     }
     

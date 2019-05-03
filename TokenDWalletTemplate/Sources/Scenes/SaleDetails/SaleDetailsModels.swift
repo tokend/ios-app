@@ -148,6 +148,7 @@ extension SaleDetails.Model {
         var amount: Decimal
         let availableAmount: Decimal
         let isCancellable: Bool
+        let actionTitle: String
         let tabIdentifier: SaleDetails.TabIdentifier
     }
     

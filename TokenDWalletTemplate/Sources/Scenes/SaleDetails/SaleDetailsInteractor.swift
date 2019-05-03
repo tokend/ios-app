@@ -296,12 +296,14 @@ extension SaleDetails {
         private func getInvestingTabModel() -> Model.InvestingTabModel {
             let availableAmount = self.getAvailableInputAmount()
             let isCancellable = self.sceneModel.inputAmount != 0.0
+            let actionTitle = isCancellable ? Localized(.update) : Localized(.invest)
             
             let investingModel = Model.InvestingTabModel(
                 selectedBalance: self.sceneModel.selectedBalance,
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
                 isCancellable: isCancellable,
+                actionTitle: actionTitle,
                 tabIdentifier: .investing
             )
             

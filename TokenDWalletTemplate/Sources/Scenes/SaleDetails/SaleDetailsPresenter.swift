@@ -330,6 +330,7 @@ extension SaleDetails {
                 maxInputAmount: tabModel.availableAmount,
                 selectedAsset: tabModel.selectedBalance?.asset,
                 isCancellable: tabModel.isCancellable,
+                actionTitle: tabModel.actionTitle,
                 identifier: tabModel.tabIdentifier
             )
         }

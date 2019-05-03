@@ -65,7 +65,21 @@ extension SendPaymentAmount {
 extension SendPaymentAmount.Presenter: SendPaymentAmount.PresentationLogic {
     func presentViewDidLoad(response: Event.ViewDidLoad.Response) {
         let sceneViewModel = self.getSceneViewModel(response.sceneModel, amountValid: response.amountValid)
-        let viewModel = Event.ViewDidLoad.ViewModel(sceneModel: sceneViewModel)
+        
+        var recipientInfo = ""
+        if let recipientAddress = response.sceneModel.recipientAddress {
+            recipientInfo =  Localized(
+                .to,
+                replace: [
+                    .to_replace_address: recipientAddress
+                ]
+            )
+        }
+        
+        let viewModel = Event.ViewDidLoad.ViewModel(
+            recipientInfo: recipientInfo,
+            sceneModel: sceneViewModel
+        )
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayViewDidLoad(viewModel: viewModel)
         }

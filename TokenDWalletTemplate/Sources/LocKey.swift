@@ -140,7 +140,7 @@ enum LocKey: String {
     case expected_revenue
     case expires_at
     case expires_at_replace_date
-    case explore_funds
+    case explore_sales
     case explore_tokens
     case export_seed
     case failed
@@ -257,7 +257,7 @@ enum LocKey: String {
     case no_fees_to_overview
     case no_growth
     case no_investments
-    case no_open_funds
+    case no_open_sales
     case no_opportunities
     case no_payments
     case no_pending_offers
@@ -413,6 +413,8 @@ enum LocKey: String {
     case terms_of_use
     case this_feature_will_be
     case this_seed_is_the_only_way
+    case to
+    case to_replace_address
     case to_account
     case to_be_sure_document_key
     case to_enable_twofactor_authentication
@@ -456,6 +458,7 @@ enum LocKey: String {
     case unsupported_version
     case unsupported_version_replace_function
     case unverified_account
+    case update
     case upper_bound
     case userdataprovider_should_always_provide_walletdata
     case verification

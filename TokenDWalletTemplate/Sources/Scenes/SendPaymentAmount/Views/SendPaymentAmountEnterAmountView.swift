@@ -124,8 +124,8 @@ extension SendPaymentAmount {
             
             self.amountField.snp.makeConstraints { (make) in
                 make.top.bottom.equalToSuperview().inset(5.0)
-                make.leading.equalToSuperview().inset(10.0)
-                make.trailing.greaterThanOrEqualTo(self.snp.centerX)
+                make.centerX.equalToSuperview()
+                make.trailing.lessThanOrEqualToSuperview()
             }
         }
     }

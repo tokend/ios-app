@@ -166,7 +166,7 @@ class SignedInFlowController: BaseSignedInFlowController {
                 }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.exploreFundsIcon.image,
-                    title: Localized(.explore_funds),
+                    title: Localized(.explore_sales),
                     onSelected: { [weak self] in
                         self?.runExploreFundsFlow()
                 }),
