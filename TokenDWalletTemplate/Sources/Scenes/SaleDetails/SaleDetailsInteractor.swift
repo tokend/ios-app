@@ -536,7 +536,7 @@ extension SaleDetails {
             self.feeLoader.loadFee(
                 accountId: self.investorAccountId,
                 asset: asset.asset,
-                feeType: .offerFee,
+                feeType: .investFee,
                 amount: investAmount) { (feeResponse) in
                     switch feeResponse {
                         
