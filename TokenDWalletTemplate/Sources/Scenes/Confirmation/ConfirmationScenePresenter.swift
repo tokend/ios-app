@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol ConfirmationScenePresentationLogic {
     func presentViewDidLoad(response: ConfirmationScene.Event.ViewDidLoad.Response)
@@ -21,11 +21,14 @@ extension ConfirmationScene {
         
         private func getSectionViewModels(_ sectionModels: [Model.SectionModel]) -> [Model.SectionViewModel] {
             let sectionViewModels = sectionModels.map { (sectionModel) -> Model.SectionViewModel in
-                let cells = sectionModel.cells.map { (cellModel) -> Model.CellViewModel in
+                let cells = sectionModel.cells.map { (cellModel) -> CellViewAnyModel in
                     return self.getCellViewModel(cellModel)
                 }
                 
-                let sectionViewModel = Model.SectionViewModel(cells: cells)
+                let sectionViewModel = Model.SectionViewModel(
+                    title: sectionModel.title,
+                    cells: cells
+                )
                 
                 return sectionViewModel
             }
@@ -33,35 +36,71 @@ extension ConfirmationScene {
             return sectionViewModels
         }
         
-        private func getCellViewModel(_ cellModel: Model.CellModel) -> Model.CellViewModel {
+        private func getCellViewModel(_ cellModel: Model.CellModel) -> CellViewAnyModel {
             switch cellModel.cellType {
                 
-            case .boolSwitch(let value):
+            case .boolSwitch(let switchedOn):
                 return View.TitleBoolSwitchViewModel(
-                    title: cellModel.title,
+                    hint: cellModel.hint,
                     cellType: cellModel.cellType,
                     identifier: cellModel.identifier,
-                    value: value
+                    switchedOn: switchedOn
                 )
                 
-            case .text(let value):
+            case .text(let title):
+                let icon = self.getIconFor(identifier: cellModel.identifier)
                 return View.TitleTextViewModel(
-                    title: cellModel.title,
+                    hint: cellModel.hint,
                     cellType: cellModel.cellType,
                     identifier: cellModel.identifier,
-                    value: value
-                )
-                
-            case .textField(let value, let placeholder, let maxCharacters):
-                return View.TitleTextEditViewModel(
-                    title: cellModel.title,
-                    cellType: cellModel.cellType,
-                    identifier: cellModel.identifier,
-                    value: value,
-                    placeholder: placeholder,
-                    maxCharacters: maxCharacters
+                    isDisabled: cellModel.isDisabled,
+                    title: title,
+                    icon: icon
                 )
             }
+        }
+        
+        private func getIconFor(identifier: CellIdentifier) -> UIImage {
+            var image: UIImage?
+            switch identifier {
+                
+            case .amount:
+                image = Assets.amount.image
+                
+            case .recipient:
+                image = Assets.recipient.image
+                
+            case .destination:
+                image = Assets.destination.image
+                
+            case .description:
+                image = Assets.reference.image
+                
+            case .price:
+                image = Assets.price.image
+                
+            case .sale:
+                image = Assets.exploreFundsIcon.image
+                
+            case .toPay,
+                 .toPayAmount,
+                 .toPayFee,
+                 .toReceive,
+                 .toReceiveAmount,
+                 .toReceiveFee,
+                 .fee,
+                 .recipientFee,
+                 .payRecipientFee,
+                 .token,
+                 .investment,
+                 .fixedFee,
+                 .percentFee,
+                 .test,
+                 .total:
+                
+                break
+            }
+            return image ?? UIImage()
         }
     }
 }
