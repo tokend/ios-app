@@ -230,6 +230,7 @@ enum LocKey: String {
     case issued
     case keychaindataprovider_should_always_provide_key
     case last_name
+    case limits
     case loading
     case locked
     case lower_bound

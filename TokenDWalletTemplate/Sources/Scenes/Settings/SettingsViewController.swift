@@ -7,9 +7,7 @@ protocol SettingsDisplayLogic: class {
     func displaySectionsUpdated(viewModel: Settings.Event.SectionsUpdated.ViewModel)
     func displayDidSelectCell(viewModel: Settings.Event.DidSelectCell.ViewModel)
     func displayDidSelectSwitch(viewModel: Settings.Event.DidSelectSwitch.ViewModel)
-    func displayShowFees(viewModel: Event.ShowFees.ViewModel)
     func displayShowTerms(viewModel: Event.ShowTerms.ViewModel)
-    func displaySignOut(viewModel: Event.SignOut.ViewModel)
 }
 
 extension Settings {
@@ -136,16 +134,8 @@ extension Settings.ViewController: Settings.DisplayLogic {
         }
     }
     
-    func displayShowFees(viewModel: Event.ShowFees.ViewModel) {
-        self.routing?.onShowFees()
-    }
-    
     func displayShowTerms(viewModel: Event.ShowTerms.ViewModel) {
         self.routing?.onShowTerms(viewModel.url)
-    }
-    
-    func displaySignOut(viewModel: Event.SignOut.ViewModel) {
-        self.routing?.onSignOut()
     }
 }
 

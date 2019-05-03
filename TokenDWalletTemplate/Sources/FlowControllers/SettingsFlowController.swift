@@ -67,15 +67,10 @@ class SettingsFlowController: BaseSignedInFlowController {
             onCellSelected: { [weak self] (cellIdentifier) in
                 self?.switchToSetting(cellIdentifier)
             },
-            onShowFees: { [weak self] in
-                self?.showFees()
-            },
             onShowTerms: { [weak self] (url) in
                 self?.showTermsOfService(url: url)
-            },
-            onSignOut: { [weak self] in
-                self?.onSignOut()
-        })
+            }
+        )
         
         let provider = TermsInfoProvider(apiConfigurationModel: self.flowControllerStack.apiConfigurationModel)
         let termsUrl = provider.getTermsUrl()
@@ -108,23 +103,38 @@ class SettingsFlowController: BaseSignedInFlowController {
             )
             self.showInfoScreen(title: Localized(.account_id), addressManager: addressManager)
             
+        case .biometrics:
+            break
+            
+        case .changePassword:
+            self.showChangePasswordScreen()
+            
+        case .fees:
+            self.showFees()
+            
+        case .licenses:
+            self.showLicenses()
+            
+        case .limits:
+            self.showLimits()
+            
         case .seed:
             let addressManager = ReceiveAddress.ExportSeedManager(
                 keychainDataProvider: self.keychainDataProvider
             )
             self.showInfoScreen(title: Localized(.secret_seed), addressManager: addressManager)
             
+        case .signOut:
+            self.onSignOut()
+            
+        case .termsOfService:
+            break
+            
+        case .tfa:
+            break
+            
         case .verification:
             self.showVerificationScreen()
-            
-        case .changePassword:
-            self.showChangePasswordScreen()
-            
-        case .licenses:
-            self.showLicenses()
-            
-        default:
-            break
         }
     }
     
@@ -317,6 +327,41 @@ class SettingsFlowController: BaseSignedInFlowController {
             feesOverviewProvider: feesOverviewProvider,
             sceneModel: sceneModel,
             feeDataFormatter: feeDataFormatter,
+            routing: routing
+        )
+        
+        return vc
+    }
+    
+    private func showLimits() {
+        let vc = self.setupLimits()
+        
+        vc.navigationItem.title = Localized(.limits)
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupLimits() -> UIViewController {
+        let vc = Limits.ViewController()
+        
+        let dataFetcher = Limits.LimitsDataFetcherWorker(
+            accountsApi: self.flowControllerStack.apiV3.accountsApi
+        )
+        
+        let routing = Limits.Routing(
+            onShowError: { [weak self] (errorMessage) in
+                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+            },
+            onShowProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            onHideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+        })
+        
+        Limits.Configurator.configure(
+            viewController: vc,
+            accountId: self.userDataProvider.walletData.accountId,
+            dataFetcher: dataFetcher,
             routing: routing
         )
         

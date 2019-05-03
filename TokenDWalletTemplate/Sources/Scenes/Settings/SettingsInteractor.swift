@@ -55,14 +55,6 @@ extension Settings.Interactor: Settings.BusinessLogic {
     func onDidSelectCell(request: Event.DidSelectCell.Request) {
         switch request.cellIdentifier {
             
-        case .fees:
-            let response = Event.ShowFees.Response()
-            self.presenter.presentShowFees(response: response)
-            
-        case .signOut:
-            let response = Event.SignOut.Response()
-            self.presenter.presentSignOut(response: response)
-            
         case .termsOfService:
             guard let termsUrl = self.sceneModel.termsUrl else {
                 return
@@ -71,12 +63,15 @@ extension Settings.Interactor: Settings.BusinessLogic {
             self.presenter.presentShowTerms(response: response)
             
         case .accountId,
-             .seed,
-             .tfa,
              .biometrics,
-             .verification,
              .changePassword,
-             .licenses:
+             .fees,
+             .licenses,
+             .limits,
+             .seed,
+             .signOut,
+             .tfa,
+             .verification:
             
             let response = Event.DidSelectCell.Response(
                 cellIdentifier: request.cellIdentifier

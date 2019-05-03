@@ -8,9 +8,7 @@ protocol SettingsPresentationLogic {
     func presentSectionsUpdated(response: Event.SectionsUpdated.Response)
     func presentDidSelectCell(response: Event.DidSelectCell.Response)
     func presentDidSelectSwitch(response: Event.DidSelectSwitch.Response)
-    func presentShowFees(response: Event.ShowFees.Response)
     func presentShowTerms(response: Event.ShowTerms.Response)
-    func presentSignOut(response: Event.SignOut.Response)
 }
 
 extension Settings {
@@ -121,24 +119,10 @@ extension Settings.Presenter: Settings.PresentationLogic {
         }
     }
     
-    func presentShowFees(response: Event.ShowFees.Response) {
-        let viewModel = response
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayShowFees(viewModel: viewModel)
-        }
-    }
-    
     func presentShowTerms(response: Event.ShowTerms.Response) {
         let viewModel = response
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayShowTerms(viewModel: viewModel)
-        }
-    }
-    
-    func presentSignOut(response: Event.SignOut.Response) {
-        let viewModel = response
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displaySignOut(viewModel: viewModel)
         }
     }
 }

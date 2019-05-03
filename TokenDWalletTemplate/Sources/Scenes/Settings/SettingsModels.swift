@@ -8,15 +8,16 @@ enum Settings {
     
     enum CellIdentifier: String {
         case accountId
-        case seed
-        case tfa
         case biometrics
-        case verification
         case changePassword
-        case termsOfService
-        case licenses
         case fees
+        case licenses
+        case limits
+        case seed
         case signOut
+        case termsOfService
+        case tfa
+        case verification
     }
     
     enum Model {}
@@ -71,6 +72,8 @@ extension Settings.Model.CellModel {
 
 extension Settings.Event {
     
+    typealias Model = Settings.Model
+    
     enum ViewDidLoad {
         struct Request {}
     }
@@ -124,15 +127,12 @@ extension Settings.Event {
     enum ShowTerms {
         struct Response {
             let url: URL
+            
+            public init(url: URL) {
+                self.url = url
+            }
         }
         
         typealias ViewModel = Response
     }
-    
-    enum ShowFees {
-        struct Response {}
-        typealias ViewModel = Response
-    }
-    
-    typealias SignOut = ShowFees
 }

@@ -205,6 +205,15 @@
 		7FABEA842100D44E0005E751 /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA832100D44E0005E751 /* ScrollableStackView.swift */; };
 		7FABEA90210211170005E751 /* SendPaymentFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */; };
 		7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432B82279CED700422746 /* UITableView+LastCell.swift */; };
+		7FB432C1227C491F00422746 /* LimitsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432BB227C491F00422746 /* LimitsPresenter.swift */; };
+		7FB432C2227C491F00422746 /* LimitsRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432BC227C491F00422746 /* LimitsRouting.swift */; };
+		7FB432C3227C491F00422746 /* LimitsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432BD227C491F00422746 /* LimitsModels.swift */; };
+		7FB432C4227C491F00422746 /* LimitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432BE227C491F00422746 /* LimitsViewController.swift */; };
+		7FB432C5227C491F00422746 /* LimitsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432BF227C491F00422746 /* LimitsInteractor.swift */; };
+		7FB432C6227C491F00422746 /* LimitsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432C0227C491F00422746 /* LimitsConfigurator.swift */; };
+		7FB432CA227C65B200422746 /* LimitsDataFetcherWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432C9227C65B200422746 /* LimitsDataFetcherWorker.swift */; };
+		7FB432CC227C65BA00422746 /* LimitsDataFetcherProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432CB227C65BA00422746 /* LimitsDataFetcherProtocol.swift */; };
+		7FB432CE227C6F1C00422746 /* LimitsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB432CD227C6F1C00422746 /* LimitsListView.swift */; };
 		7FB9E46C20BEB3E2005BFE0E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46B20BEB3E2005BFE0E /* Theme.swift */; };
 		7FB9E46F20BEB6B7005BFE0E /* BaseFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */; };
 		7FB9E47120BEB6D2005BFE0E /* LaunchFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */; };
@@ -707,6 +716,15 @@
 		7FABEA832100D44E0005E751 /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
 		7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentFlowController.swift; sourceTree = "<group>"; };
 		7FB432B82279CED700422746 /* UITableView+LastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+LastCell.swift"; sourceTree = "<group>"; };
+		7FB432BB227C491F00422746 /* LimitsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsPresenter.swift; sourceTree = "<group>"; };
+		7FB432BC227C491F00422746 /* LimitsRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsRouting.swift; sourceTree = "<group>"; };
+		7FB432BD227C491F00422746 /* LimitsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsModels.swift; sourceTree = "<group>"; };
+		7FB432BE227C491F00422746 /* LimitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsViewController.swift; sourceTree = "<group>"; };
+		7FB432BF227C491F00422746 /* LimitsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsInteractor.swift; sourceTree = "<group>"; };
+		7FB432C0227C491F00422746 /* LimitsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsConfigurator.swift; sourceTree = "<group>"; };
+		7FB432C9227C65B200422746 /* LimitsDataFetcherWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsDataFetcherWorker.swift; sourceTree = "<group>"; };
+		7FB432CB227C65BA00422746 /* LimitsDataFetcherProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsDataFetcherProtocol.swift; sourceTree = "<group>"; };
+		7FB432CD227C6F1C00422746 /* LimitsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsListView.swift; sourceTree = "<group>"; };
 		7FB9E46B20BEB3E2005BFE0E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFlowController.swift; sourceTree = "<group>"; };
 		7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchFlowController.swift; sourceTree = "<group>"; };
@@ -1603,6 +1621,38 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		7FB432BA227C451600422746 /* Limits */ = {
+			isa = PBXGroup;
+			children = (
+				7FB432C0227C491F00422746 /* LimitsConfigurator.swift */,
+				7FB432BF227C491F00422746 /* LimitsInteractor.swift */,
+				7FB432BD227C491F00422746 /* LimitsModels.swift */,
+				7FB432BB227C491F00422746 /* LimitsPresenter.swift */,
+				7FB432BC227C491F00422746 /* LimitsRouting.swift */,
+				7FB432BE227C491F00422746 /* LimitsViewController.swift */,
+				7FB432C8227C658F00422746 /* Views */,
+				7FB432C7227C658600422746 /* Workers */,
+			);
+			path = Limits;
+			sourceTree = "<group>";
+		};
+		7FB432C7227C658600422746 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				7FB432C9227C65B200422746 /* LimitsDataFetcherWorker.swift */,
+				7FB432CB227C65BA00422746 /* LimitsDataFetcherProtocol.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		7FB432C8227C658F00422746 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7FB432CD227C6F1C00422746 /* LimitsListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		7FB9E46A20BEB3BF005BFE0E /* Theme */ = {
 			isa = PBXGroup;
 			children = (
@@ -1837,6 +1887,7 @@
 				E980D85120D1265A00C53841 /* DepositScene */,
 				E91131DE20C5329E00A8AC4D /* ExploreTokens */,
 				DB5A3BB721C1551D00520604 /* Fees */,
+				7FB432BA227C451600422746 /* Limits */,
 				7FA0114621C964F900CA5586 /* MarkdownViewer */,
 				710E85F32105E1AA007204D4 /* ReceiveAddress */,
 				7F7187142138470100F5C0BD /* RecoverySeed */,
@@ -2789,6 +2840,8 @@
 				E9908EC021074C1F00A0EA1C /* WalletDetailsFlowController.swift in Sources */,
 				7FC88B7A215E8BAE00BED021 /* SaleDetailsChartsFetcher.swift in Sources */,
 				E911321820C6FFFC00A8AC4D /* TokenDetailsFetcherProtocol.swift in Sources */,
+				7FB432C5227C491F00422746 /* LimitsInteractor.swift in Sources */,
+				7FB432CE227C6F1C00422746 /* LimitsListView.swift in Sources */,
 				7F4F1196210B6F5200651554 /* ConfirmationTitleTextView.swift in Sources */,
 				7FEA09C021357EEA0037F25F /* QRCodeReaderFlowController.swift in Sources */,
 				7F7495F5225CF9C00065EE8E /* TradesListRouting.swift in Sources */,
@@ -2907,6 +2960,7 @@
 				7F74960A225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift in Sources */,
 				71136B0B2134433F00D83DD3 /* TransactionDetailsInteractor.swift in Sources */,
 				7F749617226081E80065EE8E /* TradeOffersRouting.swift in Sources */,
+				7FB432C6227C491F00422746 /* LimitsConfigurator.swift in Sources */,
 				E980D86C20D1323000C53841 /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				E9063E8A20F63FEC00A5B343 /* UIColor+Interpolation.swift in Sources */,
 				E9BA0BF720C8189000CE5708 /* NumberFormatter+Decimal.swift in Sources */,
@@ -2914,6 +2968,7 @@
 				7F2A7E1E20F60CDE007F8CF8 /* SignedInFlowController.swift in Sources */,
 				E980D87220D1785B00C53841 /* Array+IndexInBounds.swift in Sources */,
 				DB59383C226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift in Sources */,
+				7FB432C4227C491F00422746 /* LimitsViewController.swift in Sources */,
 				713D684F20FF9552009FEBA3 /* SettingsPushCell.swift in Sources */,
 				7F74962C2260A1D40065EE8E /* TradeOffersDateFormatter.swift in Sources */,
 				7FEC94902148170500F41EE6 /* SaleDetailsModels.swift in Sources */,
@@ -2923,6 +2978,7 @@
 				DB0E51D62164E99F00DDA88C /* SaleInfoLoadingView.swift in Sources */,
 				7F967FA02125985A005527EA /* UpdatePasswordModels.swift in Sources */,
 				E941677B20C80239008E744B /* TokenDetailsTokenSummaryCell.swift in Sources */,
+				7FB432C3227C491F00422746 /* LimitsModels.swift in Sources */,
 				E980D85D20D1267900C53841 /* DepositSceneConfigurator.swift in Sources */,
 				7F8B55B1212ED4B8003AE5D7 /* TimerApplication.swift in Sources */,
 				7FEC94952148170500F41EE6 /* SaleDetailsDataProvider.swift in Sources */,
@@ -2941,6 +2997,7 @@
 				DB59386C2273616B00C8997C /* PrecisedFormatter.swift in Sources */,
 				710E86052105E1AB007204D4 /* ReceiveAddressViewController.swift in Sources */,
 				7FC88B85216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift in Sources */,
+				7FB432CA227C65B200422746 /* LimitsDataFetcherWorker.swift in Sources */,
 				DB593842226F4C2B00C8997C /* SendPaymentAmountTitleTextEditView.swift in Sources */,
 				7F74961A226081E80065EE8E /* TradeOffersInteractor.swift in Sources */,
 				7F74962A2260A1D40065EE8E /* TradeOffersChartsFetcher.swift in Sources */,
@@ -3068,6 +3125,7 @@
 				7FABEA6920FD08B30005E751 /* ValueFormatter.swift in Sources */,
 				E911321220C6D0D800A8AC4D /* TokenDetailsConfigurator.swift in Sources */,
 				E980D85820D1267900C53841 /* DepositScenePresenter.swift in Sources */,
+				7FB432C2227C491F00422746 /* LimitsRouting.swift in Sources */,
 				7F71871B2138471D00F5C0BD /* RecoverySeedPresenter.swift in Sources */,
 				7FF6762520BDBBF40074E9A8 /* RootNavigationViewController.swift in Sources */,
 				DB5A3BC921C1593800520604 /* FeeSectionProvider.swift in Sources */,
@@ -3175,6 +3233,7 @@
 				E9A5CBE8211C8D36009112CA /* DashboardPlugInsProvider.swift in Sources */,
 				DB0E51D72164E99F00DDA88C /* SaleInfoTitleTextView.swift in Sources */,
 				7F74961F2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift in Sources */,
+				7FB432CC227C65BA00422746 /* LimitsDataFetcherProtocol.swift in Sources */,
 				7FF6761A20BDA0910074E9A8 /* RegisterSceneConfigurator.swift in Sources */,
 				710E860E2105E1AB007204D4 /* ReceiveAddressShareUtilProtocol.swift in Sources */,
 				710E86242105ECAD007204D4 /* BXFStaticTableViewSectionCell.swift in Sources */,
@@ -3233,6 +3292,7 @@
 				E9BCDD542121D74700EB0DF2 /* DashboardPaymentsPlugInRateProviderProtocol.swift in Sources */,
 				7F967FCF212D79B5005527EA /* RegisterSceneLocalSignInWorker.swift in Sources */,
 				71136B112134433F00D83DD3 /* TransactionDetailsAmountFormatter.swift in Sources */,
+				7FB432C1227C491F00422746 /* LimitsPresenter.swift in Sources */,
 				7F8B55B3212EDAE4003AE5D7 /* main.swift in Sources */,
 				710E862D2105ECAD007204D4 /* BXFStaticTableViewInfoSection.swift in Sources */,
 				7F967FC5212C41EE005527EA /* SettingsManager.swift in Sources */,

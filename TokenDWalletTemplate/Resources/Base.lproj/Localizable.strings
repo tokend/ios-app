@@ -227,6 +227,7 @@
 "issued" = "Issued";
 "keychaindataprovider_should_always_provide_key" = "KeychainDataProvider should always provide key";
 "last_name" = "Last name";
+"limits" = "Limits";
 "loading" = "Loading...";
 "locked" = "Locked";
 "lower_bound" = "Lower bound";

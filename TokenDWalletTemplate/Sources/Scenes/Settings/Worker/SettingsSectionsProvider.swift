@@ -162,9 +162,16 @@ extension Settings {
                 identifier: .fees
             )
             
+            let limitsCell = Model.CellModel(
+                title: Localized(.limits),
+                icon: Assets.fee.image,
+                cellType: .disclosureCell,
+                identifier: .limits
+            )
+            
             let acountSection = Model.SectionModel(
                 title: Localized(.account),
-                cells: [accountIdCell, seedCell, feesCell],
+                cells: [accountIdCell, seedCell, feesCell, limitsCell],
                 description: ""
             )
             
