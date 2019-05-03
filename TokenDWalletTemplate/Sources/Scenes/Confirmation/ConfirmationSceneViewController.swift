@@ -12,10 +12,11 @@ extension ConfirmationScene {
     typealias DisplayLogic = ConfirmationSceneDisplayLogic
     
     class ViewController: UIViewController {
+        typealias Event = ConfirmationScene.Event
         
         // MARK: - Private properties
         
-        private let stackView: ScrollableStackView = ScrollableStackView()
+        private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         
         private var sections: [Model.SectionViewModel] = []
         
@@ -37,7 +38,7 @@ extension ConfirmationScene {
             super.viewDidLoad()
             
             self.setupView()
-            self.setupStackView()
+            self.setupTableView()
             self.setupConfirmActionButton()
             self.setupLayout()
             
@@ -47,80 +48,20 @@ extension ConfirmationScene {
             }
         }
         
-        // MARK: - Private
-        
-        private func updateWith(sectionViewModels: [Model.SectionViewModel]) {
-            var views: [UIView] = []
-            
-            for sectionViewModel in sectionViewModels {
-                for cell in sectionViewModel.cells {
-                    switch cell {
-                        
-                    case let viewModel as View.TitleTextViewModel:
-                        let view = self.getTitleTextView(viewModel: viewModel)
-                        views.append(view)
-                        
-                    case let viewModel as View.TitleTextEditViewModel:
-                        let view = self.getTitleTextEditView(viewModel: viewModel)
-                        views.append(view)
-                        
-                    case let viewModel as View.TitleBoolSwitchViewModel:
-                        let view = self.getTitleBoolSwitchView(viewModel: viewModel)
-                        views.append(view)
-                        
-                    default:
-                        break
-                    }
-                }
-            }
-            
-            self.stackView.set(views: views, transition: .none)
-        }
-        
-        private func getTitleTextView(viewModel: View.TitleTextViewModel) -> View.TitleTextView {
-            let view = View.TitleTextView()
-            view.model = viewModel
-            return view
-        }
-        
-        private func getTitleTextEditView(viewModel: View.TitleTextEditViewModel) -> View.TitleTextEditView {
-            let view = View.TitleTextEditView()
-            view.model = viewModel
-            view.onEdit = { [weak self] (identifier, value) in
-                let request = Event.TextFieldEdit.Request(
-                    identifier: identifier,
-                    text: value
-                )
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onTextFieldEdit(request: request)
-                })
-            }
-            return view
-        }
-        
-        private func getTitleBoolSwitchView(viewModel: View.TitleBoolSwitchViewModel) -> View.TitleBoolSwitchView {
-            let view = View.TitleBoolSwitchView()
-            view.model = viewModel
-            view.onSwitch = { [weak self] (identifier, value) in
-                let request = Event.BoolSwitch.Request(
-                    identifier: identifier,
-                    value: value
-                )
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onBoolSwitch(request: request)
-                })
-            }
-            return view
-        }
-        
         // MARK: - Setup
         
         private func setupView() {
             
         }
         
-        private func setupStackView() {
-            
+        private func setupTableView() {
+            self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
+            self.tableView.register(classes: [
+                View.TitleTextViewModel.self,
+                View.TitleBoolSwitchViewModel.self
+                ])
+            self.tableView.delegate = self
+            self.tableView.dataSource = self
         }
         
         private func setupConfirmActionButton() {
@@ -140,9 +81,9 @@ extension ConfirmationScene {
         }
         
         private func setupLayout() {
-            self.view.addSubview(self.stackView)
+            self.view.addSubview(self.tableView)
             
-            self.stackView.snp.makeConstraints { (make) in
+            self.tableView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
         }
@@ -155,12 +96,13 @@ extension ConfirmationScene.ViewController: ConfirmationScene.DisplayLogic {
     }
     
     func displaySectionsUpdated(viewModel: ConfirmationScene.Event.SectionsUpdated.ViewModel) {
-        self.updateWith(sectionViewModels: viewModel.sectionViewModels)
+        self.sections = viewModel.sectionViewModels
+        self.tableView.reloadData()
     }
     
     func displayConfirmAction(viewModel: ConfirmationScene.Event.ConfirmAction.ViewModel) {
         switch viewModel {
-        
+            
         case .loading:
             self.routing?.onShowProgress()
             
@@ -173,5 +115,42 @@ extension ConfirmationScene.ViewController: ConfirmationScene.DisplayLogic {
         case .succeeded:
             self.routing?.onConfirmationSucceeded()
         }
+    }
+}
+
+extension ConfirmationScene.ViewController: UITableViewDelegate {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.sections.count
+    }
+}
+
+extension ConfirmationScene.ViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.sections[section].cells.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let model = self.sections[indexPath.section].cells[indexPath.row]
+        let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
+        
+        if let boolSwitchCell = cell as? ConfirmationScene.View.TitleBoolSwitchView {
+            boolSwitchCell.onSwitch = { [weak self] (identifier, value) in
+                let request = Event.BoolSwitch.Request(
+                    identifier: identifier,
+                    value: value
+                )
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onBoolSwitch(request: request)
+                })
+            }
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.sections[section].title
     }
 }

@@ -188,6 +188,7 @@ extension SaleDetails.Model {
         let isBuy: Bool
         let baseAmount: Decimal
         let quoteAmount: Decimal
+        let baseAssetName: String
         let price: Decimal
         let fee: Decimal
         let type: Int

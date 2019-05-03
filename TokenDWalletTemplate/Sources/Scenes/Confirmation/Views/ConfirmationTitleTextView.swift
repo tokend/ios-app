@@ -1,114 +1,170 @@
 import UIKit
 
 extension ConfirmationScene.View {
-    class TitleTextViewModel: ConfirmationScene.Model.CellViewModel {
+    class TitleTextViewModel: ConfirmationScene.Model.CellViewModel, CellViewModel {
         
         // MARK: - Public properties
         
-        var value: String?
+        var title: String?
+        var icon: UIImage?
         
         // MARK: -
         
         init(
-            title: String,
+            hint: String?,
             cellType: ConfirmationScene.Model.CellModel.CellType,
             identifier: ConfirmationScene.CellIdentifier,
-            value: String?
+            isDisabled: Bool,
+            title: String?,
+            icon: UIImage?
             ) {
             
-            self.value = value
+            self.title = title
+            self.icon = icon
             
             super.init(
-                title: title,
+                hint: hint,
                 cellType: cellType,
-                identifier: identifier
+                identifier: identifier,
+                isDisabled: isDisabled
             )
+        }
+        
+        func setup(cell: TitleTextView) {
+            cell.hint = self.hint
+            cell.title = self.title
+            cell.icon = self.icon
+            cell.isDisabled = self.isDisabled
         }
     }
     
-    class TitleTextView: UIView {
+    class TitleTextView: BaseCell {
         
         // MARK: - Public properties
         
-        var model: TitleTextViewModel? {
-            didSet {
-                self.updateFromModel()
+        public var icon: UIImage? {
+            get { return self.iconView.image }
+            set { self.iconView.image = newValue }
+        }
+        
+        public var title: String? {
+            get { return self.titleLabel.text }
+            set { self.titleLabel.text = newValue }
+        }
+        
+        public var hint: String? {
+            get { return self.hintLabel.text }
+            set {
+                self.hintLabel.text = newValue
+                self.updateLayout()
             }
         }
         
-        // MARK: - Private properties
+        public var isDisabled: Bool = false {
+            didSet {
+                self.updateDisability()
+            }
+        }
         
+        private let iconView: UIImageView = UIImageView()
         private let titleLabel: UILabel = UILabel()
-        private let textLabel: UILabel = UILabel()
+        private let hintLabel: UILabel = UILabel()
         
         // MARK: -
         
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
             
-            self.customInit()
+            self.commonInit()
         }
         
         required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-            
-            self.customInit()
+            fatalError("init(coder:) has not been implemented")
         }
-        
-        private func customInit() {
-            self.setupView()
-            self.setupTitleLabel()
-            self.setupTextLabel()
-            self.setupLayout()
-        }
-        
-        // MARK: - Public
         
         // MARK: - Private
         
-        private func updateFromModel() {
-            self.titleLabel.text = self.model?.title
-            self.textLabel.text = self.model?.value
+        private func updateDisability() {
+            if self.isDisabled {
+                self.titleLabel.textColor = Theme.Colors.textFieldForegroundDisabledColor
+                self.hintLabel.textColor = Theme.Colors.textFieldForegroundDisabledColor
+            } else {
+                self.titleLabel.textColor = Theme.Colors.textFieldForegroundColor
+                self.hintLabel.textColor = Theme.Colors.textFieldForegroundColor
+            }
         }
         
-        // MARK: - Setup
+        private func commonInit() {
+            self.setupView()
+            self.setupIconView()
+            self.setupTitleLabel()
+            self.setupHintLabel()
+            
+            self.setupLayout()
+        }
         
-        private func setupView() {
-            self.backgroundColor = Theme.Colors.contentBackgroundColor
+        private func setupIconView() {
+            self.iconView.contentMode = .scaleAspectFit
+            self.iconView.tintColor = Theme.Colors.mainColor
         }
         
         private func setupTitleLabel() {
-            SharedViewsBuilder.configureInputForm(titleLabel: self.titleLabel)
+            self.titleLabel.font = Theme.Fonts.plainTextFont
+            self.titleLabel.textAlignment = .left
+            self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+            self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
             self.titleLabel.numberOfLines = 0
         }
         
-        private func setupTextLabel() {
-            SharedViewsBuilder.configureInputForm(valueLabel: self.textLabel)
-            self.textLabel.textAlignment = .right
-            self.textLabel.numberOfLines = 0
+        private func setupHintLabel() {
+            self.hintLabel.font = Theme.Fonts.smallTextFont
+            self.hintLabel.textAlignment = .left
+            self.hintLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
+            self.hintLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.hintLabel.numberOfLines = 1
         }
         
         private func setupLayout() {
+            self.addSubview(self.iconView)
             self.addSubview(self.titleLabel)
-            self.addSubview(self.textLabel)
             
-            self.titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-            self.textLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-
-            self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            self.textLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            self.titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+            self.titleLabel.setContentHuggingPriority(.required, for: .horizontal)
             
-            self.titleLabel.snp.makeConstraints { (make) in
-                make.leading.equalToSuperview().inset(20.0)
+            self.iconView.snp.makeConstraints { (make) in
+                make.leading.equalToSuperview().inset(self.sideInset)
                 make.centerY.equalToSuperview()
-                make.top.bottom.equalToSuperview().inset(14.0)
+                make.width.height.equalTo(self.iconSize)
             }
             
-            self.textLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.titleLabel.snp.trailing).offset(10.0)
-                make.top.bottom.equalToSuperview().inset(14.0)
-                make.trailing.equalToSuperview().inset(20.0)
+            self.updateLayout()
+        }
+        
+        private func updateLayout() {
+            if let hint = self.hint,
+                !hint.isEmpty {
+                
+                self.addSubview(self.hintLabel)
+                self.titleLabel.snp.remakeConstraints { (make) in
+                    make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalToSuperview().inset(self.topInset)
+                }
+                
+                self.hintLabel.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalTo(self.titleLabel)
+                    make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset/2)
+                    make.bottom.equalToSuperview().inset(self.topInset)
+                }
+            } else {
+                self.hintLabel.removeFromSuperview()
+                self.titleLabel.snp.remakeConstraints { (make) in
+                    make.leading.equalTo(self.iconView.snp.trailing).offset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.bottom.equalToSuperview().inset(self.topInset)
+                }
             }
+            self.setNeedsLayout()
         }
     }
 }
