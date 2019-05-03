@@ -66,7 +66,6 @@ extension SendPaymentAmount {
         }
         
         private func setupAmountField() {
-            self.amountField.textAlignment = .right
             self.amountField.font =  Theme.Fonts.hugeTitleFont
             self.amountField.attributedPlaceholder = NSAttributedString(
                 string: "0",
