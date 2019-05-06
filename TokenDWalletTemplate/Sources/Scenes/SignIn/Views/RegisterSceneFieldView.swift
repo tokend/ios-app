@@ -129,7 +129,7 @@ extension RegisterScene.View {
                     make.leading.equalTo(self.titleLabel.snp.trailing).offset(20.0)
                 }
                 
-            default:
+            case .hidePassword, .scanQr, .showPassword:
                 self.actionButton.snp.remakeConstraints { (make) in
                     make.trailing.top.bottom.equalToSuperview()
                     make.width.equalTo(self.actionButton.snp.height)
@@ -148,7 +148,7 @@ extension RegisterScene.View {
             case .scanQr:
                 self.textField.textColor = Theme.Colors.textFieldForegroundDisabledColor
                 
-            default:
+            case .hidePassword, .none, .showPassword:
                 self.textField.textColor = self.textEditingEnabled
                     ? Theme.Colors.textFieldForegroundColor
                     : Theme.Colors.textFieldForegroundDisabledColor
