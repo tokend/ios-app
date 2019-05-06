@@ -12,9 +12,7 @@ enum SaleDetails {
     enum TabIdentifier: String {
         case empty
         case details
-        case description
-        case investing
-        case charts
+        case invest
         case chart
         case overview
     }
@@ -103,30 +101,27 @@ extension SaleDetails.Model {
     }
     
     enum TabType {
-        case description(DescriptionTabModel)
-        case investing(InvestingTabModel)
         case chart(ChartTabModel)
-        case overview(OverviewTabModel)
         case empty(EmptyTabModel)
+        case invest(InvestTabModel)
+        case overview(OverviewTabModel)
     }
     
     enum TabContentType {
-        case description(SaleDetails.DescriptionTab.ViewModel)
-        case investing(SaleDetails.InvestingTab.ViewModel)
         case chart(SaleDetails.ChartTab.ViewModel)
-        case overview(SaleDetails.OverviewTab.ViewModel)
         case empty(SaleDetails.EmptyContent.ViewModel)
+        case invest(SaleDetails.InvestTab.ViewModel)
+        case overview(SaleDetails.OverviewTab.ViewModel)
     }
     
     enum TabViewType {
-        case description(SaleDetails.DescriptionTab.View)
-        case investing(SaleDetails.InvestingTab.View)
         case chart(SaleDetails.ChartTab.View)
-        case overview(SaleDetails.OverviewTab.View)
         case empty(SaleDetails.EmptyContent.View)
+        case invest(SaleDetails.InvestTab.View)
+        case overview(SaleDetails.OverviewTab.View)
     }
     
-    struct DescriptionTabModel {
+    struct OverviewTabModel {
         let imageUrl: URL?
         let name: String
         let description: String
@@ -142,10 +137,12 @@ extension SaleDetails.Model {
         
         let youtubeVideoUrl: URL?
         
+        let overviewContent: String?
+        
         let tabIdentifier: SaleDetails.TabIdentifier
     }
     
-    struct InvestingTabModel {
+    struct InvestTabModel {
         var selectedBalance: BalanceDetails?
         var amount: Decimal
         let availableAmount: Decimal
@@ -169,11 +166,6 @@ extension SaleDetails.Model {
         
         let chartModel: ChartModel
         
-        let tabIdentifier: SaleDetails.TabIdentifier
-    }
-    
-    struct OverviewTabModel {
-        let overview: String
         let tabIdentifier: SaleDetails.TabIdentifier
     }
     
@@ -349,11 +341,11 @@ extension SaleDetails.Event {
         }
         
         struct Response {
-            let updatedTab: Model.InvestingTabModel
+            let updatedTab: Model.InvestTabModel
         }
         
         struct ViewModel {
-            let updatedTab: SaleDetails.InvestingTab.ViewModel
+            let updatedTab: SaleDetails.InvestTab.ViewModel
         }
     }
     
@@ -460,7 +452,7 @@ extension SaleDetails.Event {
 
 // MARK: -
 
-extension SaleDetails.Model.DescriptionTabModel {
+extension SaleDetails.Model.OverviewTabModel {
     
     enum ImageState {
         case empty

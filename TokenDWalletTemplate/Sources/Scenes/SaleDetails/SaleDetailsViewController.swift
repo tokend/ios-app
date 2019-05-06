@@ -84,14 +84,14 @@ extension SaleDetails {
             }
         }
         
-        private func updateInvestingTab(_ viewModel: InvestingTab.ViewModel) {
+        private func updateInvestTab(_ viewModel: InvestTab.ViewModel) {
             guard let viewType = self.contentType else {
                 return
             }
             switch viewType {
                 
-            case .investing(let investingTab):
-                viewModel.setup(tab: investingTab)
+            case .invest(let investTab):
+                viewModel.setup(tab: investTab)
                 
             default:
                 break
@@ -132,36 +132,23 @@ extension SaleDetails {
                 contentType = .chart(chartTabView)
                 contentView = chartTabView
                 
-            case .description(let viewModel):
-                let descriptionTabView = SaleDetails.DescriptionTab.View()
-                viewModel.setup(tab: descriptionTabView)
+            case .invest(let viewModel):
+                let investTabView = SaleDetails.InvestTab.View()
+                viewModel.setup(tab: investTabView)
                 
-                descriptionTabView.onDidSelectMoreInfoButton = { [weak self] (identifier) in
-                    let request = Event.DidSelectMoreInfoButton.Request()
-                    self?.interactorDispatch?.sendRequest { businessLogic in
-                        businessLogic.onDidSelectMoreInfoButton(request: request)
-                    }
-                }
-                contentType = .description(descriptionTabView)
-                contentView = descriptionTabView
-                
-            case .investing(let viewModel):
-                let investingTabView = SaleDetails.InvestingTab.View()
-                viewModel.setup(tab: investingTabView)
-                
-                investingTabView.onSelectBalance = { [weak self] (identifier) in
+                investTabView.onSelectBalance = { [weak self] (identifier) in
                     let request = Event.SelectBalance.Request()
                     self?.interactorDispatch?.sendRequest { businessLogic in
                         businessLogic.onSelectBalance(request: request)
                     }
                 }
-                investingTabView.onInvestAction = { [weak self] (identifier) in
+                investTabView.onInvestAction = { [weak self] (identifier) in
                     let request = Event.InvestAction.Request()
                     self?.interactorDispatch?.sendRequest { businessLogic in
                         businessLogic.onInvestAction(request: request)
                     }
                 }
-                investingTabView.onCancelInvestAction = { [weak self] (identifier) in
+                investTabView.onCancelInvestAction = { [weak self] (identifier) in
                     let onSelected: ((Int) -> Void) = { _ in
                         let request = Event.CancelInvestAction.Request()
                         self?.interactorDispatch?.sendRequest { businessLogic in
@@ -175,14 +162,14 @@ extension SaleDetails {
                         onSelected
                     )
                 }
-                investingTabView.onDidEnterAmount = { [weak self] (amount) in
+                investTabView.onDidEnterAmount = { [weak self] (amount) in
                     let request = Event.EditAmount.Request(amount: amount)
                     self?.interactorDispatch?.sendRequest { businessLogic in
                         businessLogic.onEditAmount(request: request)
                     }
                 }
-                contentType = .investing(investingTabView)
-                contentView = investingTabView
+                contentType = .invest(investTabView)
+                contentView = investTabView
                 
             case .overview(let viewModel):
                 let overviewTabView = SaleDetails.OverviewTab.View()
@@ -216,10 +203,8 @@ extension SaleDetails {
             let view: UIView
             switch viewType {
                 
-            case .description(let descriptionView):
-                view = descriptionView
-            case .investing(let investingView):
-                view = investingView
+            case .invest(let investView):
+                view = investView
             case .chart(let chartView):
                 view = chartView
             case .overview(let overviewView):
@@ -266,7 +251,7 @@ extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     }
     
     func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel) {
-        self.updateInvestingTab(viewModel.updatedTab)
+        self.updateInvestTab(viewModel.updatedTab)
     }
     
     func displayInvestAction(viewModel: Event.InvestAction.ViewModel) {

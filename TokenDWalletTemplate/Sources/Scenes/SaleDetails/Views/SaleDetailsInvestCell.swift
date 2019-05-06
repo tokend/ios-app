@@ -5,7 +5,7 @@ import UIKit
 
 extension SaleDetails {
     
-    enum InvestingTab {
+    enum InvestTab {
         
         struct ViewModel {
             
@@ -17,7 +17,7 @@ extension SaleDetails {
             let actionTitle: String
             let identifier: TabIdentifier
             
-            func setup(tab: InvestingTab.View) {
+            func setup(tab: View) {
                 tab.availableAmount = self.availableAmount
                 tab.inputAmount = self.inputAmount
                 tab.maxInputAmount = self.maxInputAmount
@@ -141,7 +141,7 @@ extension SaleDetails {
                 self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
                 self.titleLabel.textAlignment = .left
                 self.titleLabel.numberOfLines = 1
-                self.titleLabel.text = Localized(.investing)
+                self.titleLabel.text = Localized(.invest)
             }
             
             private func setupInvestContenView() {
@@ -204,7 +204,10 @@ extension SaleDetails {
             }
             
             private func setupInvestButton() {
-                SharedViewsBuilder.configureActionButton(self.investButton, title: Localized(.invest))
+                SharedViewsBuilder.configureActionButton(
+                    self.investButton,
+                    title: Localized(.invest_cap)
+                )
                 self.investButton.contentEdgeInsets = UIEdgeInsets(
                     top: 0.0, left: self.sideInset, bottom: 0.0, right: self.sideInset
                 )

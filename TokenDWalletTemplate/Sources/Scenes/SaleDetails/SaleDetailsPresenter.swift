@@ -55,7 +55,7 @@ extension SaleDetails {
         // MARK: - Private
         
         private func getTimeText(
-            sale: Model.DescriptionTabModel
+            sale: Model.OverviewTabModel
             ) -> (timeText: NSAttributedString, isUpcomming: Bool) {
             
             let isUpcomming: Bool
@@ -130,9 +130,9 @@ extension SaleDetails {
             return (attributedDaysRemaining, isUpcomming)
         }
         
-        private func createDescriptionTabViewModel(
-            sale: Model.DescriptionTabModel
-            ) -> DescriptionTab.ViewModel {
+        private func createOverviewTabViewModel(
+            sale: Model.OverviewTabModel
+            ) -> OverviewTab.ViewModel {
             
             let name = sale.name
             let asset = sale.asset
@@ -190,7 +190,9 @@ extension SaleDetails {
             
             let timeText = self.getTimeText(sale: sale)
             
-            return DescriptionTab.ViewModel(
+            let overviewContent = self.clearEscapedCharacters(sale.overviewContent)
+            
+            return OverviewTab.ViewModel(
                 imageUrl: sale.imageUrl,
                 name: saleName,
                 description: attributedDescription,
@@ -199,6 +201,7 @@ extension SaleDetails {
                 investedPercentage: sale.investmentPercentage,
                 investedPercentageText: attributedInvestedPercentage,
                 timeText: timeText.timeText,
+                overviewContent: overviewContent,
                 identifier: sale.tabIdentifier
             )
         }
@@ -260,19 +263,6 @@ extension SaleDetails {
             )
         }
         
-        private func createOverviewTabViewModel(
-            overview: Model.OverviewTabModel
-            ) -> OverviewTab.ViewModel {
-            
-            let contentText = self.overviewFormatter.formatText(
-                text: overview.overview
-            )
-            return OverviewTab.ViewModel(
-                contentText: contentText,
-                identifier: .overview
-            )
-        }
-        
         private func createEmptyTabViewModel(
             model: Model.EmptyTabModel
             ) -> EmptyContent.ViewModel {
@@ -306,9 +296,9 @@ extension SaleDetails {
             })
         }
         
-        private func createInvestingTabViewModel(
-            tabModel: Model.InvestingTabModel
-            ) -> InvestingTab.ViewModel {
+        private func createInvestTabViewModel(
+            tabModel: Model.InvestTabModel
+            ) -> InvestTab.ViewModel {
             
             let availableAmount: String
             if let selectedAsset = tabModel.selectedBalance {
@@ -326,7 +316,7 @@ extension SaleDetails {
                 availableAmount = ""
             }
             
-            return InvestingTab.ViewModel(
+            return InvestTab.ViewModel(
                 availableAmount: availableAmount,
                 inputAmount: tabModel.amount,
                 maxInputAmount: tabModel.availableAmount,
@@ -420,26 +410,31 @@ extension SaleDetails {
         private func getTabContentType(tabType: Model.TabType) -> Model.TabContentType {
             switch tabType {
                 
-            case .description(let descriptionTabModel):
-                let content = self.createDescriptionTabViewModel(sale: descriptionTabModel)
-                return .description(content)
-                
-            case .investing(let investingTabModel):
-                let content = self.createInvestingTabViewModel(tabModel: investingTabModel)
-                return .investing(content)
+            case .invest(let investTabModel):
+                let content = self.createInvestTabViewModel(tabModel: investTabModel)
+                return .invest(content)
                 
             case .chart(let chartTabModel):
                 let content = self.createChartTabViewModel(tabModel: chartTabModel)
                 return .chart(content)
                 
             case .overview(let overviewTabModel):
-                let content = self.createOverviewTabViewModel(overview: overviewTabModel)
+                let content = self.createOverviewTabViewModel(sale: overviewTabModel)
                 return .overview(content)
                 
             case .empty(let emptyTabModel):
                 let content = self.createEmptyTabViewModel(model: emptyTabModel)
                 return .empty(content)
             }
+        }
+        
+        private func clearEscapedCharacters(_ string: String?) -> String? {
+            return string?
+                .replacingOccurrences(of: "\\n", with: "\n")
+                .replacingOccurrences(of: "\"", with: "")
+                .replacingOccurrences(of: "\\'", with: "\'")
+                .replacingOccurrences(of: "\\t", with: "\t")
+                .replacingOccurrences(of: "\\\\", with: "\\")
         }
     }
 }
@@ -472,7 +467,7 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
     }
     
     func presentBalanceSelected(response: Event.BalanceSelected.Response) {
-        let updatedTab = self.createInvestingTabViewModel(tabModel: response.updatedTab)
+        let updatedTab = self.createInvestTabViewModel(tabModel: response.updatedTab)
         let viewModel = Event.BalanceSelected.ViewModel(updatedTab: updatedTab)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayBalanceSelected(viewModel: viewModel)

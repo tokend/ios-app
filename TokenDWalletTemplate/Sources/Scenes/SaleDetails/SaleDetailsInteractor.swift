@@ -173,7 +173,7 @@ extension SaleDetails {
                 investmentPercentage = 1.0
             }
             
-            let descModel = Model.DescriptionTabModel(
+            let overviewModel = Model.OverviewTabModel(
                 imageUrl: sale.details.logoUrl,
                 name: sale.details.name,
                 description: sale.details.shortDescription,
@@ -185,65 +185,43 @@ extension SaleDetails {
                 startDate: sale.startTime,
                 endDate: sale.endTime,
                 youtubeVideoUrl: sale.details.youtubeVideoUrl,
-                tabIdentifier: .description
+                overviewContent: self.overviewModel?.overview,
+                tabIdentifier: .overview
             )
             
-            let descTabModel = Model.TabModel(
+            let overviewTabModel = Model.TabModel(
                 title: Localized(.description),
-                tabType: .description(descModel),
-                tabIdentifier: .description
+                tabType: .overview(overviewModel),
+                tabIdentifier: .overview
             )
-            tabModels.append(descTabModel)
-            
-            // Overview
-            
-            let overviewTab: Model.TabModel
-            if let overviewModel = self.overviewModel {
-                let overviewTabModel = Model.OverviewTabModel(
-                    overview: overviewModel.overview,
-                    tabIdentifier: .overview
-                )
-                overviewTab = Model.TabModel(
-                    title: Localized(.overview),
-                    tabType: .overview(overviewTabModel),
-                    tabIdentifier: .overview
-                )
-            } else if let errorMessage = self.errors[.overview] {
-                overviewTab = self.getEmptyTab(
-                    title: Localized(.overview),
-                    message: errorMessage
-                )
-            } else {
-                overviewTab = self.getEmptyTab(title: Localized(.overview))
-            }
-            tabModels.append(overviewTab)
+            tabModels.append(overviewTabModel)
             
             // Invest
             
-            let investingEnabled: Bool
+            let investEnabled: Bool
             if self.account != nil, self.assetModel != nil {
-                investingEnabled = true
+                investEnabled = true
             } else {
-                investingEnabled = false
+                investEnabled = false
             }
             
-            if investingEnabled {
-                let investingTabModel: Model.TabModel
+            if investEnabled {
+                let investTabModel: Model.TabModel
                 
-                if let errorMessage = self.errors[.investing] {
-                    investingTabModel = self.getEmptyTab(
-                        title: Localized(.investing),
+                if let errorMessage = self.errors[.invest] {
+                    investTabModel = self.getEmptyTab(
+                        title: Localized(.invest),
                         message: errorMessage
                     )
                 } else {
-                    let investingModel = self.getInvestingTabModel()
-                    investingTabModel = Model.TabModel(
-                        title: Localized(.investing),
-                        tabType: .investing(investingModel),
-                        tabIdentifier: .investing
+                    let investModel = self.getInvestTabModel()
+                    investTabModel = Model.TabModel(
+                        title: Localized(.invest),
+                        tabType: .invest(investModel),
+                        tabIdentifier: .invest
                     )
                 }
-                tabModels.append(investingTabModel)
+                tabModels.append(investTabModel)
             }
             
             // Chart
@@ -295,21 +273,21 @@ extension SaleDetails {
             self.sceneModel.selectedTabId = first.tabIdentifier
         }
         
-        private func getInvestingTabModel() -> Model.InvestingTabModel {
+        private func getInvestTabModel() -> Model.InvestTabModel {
             let availableAmount = self.getAvailableInputAmount()
             let isCancellable = self.sceneModel.inputAmount != 0.0
-            let actionTitle = isCancellable ? Localized(.update) : Localized(.invest)
+            let actionTitle = isCancellable ? Localized(.update) : Localized(.invest_cap)
             
-            let investingModel = Model.InvestingTabModel(
+            let investModel = Model.InvestTabModel(
                 selectedBalance: self.sceneModel.selectedBalance,
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
                 isCancellable: isCancellable,
                 actionTitle: actionTitle,
-                tabIdentifier: .investing
+                tabIdentifier: .invest
             )
             
-            return investingModel
+            return investModel
         }
         
         private func getChartTabModel(
@@ -340,7 +318,7 @@ extension SaleDetails {
                 growthPositive: growthPositive,
                 growthSincePeriod: growthSincePeriod,
                 chartModel: chartModel,
-                tabIdentifier: .charts
+                tabIdentifier: .chart
             )
             
             return chartTabModel
@@ -785,8 +763,8 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
         self.sceneModel.selectedBalance = balance
         self.updateInputAmountFromSelectedBalance()
         
-        let investingTabModel = self.getInvestingTabModel()
-        let response = Event.BalanceSelected.Response(updatedTab: investingTabModel)
+        let investTabModel = self.getInvestTabModel()
+        let response = Event.BalanceSelected.Response(updatedTab: investTabModel)
         self.presenter.presentBalanceSelected(response: response)
     }
     
@@ -964,7 +942,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
             asset: sale.defaultQuoteAsset,
             investedAmount: investedAmount,
             investedDate: investedDate,
-            identifier: .charts
+            identifier: .chart
         )
         self.presenter.presentSelectChartEntry(response: response)
     }

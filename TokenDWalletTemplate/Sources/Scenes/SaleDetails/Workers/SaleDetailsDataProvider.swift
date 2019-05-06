@@ -250,7 +250,7 @@ extension SaleDetails {
                     switch result {
                         
                     case .failure(let error):
-                        self?.errorsValue[.investing] = error.localizedDescription
+                        self?.errorsValue[.invest] = error.localizedDescription
                         
                     case .success(let offers):
                         self?.pendingOffers.accept(offers)

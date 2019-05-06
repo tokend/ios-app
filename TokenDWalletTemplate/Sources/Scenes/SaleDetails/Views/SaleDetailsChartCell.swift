@@ -246,6 +246,7 @@ extension SaleDetails {
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.translatesAutoresizingMaskIntoConstraints = false
             }
             
             private func setupContainerView() {

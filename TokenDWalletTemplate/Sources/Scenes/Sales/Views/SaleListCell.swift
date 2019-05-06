@@ -49,6 +49,7 @@ extension Sales {
                             into: self.saleImageView
                         )
                     } else {
+                        Nuke.cancelRequest(for: self.saleImageView)
                         self.saleImageView.image = nil
                     }
                 }

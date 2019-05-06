@@ -127,6 +127,7 @@ extension SaleInfo {
                         into: self.tokenIconView
                     )
                 } else {
+                    Nuke.cancelRequest(for: self.tokenIconView)
                     self.tokenIconView.image = nil
                     self.tokenAbbreviationView.isHidden = false
                 }

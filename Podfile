@@ -22,7 +22,7 @@ def main_app_pods
   
   pod 'PullToRefresher', '~> 3.0'
   pod 'Nuke'
-  pod 'Down'
+  pod 'MarkdownView'
   pod 'AFDateHelper', '~> 4.2.2'
   
   pod 'Firebase/Core'

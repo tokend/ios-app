@@ -242,8 +242,8 @@
 		7FEC94962148170500F41EE6 /* SaleDetailsValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC94892148170500F41EE6 /* SaleDetailsValueFormatter.swift */; };
 		7FEC94972148170500F41EE6 /* SaleDetailsRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948A2148170500F41EE6 /* SaleDetailsRouting.swift */; };
 		7FEC94982148170500F41EE6 /* SaleDetailsChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948C2148170500F41EE6 /* SaleDetailsChartCell.swift */; };
-		7FEC94992148170500F41EE6 /* SaleDetailsInvestingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948D2148170500F41EE6 /* SaleDetailsInvestingCell.swift */; };
-		7FEC949A2148170500F41EE6 /* SaleDetailsDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948E2148170500F41EE6 /* SaleDetailsDescriptionCell.swift */; };
+		7FEC94992148170500F41EE6 /* SaleDetailsInvestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948D2148170500F41EE6 /* SaleDetailsInvestCell.swift */; };
+		7FEC949A2148170500F41EE6 /* SaleDetailsOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948E2148170500F41EE6 /* SaleDetailsOverviewCell.swift */; };
 		7FEC949B2148170500F41EE6 /* SaleDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC948F2148170500F41EE6 /* SaleDetailsViewController.swift */; };
 		7FF5AE4D215B761D0066A2ED /* SaleDetailsAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */; };
 		7FF5AE4F215BCC450066A2ED /* WalletRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */; };
@@ -278,7 +278,6 @@
 		DB0E51D92164E99F00DDA88C /* SaleInfoTokenContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51CE2164E99E00DDA88C /* SaleInfoTokenContent.swift */; };
 		DB0E51DA2164ED9400DDA88C /* SaleInfoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C22164E99E00DDA88C /* SaleInfoModels.swift */; };
 		DB10444B2167B4E000FD43BC /* SaleEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB10444A2167B4E000FD43BC /* SaleEmptyView.swift */; };
-		DB14989A225B86E600A9A74C /* SaleDetailsOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */; };
 		DB14989C225B896900A9A74C /* SaleInfoTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */; };
 		DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017C21F5DB0F00CD3DA4 /* Assets.swift */; };
 		DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */; };
@@ -747,8 +746,8 @@
 		7FEC94892148170500F41EE6 /* SaleDetailsValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsValueFormatter.swift; sourceTree = "<group>"; };
 		7FEC948A2148170500F41EE6 /* SaleDetailsRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsRouting.swift; sourceTree = "<group>"; };
 		7FEC948C2148170500F41EE6 /* SaleDetailsChartCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartCell.swift; sourceTree = "<group>"; };
-		7FEC948D2148170500F41EE6 /* SaleDetailsInvestingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInvestingCell.swift; sourceTree = "<group>"; };
-		7FEC948E2148170500F41EE6 /* SaleDetailsDescriptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsDescriptionCell.swift; sourceTree = "<group>"; };
+		7FEC948D2148170500F41EE6 /* SaleDetailsInvestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInvestCell.swift; sourceTree = "<group>"; };
+		7FEC948E2148170500F41EE6 /* SaleDetailsOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsOverviewCell.swift; sourceTree = "<group>"; };
 		7FEC948F2148170500F41EE6 /* SaleDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsViewController.swift; sourceTree = "<group>"; };
 		7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsAmountFormatter.swift; sourceTree = "<group>"; };
 		7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRepo.swift; sourceTree = "<group>"; };
@@ -787,7 +786,6 @@
 		DB0E51CC2164E99E00DDA88C /* SaleInfoTitleTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTitleTextView.swift; sourceTree = "<group>"; };
 		DB0E51CE2164E99E00DDA88C /* SaleInfoTokenContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTokenContent.swift; sourceTree = "<group>"; };
 		DB10444A2167B4E000FD43BC /* SaleEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleEmptyView.swift; sourceTree = "<group>"; };
-		DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsOverviewCell.swift; sourceTree = "<group>"; };
 		DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTextFormatter.swift; sourceTree = "<group>"; };
 		DB16017C21F5DB0F00CD3DA4 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
@@ -1745,10 +1743,9 @@
 			isa = PBXGroup;
 			children = (
 				7FEC948C2148170500F41EE6 /* SaleDetailsChartCell.swift */,
-				7FEC948E2148170500F41EE6 /* SaleDetailsDescriptionCell.swift */,
 				DB09402B2264E4F500A9992A /* SaleDetailsEmptyView.swift */,
-				7FEC948D2148170500F41EE6 /* SaleDetailsInvestingCell.swift */,
-				DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */,
+				7FEC948D2148170500F41EE6 /* SaleDetailsInvestCell.swift */,
+				7FEC948E2148170500F41EE6 /* SaleDetailsOverviewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2704,13 +2701,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate-resources.sh",
-				"${PODS_ROOT}/Down/Resources/DownView.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MarkdownView/MarkdownView.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DownView.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MarkdownView.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2859,7 +2856,7 @@
 				E93F075A20D7E8BA000C0991 /* TransactionsListSceneTransactionsFetcherProtocol.swift in Sources */,
 				7FA02BD8215923C3005C1BE4 /* TransactionsListAmountFormatter.swift in Sources */,
 				E911320020C69E5D00A8AC4D /* KeyboardController.swift in Sources */,
-				7FEC94992148170500F41EE6 /* SaleDetailsInvestingCell.swift in Sources */,
+				7FEC94992148170500F41EE6 /* SaleDetailsInvestCell.swift in Sources */,
 				710E86342105FA95007204D4 /* BXFGroupedHeaderFooterLabel.swift in Sources */,
 				E9A5CBC42119A64C009112CA /* PendingOffersRepo.swift in Sources */,
 				7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */,
@@ -3242,7 +3239,7 @@
 				7FEC94912148170500F41EE6 /* SaleDetailsPresenter.swift in Sources */,
 				E93F076920D91357000C0991 /* TransactionsListScenePaymentsFetcher.swift in Sources */,
 				7FB9E48220C06FD1005BFE0E /* KeychainManager.swift in Sources */,
-				7FEC949A2148170500F41EE6 /* SaleDetailsDescriptionCell.swift in Sources */,
+				7FEC949A2148170500F41EE6 /* SaleDetailsOverviewCell.swift in Sources */,
 				7FEC94972148170500F41EE6 /* SaleDetailsRouting.swift in Sources */,
 				E93F075820D7D885000C0991 /* TransactionsListTableViewCell.swift in Sources */,
 				E91131FA20C56FC700A8AC4D /* UIView+Loading.swift in Sources */,
@@ -3262,7 +3259,6 @@
 				7FEB45C020DD4143001CA31C /* VerifyEmailInteractor.swift in Sources */,
 				E92F1C0E2139B77D00D4695E /* OrderBookTableViewBuyCell.swift in Sources */,
 				E980D84E20CFF64400C53841 /* BehaviorRelay+EmitValue.swift in Sources */,
-				DB14989A225B86E600A9A74C /* SaleDetailsOverviewCell.swift in Sources */,
 				DB593837226E0A0600C8997C /* SendPaymentDestinationInteractor.swift in Sources */,
 				DB33ECA1216672D1006D220B /* SaleInfoEmptyView.swift in Sources */,
 				E93F075420D7C87F000C0991 /* TransactionsListConfigurator.swift in Sources */,
