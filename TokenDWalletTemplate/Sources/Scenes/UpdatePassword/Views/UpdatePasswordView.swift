@@ -15,7 +15,8 @@ extension UpdatePassword {
         // MARK: - Private properties
         
         private let contentView = UIView()
-        private var fields: [FieldView] = []
+        private var fields: [Field] = []
+        private var fieldViews: [FieldView] = []
         
         private let disposeBag = DisposeBag()
         
@@ -48,8 +49,9 @@ extension UpdatePassword {
             self.contentView.subviews.forEach { (fieldView) in
                 fieldView.removeFromSuperview()
             }
-            self.fields.removeAll()
+            self.fieldViews.removeAll()
             
+            self.fields = fields
             self.layoutFields(fields)
         }
         
@@ -70,12 +72,36 @@ extension UpdatePassword {
             fieldView.textField.autocorrectionType = field.autocorrection
             fieldView.textField.isSecureTextEntry = field.secureInput
             fieldView.textField.delegate = self
+            
+            switch field.fieldType {
+                
+            case .newPassword, .oldPassword, .confirmPassword:
+                fieldView.actionType = field.secureInput
+                    ? .showPassword
+                    : .hidePassword
+                
+                fieldView.actionButton.rx
+                    .controlEvent(.touchUpInside)
+                    .asDriver()
+                    .drive(onNext: { [weak self] in
+                        self?.changePasswordVisibility(
+                            field: field,
+                            actionType: fieldView.actionType
+                        )
+                    })
+                    .disposed(by: self.disposeBag)
+                
+            case .email, .seed:
+                break
+            }
+            
             fieldView.textField
                 .rx
                 .text
                 .asDriver()
                 .drive(onNext: { [weak self] text in
                     self?.onEditField?(field.fieldType, text)
+                    self?.updateFieldText(field: field, text: text)
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -127,7 +153,7 @@ extension UpdatePassword {
                     }
                 }
                 prevField = textField
-                self.fields.append(textField)
+                self.fieldViews.append(textField)
                 
                 let separator = UIView()
                 self.setupSeparator(separator)
@@ -144,6 +170,35 @@ extension UpdatePassword {
                 make.bottom.equalToSuperview()
             }
         }
+        
+        private func changePasswordVisibility(
+            field: View.Field,
+            actionType: ActionType
+            ) {
+            
+            guard var fieldToChange = self.fields.first(where: { (storedField) -> Bool in
+                return storedField.fieldType == field.fieldType
+            }), let index = self.fields.indexOf(fieldToChange) else {
+                return
+            }
+            fieldToChange.secureInput = !fieldToChange.secureInput
+            self.fields[index] = fieldToChange
+            self.setupFields(self.fields)
+        }
+        
+        private func updateFieldText(
+            field: View.Field,
+            text: String?
+            ) {
+            
+            guard var fieldToChange = self.fields.first(where: { (storedField) -> Bool in
+                return storedField.fieldType == field.fieldType
+            }), let index = self.fields.indexOf(fieldToChange) else {
+                return
+            }
+            fieldToChange.text = text
+            self.fields[index] = fieldToChange
+        }
     }
 }
 
@@ -153,15 +208,16 @@ extension UpdatePassword.View: UITextFieldDelegate {
 
 extension UpdatePassword.View {
     
-    struct Field {
+    struct Field: Equatable {
         let fieldType: UpdatePassword.Model.FieldType
         let title: String
-        let text: String?
+        var text: String?
         let placeholder: String?
         let keyboardType: UIKeyboardType
         let autocapitalize: UITextAutocapitalizationType
         let autocorrection: UITextAutocorrectionType
-        let secureInput: Bool
+        var secureInput: Bool
     }
     typealias FieldView = RegisterScene.View.FieldView
+    typealias ActionType = RegisterScene.Model.Field.ActionType
 }
