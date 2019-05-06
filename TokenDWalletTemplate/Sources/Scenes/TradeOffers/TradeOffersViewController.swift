@@ -43,7 +43,7 @@ extension TradeOffers {
         
         private lazy var chartView: TradeChartCard = {
             let view = TradeChartCard(frame: CGRect.zero)
-            self.layoutContentView(view, maxHeight: 450.0)
+            self.layoutContentView(view)
             return view
         }()
         
@@ -158,18 +158,12 @@ extension TradeOffers {
             }
         }
         
-        private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {
+        private func layoutContentView(_ contentView: UIView) {
             contentView.isHidden = true
             self.containerView.addSubview(contentView)
             self.containerView.sendSubviewToBack(contentView)
             contentView.snp.makeConstraints({ (make) in
-                make.leading.trailing.top.equalToSuperview()
-                if let maxHeight = maxHeight {
-                    make.height.lessThanOrEqualTo(maxHeight)
-                    make.bottom.lessThanOrEqualToSuperview()
-                } else {
-                    make.bottom.equalToSuperview()
-                }
+                make.edges.equalToSuperview()
             })
         }
         

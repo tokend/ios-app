@@ -180,7 +180,6 @@ class ChartView: UIView {
         self.addSubview(self.chart)
         self.chart.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
-            make.height.equalTo(250)
         }
     }
 }
