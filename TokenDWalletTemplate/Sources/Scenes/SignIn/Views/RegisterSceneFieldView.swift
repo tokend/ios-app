@@ -11,7 +11,7 @@ extension RegisterScene.View {
         
         let titleLabel: UILabel = UILabel()
         let textField: UITextField = UITextField()
-        let scanButton: UIButton = UIButton(type: .custom)
+        let actionButton: UIButton = UIButton(type: .custom)
         
         var titleWidth: CGFloat = 80.0 {
             didSet {
@@ -25,12 +25,11 @@ extension RegisterScene.View {
             }
         }
         
-        var scanButtonHidden: Bool {
-            get { return self.scanButton.isHidden }
-            set {
-                self.scanButton.isHidden = newValue
-                self.updateTextFieldEditing()
+        var actionType: RegisterScene.Model.Field.ActionType = .none {
+            didSet {
+                self.setupActionButton()
                 self.updateLabelsLayout()
+                self.updateTextFieldEditing()
             }
         }
         
@@ -53,9 +52,7 @@ extension RegisterScene.View {
             
             self.setupTitleLabel()
             self.setupTextField()
-            self.setupScanButton()
             self.setupLayout()
-            self.scanButtonHidden = true
         }
         
         // MARK: - Public
@@ -82,15 +79,34 @@ extension RegisterScene.View {
             self.textField.font = Theme.Fonts.textFieldTextFont
         }
         
-        private func setupScanButton() {
-            self.scanButton.setImage(#imageLiteral(resourceName: "Scan QR icon"), for: .normal)
-            self.scanButton.tintColor = Theme.Colors.mainColor
+        private func setupActionButton() {
+            let buttonImage: UIImage?
+            var isHidden: Bool = false
+            
+            switch self.actionType {
+                
+            case .hidePassword:
+                buttonImage = Assets.hidePasswordIcon.image
+                
+            case .none:
+                buttonImage = nil
+                isHidden = true
+                
+            case .scanQr:
+                buttonImage = Assets.scanQrIcon.image
+                
+            case .showPassword:
+                buttonImage = Assets.showPasswordIcon.image
+            }
+            self.actionButton.setImage(buttonImage, for: .normal)
+            self.actionButton.tintColor = Theme.Colors.mainColor
+            self.actionButton.isHidden = isHidden
         }
         
         private func setupLayout() {
             self.addSubview(self.titleLabel)
             self.addSubview(self.textField)
-            self.addSubview(self.scanButton)
+            self.addSubview(self.actionButton)
             
             self.updateLabelsLayout()
         }
@@ -101,33 +117,42 @@ extension RegisterScene.View {
                 make.width.equalTo(self.titleWidth)
             }
             
-            if self.scanButtonHidden {
-                self.scanButton.snp.remakeConstraints { (make) in
+            switch self.actionType {
+                
+            case .none:
+                self.actionButton.snp.remakeConstraints { (make) in
                     make.trailing.top.bottom.equalToSuperview()
-                    make.width.equalTo(self.scanButton.snp.height)
+                    make.width.equalTo(self.actionButton.snp.height)
                 }
                 self.textField.snp.remakeConstraints { (make) in
                     make.trailing.top.bottom.equalToSuperview()
                     make.leading.equalTo(self.titleLabel.snp.trailing).offset(20.0)
                 }
-            } else {
-                self.scanButton.snp.remakeConstraints { (make) in
+                
+            default:
+                self.actionButton.snp.remakeConstraints { (make) in
                     make.trailing.top.bottom.equalToSuperview()
-                    make.width.equalTo(self.scanButton.snp.height)
+                    make.width.equalTo(self.actionButton.snp.height)
                 }
                 self.textField.snp.remakeConstraints { (make) in
                     make.top.bottom.equalToSuperview()
                     make.leading.equalTo(self.titleLabel.snp.trailing).offset(20.0)
-                    make.trailing.equalTo(self.scanButton.snp.leading).offset(-20.0)
+                    make.trailing.equalTo(self.actionButton.snp.leading).offset(-20.0)
                 }
             }
         }
         
         private func updateTextFieldEditing() {
-            self.textField.isEnabled = self.textEditingEnabled && self.scanButtonHidden
-            self.textField.textColor = self.textField.isEnabled
-                ? Theme.Colors.textFieldForegroundColor
-                : Theme.Colors.textFieldForegroundDisabledColor
+            switch self.actionType {
+                
+            case .scanQr:
+                self.textField.textColor = Theme.Colors.textFieldForegroundDisabledColor
+                
+            default:
+                self.textField.textColor = self.textEditingEnabled
+                    ? Theme.Colors.textFieldForegroundColor
+                    : Theme.Colors.textFieldForegroundDisabledColor
+            }
         }
     }
 }

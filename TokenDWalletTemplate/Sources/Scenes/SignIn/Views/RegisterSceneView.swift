@@ -168,8 +168,8 @@ extension RegisterScene {
             switch field.fieldType {
                 
             case .scanServerInfo:
-                fieldView.scanButtonHidden = false
-                fieldView.scanButton.rx
+                fieldView.actionType = .scanQr
+                fieldView.actionButton.rx
                     .controlEvent(.touchUpInside)
                     .asDriver()
                     .drive(onNext: { [weak self] in
@@ -178,12 +178,34 @@ extension RegisterScene {
                     .disposed(by: self.disposeBag)
                 
             case .text(let purpose):
-                fieldView.scanButtonHidden = true
+                switch purpose {
+                    
+                case .confirmPassword, .password:
+                    fieldView.actionType = field.secureInput
+                        ? .showPassword
+                        : .hidePassword
+                    
+                    fieldView.actionButton.rx
+                        .controlEvent(.touchUpInside)
+                        .asDriver()
+                        .drive(onNext: { [weak self] in
+                            self?.changePasswordVisibility(
+                                field: field,
+                                actionType: fieldView.actionType
+                            )
+                        })
+                        .disposed(by: self.disposeBag)
+                    
+                case .email:
+                    break
+                }
+                
                 fieldView.textField.rx
                     .text
                     .asDriver()
                     .drive(onNext: { [weak self] text in
                         self?.onEditField?(purpose, text)
+                        self?.updateFieldText(field: field, text: text)
                     })
                     .disposed(by: self.disposeBag)
                 fieldView.textField.rx
@@ -324,6 +346,35 @@ extension RegisterScene {
             
             return agreeOnTermsView
         }
+        
+        private func changePasswordVisibility(
+            field: View.Field,
+            actionType: Model.Field.ActionType
+            ) {
+            
+            guard var fieldToChange = self.fields.first(where: { (storedField) -> Bool in
+                return storedField.fieldType == field.fieldType
+            }), let index = self.fields.indexOf(fieldToChange) else {
+                return
+            }
+            fieldToChange.secureInput = !fieldToChange.secureInput
+            self.fields[index] = fieldToChange
+            self.setFields(self.fields)
+        }
+        
+        private func updateFieldText(
+            field: View.Field,
+            text: String?
+            ) {
+            
+            guard var fieldToChange = self.fields.first(where: { (storedField) -> Bool in
+                return storedField.fieldType == field.fieldType
+            }), let index = self.fields.indexOf(fieldToChange) else {
+                return
+            }
+            fieldToChange.text = text
+            self.fields[index] = fieldToChange
+        }
     }
 }
 
@@ -336,15 +387,23 @@ extension RegisterScene.View: UITextFieldDelegate {
 // MARK: - Field
 
 extension RegisterScene.View {
-    struct Field {
+    struct Field: Equatable {
         let fieldType: RegisterScene.Model.Field.FieldType
         let title: String
-        let text: String?
+        var text: String?
         let placeholder: String?
         let keyboardType: UIKeyboardType
         let autocapitalize: UITextAutocapitalizationType
         let autocorrection: UITextAutocorrectionType
-        let secureInput: Bool
+        var secureInput: Bool
         let editable: Bool
+        
+        public static func == (
+            lhs: RegisterScene.View.Field,
+            rhs: RegisterScene.View.Field
+            ) -> Bool {
+            
+            return lhs.fieldType == rhs.fieldType
+        }
     }
 }

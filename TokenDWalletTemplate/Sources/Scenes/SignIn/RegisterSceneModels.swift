@@ -20,16 +20,19 @@ extension RegisterScene.Model {
         let type: FieldType
         var text: String?
         let editable: Bool
+        let actionType: ActionType
         
         init(
             type: FieldType,
             text: String?,
-            editable: Bool = true
+            editable: Bool = true,
+            actionType: ActionType = .none
             ) {
             
             self.type = type
             self.text = text
             self.editable = editable
+            self.actionType = actionType
         }
     }
     
@@ -134,6 +137,13 @@ extension RegisterScene.Model.Field {
     enum FieldType {
         case scanServerInfo
         case text(purpose: FieldPurpose)
+    }
+    
+    enum ActionType {
+        case hidePassword
+        case none
+        case scanQr
+        case showPassword
     }
 }
 
@@ -297,5 +307,22 @@ extension RegisterScene.Event.SignAction.ViewModel {
         
         let message: String
         let type: ErrorType
+    }
+}
+
+extension RegisterScene.Model.Field.FieldType: Equatable {
+    
+    public static func == (
+        lhs: RegisterScene.Model.Field.FieldType,
+        rhs: RegisterScene.Model.Field.FieldType
+        ) -> Bool {
+        
+        if case .scanServerInfo = lhs, case .scanServerInfo = rhs {
+            return true
+        } else if case let .text(lPurpose) = lhs, case let .text(rPurpose) = rhs {
+            return lPurpose == rPurpose
+        } else {
+            return false
+        }
     }
 }
