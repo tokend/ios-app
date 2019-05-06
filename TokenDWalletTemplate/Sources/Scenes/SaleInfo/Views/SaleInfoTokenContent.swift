@@ -56,6 +56,7 @@ extension SaleInfo {
             public var tokenName: String? {
                 didSet {
                     self.tokenNameLabel.text = self.tokenName
+                    self.updateTokenAbbreviationLabel()
                 }
             }
             
@@ -67,14 +68,7 @@ extension SaleInfo {
             
             public var iconUrl: URL? = nil {
                 didSet {
-                    if let iconUrl = self.iconUrl {
-                        Nuke.loadImage(
-                            with: iconUrl,
-                            into: self.tokenIconView
-                        )
-                    } else {
-                        self.tokenIconView.image = nil
-                    }
+                    self.updateIcon()
                 }
             }
             
@@ -95,6 +89,9 @@ extension SaleInfo {
             private let tokenIconContainerView: UIView = UIView()
             private let tokenIconView: UIImageView = UIImageView()
             
+            private let tokenAbbreviationView: UIView = UIView()
+            private let tokenAbbreviationLabel: UILabel = UILabel()
+            
             private let labelStackView: UIView = UIView()
             private let tokenCodeLabel: UILabel = UILabel()
             private let tokenNameLabel: UILabel = UILabel()
@@ -113,11 +110,36 @@ extension SaleInfo {
                 self.setupView()
                 self.setupTokenInfoView()
                 self.setupIconView()
+                self.setupTokenAbbreviationView()
+                self.setupTokenAbbreviationLabel()
                 self.setupLabelStackView()
                 self.setupTokenCodeLabel()
                 self.setupTokenNameLabel()
                 self.setupTokenDetailsTableView()
                 self.setupLayout()
+            }
+            
+            private func updateIcon() {
+                if let iconUrl = self.iconUrl {
+                    self.tokenAbbreviationView.isHidden = true
+                    Nuke.loadImage(
+                        with: iconUrl,
+                        into: self.tokenIconView
+                    )
+                } else {
+                    self.tokenIconView.image = nil
+                    self.tokenAbbreviationView.isHidden = false
+                }
+            }
+            
+            private func updateTokenAbbreviationLabel() {
+                guard let code = self.tokenCode,
+                    let firstCharacter = code.first else {
+                        return
+                }
+                self.tokenAbbreviationView.backgroundColor = TokenColoringProvider.shared.coloringForCode(code)
+                let abbreviation = "\(firstCharacter)".uppercased()
+                self.tokenAbbreviationLabel.text = abbreviation
             }
             
             // MARK: - Setup
@@ -132,6 +154,17 @@ extension SaleInfo {
             
             private func setupIconView() {
                 self.tokenIconView.contentMode = .scaleAspectFit
+            }
+            
+            private func setupTokenAbbreviationView() {
+                self.tokenAbbreviationView.layer.cornerRadius = self.iconSize / 2
+                self.tokenAbbreviationView.isHidden = true
+            }
+            
+            private func setupTokenAbbreviationLabel() {
+                self.tokenAbbreviationLabel.textColor = Theme.Colors.textOnMainColor
+                self.tokenAbbreviationLabel.font = Theme.Fonts.largeTitleFont
+                self.tokenAbbreviationLabel.textAlignment = .center
             }
             
             private func setupLabelStackView() {
@@ -173,10 +206,13 @@ extension SaleInfo {
             private func setupLayout() {
                 self.addSubview(self.tokenInfoView)
                 self.tokenInfoView.addSubview(self.tokenIconContainerView)
-                self.tokenIconView.addSubview(self.labelStackView)
+                self.tokenInfoView.addSubview(self.labelStackView)
                 
                 self.tokenIconContainerView.addSubview(self.tokenIconView)
-                self.tokenInfoView.addSubview(self.tokenIconView)
+                self.tokenIconContainerView.addSubview(self.tokenAbbreviationView)
+                
+                self.tokenAbbreviationView.addSubview(self.tokenAbbreviationLabel)
+                
                 self.labelStackView.addSubview(self.tokenCodeLabel)
                 self.labelStackView.addSubview(self.tokenNameLabel)
                 
@@ -191,13 +227,25 @@ extension SaleInfo {
                 }
                 
                 self.tokenIconView.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview()
+                }
+                
+                self.tokenAbbreviationView.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview()
+                }
+                
+                self.tokenAbbreviationLabel.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview()
+                }
+                
+                self.tokenIconContainerView.snp.makeConstraints { (make) in
                     make.top.equalToSuperview().inset(self.topInset)
                     make.leading.equalToSuperview().inset(self.sideInset)
                     make.width.height.equalTo(self.iconSize)
                 }
                 
                 self.labelStackView.snp.makeConstraints { (make) in
-                    make.leading.equalTo(self.tokenIconView.snp.trailing).offset(self.sideInset)
+                    make.leading.equalTo(self.tokenIconContainerView.snp.trailing).offset(self.sideInset)
                     make.trailing.equalTo(self.tokenBalanceStateIcon).offset(self.sideInset)
                     make.top.equalTo(self.tokenIconView)
                 }
