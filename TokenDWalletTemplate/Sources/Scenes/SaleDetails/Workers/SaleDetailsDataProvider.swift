@@ -311,7 +311,8 @@ extension SaleDetails {
         }
         
         private func youtubeVideoUrlForId(_ id: String?) -> URL? {
-            guard let id = id
+            guard let id = id,
+                !id.isEmpty
                 else {
                     return nil
             }
