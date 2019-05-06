@@ -1803,13 +1803,13 @@
 		7FF675F620BD98630074E9A8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				DBB5659D21F771140066B5E5 /* Base.lproj */,
 				7F8B55B4212F05B9003AE5D7 /* TokenDWalletTemplate.entitlements */,
 				7FA0114421C961FE00CA5586 /* acknowledgements.markdown */,
 				E9908EC321079EF200A0EA1C /* APIConfiguration.plist */,
 				7FF675F920BD98630074E9A8 /* Info.plist */,
 				7FF675F720BD98630074E9A8 /* LaunchScreen.storyboard */,
 				717D7E672101F58000791410 /* Assets.xcassets */,
+				DBB5659D21F771140066B5E5 /* Base.lproj */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2627,8 +2627,9 @@
 				7FF675DC20BD95630074E9A8 /* Sources */,
 				7FF675DD20BD95630074E9A8 /* Frameworks */,
 				7FF675DE20BD95630074E9A8 /* Resources */,
-				7FC88B922166412500BED021 /* SwiftLint */,
 				023078CF20EDFD26EE74D491 /* [CP] Copy Pods Resources */,
+				7FC88B922166412500BED021 /* SwiftLint */,
+				7FB432D1228045FC00422746 /* Fabric */,
 			);
 			buildRules = (
 			);
@@ -2737,6 +2738,25 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		7FB432D1228045FC00422746 /* Fabric */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = Fabric;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
 		};
 		7FC88B922166412500BED021 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3389,6 +3409,7 @@
 				CODE_SIGN_ENTITLEMENTS = TokenDWalletTemplate/Resources/TokenDWalletTemplate.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = TW4HA36GCB;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/TokenDWalletTemplate/Resources/Info.plist";
