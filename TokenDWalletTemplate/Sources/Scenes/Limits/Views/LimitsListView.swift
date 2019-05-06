@@ -197,7 +197,20 @@ extension Limits.ListView {
             self.addSubview(self.progressTitleLabel)
             
             self.titleLabel.snp.makeConstraints { (make) in
-                make
+                make.leading.equalToSuperview().inset(14.0)
+                make.centerY.equalToSuperview()
+            }
+            
+            self.progressBar.snp.makeConstraints { (make) in
+                make.leading.equalTo(self.titleLabel.snp.trailing).offset(10.0)
+                make.trailing.equalToSuperview().inset(14.0)
+                make.top.equalToSuperview().inset(10.0)
+            }
+            
+            self.progressTitleLabel.snp.makeConstraints { (make) in
+                make.leading.trailing.equalTo(self.progressBar)
+                make.top.equalTo(self.progressBar.snp.bottom).offset(10.0)
+                make.bottom.equalToSuperview().inset(10.0)
             }
         }
     }
