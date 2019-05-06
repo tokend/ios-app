@@ -393,6 +393,7 @@ extension SaleDetails {
 }
 
 extension SaleDetails.DescriptionTab.View {
+    
     enum ImageState {
         case empty
         case loaded(UIImage)
@@ -401,6 +402,7 @@ extension SaleDetails.DescriptionTab.View {
 }
 
 extension SaleDetails.Model.DescriptionTabModel.ImageState {
+    
     var saleTabImageState: SaleDetails.DescriptionTab.View.ImageState {
         switch self {
             

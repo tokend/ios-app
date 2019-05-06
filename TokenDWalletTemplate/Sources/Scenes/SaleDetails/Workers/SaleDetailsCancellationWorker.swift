@@ -6,7 +6,9 @@ enum SaleDetailsCancelInvestResult {
     case failure(String)
     case success
 }
+
 protocol SaleDetailsCancelInvestWorkerProtocol {
+    
     func cancelInvest(
         model: SaleDetails.Model.CancelInvestModel,
         completion: @escaping ((SaleDetailsCancelInvestResult) -> Void)
@@ -14,6 +16,7 @@ protocol SaleDetailsCancelInvestWorkerProtocol {
 }
 
 extension SaleDetails {
+    
     typealias CancelInvestWorkerProtocol = SaleDetailsCancelInvestWorkerProtocol
     
     class CancelInvestWorker {

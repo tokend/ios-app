@@ -2,6 +2,7 @@ import UIKit
 import Charts
 
 protocol SaleDetailsDisplayLogic: class {
+    
     typealias Event = SaleDetails.Event
     
     func displayTabsUpdated(viewModel: Event.TabsUpdated.ViewModel)
@@ -16,6 +17,7 @@ protocol SaleDetailsDisplayLogic: class {
 }
 
 extension SaleDetails {
+    
     typealias DisplayLogic = SaleDetailsDisplayLogic
     
     class ViewController: UIViewController {
@@ -233,6 +235,7 @@ extension SaleDetails {
 // MARK: - DisplayLogic
 
 extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
+    
     func displayTabsUpdated(viewModel: Event.TabsUpdated.ViewModel) {
         let items = viewModel.tabs.map { (tab) -> HorizontalPicker.Item in
             return HorizontalPicker.Item(

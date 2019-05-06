@@ -6,6 +6,7 @@ enum SaleDetailsChartsFetcherResult {
 }
 
 protocol SaleDetailsChartsFetcherProtocol {
+    
     typealias Result = SaleDetailsChartsFetcherResult
     typealias Completion = (Result) -> Void
     
@@ -19,5 +20,6 @@ protocol SaleDetailsChartsFetcherProtocol {
 }
 
 extension SaleDetails {
+    
     typealias ChartsFetcherProtocol = SaleDetailsChartsFetcherProtocol
 }

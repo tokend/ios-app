@@ -1,10 +1,12 @@
 import UIKit
 
 protocol SaleDetailsDateFormatterProtocol {
+    
     func dateToString(_ date: Date) -> String
 }
 
 extension SaleDetails {
+    
     typealias DateFormatterProtocol = SaleDetailsDateFormatterProtocol
     
     class SaleDetailsDateFormatter: DateFormatterProtocol {

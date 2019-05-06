@@ -18,6 +18,7 @@ extension SaleDetails {
 }
 
 extension SaleDetails.ChartsFetcher: SaleDetails.ChartsFetcherProtocol {
+    
     func getChartsForBaseAsset(
         _ base: String,
         quoteAsset quote: String,
@@ -57,6 +58,7 @@ extension SaleDetails.ChartsFetcher: SaleDetails.ChartsFetcherProtocol {
 }
 
 private extension TokenDSDK.ChartResponse {
+    
     typealias Chart = SaleDetails.Model.ChartEntry
     
     var chart: Chart {

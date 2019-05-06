@@ -10,6 +10,7 @@ enum SaleDetailsDataProviderImageKey {
 }
 
 protocol SaleDetailsDataProviderProtocol {
+    
     typealias ImageKey = SaleDetailsDataProviderImageKey
     
     func observeSale() -> Observable<SaleDetails.Model.SaleModel?>
@@ -326,6 +327,7 @@ extension SaleDetails {
 // MARK: -
 
 extension SaleDetails.DataProvider.ImageKey {
+    
     var repoImageKey: ImagesUtility.ImageKey {
         switch self {
             
@@ -339,6 +341,7 @@ extension SaleDetails.DataProvider.ImageKey {
 }
 
 private extension TokenDSDK.ChartResponse {
+    
     typealias Chart = SaleDetails.Model.ChartEntry
     
     var chart: Chart {

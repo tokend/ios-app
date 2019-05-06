@@ -5,6 +5,7 @@ import RxSwift
 import RxCocoa
 
 protocol SaleDetailsBusinessLogic {
+    
     typealias Event = SaleDetails.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
@@ -20,6 +21,7 @@ protocol SaleDetailsBusinessLogic {
 }
 
 extension SaleDetails {
+    
     typealias BusinessLogic = SaleDetailsBusinessLogic
     
     // swiftlint:disable type_body_length
@@ -709,6 +711,7 @@ extension SaleDetails {
 }
 
 extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
+    
     func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         let scheduler = SerialDispatchQueueScheduler(
             queue: self.queue,
@@ -980,6 +983,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
 }
 
 extension SaleDetails.Interactor {
+    
     enum FeeResult {
         case failed(error: Swift.Error)
         case success(fee: FeeResponse)

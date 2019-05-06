@@ -1,6 +1,7 @@
 import UIKit
 
 protocol SaleDetailsPresentationLogic {
+    
     typealias Event = SaleDetails.Event
     
     func presentTabsUpdated(response: Event.TabsUpdated.Response)
@@ -15,6 +16,7 @@ protocol SaleDetailsPresentationLogic {
 }
 
 extension SaleDetails {
+    
     typealias PresentationLogic = SaleDetailsPresentationLogic
     
     class Presenter {
@@ -443,6 +445,7 @@ extension SaleDetails {
 }
 
 extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
+    
     func presentTabsUpdated(response: Event.TabsUpdated.Response) {
         let tabContent = self.getTabContentType(tabType: response.selectedTabType)
         

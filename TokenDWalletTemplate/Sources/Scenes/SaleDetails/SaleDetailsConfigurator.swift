@@ -3,6 +3,7 @@ import Foundation
 extension SaleDetails {
     
     enum Configurator {
+        
         static func configure(
             viewController: ViewController,
             dataProvider: DataProvider,

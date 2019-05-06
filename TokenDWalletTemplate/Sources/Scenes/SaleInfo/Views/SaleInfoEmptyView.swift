@@ -5,6 +5,7 @@ import SnapKit
 extension SaleInfo {
     
     enum EmptyContent {
+        
         struct Model {
             let message: String
         }

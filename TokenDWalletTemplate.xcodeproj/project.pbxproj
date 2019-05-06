@@ -1727,8 +1727,8 @@
 		7FEC94862148170500F41EE6 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
-				DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */,
 				7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */,
+				DBA1A76D2252562800A52775 /* SaleDetailsCancellationWorker.swift */,
 				7FC88B802164F09A00BED021 /* SaleDetailsChartDateFormatter.swift */,
 				7FC88B79215E8BAD00BED021 /* SaleDetailsChartsFetcher.swift */,
 				7FC88B7B215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift */,
@@ -1736,7 +1736,7 @@
 				7FEC94872148170500F41EE6 /* SaleDetailsDateFormatter.swift */,
 				7FA02BD9215A2265005C1BE4 /* SaleDetailsInvestedAmountFormatter.swift */,
 				7FEC94892148170500F41EE6 /* SaleDetailsValueFormatter.swift */,
-				DBA1A76D2252562800A52775 /* SaleDetailsCancellationWorker.swift */,
+				DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -1746,9 +1746,9 @@
 			children = (
 				7FEC948C2148170500F41EE6 /* SaleDetailsChartCell.swift */,
 				7FEC948E2148170500F41EE6 /* SaleDetailsDescriptionCell.swift */,
+				DB09402B2264E4F500A9992A /* SaleDetailsEmptyView.swift */,
 				7FEC948D2148170500F41EE6 /* SaleDetailsInvestingCell.swift */,
 				DB149899225B86E600A9A74C /* SaleDetailsOverviewCell.swift */,
-				DB09402B2264E4F500A9992A /* SaleDetailsEmptyView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

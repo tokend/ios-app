@@ -26,6 +26,7 @@ enum SaleDetails {
 // MARK: - Models
 
 extension SaleDetails.Model {
+    
     class SceneModel {
         var tabs: [TabModel]
         var selectedTabId: SaleDetails.TabIdentifier?
@@ -298,6 +299,7 @@ extension SaleDetails.Model {
 // MARK: - Events
 
 extension SaleDetails.Event {
+    
     typealias Model = SaleDetails.Model
     
     enum ViewDidLoad {
@@ -459,6 +461,7 @@ extension SaleDetails.Event {
 // MARK: -
 
 extension SaleDetails.Model.DescriptionTabModel {
+    
     enum ImageState {
         case empty
         case loaded(UIImage)
@@ -467,6 +470,7 @@ extension SaleDetails.Model.DescriptionTabModel {
 }
 
 extension SaleDetails.Model.SaleModel {
+    
     struct Details {
         let description: String
         let logoUrl: URL?
@@ -490,6 +494,7 @@ extension SaleDetails.Model.SaleModel {
 }
 
 extension SaleDetails.Model.BalanceDetails: Equatable {
+    
     static func ==(left: SaleDetails.Model.BalanceDetails, right: SaleDetails.Model.BalanceDetails) -> Bool {
         return (left.asset == right.asset)
             && (left.balance == right.balance)
@@ -498,6 +503,7 @@ extension SaleDetails.Model.BalanceDetails: Equatable {
 }
 
 extension SaleDetails.Event.InvestAction.Response {
+    
     enum InvestError: Swift.Error, LocalizedError {
         case baseBalanceIsNotFound(asset: String)
         case feeError(Error)

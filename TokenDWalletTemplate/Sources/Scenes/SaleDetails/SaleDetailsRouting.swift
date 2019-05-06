@@ -1,7 +1,9 @@
 import Foundation
 
 extension SaleDetails {
+    
     struct Routing {
+        
         let onShowProgress: () -> Void
         let onHideProgress: () -> Void
         let onShowError: (_ erroMessage: String) -> Void

@@ -1,11 +1,13 @@
 import Foundation
 
 protocol SaleDetailsChartDateFormatterProtocol {
+    
     func dateToString(_ date: Date) -> String
     func formatDateForXAxis(_ date: Date, type: SaleDetails.Model.Period) -> String
 }
 
 extension SaleDetails {
+    
     typealias ChartDateFormatterProtocol = SaleDetailsChartDateFormatterProtocol
 }
 

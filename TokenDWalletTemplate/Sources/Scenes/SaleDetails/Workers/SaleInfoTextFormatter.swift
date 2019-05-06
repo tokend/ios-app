@@ -1,6 +1,7 @@
 import Foundation
 
 protocol SaleDetailsTextFormatterProtocol {
+    
     func formatText(text: String) -> String
 }
 
@@ -14,8 +15,9 @@ extension SaleDetails {
                     with: textData,
                     options: .allowFragments
                 ) else {
-                return text
+                    return text
             }
+            
             return "\(jsonObject)"
         }
     }
