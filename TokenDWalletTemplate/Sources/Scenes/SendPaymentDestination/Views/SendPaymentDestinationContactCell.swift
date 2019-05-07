@@ -66,7 +66,7 @@ extension SendPaymentDestination {
                 
                 self.separator.snp.makeConstraints { (make) in
                     make.leading.trailing.bottom.equalToSuperview()
-                    make.height.equalTo(1.0)
+                    make.height.equalTo(1.0/UIScreen.main.scale)
                 }
             }
         }
