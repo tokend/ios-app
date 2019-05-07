@@ -185,6 +185,7 @@ class ChartView: UIView {
 }
 
 extension ChartView: ChartViewDelegate {
+    
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         if let entryIndex = chartView.data?.getDataSetByIndex(highlight.dataSetIndex)?.entryIndex(entry: entry) {
             self.onDidSelectEntry?(highlight.dataSetIndex, entryIndex, self)

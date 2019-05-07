@@ -142,7 +142,7 @@ extension TradeOffers {
                     .drive(onNext: { [weak self] (_) in
                         self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                             businessLogic.onSwipeRecognized(request: .right)
-                        })  
+                        })
                     })
                     .disposed(by: self.disposeBag)
                 
