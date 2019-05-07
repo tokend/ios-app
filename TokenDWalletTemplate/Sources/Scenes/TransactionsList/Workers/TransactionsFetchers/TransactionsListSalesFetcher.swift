@@ -202,9 +202,9 @@ extension TransactionsListScene {
             )
             
             let counterparty: String = Localized(
-                ._in,
+                .in_asset,
                 replace: [
-                    ._in_replace_asset: offer.baseAssetCode
+                    .in_asset_replace_asset: offer.baseAssetCode
                 ]
             )
             
