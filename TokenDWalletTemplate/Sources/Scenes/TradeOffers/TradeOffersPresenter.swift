@@ -15,6 +15,7 @@ public protocol TradeOffersPresentationLogic {
     func presentLoading(response: Event.Loading.Response)
     func presentChartFormatterDidChange(response: Event.ChartFormatterDidChange.Response)
     func presentCreateOffer(response: Event.CreateOffer.Response)
+    func presentSwipeRecognized(response: Event.SwipeRecognized.Response)
 }
 
 extension TradeOffers {
@@ -336,6 +337,13 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayCreateOffer(viewModel: viewModel)
+        }
+    }
+    
+    public func presentSwipeRecognized(response: Event.SwipeRecognized.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displaySwipeRecognized(viewModel: viewModel)
         }
     }
 }

@@ -224,6 +224,11 @@ extension TradeOffers.Model {
             self.yAxisFormatter = yAxisFormatter
         }
     }
+    
+    public enum SwipeDirection {
+        case left
+        case right
+    }
 }
 
 // MARK: - Events
@@ -587,5 +592,15 @@ extension TradeOffers.Event {
                 self.axisFormatters = axisFormatters
             }
         }
+    }
+    
+    public enum SwipeRecognized {
+        public typealias Request = Model.SwipeDirection
+        
+        public struct Response {
+            let index: Int
+        }
+        
+        public typealias ViewModel = Response
     }
 }
