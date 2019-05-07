@@ -199,6 +199,8 @@ enum LocKey: String {
     case iban
     case iban_colon
     case id_document
+    case _in
+    case _in_replace_asset
     case incoming
     case incoming_outgoing
     case incorrect_or_corrupted_recovery_seed

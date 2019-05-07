@@ -194,24 +194,23 @@ extension TransactionsListScene {
             _ offer: PendingOffersRepo.Offer
             ) -> Transaction {
             
-            let amountValue: Decimal = offer.baseAmount
-            let assetValue: String = offer.baseAssetCode
+            let amountValue: Decimal = offer.quoteAmount
+            let assetValue: String = offer.quoteAssetCode
             let amount = Amount(
                 value: amountValue,
                 asset: assetValue
             )
             
-            let quoteassetcode = offer.quoteAssetCode
             let counterparty: String = Localized(
-                .for_code,
+                ._in,
                 replace: [
-                    .for_code_replace_code: quoteassetcode
+                    ._in_replace_asset: offer.baseAssetCode
                 ]
             )
             
             return Transaction(
                 identifier: offer.offerId,
-                balanceId: offer.baseBalanceId,
+                balanceId: offer.quoteBalanceId,
                 amount: amount,
                 amountEffect: .sale,
                 counterparty: counterparty,

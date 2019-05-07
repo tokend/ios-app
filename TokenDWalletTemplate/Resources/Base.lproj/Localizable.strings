@@ -196,6 +196,8 @@
 "iban" = "IBAN";
 "iban_colon" = "IBAN:";
 "id_document" = "ID document";
+"_in" = "In $(asset)";
+"_in_replace_asset" = "asset";
 "incoming" = "Incoming";
 "incoming_outgoing" = "Incoming & Outgoing";
 "incorrect_or_corrupted_recovery_seed" = "Incorrect or corrupted recovery seed";
