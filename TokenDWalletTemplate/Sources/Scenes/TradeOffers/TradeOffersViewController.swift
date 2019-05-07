@@ -146,9 +146,6 @@ extension TradeOffers {
                     })
                     .disposed(by: self.disposeBag)
                 
-            case .up, .down:
-                break
-                
             default:
                 break
             }
