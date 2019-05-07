@@ -351,7 +351,7 @@
 		DBB565A121F771140066B5E5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DBB5659E21F771140066B5E5 /* Localizable.strings */; };
 		DBB565A321F789820066B5E5 /* String+Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB565A221F789820066B5E5 /* String+Index.swift */; };
 		DBED51CF2280360D0040632E /* Array+IndexOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51CE2280360D0040632E /* Array+IndexOf.swift */; };
-		DBED51D12280835B0040632E /* SendPaymentDestinationErrorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51D02280835B0040632E /* SendPaymentDestinationErrorCell.swift */; };
+		DBED51D12280835B0040632E /* SendPaymentDestinationEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */; };
 		E9063E8320E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */; };
 		E9063E8820F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9063E8720F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift */; };
 		E9063E8A20F63FEC00A5B343 /* UIColor+Interpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9063E8920F63FEC00A5B343 /* UIColor+Interpolation.swift */; };
@@ -861,7 +861,7 @@
 		DBB5659F21F771140066B5E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		DBB565A221F789820066B5E5 /* String+Index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Index.swift"; sourceTree = "<group>"; };
 		DBED51CE2280360D0040632E /* Array+IndexOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+IndexOf.swift"; sourceTree = "<group>"; };
-		DBED51D02280835B0040632E /* SendPaymentDestinationErrorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationErrorCell.swift; sourceTree = "<group>"; };
+		DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationEmptyCell.swift; sourceTree = "<group>"; };
 		E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneRateProviderProtocol.swift; sourceTree = "<group>"; };
 		E9063E8720F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexibleHeaderContainerViewController.swift; sourceTree = "<group>"; };
 		E9063E8920F63FEC00A5B343 /* UIColor+Interpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Interpolation.swift"; sourceTree = "<group>"; };
@@ -2104,9 +2104,9 @@
 		DB593839226E0A0F00C8997C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DB59383B226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift */,
 				DB5938452270A1DF00C8997C /* SendPaymentDestinationContactCell.swift */,
-				DBED51D02280835B0040632E /* SendPaymentDestinationErrorCell.swift */,
+				DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */,
+				DB59383B226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2834,7 +2834,7 @@
 				E9908EC2210788F600A0EA1C /* BaseSignedInFlowController.swift in Sources */,
 				710E860B2105E1AB007204D4 /* ReceiveAddressInvoiceFormatterProtocol.swift in Sources */,
 				7187EBE42146994E0035D6D3 /* SalesFlowController.swift in Sources */,
-				DBED51D12280835B0040632E /* SendPaymentDestinationErrorCell.swift in Sources */,
+				DBED51D12280835B0040632E /* SendPaymentDestinationEmptyCell.swift in Sources */,
 				E91131EA20C532AC00A8AC4D /* ExploreTokensConfigurator.swift in Sources */,
 				7F749605225E2B790065EE8E /* TradesListAssetPairsFetcherProtocol.swift in Sources */,
 				7F7496282260A1D40065EE8E /* TradeOffersChartCardValueFormatter.swift in Sources */,
