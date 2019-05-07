@@ -25,12 +25,14 @@ extension SendPaymentDestination {
             // MARK: - Private properties
             
             private let nameLabel: UILabel = UILabel()
+            private let separator: UIView = UIView()
             
             override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
                 super.init(style: style, reuseIdentifier: reuseIdentifier)
                 
                 self.setupView()
                 self.setupNameLabel()
+                self.setupSeparator()
                 self.setupLayout()
             }
             
@@ -49,12 +51,22 @@ extension SendPaymentDestination {
                 self.nameLabel.font = Theme.Fonts.plainTextFont
             }
             
+            private func setupSeparator() {
+                self.separator.backgroundColor = Theme.Colors.separatorOnContentBackgroundColor
+            }
+            
             private func setupLayout() {
                 self.contentView.addSubview(self.nameLabel)
+                self.contentView.addSubview(self.separator)
                 
                 self.nameLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(15.0)
                     make.top.bottom.equalToSuperview().inset(10.0)
+                }
+                
+                self.separator.snp.makeConstraints { (make) in
+                    make.leading.trailing.bottom.equalToSuperview()
+                    make.height.equalTo(1.0/UIScreen.main.scale)
                 }
             }
         }
