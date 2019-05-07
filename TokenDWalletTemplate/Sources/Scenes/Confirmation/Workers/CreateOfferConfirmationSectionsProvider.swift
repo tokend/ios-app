@@ -254,7 +254,7 @@ extension ConfirmationScene {
             let toPayAmountCell = ConfirmationScene.Model.CellModel(
                 hint: Localized(.amount),
                 cellType: .text(value: toPayAmountString),
-                identifier: .toPayAmount
+                identifier: .amount
             )
             toPayCells.append(toPayAmountCell)
             

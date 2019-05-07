@@ -13,6 +13,7 @@ public protocol TradeOffersBusinessLogic {
     func onCreateOffer(request: Event.CreateOffer.Request)
     func onPullToRefresh(request: Event.PullToRefresh.Request)
     func onLoadMore(request: Event.LoadMore.Request)
+    func onSwipeRecognized(request: Event.SwipeRecognized.Request)
 }
 
 extension TradeOffers {
@@ -344,6 +345,25 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
             
         case .trades:
             self.tradesFetcher.loadMoreItems()
+        }
+    }
+    
+    public func onSwipeRecognized(request: Event.SwipeRecognized.Request) {
+        guard let selectedTabIndex = self.sceneModel.tabs.indexOf(self.sceneModel.selectedTab) else {
+            return
+        }
+        
+        let indexToGo: Int
+        switch request {
+            
+        case .left:
+            indexToGo = selectedTabIndex + 1
+        case .right:
+            indexToGo = selectedTabIndex - 1
+        }
+        if self.sceneModel.tabs.indexInBounds(indexToGo) {
+            let response = Event.SwipeRecognized.Response(index: indexToGo)
+            self.presenter.presentSwipeRecognized(response: response)
         }
     }
 }

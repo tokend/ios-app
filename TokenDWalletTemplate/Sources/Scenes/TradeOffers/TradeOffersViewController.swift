@@ -17,6 +17,7 @@ public protocol TradeOffersDisplayLogic: class {
     func displayLoading(viewModel: Event.Loading.ViewModel)
     func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel)
     func displayCreateOffer(viewModel: Event.CreateOffer.ViewModel)
+    func displaySwipeRecognized(viewModel: Event.SwipeRecognized.ViewModel)
 }
 
 extension TradeOffers {
@@ -32,6 +33,8 @@ extension TradeOffers {
         
         private let picker: HorizontalPicker = HorizontalPicker(frame: CGRect.zero)
         private let containerView: UIView = UIView()
+        private let leftSwipeRecongnier: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
+        private let rightSwipeRecongnier: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
         
         private let chartCardValueFormatter: ChartCardValueFormatter = ChartCardValueFormatter()
         
@@ -90,6 +93,8 @@ extension TradeOffers {
             self.setupChartView()
             self.setupTradesView()
             self.setupNavigationBar()
+            self.setupSwipeRecognizer(direction: .left)
+            self.setupSwipeRecognizer(direction: .right)
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request(
@@ -111,6 +116,44 @@ extension TradeOffers {
         }
         
         // MARK: - Private
+        
+        private func setupSwipeRecognizer(direction: UISwipeGestureRecognizer.Direction) {
+            switch direction {
+                
+            case .left:
+                self.leftSwipeRecongnier.direction = .left
+                self.leftSwipeRecongnier
+                    .rx
+                    .event
+                    .asDriver()
+                    .drive(onNext: { [weak self] (_) in
+                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                            businessLogic.onSwipeRecognized(request: .left)
+                        })
+                    })
+                    .disposed(by: self.disposeBag)
+                
+            case .right:
+                self.rightSwipeRecongnier.direction = .right
+                self.rightSwipeRecongnier
+                    .rx
+                    .event
+                    .asDriver()
+                    .drive(onNext: { [weak self] (_) in
+                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                            businessLogic.onSwipeRecognized(request: .right)
+                        })
+
+                    })
+                .disposed(by: self.disposeBag)
+                
+            case .up, .down:
+                break
+                
+            default:
+                break
+            }
+        }
         
         private func setupPicker() {
             self.picker.backgroundColor = Theme.Colors.mainColor
@@ -206,6 +249,8 @@ extension TradeOffers {
         private func setupLayout() {
             self.view.addSubview(self.picker)
             self.view.addSubview(self.containerView)
+            self.view.addGestureRecognizer(self.leftSwipeRecongnier)
+            self.view.addGestureRecognizer(self.rightSwipeRecongnier)
             
             self.picker.snp.makeConstraints { (make) in
                 make.leading.trailing.top.equalToSuperview()
@@ -455,6 +500,11 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         } else {
             self.routing?.onDidSelectNewOffer(viewModel.baseAsset, viewModel.quoteAsset)
         }
+    }
+    
+    public func displaySwipeRecognized(viewModel: Event.SwipeRecognized.ViewModel) {
+        self.picker.setSelectedItemAtIndex(viewModel.index, animated: true)
+        self.picker.items[viewModel.index].onSelect()
     }
 }
 
