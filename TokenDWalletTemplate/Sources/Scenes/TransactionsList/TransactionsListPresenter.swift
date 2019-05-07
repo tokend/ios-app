@@ -161,7 +161,7 @@ extension TransactionsListScene {
                 amountColor = Theme.Colors.neutralAmountColor
                 
             case .sale:
-                title = Localized(.sale)
+                title = Localized(.investment)
                 icon = Assets.outgoing.image
                 iconTint = Theme.Colors.negativeColor
                 amountColor = Theme.Colors.negativeAmountColor
