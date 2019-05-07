@@ -33,8 +33,8 @@ extension TradeOffers {
         
         private let picker: HorizontalPicker = HorizontalPicker(frame: CGRect.zero)
         private let containerView: UIView = UIView()
-        private let leftSwipeRecongnier: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
-        private let rightSwipeRecongnier: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
+        private let leftSwipeRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
+        private let rightSwipeRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
         
         private let chartCardValueFormatter: ChartCardValueFormatter = ChartCardValueFormatter()
         
@@ -121,8 +121,8 @@ extension TradeOffers {
             switch direction {
                 
             case .left:
-                self.leftSwipeRecongnier.direction = .left
-                self.leftSwipeRecongnier
+                self.leftSwipeRecognizer.direction = .left
+                self.leftSwipeRecognizer
                     .rx
                     .event
                     .asDriver()
@@ -134,18 +134,17 @@ extension TradeOffers {
                     .disposed(by: self.disposeBag)
                 
             case .right:
-                self.rightSwipeRecongnier.direction = .right
-                self.rightSwipeRecongnier
+                self.rightSwipeRecognizer.direction = .right
+                self.rightSwipeRecognizer
                     .rx
                     .event
                     .asDriver()
                     .drive(onNext: { [weak self] (_) in
                         self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                             businessLogic.onSwipeRecognized(request: .right)
-                        })
-
+                        })  
                     })
-                .disposed(by: self.disposeBag)
+                    .disposed(by: self.disposeBag)
                 
             case .up, .down:
                 break
@@ -249,8 +248,8 @@ extension TradeOffers {
         private func setupLayout() {
             self.view.addSubview(self.picker)
             self.view.addSubview(self.containerView)
-            self.view.addGestureRecognizer(self.leftSwipeRecongnier)
-            self.view.addGestureRecognizer(self.rightSwipeRecongnier)
+            self.view.addGestureRecognizer(self.leftSwipeRecognizer)
+            self.view.addGestureRecognizer(self.rightSwipeRecognizer)
             
             self.picker.snp.makeConstraints { (make) in
                 make.leading.trailing.top.equalToSuperview()
