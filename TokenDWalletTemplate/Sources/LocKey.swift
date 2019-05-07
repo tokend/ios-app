@@ -253,6 +253,7 @@ enum LocKey: String {
     case no_balances
     case no_bids
     case no_chart_entries
+    case no_contacts_available
     case no_fees
     case no_fees_to_overview
     case no_growth
