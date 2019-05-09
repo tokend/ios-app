@@ -41,20 +41,41 @@ public enum TradeOffers {
             }
         }
         
+        public struct OrderBook {
+            
+            public let buyItems: [Offer]
+            public let sellItems: [Offer]
+            
+            public var maxBuyVolume: Decimal {
+                return self.buyItems.last?.volume ?? 0
+            }
+            
+            public var maxSellVolume: Decimal {
+                return self.sellItems.last?.volume ?? 0
+            }
+            
+            public var maxVolume: Decimal {
+                return max(self.maxBuyVolume, self.maxSellVolume)
+            }
+        }
+        
         public struct Offer: Equatable {
             
             public let amount: Amount
             public let price: Amount
+            public let volume: Decimal
             public let isBuy: Bool
             
             public init(
                 amount: Amount,
                 price: Amount,
+                volume: Decimal,
                 isBuy: Bool
                 ) {
                 
                 self.amount = amount
                 self.price = price
+                self.volume = volume
                 self.isBuy = isBuy
             }
         }
@@ -96,8 +117,7 @@ extension TradeOffers.Model {
         public let assetPair: AssetPair
         public let tabs: [ContentTab]
         public var selectedTab: ContentTab
-        public var buyOffers: [Offer] = []
-        public var sellOffers: [Offer] = []
+        public var orderBook: OrderBook
         public var selectedPeriod: Period?
         public var charts: Charts?
         public var periods: [Period] = []
@@ -117,6 +137,9 @@ extension TradeOffers.Model {
                 .chart,
                 .trades
             ]
+            let buyItems: [Offer] = []
+            let sellItems: [Offer] = []
+            self.orderBook = OrderBook(buyItems: buyItems, sellItems: sellItems)
         }
     }
     
@@ -477,7 +500,8 @@ extension TradeOffers.Event {
             case error(error: Swift.Error)
             case offers(
                 buy: [Model.Offer],
-                sell: [Model.Offer]
+                sell: [Model.Offer],
+                maxVolume: Decimal
             )
         }
         

@@ -140,10 +140,9 @@ extension TradeOffers {
                 })
                 .disposed(by: self.disposeBag)
             
-            self.offersFetcher.observeItems(pageSize: pageSize)
-                .subscribe(onNext: { [weak self] (offers) in
-                    self?.sceneModel.buyOffers = offers.buyItems
-                    self?.sceneModel.sellOffers = offers.sellItems
+            self.offersFetcher.observeOrderBook(pageSize: pageSize)
+                .subscribe(onNext: { [weak self] (orderBook) in
+                    self?.sceneModel.orderBook = orderBook
                     
                     self?.onOffersDidUpdate()
                 })
@@ -182,8 +181,9 @@ extension TradeOffers {
         
         private func onOffersDidUpdate() {
             let response = Event.OffersDidUpdate.Response.offers(
-                buy: self.sceneModel.buyOffers,
-                sell: self.sceneModel.sellOffers
+                buy: self.sceneModel.orderBook.buyItems,
+                sell: self.sceneModel.orderBook.sellItems,
+                maxVolume: self.sceneModel.orderBook.maxVolume
             )
             self.presenter.presentOffersDidUpdate(response: response)
         }
@@ -327,7 +327,7 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
         switch request {
             
         case .orderBook:
-            self.offersFetcher.reloadItems()
+            self.offersFetcher.reloadOrderBook()
             
         case .chart:
             break
