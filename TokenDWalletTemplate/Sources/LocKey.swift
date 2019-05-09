@@ -472,6 +472,7 @@ enum LocKey: String {
     case verify_email
     case view_history
     case view_more
+    case volume
     case wallet
     case week
     case withdraw
