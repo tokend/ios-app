@@ -3,6 +3,7 @@ import UIKit
 public protocol OrderBookTableViewCellProtocol {
     func setPrice(_ price: String)
     func setAmount(_ amount: String)
+    func setVolumeCoefficient(_ coefficient: Double)
     func setLoading(_ isLoading: Bool)
 }
 
@@ -47,6 +48,7 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
     public let priceCurrency: String
     public let amount: String
     public let amountCurrency: String
+    public let coefficient: Double
     public let isBuy: Bool
     public let offer: Offer
     public let isLoading: Bool
@@ -57,6 +59,7 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
         priceCurrency: String,
         amount: String,
         amountCurrency: String,
+        coefficient: Double,
         isBuy: Bool,
         offer: Offer,
         isLoading: Bool,
@@ -67,6 +70,7 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
         self.priceCurrency = priceCurrency
         self.amount = amount
         self.amountCurrency = amountCurrency
+        self.coefficient = coefficient
         self.isBuy = isBuy
         self.offer = offer
         self.isLoading = isLoading
@@ -76,6 +80,7 @@ public struct OrderBookTableViewCellModel<CellType: OrderBookTableViewCell>: Cel
     public func setup(cell: CellType) {
         cell.setPrice(self.price)
         cell.setAmount(self.amount)
+        cell.setVolumeCoefficient(self.coefficient)
         cell.setLoading(self.isLoading)
     }
 }

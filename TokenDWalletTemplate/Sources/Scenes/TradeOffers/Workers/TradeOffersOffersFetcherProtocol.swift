@@ -10,13 +10,13 @@ public enum TradeOffersOffersFetcherLoadingStatus {
 public protocol TradeOffersOffersFetcherProtocol {
     
     typealias LoadingStatus = TradeOffersOffersFetcherLoadingStatus
-    typealias Item = TradeOffers.Model.Offer
+    typealias OrderBook = TradeOffers.Model.OrderBook
     
-    func getItemsValue() -> (buyItems: [Item], sellItems: [Item])
+    func getOrderBookValue() -> OrderBook
     func getLoadingStatusValue() -> LoadingStatus
     
-    func observeItems(pageSize: Int) -> Observable<(buyItems: [Item], sellItems: [Item])>
-    func reloadItems()
+    func observeOrderBook(pageSize: Int) -> Observable<OrderBook>
+    func reloadOrderBook()
     func observeLoadingStatus() -> Observable<LoadingStatus>
     func observeErrorStatus() -> Observable<Swift.Error>
 }
