@@ -11,10 +11,9 @@ enum SaleDetails {
     
     enum TabIdentifier: String {
         case empty
-        case details
-        case invest
-        case chart
         case overview
+        case details
+        case chart
     }
     
     enum Model {}
@@ -30,8 +29,8 @@ extension SaleDetails.Model {
         var selectedTabId: SaleDetails.TabIdentifier?
         var inputAmount: Decimal
         var selectedBalance: BalanceDetails?
-        var chartsPeriods: [Period]
-        var selectedChartsPeriod: Period?
+        var chartsPeriods: [SaleDetails.ChartTab.Period]
+        var selectedChartsPeriod: SaleDetails.ChartTab.Period?
         var selectedChartEntryIndex: Int?
         
         init() {
@@ -49,8 +48,8 @@ extension SaleDetails.Model {
             selectedTabId: SaleDetails.TabIdentifier?,
             inputAmount: Decimal,
             selectedBalance: BalanceDetails?,
-            chartsPeriods: [Period],
-            selectedChartsPeriod: Period?,
+            chartsPeriods: [SaleDetails.ChartTab.Period],
+            selectedChartsPeriod: SaleDetails.ChartTab.Period?,
             selectedChartEntryIndex: Int?
             ) {
             
@@ -101,48 +100,27 @@ extension SaleDetails.Model {
     }
     
     enum TabType {
-        case chart(ChartTabModel)
-        case empty(EmptyTabModel)
-        case invest(InvestTabModel)
-        case overview(OverviewTabModel)
+        case empty(SaleDetails.EmptyTabModel)
+        case overview(SaleDetails.OverviewTab.Model)
+        case details(SaleDetails.DetailsTab.Model)
+        case chart(SaleDetails.ChartTab.Model)
     }
     
     enum TabContentType {
-        case chart(SaleDetails.ChartTab.ViewModel)
         case empty(SaleDetails.EmptyContent.ViewModel)
-        case invest(SaleDetails.InvestTab.ViewModel)
         case overview(SaleDetails.OverviewTab.ViewModel)
+        case details(SaleDetails.DetailsTab.ViewModel)
+        case chart(SaleDetails.ChartTab.ViewModel)
     }
     
     enum TabViewType {
-        case chart(SaleDetails.ChartTab.View)
         case empty(SaleDetails.EmptyContent.View)
-        case invest(SaleDetails.InvestTab.View)
         case overview(SaleDetails.OverviewTab.View)
+        case details(SaleDetails.DetailsTab.View)
+        case chart(SaleDetails.ChartTab.View)
     }
     
-    struct OverviewTabModel {
-        let imageUrl: URL?
-        let name: String
-        let description: String
-        let asset: String
-        
-        let investmentAsset: String
-        let investmentAmount: Decimal
-        let investmentPercentage: Float
-        let investorsCount: Int
-        
-        let startDate: Date
-        let endDate: Date
-        
-        let youtubeVideoUrl: URL?
-        
-        let overviewContent: String?
-        
-        let tabIdentifier: SaleDetails.TabIdentifier
-    }
-    
-    struct InvestTabModel {
+    struct InvestTabModel1 {
         var selectedBalance: BalanceDetails?
         var amount: Decimal
         let availableAmount: Decimal
@@ -151,30 +129,7 @@ extension SaleDetails.Model {
         let tabIdentifier: SaleDetails.TabIdentifier
     }
     
-    struct ChartTabModel {
-        let asset: String
-        
-        let investedAmount: Decimal
-        let investedDate: Date?
-        
-        let datePickerItems: [Period]
-        let selectedDatePickerItem: Int?
-        
-        let growth: Decimal
-        let growthPositive: Bool?
-        let growthSincePeriod: Period?
-        
-        let chartModel: ChartModel
-        
-        let tabIdentifier: SaleDetails.TabIdentifier
-    }
-    
-    struct EmptyTabModel {
-        let message: String
-        let tabIdentifier: SaleDetails.TabIdentifier
-    }
-    
-    struct SaleInvestModel {
+    struct SaleInvestModel1 {
         let baseAsset: String
         let quoteAsset: String
         let baseBalance: String
@@ -191,18 +146,13 @@ extension SaleDetails.Model {
         let orderBookId: UInt64
     }
     
-    struct CancelInvestModel {
+    struct CancelInvestModel1 {
         let baseBalance: String
         let quoteBalance: String
         let price: Decimal
         let fee: Decimal
         let prevOfferId: UInt64
         let orderBookId: UInt64
-    }
-    
-    struct SaleInfoModel {
-        let saleId: String
-        let asset: String
     }
     
     struct SaleOverviewModel {
@@ -234,57 +184,6 @@ extension SaleDetails.Model {
         let amount: Decimal
         let asset: String
         let id: UInt64
-    }
-    
-    enum Period: Int, Hashable, Equatable {
-        case hour
-        case day
-        case week
-        case month
-        case year
-        
-        init?(string: String) {
-            switch string {
-            case "hour": self.init(rawValue: Period.hour.rawValue)
-            case "day": self.init(rawValue: Period.day.rawValue)
-            case "week": self.init(rawValue: Period.week.rawValue)
-            case "month": self.init(rawValue: Period.month.rawValue)
-            case "year": self.init(rawValue: Period.year.rawValue)
-            default: return nil
-            }
-        }
-    }
-    
-    struct PeriodViewModel {
-        let title: String
-        let isEnabled: Bool
-        let period: Period
-    }
-    
-    struct ChartModel {
-        let entries: [ChartEntry]
-        let maxValue: Decimal
-    }
-    
-    struct ChartEntry {
-        let date: Date
-        let value: Decimal
-    }
-    
-    struct ChartViewModel {
-        let entries: [ChartDataEntry]
-        let maxValue: Double
-        let formattedMaxValue: String
-    }
-    
-    struct ChartDataEntry {
-        let x: Double
-        let y: Double
-    }
-    
-    struct AxisFormatters {
-        let xAxisFormatter: (Double) -> String
-        let yAxisFormatter: (Double) -> String
     }
 }
 
@@ -341,7 +240,7 @@ extension SaleDetails.Event {
         }
         
         struct Response {
-            let updatedTab: Model.InvestTabModel
+            let updatedTab: Model.InvestTabModel1
         }
         
         struct ViewModel {
@@ -362,14 +261,14 @@ extension SaleDetails.Event {
             case loading
             case loaded
             case failed(SaleDetails.Event.InvestAction.Response.InvestError)
-            case succeeded(Model.SaleInvestModel)
+            case succeeded(Model.SaleInvestModel1)
         }
         
         enum ViewModel {
             case loading
             case loaded
             case failed(errorMessage: String)
-            case succeeded(Model.SaleInvestModel)
+            case succeeded(Model.SaleInvestModel1)
         }
     }
     
@@ -389,22 +288,6 @@ extension SaleDetails.Event {
         }
     }
     
-    enum DidSelectMoreInfoButton {
-        struct Request {}
-        
-        struct Response {
-            let saleId: String
-            let blobId: String
-            let asset: String
-        }
-        
-        struct ViewModel {
-            let saleId: String
-            let blobId: String
-            let asset: String
-        }
-    }
-    
     enum SelectChartPeriod {
         struct Request {
             let period: Int
@@ -413,17 +296,17 @@ extension SaleDetails.Event {
         struct Response {
             let asset: String
             
-            let periods: [Model.Period]
-            let selectedPeriod: Model.Period
+            let periods: [SaleDetails.ChartTab.Period]
+            let selectedPeriod: SaleDetails.ChartTab.Period
             let selectedPeriodIndex: Int?
             
             let growth: Decimal
             let growthPositive: Bool?
-            let growthSincePeriod: Model.Period?
+            let growthSincePeriod: SaleDetails.ChartTab.Period?
             
-            let chartModel: Model.ChartModel
+            let chartModel: SaleDetails.ChartTab.ChartModel
             
-            let updatedTab: Model.ChartTabModel
+            let updatedTab: SaleDetails.ChartTab.Model
         }
         
         struct ViewModel {
@@ -451,15 +334,6 @@ extension SaleDetails.Event {
 }
 
 // MARK: -
-
-extension SaleDetails.Model.OverviewTabModel {
-    
-    enum ImageState {
-        case empty
-        case loaded(UIImage)
-        case loading
-    }
-}
 
 extension SaleDetails.Model.SaleModel {
     

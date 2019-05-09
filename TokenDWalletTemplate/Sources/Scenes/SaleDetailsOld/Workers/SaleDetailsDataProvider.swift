@@ -19,7 +19,7 @@ protocol SaleDetailsDataProviderProtocol {
     func observeBalances() -> Observable<[SaleDetails.Model.BalanceDetails]>
     func observeAccount() -> Observable<SaleDetails.Model.AccountModel>
     func observeOffers() -> Observable<[SaleDetails.Model.InvestmentOffer]>
-    func observeCharts() -> Observable<[SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]]>
+    func observeCharts() -> Observable<[SaleDetails.ChartTab.Period: [SaleDetails.ChartTab.ChartEntry]]>
     func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]>
     
     func refreshBalances()
@@ -31,8 +31,8 @@ extension SaleDetails {
     
     class SaleDataProvider: DataProvider {
         
-        private typealias ChartPeriod = SaleDetails.Model.Period
-        private typealias ChartEntry = SaleDetails.Model.ChartEntry
+        private typealias ChartPeriod = SaleDetails.ChartTab.Period
+        private typealias ChartEntry = SaleDetails.ChartTab.ChartEntry
         private typealias TabIdentifier = SaleDetails.TabIdentifier
         
         // MARK: - Private properties
@@ -191,17 +191,17 @@ extension SaleDetails {
             })
         }
         
-        func observeCharts() -> Observable<[Model.Period: [Model.ChartEntry]]> {
-            return self.charts.map({ (chartsResponse) -> [Model.Period: [Model.ChartEntry]] in
-                var charts = [Model.Period: [Model.ChartEntry]]()
+        func observeCharts() -> Observable<[ChartTab.Period: [ChartTab.ChartEntry]]> {
+            return self.charts.map({ (chartsResponse) -> [ChartTab.Period: [ChartTab.ChartEntry]] in
+                var charts = [ChartTab.Period: [ChartTab.ChartEntry]]()
                 for key in chartsResponse.keys {
-                    guard let period = Model.Period(string: key),
+                    guard let period = ChartTab.Period(string: key),
                         let chart = chartsResponse[key]
                         else {
                             continue
                     }
                     
-                    charts[period] = chart.map({ (chart) -> Model.ChartEntry in
+                    charts[period] = chart.map({ (chart) -> ChartTab.ChartEntry in
                         return chart.chart
                     })
                 }
@@ -235,27 +235,27 @@ extension SaleDetails {
         // MARK: - Private
         
         private func loadPendingOffers(saleId: String) {
-            let parameters = OffersOffersRequestParameters(
-                isBuy: true,
-                order: nil,
-                baseAsset: nil,
-                quoteAsset: nil,
-                orderBookId: saleId,
-                offerId: nil
-            )
-            
-            self.offersRepo.loadOffers(
-                parameters: parameters,
-                completion: { [weak self] (result) in
-                    switch result {
-                        
-                    case .failure(let error):
-                        self?.errorsValue[.invest] = error.localizedDescription
-                        
-                    case .success(let offers):
-                        self?.pendingOffers.accept(offers)
-                    }
-            })
+//            let parameters = OffersOffersRequestParameters(
+//                isBuy: true,
+//                order: nil,
+//                baseAsset: nil,
+//                quoteAsset: nil,
+//                orderBookId: saleId,
+//                offerId: nil
+//            )
+//
+//            self.offersRepo.loadOffers(
+//                parameters: parameters,
+//                completion: { [weak self] (result) in
+//                    switch result {
+//
+//                    case .failure(let error):
+//                        self?.errorsValue[.invest] = error.localizedDescription
+//
+//                    case .success(let offers):
+//                        self?.pendingOffers.accept(offers)
+//                    }
+//            })
         }
         
         private func loadOverview(blobId: String) {
@@ -328,7 +328,7 @@ extension SaleDetails {
 
 extension SaleDetails.DataProvider.ImageKey {
     
-    var repoImageKey: ImagesUtility.ImageKey {
+    fileprivate var repoImageKey: ImagesUtility.ImageKey {
         switch self {
             
         case .key(let key):
@@ -342,7 +342,7 @@ extension SaleDetails.DataProvider.ImageKey {
 
 private extension TokenDSDK.ChartResponse {
     
-    typealias Chart = SaleDetails.Model.ChartEntry
+    typealias Chart = SaleDetails.ChartTab.ChartEntry
     
     var chart: Chart {
         return Chart(

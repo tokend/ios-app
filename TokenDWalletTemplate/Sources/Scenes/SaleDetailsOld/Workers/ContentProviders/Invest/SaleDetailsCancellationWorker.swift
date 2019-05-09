@@ -10,7 +10,7 @@ enum SaleDetailsCancelInvestResult {
 protocol SaleDetailsCancelInvestWorkerProtocol {
     
     func cancelInvest(
-        model: SaleDetails.Model.CancelInvestModel,
+//        model: SaleDetails.Model.CancelInvestModel,
         completion: @escaping ((SaleDetailsCancelInvestResult) -> Void)
     )
 }
@@ -46,7 +46,7 @@ extension SaleDetails {
         // MARK: - Private
         
         private func cancelInvestment(
-            cancelModel: SaleDetails.Model.CancelInvestModel,
+//            cancelModel: SaleDetails.Model.CancelInvestModel,
             networkInfo: NetworkInfoModel,
             completion: @escaping ((SaleDetailsCancelInvestResult) -> Void)
             ) {
@@ -126,7 +126,7 @@ extension SaleDetails {
 extension SaleDetails.CancelInvestWorker: SaleDetails.CancelInvestWorkerProtocol {
     
     func cancelInvest(
-        model: SaleDetails.Model.CancelInvestModel,
+//        model: SaleDetails.Model.CancelInvestModel,
         completion: @escaping ((SaleDetailsCancelInvestResult) -> Void)
         ) {
         

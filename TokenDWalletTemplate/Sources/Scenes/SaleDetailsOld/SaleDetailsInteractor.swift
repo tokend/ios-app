@@ -14,7 +14,6 @@ protocol SaleDetailsBusinessLogic {
     func onInvestAction(request: Event.InvestAction.Request)
     func onCancelInvestAction(request: Event.CancelInvestAction.Request)
     func onEditAmount(request: Event.EditAmount.Request)
-    func onDidSelectMoreInfoButton(request: Event.DidSelectMoreInfoButton.Request)
     func onSelectChartPeriod(request: Event.SelectChartPeriod.Request)
     func onSelectChartEntry(request: Event.SelectChartEntry.Request)
     func onTabWasSelected(request: Event.TabWasSelected.Request)
@@ -81,7 +80,7 @@ extension SaleDetails {
                 self.updateRelay.emitEvent()
             }
         }
-        private var charts: [Model.Period: [Model.ChartEntry]] = [:] {
+        private var charts: [ChartTab.Period: [ChartTab.ChartEntry]] = [:] {
             didSet {
                 self.updateChartsPeriods()
                 self.updateRelay.emitEvent()
@@ -164,7 +163,7 @@ extension SaleDetails {
                 return tabModels
             }
             
-            // Description
+            // Overview
             
             let investmentPercentage: Float
             if sale.softCap != 0.0 {
@@ -173,7 +172,7 @@ extension SaleDetails {
                 investmentPercentage = 1.0
             }
             
-            let overviewModel = Model.OverviewTabModel(
+            let overviewModel = OverviewTab.Model(
                 imageUrl: sale.details.logoUrl,
                 name: sale.details.name,
                 description: sale.details.shortDescription,
@@ -190,39 +189,39 @@ extension SaleDetails {
             )
             
             let overviewTabModel = Model.TabModel(
-                title: Localized(.description),
+                title: Localized(.overview),
                 tabType: .overview(overviewModel),
                 tabIdentifier: .overview
             )
             tabModels.append(overviewTabModel)
             
-            // Invest
+            // Details
             
-            let investEnabled: Bool
-            if self.account != nil, self.assetModel != nil {
-                investEnabled = true
-            } else {
-                investEnabled = false
-            }
-            
-            if investEnabled {
-                let investTabModel: Model.TabModel
-                
-                if let errorMessage = self.errors[.invest] {
-                    investTabModel = self.getEmptyTab(
-                        title: Localized(.invest),
-                        message: errorMessage
-                    )
-                } else {
-                    let investModel = self.getInvestTabModel()
-                    investTabModel = Model.TabModel(
-                        title: Localized(.invest),
-                        tabType: .invest(investModel),
-                        tabIdentifier: .invest
-                    )
-                }
-                tabModels.append(investTabModel)
-            }
+//            let investEnabled: Bool
+//            if self.account != nil, self.assetModel != nil {
+//                investEnabled = true
+//            } else {
+//                investEnabled = false
+//            }
+//
+//            if investEnabled {
+//                let investTabModel: Model.TabModel
+//
+//                if let errorMessage = self.errors[.invest] {
+//                    investTabModel = self.getEmptyTab(
+//                        title: Localized(.invest),
+//                        message: errorMessage
+//                    )
+//                } else {
+//                    let investModel = self.getInvestTabModel()
+//                    investTabModel = Model.TabModel(
+//                        title: Localized(.invest),
+//                        tabType: .invest(investModel),
+//                        tabIdentifier: .invest
+//                    )
+//                }
+//                tabModels.append(investTabModel)
+//            }
             
             // Chart
             
@@ -273,12 +272,12 @@ extension SaleDetails {
             self.sceneModel.selectedTabId = first.tabIdentifier
         }
         
-        private func getInvestTabModel() -> Model.InvestTabModel {
+        private func getDetailsTabModel() -> InvestTab.Model {
             let availableAmount = self.getAvailableInputAmount()
             let isCancellable = self.sceneModel.inputAmount != 0.0
             let actionTitle = isCancellable ? Localized(.update) : Localized(.invest_cap)
             
-            let investModel = Model.InvestTabModel(
+            let investModel = InvestTab.Model(
                 selectedBalance: self.sceneModel.selectedBalance,
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
@@ -291,10 +290,10 @@ extension SaleDetails {
         }
         
         private func getChartTabModel(
-            charts: [Model.ChartEntry],
-            chart: Model.ChartEntry,
+            charts: [ChartTab.ChartEntry],
+            chart: ChartTab.ChartEntry,
             sale: Model.SaleModel
-            ) -> Model.ChartTabModel {
+            ) -> ChartTab.Model {
             
             let investedAmount = chart.value
             let investedDate: Date? = self.sceneModel.selectedChartEntryIndex == nil ? nil : chart.date
@@ -302,7 +301,7 @@ extension SaleDetails {
             let selectedDatePickerItem = self.getSelectedPeriodIndex()
             let growth = self.getChartGrowthForCharts(charts)
             let growthPositive: Bool? = growth == 0.0 ? nil : growth > 0.0
-            var growthSincePeriod: Model.Period?
+            var growthSincePeriod: ChartTab.Period?
             if let selectedPeriod = selectedDatePickerItem {
                 growthSincePeriod = datePickerItems[selectedPeriod]
             }
@@ -325,7 +324,7 @@ extension SaleDetails {
         }
         
         private func getEmptyTab(title: String, message: String? = nil) -> Model.TabModel {
-            let emptyTabModel = Model.EmptyTabModel(
+            let emptyTabModel = EmptyTab.Model(
                 message: message ?? Localized(.loading),
                 tabIdentifier: .empty
             )
@@ -337,7 +336,7 @@ extension SaleDetails {
             return emptyTab
         }
         
-        private func getChartGrowthForCharts(_ charts: [Model.ChartEntry]) -> Decimal {
+        private func getChartGrowthForCharts(_ charts: [ChartTab.ChartEntry]) -> Decimal {
             guard let first = charts.first, let last = charts.last else {
                 return 0.0
             }
@@ -547,12 +546,15 @@ extension SaleDetails {
             return prevOffer.id
         }
         
-        private func getChartsForPeriod(_ period: Model.Period) -> [Model.ChartEntry]? {
+        private func getChartsForPeriod(_ period: ChartTab.Period) -> [ChartTab.ChartEntry]? {
             return self.charts[period]
         }
         
-        private func getPeriodPickerItemsForCharts(_ charts: [Model.Period: [Model.ChartEntry]]) -> [Model.Period] {
-            var periods = charts.compactMap({ (chartItem) -> Model.Period? in
+        private func getPeriodPickerItemsForCharts(
+            _ charts: [ChartTab.Period: [ChartTab.ChartEntry]]
+            ) -> [ChartTab.Period] {
+            
+            var periods = charts.compactMap({ (chartItem) -> ChartTab.Period? in
                 return chartItem.value.count > 0 ? chartItem.key : nil
             })
             
@@ -571,11 +573,11 @@ extension SaleDetails {
             return self.sceneModel.chartsPeriods.index(of: selected)
         }
         
-        private func getChartModel(charts: [Model.ChartEntry]) -> Model.ChartModel {
+        private func getChartModel(charts: [ChartTab.ChartEntry]) -> ChartTab.ChartModel {
             let chartMaxValue = charts.max { (entry1, entry2) -> Bool in
                 return entry1.value < entry2.value
                 }?.value ?? 0.0
-            let chartModel = Model.ChartModel(
+            let chartModel = ChartTab.ChartModel(
                 entries: charts,
                 maxValue: chartMaxValue
             )
@@ -656,33 +658,33 @@ extension SaleDetails {
             orderBookId: UInt64
             ) {
             
-            let cancelModel = Model.CancelInvestModel(
-                baseBalance: baseBalance,
-                quoteBalance: quoteBalance,
-                price: price,
-                fee: fee,
-                prevOfferId: prevOfferId,
-                orderBookId: orderBookId
-            )
-            
-            self.cancelInvestWorker.cancelInvest(
-                model: cancelModel,
-                completion: { [weak self] (result) in
-                    
-                    let response: Event.CancelInvestAction.Response
-                    switch result {
-                        
-                    case .failure:
-                        response = .failed(.failedToCancelInvestment)
-                        
-                    case .success:
-                        response = .succeeded
-                        self?.dataProvider.refreshBalances()
-                        self?.observeOffers()
-                    }
-                    self?.presenter.presentCancelInvestAction(response: response)
-                }
-            )
+//            let cancelModel = Model.CancelInvestModel(
+//                baseBalance: baseBalance,
+//                quoteBalance: quoteBalance,
+//                price: price,
+//                fee: fee,
+//                prevOfferId: prevOfferId,
+//                orderBookId: orderBookId
+//            )
+//
+//            self.cancelInvestWorker.cancelInvest(
+//                model: cancelModel,
+//                completion: { [weak self] (result) in
+//
+//                    let response: Event.CancelInvestAction.Response
+//                    switch result {
+//
+//                    case .failure:
+//                        response = .failed(.failedToCancelInvestment)
+//
+//                    case .success:
+//                        response = .succeeded
+//                        self?.dataProvider.refreshBalances()
+//                        self?.observeOffers()
+//                    }
+//                    self?.presenter.presentCancelInvestAction(response: response)
+//                }
+//            )
         }
     }
     // swiftlint:enable type_body_length
@@ -758,14 +760,14 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
     }
     
     func onBalanceSelected(request: Event.BalanceSelected.Request) {
-        guard let balance = self.getBalanceWith(balanceId: request.balanceId) else { return }
-        
-        self.sceneModel.selectedBalance = balance
-        self.updateInputAmountFromSelectedBalance()
-        
-        let investTabModel = self.getInvestTabModel()
-        let response = Event.BalanceSelected.Response(updatedTab: investTabModel)
-        self.presenter.presentBalanceSelected(response: response)
+//        guard let balance = self.getBalanceWith(balanceId: request.balanceId) else { return }
+//
+//        self.sceneModel.selectedBalance = balance
+//        self.updateInputAmountFromSelectedBalance()
+//
+//        let investTabModel = self.getInvestTabModel()
+//        let response = Event.BalanceSelected.Response(updatedTab: investTabModel)
+//        self.presenter.presentBalanceSelected(response: response)
     }
     
     func onInvestAction(request: Event.InvestAction.Request) {
@@ -833,24 +835,24 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
                     let prevOfferId = self?.getPrevOfferId(selectedBalance: selectedBalance)
                     let baseAmount = investAmount/quoteAsset.price
                     
-                    let saleInvestModel = Model.SaleInvestModel(
-                        baseAsset: sale.baseAsset,
-                        quoteAsset: quoteAsset.asset,
-                        baseBalance: baseBalance.balanceId,
-                        quoteBalance: selectedBalance.balanceId,
-                        isBuy: true,
-                        baseAmount: baseAmount,
-                        quoteAmount: investAmount,
-                        baseAssetName: sale.details.name,
-                        price: quoteAsset.price,
-                        fee: fee.percent,
-                        type: sale.type.rawValue,
-                        offerId: 0,
-                        prevOfferId: prevOfferId,
-                        orderBookId: orderBookId
-                    )
-                    let response = Event.InvestAction.Response.succeeded(saleInvestModel)
-                    self?.presenter.presentInvestAction(response: response)
+//                    let saleInvestModel = Model.SaleInvestModel(
+//                        baseAsset: sale.baseAsset,
+//                        quoteAsset: quoteAsset.asset,
+//                        baseBalance: baseBalance.balanceId,
+//                        quoteBalance: selectedBalance.balanceId,
+//                        isBuy: true,
+//                        baseAmount: baseAmount,
+//                        quoteAmount: investAmount,
+//                        baseAssetName: sale.details.name,
+//                        price: quoteAsset.price,
+//                        fee: fee.percent,
+//                        type: sale.type.rawValue,
+//                        offerId: 0,
+//                        prevOfferId: prevOfferId,
+//                        orderBookId: orderBookId
+//                    )
+//                    let response = Event.InvestAction.Response.succeeded(saleInvestModel)
+//                    self?.presenter.presentInvestAction(response: response)
                 }
         }
     }
@@ -861,19 +863,6 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
     
     func onEditAmount(request: Event.EditAmount.Request) {
         self.sceneModel.inputAmount = request.amount ?? 0.0
-    }
-    
-    func onDidSelectMoreInfoButton(request: Event.DidSelectMoreInfoButton.Request) {
-        guard let sale = self.sale else {
-            return
-        }
-        
-        let response = SaleDetails.Event.DidSelectMoreInfoButton.Response(
-            saleId: sale.id,
-            blobId: sale.details.description,
-            asset: sale.baseAsset
-        )
-        self.presenter.presentDidSelectMoreInfoButton(response: response)
     }
     
     func onSelectChartPeriod(request: Event.SelectChartPeriod.Request) {
@@ -928,7 +917,7 @@ extension SaleDetails.Interactor: SaleDetails.BusinessLogic {
         
         self.sceneModel.selectedChartEntryIndex = request.chartEntryIndex
         
-        let chart: Model.ChartEntry
+        let chart: SaleDetails.ChartTab.ChartEntry
         if let selectedChartEntryIndex = self.sceneModel.selectedChartEntryIndex {
             chart = charts[selectedChartEntryIndex]
         } else {

@@ -43,7 +43,7 @@ class SalesFlowController: BaseSignedInFlowController {
         
         let routing = Sales.Routing(
             onDidSelectSale: { [weak self] (identifier) in
-                self?.showSaleDetailsScreen(identifier: identifier)
+                self?.showSaleInfoScreen(identifier: identifier)
             },
             onShowInvestments: { [weak self] in
                 self?.showInvestments()
@@ -141,107 +141,121 @@ class SalesFlowController: BaseSignedInFlowController {
         navigationController.pushViewController(vc, animated: true)
     }
     
-    private func showSaleDetailsScreen(identifier: String) {
-        let vc = self.setupSaleDetailsScreen(identifier: identifier)
+    private func showSaleInfoScreen(identifier: String) {
+        let vc = self.setupSaleInfoScreen(identifier: identifier)
         
         self.navigationController.pushViewController(vc, animated: true)
     }
     
-    private func setupSaleDetailsScreen(identifier: String) -> SaleDetails.ViewController {
-        let vc = SaleDetails.ViewController()
+    private func setupSaleInfoScreen(identifier: String) -> TabsContainer.ViewController {
+        let vc = TabsContainer.ViewController()
         
-        let dataProvider = SaleDetails.SaleDataProvider(
-            saleIdentifier: identifier,
-            salesRepo: self.reposController.salesRepo,
-            assetsRepo: self.reposController.assetsRepo,
-            balancesRepo: self.reposController.balancesRepo,
-            walletRepo: self.reposController.walletRepo,
-            offersRepo: self.reposController.pendingOffersRepo,
-            chartsApi: self.flowControllerStack.api.chartsApi,
-            blobsApi: self.flowControllerStack.api.blobsApi,
-            imagesUtility: self.reposController.imagesUtility
-        )
+        let overviewTab = self.setupSaleOverviewTabModel(identifier: identifier)
         
-        let amountFormatter = SaleDetails.AmountFormatter()
+        let tabs: [TabsContainer.Model.TabModel] = [
+            overviewTab
+        ]
         
-        let dateFormatter = SaleDetails.SaleDetailsDateFormatter()
+        let contentProvider = TabsContainer.InfoContentProvider(tabs: tabs)
         
-        let chartDateFormatter = SaleDetails.ChartDateFormatter()
+        let routing = TabsContainer.Routing()
         
-        let investedAmountFormatter = SaleDetails.InvestAmountFormatter()
-        let overviewFormatter = SaleDetails.TextFormatter()
+//        let dataProvider = SaleDetails.SaleDataProvider(
+//            saleIdentifier: identifier,
+//            salesRepo: self.reposController.salesRepo,
+//            assetsRepo: self.reposController.assetsRepo,
+//            balancesRepo: self.reposController.balancesRepo,
+//            walletRepo: self.reposController.walletRepo,
+//            offersRepo: self.reposController.pendingOffersRepo,
+//            chartsApi: self.flowControllerStack.api.chartsApi,
+//            blobsApi: self.flowControllerStack.api.blobsApi,
+//            imagesUtility: self.reposController.imagesUtility
+//        )
+//
+//        let amountFormatter = SaleDetails.AmountFormatter()
+//
+//        let dateFormatter = SaleDetails.SaleDetailsDateFormatter()
+//
+//        let chartDateFormatter = SaleDetails.ChartDateFormatter()
+//
+//        let investedAmountFormatter = SaleDetails.InvestAmountFormatter()
+//        let overviewFormatter = SaleDetails.TextFormatter()
+//
+//        let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
+//
+//        let transactionSender = TransactionSender(
+//            api: self.flowControllerStack.api.transactionsApi,
+//            keychainDataProvider: self.keychainDataProvider
+//        )
+//
+//        let cancelInvestWorker = SaleDetails.CancelInvestWorker(
+//            transactionSender: transactionSender,
+//            amountConverter: AmountConverter(),
+//            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
+//            userDataProvider: self.userDataProvider
+//        )
+//
+//        let routing = SaleDetails.Routing(
+//            onShowProgress: { [weak self] in
+//                self?.navigationController.showProgress()
+//            },
+//            onHideProgress: { [weak self] in
+//                self?.navigationController.hideProgress()
+//            },
+//            onShowError: { [weak self] (errorMessage) in
+//                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+//            },
+//            onPresentPicker: { [weak self] (title, options, onSelected) in
+//                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+//                    return
+//                }
+//
+//                self?.showDialog(
+//                    title: title,
+//                    message: nil,
+//                    style: .actionSheet,
+//                    options: options,
+//                    onSelected: onSelected,
+//                    onCanceled: nil,
+//                    presentViewController: present
+//                )
+//            },
+//            onSaleInvestAction: { [weak self] (investModel) in
+//                self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
+//            },
+//            showDialog: { [weak self] (title, message, options, onSelected) in
+//                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+//                    return
+//                }
+//                self?.showDialog(
+//                    title: title,
+//                    message: message,
+//                    style: .alert,
+//                    options: options,
+//                    onSelected: onSelected,
+//                    onCanceled: nil,
+//                    presentViewController: present
+//                )
+//            }
+//        )
+//
+//        SaleDetails.Configurator.configure(
+//            viewController: vc,
+//            dataProvider: dataProvider,
+//            amountFormatter: amountFormatter,
+//            dateFormatter: dateFormatter,
+//            chartDateFormatter: chartDateFormatter,
+//            investedAmountFormatter: investedAmountFormatter,
+//            overviewFormatter: overviewFormatter,
+//            feeLoader: feeLoader,
+//            cancelInvestWorker: cancelInvestWorker,
+//            investorAccountId: self.userDataProvider.walletData.accountId,
+//            routing: routing
+//        )
         
-        let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
-        
-        let transactionSender = TransactionSender(
-            api: self.flowControllerStack.api.transactionsApi,
-            keychainDataProvider: self.keychainDataProvider
-        )
-        
-        let cancelInvestWorker = SaleDetails.CancelInvestWorker(
-            transactionSender: transactionSender,
-            amountConverter: AmountConverter(),
-            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
-            userDataProvider: self.userDataProvider
-        )
-        
-        let routing = SaleDetails.Routing(
-            onShowProgress: { [weak self] in
-                self?.navigationController.showProgress()
-            },
-            onHideProgress: { [weak self] in
-                self?.navigationController.hideProgress()
-            },
-            onShowError: { [weak self] (errorMessage) in
-                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
-            },
-            onPresentPicker: { [weak self] (title, options, onSelected) in
-                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
-                    return
-                }
-                
-                self?.showDialog(
-                    title: title,
-                    message: nil,
-                    style: .actionSheet,
-                    options: options,
-                    onSelected: onSelected,
-                    onCanceled: nil,
-                    presentViewController: present
-                )
-            },
-            onSaleInvestAction: { [weak self] (investModel) in
-                self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
-            },
-            showDialog: { [weak self] (title, message, options, onSelected) in
-                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
-                    return
-                }
-                self?.showDialog(
-                    title: title,
-                    message: message,
-                    style: .alert,
-                    options: options,
-                    onSelected: onSelected,
-                    onCanceled: nil,
-                    presentViewController: present
-                )
-            },
-            onSaleInfoAction: { [weak self] (infoModel) in
-                self?.showSaleInfoScreen(saleInfoModel: infoModel)
-        })
-        
-        SaleDetails.Configurator.configure(
+        TabsContainer.Configurator.configure(
             viewController: vc,
-            dataProvider: dataProvider,
-            amountFormatter: amountFormatter,
-            dateFormatter: dateFormatter,
-            chartDateFormatter: chartDateFormatter,
-            investedAmountFormatter: investedAmountFormatter,
-            overviewFormatter: overviewFormatter,
-            feeLoader: feeLoader,
-            cancelInvestWorker: cancelInvestWorker,
-            investorAccountId: self.userDataProvider.walletData.accountId,
+            contentProvider: contentProvider,
             routing: routing
         )
         
@@ -250,105 +264,135 @@ class SalesFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showSaleInvestConfirmationScreen(saleInvestModel: SaleDetails.Model.SaleInvestModel) {
-        let vc = self.setupSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
+    private func setupSaleOverviewTabModel(identifier: String) -> TabsContainer.Model.TabModel {
+        let vc = SaleOverview.ViewController()
         
-        self.navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func setupSaleInvestConfirmationScreen(
-        saleInvestModel: SaleDetails.Model.SaleInvestModel
-        ) -> ConfirmationScene.ViewController {
-        
-        let vc = ConfirmationScene.ViewController()
-        
-        let amountFormatter = ConfirmationScene.AmountFormatter()
-        let percentFormatter = ConfirmationScene.PercentFormatter()
-        let amountConverter = AmountConverter()
-        
-        let saleInvestModel = ConfirmationScene.Model.SaleInvestModel(
-            baseAsset: saleInvestModel.baseAsset,
-            quoteAsset: saleInvestModel.quoteAsset,
-            baseBalance: saleInvestModel.baseBalance,
-            quoteBalance: saleInvestModel.quoteBalance,
-            isBuy: saleInvestModel.isBuy,
-            baseAmount: saleInvestModel.baseAmount,
-            quoteAmount: saleInvestModel.quoteAmount,
-            baseAssetName: saleInvestModel.baseAssetName,
-            price: saleInvestModel.price,
-            fee: saleInvestModel.fee,
-            type: saleInvestModel.type,
-            offerId: saleInvestModel.offerId,
-            prevOfferId: saleInvestModel.prevOfferId,
-            orderBookId: saleInvestModel.orderBookId
+        let dataProvider = SaleOverview.OverviewDataProvider(
+            saleIdentifier: identifier,
+            salesRepo: self.reposController.salesRepo,
+            blobsApi: self.flowControllerStack.api.blobsApi,
+            imagesUtility: self.reposController.imagesUtility
         )
         
-        let sectionsProvider = ConfirmationScene.SaleInvestConfirmationProvider(
-            saleInvestModel: saleInvestModel,
-            transactionSender: self.managersController.transactionSender,
-            networkInfoFetcher: self.reposController.networkInfoRepo,
-            amountFormatter: amountFormatter,
-            userDataProvider: self.userDataProvider,
-            amountConverter: amountConverter,
-            percentFormatter: percentFormatter
-        )
+        let investedAmountFormatter = SaleOverview.InvestAmountFormatter()
         
-        let routing = ConfirmationScene.Routing(
-            onShowProgress: { [weak self] in
-                self?.navigationController.showProgress()
-            },
-            onHideProgress: { [weak self] in
-                self?.navigationController.hideProgress()
-            },
-            onShowError: { [weak self] (errorMessage) in
-                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
-            },
-            onConfirmationSucceeded: { [weak self] in
-                self?.onShowWalletScreen?(saleInvestModel.quoteBalance)
-        })
+        let routing = SaleOverview.Routing()
         
-        ConfirmationScene.Configurator.configure(
+        SaleOverview.Configurator.configure(
             viewController: vc,
-            sectionsProvider: sectionsProvider,
-            routing: routing
-        )
-        
-        vc.navigationItem.title = Localized(.confirmation)
-        
-        return vc
-    }
-    
-    private func showSaleInfoScreen(saleInfoModel: SaleDetails.Model.SaleInfoModel) {
-        let vc = self.setupSaleInfoScene(saleInfoModel: saleInfoModel)
-        
-        self.navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func setupSaleInfoScene(saleInfoModel: SaleDetails.Model.SaleInfoModel) -> SaleInfo.ViewController {
-        let vc = SaleInfo.ViewController()
-        let dataProvider = SaleInfo.SaleInfoDataProvider(
-            accountId: self.userDataProvider.walletData.accountId,
-            saleId: saleInfoModel.saleId,
-            asset: saleInfoModel.asset,
-            salesApi: self.flowControllerStack.api.salesApi,
-            assetsRepo: self.reposController.assetsRepo,
-            imagesUtility: self.reposController.imagesUtility,
-            balancesRepo: self.reposController.balancesRepo
-        )
-        
-        let routing  = SaleInfo.Routing()
-        let sceneModel = SaleInfo.Model.SceneModel(tabs: [])
-        let dateFormatter = SaleInfo.DateFormatter()
-        let amountFormatter = SaleInfo.AmountFormatter()
-        
-        SaleInfo.Configurator.configure(
-            viewController: vc,
-            sceneModel: sceneModel,
             dataProvider: dataProvider,
-            dateFormatter: dateFormatter,
-            amountFormatter: amountFormatter,
+            investedAmountFormatter: investedAmountFormatter,
             routing: routing
         )
-        return vc
+        
+        let tab = TabsContainer.Model.TabModel(
+            title: Localized(.overview),
+            content: .viewController(vc),
+            identifier: Localized(.overview)
+        )
+        
+        return tab
     }
+    
+//    private func showSaleInvestConfirmationScreen(saleInvestModel: SaleDetails.Model.SaleInvestModel1) {
+//        let vc = self.setupSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
+//
+//        self.navigationController.pushViewController(vc, animated: true)
+//    }
+//
+//    private func setupSaleInvestConfirmationScreen(
+//        saleInvestModel: SaleDetails.Model.SaleInvestModel1
+//        ) -> ConfirmationScene.ViewController {
+//
+//        let vc = ConfirmationScene.ViewController()
+//
+//        let amountFormatter = ConfirmationScene.AmountFormatter()
+//        let percentFormatter = ConfirmationScene.PercentFormatter()
+//        let amountConverter = AmountConverter()
+//
+//        let saleInvestModel = ConfirmationScene.Model.SaleInvestModel(
+//            baseAsset: saleInvestModel.baseAsset,
+//            quoteAsset: saleInvestModel.quoteAsset,
+//            baseBalance: saleInvestModel.baseBalance,
+//            quoteBalance: saleInvestModel.quoteBalance,
+//            isBuy: saleInvestModel.isBuy,
+//            baseAmount: saleInvestModel.baseAmount,
+//            quoteAmount: saleInvestModel.quoteAmount,
+//            baseAssetName: saleInvestModel.baseAssetName,
+//            price: saleInvestModel.price,
+//            fee: saleInvestModel.fee,
+//            type: saleInvestModel.type,
+//            offerId: saleInvestModel.offerId,
+//            prevOfferId: saleInvestModel.prevOfferId,
+//            orderBookId: saleInvestModel.orderBookId
+//        )
+//
+//        let sectionsProvider = ConfirmationScene.SaleInvestConfirmationProvider(
+//            saleInvestModel: saleInvestModel,
+//            transactionSender: self.managersController.transactionSender,
+//            networkInfoFetcher: self.reposController.networkInfoRepo,
+//            amountFormatter: amountFormatter,
+//            userDataProvider: self.userDataProvider,
+//            amountConverter: amountConverter,
+//            percentFormatter: percentFormatter
+//        )
+//
+//        let routing = ConfirmationScene.Routing(
+//            onShowProgress: { [weak self] in
+//                self?.navigationController.showProgress()
+//            },
+//            onHideProgress: { [weak self] in
+//                self?.navigationController.hideProgress()
+//            },
+//            onShowError: { [weak self] (errorMessage) in
+//                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+//            },
+//            onConfirmationSucceeded: { [weak self] in
+//                self?.onShowWalletScreen?(saleInvestModel.quoteBalance)
+//        })
+//
+//        ConfirmationScene.Configurator.configure(
+//            viewController: vc,
+//            sectionsProvider: sectionsProvider,
+//            routing: routing
+//        )
+//
+//        vc.navigationItem.title = Localized(.confirmation)
+//
+//        return vc
+//    }
+    
+//    private func showSaleInfoScreen(saleInfoModel: SaleDetails.Model.SaleInfoModel1) {
+//        let vc = self.setupSaleInfoScene(saleInfoModel: saleInfoModel)
+//
+//        self.navigationController.pushViewController(vc, animated: true)
+//    }
+//
+//    private func setupSaleInfoScene(saleInfoModel: SaleDetails.Model.SaleInfoModel1) -> SaleInfo.ViewController {
+//        let vc = SaleInfo.ViewController()
+//        let dataProvider = SaleInfo.SaleInfoDataProvider(
+//            accountId: self.userDataProvider.walletData.accountId,
+//            saleId: saleInfoModel.saleId,
+//            asset: saleInfoModel.asset,
+//            salesApi: self.flowControllerStack.api.salesApi,
+//            assetsRepo: self.reposController.assetsRepo,
+//            imagesUtility: self.reposController.imagesUtility,
+//            balancesRepo: self.reposController.balancesRepo
+//        )
+//
+//        let routing  = SaleInfo.Routing()
+//        let sceneModel = SaleInfo.Model.SceneModel(tabs: [])
+//        let dateFormatter = SaleInfo.DateFormatter()
+//        let amountFormatter = SaleInfo.AmountFormatter()
+//
+//        SaleInfo.Configurator.configure(
+//            viewController: vc,
+//            sceneModel: sceneModel,
+//            dataProvider: dataProvider,
+//            dateFormatter: dateFormatter,
+//            amountFormatter: amountFormatter,
+//            routing: routing
+//        )
+//        return vc
+//    }
 }

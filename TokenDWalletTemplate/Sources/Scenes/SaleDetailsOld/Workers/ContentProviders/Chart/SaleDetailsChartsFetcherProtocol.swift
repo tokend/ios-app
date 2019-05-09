@@ -2,7 +2,7 @@ import Foundation
 
 enum SaleDetailsChartsFetcherResult {
     case failure(Swift.Error)
-    case success(charts: [SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]])
+    case success(charts: [SaleDetails.ChartTab.Period: [SaleDetails.ChartTab.ChartEntry]])
 }
 
 protocol SaleDetailsChartsFetcherProtocol {

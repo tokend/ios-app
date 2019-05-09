@@ -9,7 +9,6 @@ protocol SaleDetailsPresentationLogic {
     func presentBalanceSelected(response: Event.BalanceSelected.Response)
     func presentInvestAction(response: Event.InvestAction.Response)
     func presentCancelInvestAction(response: Event.CancelInvestAction.Response)
-    func presentDidSelectMoreInfoButton(response: Event.DidSelectMoreInfoButton.Response)
     func presentSelectChartPeriod(response: Event.SelectChartPeriod.Response)
     func presentSelectChartEntry(response: Event.SelectChartEntry.Response)
     func presentTabWasSelected(response: Event.TabWasSelected.Response)
@@ -131,7 +130,7 @@ extension SaleDetails {
         }
         
         private func createOverviewTabViewModel(
-            sale: Model.OverviewTabModel
+            sale: Model.OverviewTab.Model
             ) -> OverviewTab.ViewModel {
             
             let name = sale.name
@@ -512,17 +511,6 @@ extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
         
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayCancelInvestAction(viewModel: viewModel)
-        }
-    }
-    
-    func presentDidSelectMoreInfoButton(response: Event.DidSelectMoreInfoButton.Response) {
-        let viewModel = Event.DidSelectMoreInfoButton.ViewModel(
-            saleId: response.saleId,
-            blobId: response.blobId,
-            asset: response.asset
-        )
-        self.presenterDispatch.display { displayLogic in
-            displayLogic.displayDidSelectMoreInfoButton(viewModel: viewModel)
         }
     }
     

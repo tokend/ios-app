@@ -3,7 +3,7 @@ import Foundation
 protocol SaleDetailsChartDateFormatterProtocol {
     
     func dateToString(_ date: Date) -> String
-    func formatDateForXAxis(_ date: Date, type: SaleDetails.Model.Period) -> String
+    func formatDateForXAxis(_ date: Date, type: SaleDetails.ChartTab.Period) -> String
 }
 
 extension SaleDetails {
@@ -37,7 +37,7 @@ extension SaleDetails {
         
         func formatDateForXAxis(
             _ date: Date,
-            type: Model.Period
+            type: ChartTab.Period
             ) -> String {
             
             switch type {

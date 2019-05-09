@@ -31,15 +31,15 @@ extension SaleDetails.ChartsFetcher: SaleDetails.ChartsFetcherProtocol {
                 switch result {
                     
                 case .success(let chartsResponse):
-                    var charts: [SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]] = [:]
+                    var charts: [SaleDetails.ChartTab.Period: [SaleDetails.ChartTab.ChartEntry]] = [:]
                     for key in chartsResponse.keys {
-                        guard let period = SaleDetails.Model.Period(string: key),
+                        guard let period = SaleDetails.ChartTab.Period(string: key),
                             let chart = chartsResponse[key]
                             else {
                                 continue
                         }
                         
-                        charts[period] = chart.map({ (chart) -> SaleDetails.Model.ChartEntry in
+                        charts[period] = chart.map({ (chart) -> SaleDetails.ChartTab.ChartEntry in
                             return chart.chart
                         })
                     }
@@ -59,7 +59,7 @@ extension SaleDetails.ChartsFetcher: SaleDetails.ChartsFetcherProtocol {
 
 private extension TokenDSDK.ChartResponse {
     
-    typealias Chart = SaleDetails.Model.ChartEntry
+    typealias Chart = SaleDetails.ChartTab.ChartEntry
     
     var chart: Chart {
         return Chart(

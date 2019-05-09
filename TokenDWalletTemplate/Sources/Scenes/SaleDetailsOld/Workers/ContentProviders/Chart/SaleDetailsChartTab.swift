@@ -5,20 +5,90 @@ extension SaleDetails {
     
     enum ChartTab {
         
+        enum Period: Int, Hashable, Equatable {
+            case hour
+            case day
+            case week
+            case month
+            case year
+            
+            init?(string: String) {
+                switch string {
+                case "hour": self.init(rawValue: Period.hour.rawValue)
+                case "day": self.init(rawValue: Period.day.rawValue)
+                case "week": self.init(rawValue: Period.week.rawValue)
+                case "month": self.init(rawValue: Period.month.rawValue)
+                case "year": self.init(rawValue: Period.year.rawValue)
+                default: return nil
+                }
+            }
+        }
+        
+        struct ChartModel {
+            let entries: [ChartEntry]
+            let maxValue: Decimal
+        }
+        
+        struct ChartEntry {
+            let date: Date
+            let value: Decimal
+        }
+        
+        struct Model {
+            
+            let asset: String
+            
+            let investedAmount: Decimal
+            let investedDate: Date?
+            
+            let datePickerItems: [Period]
+            let selectedDatePickerItem: Int?
+            
+            let growth: Decimal
+            let growthPositive: Bool?
+            let growthSincePeriod: Period?
+            
+            let chartModel: ChartModel
+            
+            let tabIdentifier: SaleDetails.TabIdentifier
+        }
+        
+        struct PeriodViewModel {
+            let title: String
+            let isEnabled: Bool
+            let period: Period
+        }
+        
+        struct ChartViewModel {
+            let entries: [ChartEntryViewModel]
+            let maxValue: Double
+            let formattedMaxValue: String
+        }
+        
+        struct ChartEntryViewModel {
+            let x: Double
+            let y: Double
+        }
+        
+        struct AxisFormatters {
+            let xAxisFormatter: (Double) -> String
+            let yAxisFormatter: (Double) -> String
+        }
+        
         struct ViewModel {
             
             let title: String
             let subTitle: String
             
-            let datePickerItems: [Model.PeriodViewModel]
+            let datePickerItems: [PeriodViewModel]
             let selectedDatePickerItemIndex: Int
             
             let growth: String
             let growthPositive: Bool?
             let growthSinceDate: String
             
-            let axisFormatters: Model.AxisFormatters
-            let chartViewModel: Model.ChartViewModel
+            let axisFormatters: AxisFormatters
+            let chartViewModel: ChartViewModel
             
             let identifier: TabIdentifier
             
@@ -61,8 +131,8 @@ extension SaleDetails {
             let growthPositive: Bool?
             let growthSinceDate: String
             
-            let axisFormatters: Model.AxisFormatters
-            let chartViewModel: Model.ChartViewModel
+            let axisFormatters: AxisFormatters
+            let chartViewModel: ChartViewModel
             
             // MARK: -
             
@@ -146,7 +216,7 @@ extension SaleDetails {
                 set { self.growthSinceDateLabel.text = newValue}
             }
             
-            public var chartEntries: [Model.ChartDataEntry] = [] {
+            public var chartEntries: [ChartEntryViewModel] = [] {
                 didSet {
                     self.chartView.entries = self.chartEntries.map({ (chartEntry) -> ChartDataEntry in
                         return ChartDataEntry(x: chartEntry.x, y: chartEntry.y)
@@ -208,7 +278,7 @@ extension SaleDetails {
             
             // MARK: - Public
             
-            func setAxisFormatters(axisFormatters: Model.AxisFormatters) {
+            func setAxisFormatters(axisFormatters: AxisFormatters) {
                 self.chartCardValueFormatter.string = { (value, axis) in
                     if axis is XAxis {
                         return axisFormatters.xAxisFormatter(value)
