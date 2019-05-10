@@ -42,7 +42,7 @@ enum RegisterSceneSignUpResult {
     typealias SignError = RegisterSceneSignError
     
     case failed(SignError)
-    case succeeded(account: String, walletData: RegisterScene.Model.WalletData, recoverySeed: String)
+    case succeeded(model: RegisterScene.TokenDRegisterWorker.SignUpModel)
 }
 
 protocol RegisterSceneSignUpWorkerProtocol {

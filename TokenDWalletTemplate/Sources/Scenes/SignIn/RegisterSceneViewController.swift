@@ -208,8 +208,8 @@ extension RegisterScene.ViewController: RegisterScene.DisplayLogic {
         case .succeededSignIn(let account):
             self.routing?.onSuccessfulLogin(account)
             
-        case .succeededSignUp(let account, let walletData, let recoverySeed):
-            self.routing?.onSuccessfulRegister(account, walletData, recoverySeed)
+        case .showRecoverySeed(let model):
+            self.routing?.onShowRecoverySeed(model)
         }
     }
     

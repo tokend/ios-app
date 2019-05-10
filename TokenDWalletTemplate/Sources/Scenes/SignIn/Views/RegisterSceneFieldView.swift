@@ -143,6 +143,7 @@ extension RegisterScene.View {
         }
         
         private func updateTextFieldEditing() {
+            self.textField.isEnabled = self.textEditingEnabled
             switch self.actionType {
                 
             case .scanQr:

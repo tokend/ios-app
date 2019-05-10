@@ -352,6 +352,7 @@
 		DBB565A321F789820066B5E5 /* String+Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB565A221F789820066B5E5 /* String+Index.swift */; };
 		DBED51CF2280360D0040632E /* Array+IndexOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51CE2280360D0040632E /* Array+IndexOf.swift */; };
 		DBED51D12280835B0040632E /* SendPaymentDestinationEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */; };
+		DBED51E22285C6600040632E /* RecoverySeedSignUpWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51E12285C65F0040632E /* RecoverySeedSignUpWorker.swift */; };
 		E9063E8320E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */; };
 		E9063E8820F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9063E8720F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift */; };
 		E9063E8A20F63FEC00A5B343 /* UIColor+Interpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9063E8920F63FEC00A5B343 /* UIColor+Interpolation.swift */; };
@@ -862,6 +863,7 @@
 		DBB565A221F789820066B5E5 /* String+Index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Index.swift"; sourceTree = "<group>"; };
 		DBED51CE2280360D0040632E /* Array+IndexOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+IndexOf.swift"; sourceTree = "<group>"; };
 		DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationEmptyCell.swift; sourceTree = "<group>"; };
+		DBED51E12285C65F0040632E /* RecoverySeedSignUpWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedSignUpWorker.swift; sourceTree = "<group>"; };
 		E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneRateProviderProtocol.swift; sourceTree = "<group>"; };
 		E9063E8720F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexibleHeaderContainerViewController.swift; sourceTree = "<group>"; };
 		E9063E8920F63FEC00A5B343 /* UIColor+Interpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Interpolation.swift"; sourceTree = "<group>"; };
@@ -1381,6 +1383,7 @@
 				7F7187152138471D00F5C0BD /* RecoverySeedPresenter.swift */,
 				7F7187162138471D00F5C0BD /* RecoverySeedRouting.swift */,
 				7F7187182138471D00F5C0BD /* RecoverySeedViewController.swift */,
+				DBED51E02285C63A0040632E /* Workers */,
 			);
 			path = RecoverySeed;
 			sourceTree = "<group>";
@@ -2167,6 +2170,14 @@
 				DBB5659E21F771140066B5E5 /* Localizable.strings */,
 			);
 			path = Base.lproj;
+			sourceTree = "<group>";
+		};
+		DBED51E02285C63A0040632E /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				DBED51E12285C65F0040632E /* RecoverySeedSignUpWorker.swift */,
+			);
+			path = Workers;
 			sourceTree = "<group>";
 		};
 		E9063E9A20F669D300A5B343 /* BalanceHeaderWithPicker */ = {
@@ -2980,6 +2991,7 @@
 				E9A5CBDA211B338C009112CA /* DashboardModels.swift in Sources */,
 				DB990C3621E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift in Sources */,
 				7FC88B7C215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift in Sources */,
+				DBED51E22285C6600040632E /* RecoverySeedSignUpWorker.swift in Sources */,
 				DB593844227095F900C8997C /* SendPaymentDestinationContactsFethcer.swift in Sources */,
 				E93F075220D7C87F000C0991 /* TransactionsListViewController.swift in Sources */,
 				E9908EE8210F176400A0EA1C /* TransactionSender.swift in Sources */,
