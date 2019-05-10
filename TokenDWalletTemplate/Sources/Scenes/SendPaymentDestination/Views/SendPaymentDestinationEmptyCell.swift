@@ -7,7 +7,7 @@ extension SendPaymentDestination {
         public struct ViewModel: CellViewModel {
             let message: String
             
-            func setup(cell: Cell) {
+            public func setup(cell: Cell) {
                 cell.message = self.message
             }
         }
