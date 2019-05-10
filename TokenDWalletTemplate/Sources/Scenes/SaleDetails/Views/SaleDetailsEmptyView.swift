@@ -2,23 +2,25 @@ import Foundation
 import UIKit
 import SnapKit
 
-extension SaleInfo {
+extension SaleDetails {
     
-    enum EmptyContent {
+    public enum EmptyContent {
         
-        struct Model {
-            let message: String
+        public struct Model {
+            
+            public let message: String
         }
         
-        struct ViewModel {
-            let message: String
+        public struct ViewModel {
             
-            func setup(_ view: View) {
+            public let message: String
+            
+            public func setup(_ view: View) {
                 view.message = self.message
             }
         }
         
-        class View: UIView {
+        public class View: UIView {
             
             // MARK: - Override
             

@@ -1,23 +1,28 @@
 import Foundation
 import UIKit
 
-protocol SaleInfoPresentationLogic {
-    func presentTabsUpdated(response: SaleInfo.Event.OnTabsUpdated.Response)
-    func presentTabDidChange(response: SaleInfo.Event.TabDidChange.Response)
+public protocol SaleDetailsPresentationLogic {
+    
+    func presentTabsUpdated(response: SaleDetails.Event.OnTabsUpdated.Response)
 }
 
-extension SaleInfo {
-    typealias PresentationLogic = SaleInfoPresentationLogic
-    typealias DateFormatter = TransactionDetails.DateFormatter
-    typealias AmountFormatter = SharedAmountFormatter
+extension SaleDetails {
     
-    struct Presenter {
+    public typealias PresentationLogic = SaleDetailsPresentationLogic
+    public typealias DateFormatter = TransactionDetails.DateFormatter
+    public typealias AmountFormatter = SharedAmountFormatter
+    
+    public struct Presenter {
+        
+        // MARK: - Private properties
         
         private let presenterDispatch: PresenterDispatch
-        private let dateFormatter: SaleInfo.DateFormatter
-        private let amountFormatter: SaleInfo.AmountFormatter
+        private let dateFormatter: SaleDetails.DateFormatter
+        private let amountFormatter: SaleDetails.AmountFormatter
         
-        init(
+        // MARK: -
+        
+        public init(
             presenterDispatch: PresenterDispatch,
             dateFormatter: DateFormatter,
             amountFormatter: AmountFormatter
@@ -28,50 +33,52 @@ extension SaleInfo {
             self.amountFormatter = amountFormatter
         }
         
+        // MARK: - Private
+        
         private func getGeneralTabViewModel(model: GeneralContent.Model) -> GeneralContent.ViewModel {
-            let sections: [SaleInfo.GeneralContent.SectionViewModel]
+            let sections: [SaleDetails.GeneralContent.SectionViewModel]
             
             let startTimeCellValue = self.dateFormatter.dateToString(date: model.startTime)
-            let startTimeCell = SaleInfo.GeneralContent.TitleValueCellModel(
+            let startTimeCell = SaleDetails.GeneralContent.TitleValueCellModel(
                 title: Localized(.start_time),
                 identifier: .startTime,
                 value: startTimeCellValue
             )
             
             let closeTimeCellValue = self.dateFormatter.dateToString(date: model.endTime)
-            let closeTimeCell = SaleInfo.GeneralContent.TitleValueCellModel(
+            let closeTimeCell = SaleDetails.GeneralContent.TitleValueCellModel(
                 title: Localized(.close_time),
                 identifier: .closeTime,
                 value: closeTimeCellValue
             )
             
-            let baseAssetCell = SaleInfo.GeneralContent.TitleValueCellModel(
+            let baseAssetCell = SaleDetails.GeneralContent.TitleValueCellModel(
                 title: Localized(.base_asset_for_hard_cap),
                 identifier: .baseAsset,
                 value: model.defaultQuoteAsset
             )
             
             let softCapCellValue = self.amountFormatter.formatAmount(model.softCap, currency: model.defaultQuoteAsset)
-            let softCapCell = SaleInfo.GeneralContent.TitleValueCellModel(
+            let softCapCell = SaleDetails.GeneralContent.TitleValueCellModel(
                 title: Localized(.soft_cap),
                 identifier: .softCap,
                 value: softCapCellValue
             )
             
             let hardCapCellValue = self.amountFormatter.formatAmount(model.hardCap, currency: model.defaultQuoteAsset)
-            let hardCapCell = SaleInfo.GeneralContent.TitleValueCellModel(
+            let hardCapCell = SaleDetails.GeneralContent.TitleValueCellModel(
                 title: Localized(.hard_cap),
                 identifier: .hardCap,
                 value: hardCapCellValue
             )
             
-            let baseHardCapCell = SaleInfo.GeneralContent.TitleValueCellModel(
+            let baseHardCapCell = SaleDetails.GeneralContent.TitleValueCellModel(
                 title: model.baseAsset + Localized(.to_sell),
                 identifier: .hardCap,
                 value: self.amountFormatter.assetAmountToString(model.baseHardCap)
             )
             
-            let saleDetailsSection = SaleInfo.GeneralContent.SectionViewModel(
+            let saleDetailsSection = SaleDetails.GeneralContent.SectionViewModel(
                 title: "",
                 cells: [
                     startTimeCell,
@@ -84,31 +91,31 @@ extension SaleInfo {
                 description: nil
             )
             sections = [saleDetailsSection]
-            let viewModel = SaleInfo.GeneralContent.ViewModel(sections: sections)
+            let viewModel = SaleDetails.GeneralContent.ViewModel(sections: sections)
             
             return viewModel
         }
         
-        private func getTokenTabViewModel(model: SaleInfo.TokenContent.Model) -> SaleInfo.TokenContent.ViewModel {
-            let availableCell = SaleInfo.TokenCellModel(
+        private func getTokenTabViewModel(model: SaleDetails.TokenContent.Model) -> SaleDetails.TokenContent.ViewModel {
+            let availableCell = SaleDetails.TokenCellModel(
                 title: Localized(.available),
                 identifier: .available,
                 value: self.amountFormatter.assetAmountToString(model.availableTokenAmount)
             )
             
-            let issuedCell = SaleInfo.TokenCellModel(
+            let issuedCell = SaleDetails.TokenCellModel(
                 title: Localized(.issued),
                 identifier: .issued,
                 value: self.amountFormatter.assetAmountToString(model.issuedTokenAmount)
             )
             
-            let maxCell = SaleInfo.TokenCellModel(
+            let maxCell = SaleDetails.TokenCellModel(
                 title: Localized(.maximum),
                 identifier: .max,
                 value: self.amountFormatter.assetAmountToString(model.maxTokenAmount)
             )
             
-            let tokenSummerySections = SaleInfo.SectionViewModel(
+            let tokenSummerySections = SaleDetails.SectionViewModel(
                 title: Localized(.token_summary),
                 cells: [
                     availableCell,
@@ -117,7 +124,7 @@ extension SaleInfo {
                 ],
                 description: nil
             )
-            let sections: [SaleInfo.SectionViewModel] = [tokenSummerySections]
+            let sections: [SaleDetails.SectionViewModel] = [tokenSummerySections]
             
             var balanceStateImage: UIImage?
             switch model.balanceState {
@@ -129,7 +136,7 @@ extension SaleInfo {
                 break
             }
             
-            let viewModel = SaleInfo.TokenContent.ViewModel(
+            let viewModel = SaleDetails.TokenContent.ViewModel(
                 assetCode: model.assetCode,
                 assetName: model.assetName,
                 balanceStateImage: balanceStateImage,
@@ -139,49 +146,38 @@ extension SaleInfo {
             return viewModel
         }
         
-        private func getContentViewModel(from contentModel: Any) -> Any {
-            let viewModel: Any
-            
-            if let model = contentModel as? SaleInfo.GeneralContent.Model {
-                viewModel = self.getGeneralTabViewModel(model: model)
-            } else if let model = contentModel as? SaleInfo.TokenContent.Model {
-                viewModel = self.getTokenTabViewModel(model: model)
-            } else if let model = contentModel as? SaleInfo.EmptyContent.Model {
-                viewModel = SaleInfo.EmptyContent.ViewModel(message: model.message)
-            } else {
-                viewModel = SaleInfo.LoadingContent.ViewModel()
+        private func getContentViewModels(from contentModels: [Any]) -> [Any] {
+            let viewModels: [Any] = contentModels.map { (contentModel) -> Any in
+                let viewModel: Any
+                
+                if let model = contentModel as? SaleDetails.GeneralContent.Model {
+                    viewModel = self.getGeneralTabViewModel(model: model)
+                } else if let model = contentModel as? SaleDetails.TokenContent.Model {
+                    viewModel = self.getTokenTabViewModel(model: model)
+                } else if let model = contentModel as? SaleDetails.EmptyContent.Model {
+                    viewModel = SaleDetails.EmptyContent.ViewModel(message: model.message)
+                } else {
+                    viewModel = SaleDetails.LoadingContent.ViewModel()
+                }
+                
+                return viewModel
             }
             
-            return viewModel
+            return viewModels
         }
     }
 }
 
-extension SaleInfo.Presenter: SaleInfo.PresentationLogic {
+extension SaleDetails.Presenter: SaleDetails.PresentationLogic {
     
-    func presentTabsUpdated(response: SaleInfo.Event.OnTabsUpdated.Response) {
-        let contentViewModel = self.getContentViewModel(from: response.contentModel)
+    public func presentTabsUpdated(response: SaleDetails.Event.OnTabsUpdated.Response) {
+        let contentViewModels: [Any] = self.getContentViewModels(from: response.contentModels)
         
-        let viewModel = SaleInfo.Event.OnTabsUpdated.ViewModel(
-            tabTitles: response.tabTitles,
-            selectedIndex: response.selectedIndex,
-            contentViewModel: contentViewModel
+        let viewModel = SaleDetails.Event.OnTabsUpdated.ViewModel(
+            contentViewModels: contentViewModels
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayTabsUpdated(viewModel: viewModel)
-        }
-    }
-    
-    func presentTabDidChange(response: SaleInfo.Event.TabDidChange.Response) {
-        let tab = response.tab 
-        let contentViewModel = self.getContentViewModel(from: tab.contentModel)
-        let tabViewModel = SaleInfo.Model.TabViewModel(
-            title: tab.title,
-            contentViewModel: contentViewModel
-        )
-        let viewModel = SaleInfo.Event.TabDidChange.ViewModel(tab: tabViewModel)
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayTabDidChange(viewModel: viewModel)
         }
     }
 }

@@ -3,14 +3,18 @@ import TokenDSDK
 import RxSwift
 import RxCocoa
 
-protocol SaleInfoDataProviderProtocol {
-    func observeData() -> Observable<[SaleInfo.Model.TabModel]>
+public protocol SaleDetailsDataProviderProtocol {
+    
+    func observeData() -> Observable<[SaleDetails.Model.TabModel]>
 }
 
-extension SaleInfo {
-    typealias DataProvider = SaleInfoDataProviderProtocol
+extension SaleDetails {
     
-    class SaleInfoDataProvider: DataProvider {
+    public typealias DataProvider = SaleDetailsDataProviderProtocol
+    
+    public class SaleDetailsDataProvider: DataProvider {
+        
+        // MARK: - Private properties
         
         private let accountId: String
         private let saleId: String
@@ -46,7 +50,9 @@ extension SaleInfo {
         
         private let disposeBag = DisposeBag()
         
-        init(
+        // MARK: -
+        
+        public init(
             accountId: String,
             saleId: String,
             asset: String,
@@ -65,7 +71,9 @@ extension SaleInfo {
             self.balancesRepo = balancesRepo
         }
         
-        func observeData() -> Observable<[SaleInfo.Model.TabModel]> {
+        // MARK: - DataProvider
+        
+        public func observeData() -> Observable<[Model.TabModel]> {
             self.updateRelay
                 .subscribe(onNext: { [weak self] (_) in
                     var tabs: [Model.TabModel] = []
@@ -94,6 +102,8 @@ extension SaleInfo {
             return self.tabs.asObservable()
         }
         
+        // MARK: - Private
+        
         private func downloadSaleDetails() {
             self.tabsLoadingStatus.accept(.loading)
             
@@ -119,12 +129,12 @@ extension SaleInfo {
             switch saleDetailsStatus {
                 
             case .failure(let error):
-                let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: Localized(.general), contentModel: model)
+                let model = EmptyContent.Model(message: error.localizedDescription)
+                let tabModel = Model.TabModel(contentModel: model)
                 return tabModel
                 
             case .success(let saleDetails):
-                let model = SaleInfo.GeneralContent.Model(
+                let model = GeneralContent.Model(
                     baseAsset: saleDetails.baseAsset,
                     defaultQuoteAsset: saleDetails.defaultQuoteAsset,
                     hardCap: saleDetails.hardCap,
@@ -133,7 +143,7 @@ extension SaleInfo {
                     startTime: saleDetails.startTime,
                     endTime: saleDetails.endTime
                 )
-                let tabModel = Model.TabModel(title: Localized(.general), contentModel: model)
+                let tabModel = Model.TabModel(contentModel: model)
                 
                 return tabModel
             }
@@ -143,8 +153,8 @@ extension SaleInfo {
             switch assetStatus {
                 
             case .failure(let error):
-                let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: Localized(.token), contentModel: model)
+                let model = EmptyContent.Model(message: error.localizedDescription)
+                let tabModel = Model.TabModel(contentModel: model)
                 return tabModel
                 
             case .success(let asset):
@@ -155,7 +165,7 @@ extension SaleInfo {
                     iconUrl = imagesUtility.getImageURL(imageKey)
                 }
                 
-                var balanceState: SaleInfo.TokenContent.BalanceState = .notCreated
+                var balanceState: TokenContent.BalanceState = .notCreated
                 let existingBalance = self.balancesRepo.balancesDetailsValue.first(where: { (balance) -> Bool in
                     return balance.asset == asset.code
                 })
@@ -163,7 +173,7 @@ extension SaleInfo {
                     balanceState = .created
                 }
                 
-                let model = SaleInfo.TokenContent.Model(
+                let model = TokenContent.Model(
                     assetName: asset.defaultDetails?.name,
                     assetCode: asset.code,
                     imageUrl: iconUrl,
@@ -173,18 +183,15 @@ extension SaleInfo {
                     maxTokenAmount: asset.maxIssuanceAmount
                 )
                 
-                let tabModel = Model.TabModel(title: Localized(.token), contentModel: model)
+                let tabModel = Model.TabModel(contentModel: model)
                 
                 return tabModel
             }
         }
         
         private func addLoadingTab(to tabs: inout [Model.TabModel], title: String) {
-            let contentModel = SaleInfo.LoadingContent.Model()
-            let tab = Model.TabModel(
-                title: title,
-                contentModel: contentModel
-            )
+            let contentModel = LoadingContent.Model()
+            let tab = Model.TabModel(contentModel: contentModel)
             tabs.append(tab)
         }
         
@@ -212,31 +219,37 @@ extension SaleInfo {
     }
 }
 
-extension SaleInfo.SaleInfoDataProvider {
-    enum LoadingStatus {
+extension SaleDetails.SaleDetailsDataProvider {
+    
+    public enum LoadingStatus {
+        
         case loading
         case loaded
     }
     
-    enum BlobResponseStatus {
+    public enum BlobResponseStatus {
+        
         case success(response: BlobResponse)
         case failure(error: Swift.Error)
     }
     
-    enum SaleDetailsResponseStatus {
+    public enum SaleDetailsResponseStatus {
+        
         case success(response: SaleDetailsResponse)
         case failure(error: Swift.Error)
     }
     
-    enum AssetResponseStatus {
+    public enum AssetResponseStatus {
+        
         case success(response: AssetsRepo.Asset)
         case failure(error: Swift.Error)
     }
     
-    enum Errors: Swift.Error, LocalizedError {
+    public enum Errors: Swift.Error, LocalizedError {
+        
         case noToken
         
-        var errorDescription: String? {
+        public var errorDescription: String? {
             switch self {
                 
             case .noToken:

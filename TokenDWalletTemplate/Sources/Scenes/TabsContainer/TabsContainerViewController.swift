@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 public protocol TabsContainerDisplayLogic: class {
     
@@ -6,6 +8,7 @@ public protocol TabsContainerDisplayLogic: class {
     
     func displayTabsUpdated(viewModel: Event.TabsUpdated.ViewModel)
     func displayTabWasSelected(viewModel: Event.TabWasSelected.ViewModel)
+    func displaySelectedTabChanged(viewModel: Event.SelectedTabChanged.ViewModel)
 }
 
 extension TabsContainer {
@@ -27,6 +30,8 @@ extension TabsContainer {
         private var currentContentIndex: Int? {
             return nil
         }
+        
+        private let disposeBag = DisposeBag()
         
         // MARK: -
         
@@ -83,6 +88,23 @@ extension TabsContainer {
             self.containerView.isPagingEnabled = true
             self.containerView.showsHorizontalScrollIndicator = false
             self.containerView.showsVerticalScrollIndicator = false
+            self.containerView.isDirectionalLockEnabled = true
+            
+            let scheduler = MainScheduler.instance
+            self.containerView.rx
+                .contentOffset
+                .throttle(0.1, scheduler: scheduler)
+                .subscribe(onNext: { [weak self] (offset) in
+                    guard let tabIndex = self?.tabIndexForContentOffset(offset.x) else {
+                        return
+                    }
+                    
+                    let request = Event.TabScrolled.Request(tabIndex: tabIndex)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onTabScrolled(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupLayout() {
@@ -145,8 +167,34 @@ extension TabsContainer {
             self.contents = []
         }
         
-        private func showContent(_ index: Int?) {
+        private func showContent(_ index: Int?, animated: Bool) {
+            let contentOffset = self.contentOffsetForTabIndex(index)
+            self.containerView.setContentOffset(
+                CGPoint(x: contentOffset, y: 0.0),
+                animated: animated
+            )
+        }
+        
+        private func contentOffsetForTabIndex(_ tabIndex: Int?) -> CGFloat {
+            guard let tabIndex = tabIndex else {
+                return 0.0
+            }
             
+            let tabWidth = self.view.bounds.width
+            let offset = tabWidth * CGFloat(tabIndex)
+            
+            return max(offset, 0.0)
+        }
+        
+        private func tabIndexForContentOffset(_ contentOffset: CGFloat) -> Int {
+            guard contentOffset >= 0.0 else {
+                return 0
+            }
+            
+            let tabWidth = self.view.bounds.width
+            let tabIndex = Int(round(contentOffset / tabWidth))
+            
+            return tabIndex
         }
     }
 }
@@ -172,10 +220,14 @@ extension TabsContainer.ViewController: TabsContainer.DisplayLogic {
             return tab.content
         }
         self.setContents(contents)
-        self.showContent(viewModel.selectedTabIndex)
+        self.showContent(viewModel.selectedTabIndex, animated: false)
     }
     
     public func displayTabWasSelected(viewModel: Event.TabWasSelected.ViewModel) {
-        self.showContent(viewModel.selectedTabIndex)
+        self.showContent(viewModel.selectedTabIndex, animated: true)
+    }
+    
+    public func displaySelectedTabChanged(viewModel: Event.SelectedTabChanged.ViewModel) {
+        self.updateSelectedTabIfNeeded(index: viewModel.selectedTabIndex)
     }
 }

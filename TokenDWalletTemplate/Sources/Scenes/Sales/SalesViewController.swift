@@ -11,7 +11,7 @@ protocol SalesDisplayLogic: class {
 protocol SalesSceneProtocol {
     typealias ContentSize = CGSize
     typealias ContentSizeDidChange = (ContentSize) -> Void
-
+    
     var onContentSizeDidChange: ContentSizeDidChange? { get set }
     var contentSize: ContentSize { get }
 }
@@ -139,7 +139,7 @@ extension Sales {
                 .drive(onNext: { [weak self] in
                     self?.routing?.onShowInvestments()
                 })
-            .disposed(by: self.disposeBag)
+                .disposed(by: self.disposeBag)
             
             items.append(pendingBarButtonItem)
             
@@ -252,7 +252,7 @@ extension Sales.ViewController: UITableViewDelegate {
             return
         }
         
-        self.routing?.onDidSelectSale(saleModel.saleIdentifier)
+        self.routing?.onDidSelectSale(saleModel.saleIdentifier, saleModel.asset)
     }
 }
 
@@ -277,7 +277,7 @@ extension Sales.ViewController: UIScrollViewDelegate {
             
             self.loadMoreIndicator.accept(())
         }
-
+        
         self.oldContentOffset = currentOffset
     }
 }

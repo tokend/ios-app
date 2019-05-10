@@ -4,7 +4,7 @@ import RxCocoa
 
 protocol DepositSceneBusinessLogic {
     typealias Event = DepositScene.Event
-
+    
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLayoutSubviews(request: Event.ViewDidLayoutSubviews.Request)
@@ -180,7 +180,7 @@ extension DepositScene.Interactor: DepositScene.BusinessLogic {
             assets: self.sceneModel.assets,
             selectedAssetIndex: index
         )
-        if  self.sceneModel.selectedAssetId == "",
+        if self.sceneModel.selectedAssetId == "",
             let id = self.sceneModel.assets.first?.id {
             self.setSelectedAssetId(id)
         }

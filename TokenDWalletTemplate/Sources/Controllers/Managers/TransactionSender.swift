@@ -4,13 +4,17 @@ import TokenDSDK
 import RxCocoa
 import RxSwift
 
-class TransactionSender {
+public class TransactionSender {
+    
+    // MARK: - Private properties
     
     private let api: TransactionsApi
     private let keychainDataProvider: KeychainDataProviderProtocol
     private let transactionActionRelay: PublishRelay<Void> = PublishRelay()
     
-    init(
+    // MARK: -
+    
+    public init(
         api: TransactionsApi,
         keychainDataProvider: KeychainDataProviderProtocol
         ) {
@@ -19,7 +23,10 @@ class TransactionSender {
         self.keychainDataProvider = keychainDataProvider
     }
     
-    enum SendTransactionResult {
+    // MARK: - Public
+    
+    public enum SendTransactionResult {
+        
         case succeeded
         case failed(Swift.Error)
     }

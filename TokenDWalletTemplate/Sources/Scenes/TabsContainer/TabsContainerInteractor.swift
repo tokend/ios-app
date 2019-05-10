@@ -8,6 +8,7 @@ public protocol TabsContainerBusinessLogic {
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onTabWasSelected(request: Event.TabWasSelected.Request)
+    func onTabScrolled(request: Event.TabScrolled.Request)
 }
 
 extension TabsContainer {
@@ -95,5 +96,22 @@ extension TabsContainer.Interactor: TabsContainer.BusinessLogic {
         
         let response = Event.TabWasSelected.Response(selectedTabIndex: selectedTabIndex)
         self.presenter.presentTabWasSelected(response: response)
+    }
+    
+    public func onTabScrolled(request: Event.TabScrolled.Request) {
+        let tabIndex = max(0, min(self.sceneModel.tabs.count - 1, request.tabIndex))
+        guard tabIndex < self.sceneModel.tabs.count else {
+            return
+        }
+        
+        let tabId = self.sceneModel.tabs[tabIndex].identifier
+        guard self.sceneModel.selectedTabId != tabId else {
+            return
+        }
+        
+        self.sceneModel.selectedTabId = tabId
+        
+        let response = Event.SelectedTabChanged.Response(selectedTabIndex: tabIndex)
+        self.presenter.presentSelectedTabChanged(response: response)
     }
 }

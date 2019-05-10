@@ -5,15 +5,17 @@ import DLCryptoKit
 import SwiftKeychainWrapper
 
 public enum KeychainKeyPostfix: String {
+    
     case keyDataSeed
     case walletData
 }
 
 public enum KeychainSharedStorageKey: String {
+    
     case accounts
 }
 
-protocol KeychainManagerProtocol {
+public protocol KeychainManagerProtocol {
     
     // Shared storage
     
@@ -46,7 +48,7 @@ protocol KeychainManagerProtocol {
     func clearAllData()
 }
 
-class KeychainManager {
+public class KeychainManager {
     
     // MARK: - Private properties
     
@@ -105,7 +107,7 @@ extension KeychainManager: KeychainManagerProtocol {
     
     // Shared storage
     
-    func getStringValue(key: KeychainSharedStorageKey) -> String? {
+    public func getStringValue(key: KeychainSharedStorageKey) -> String? {
         guard let value = self.keychainWrapper.string(forKey: key.rawValue) else {
             return nil
         }
@@ -113,11 +115,11 @@ extension KeychainManager: KeychainManagerProtocol {
         return value
     }
     
-    func saveStringValue(_ string: String, key: KeychainSharedStorageKey) -> Bool {
+    public func saveStringValue(_ string: String, key: KeychainSharedStorageKey) -> Bool {
         return self.keychainWrapper.set(string, forKey: key.rawValue)
     }
     
-    func getOpaqueData(key: KeychainSharedStorageKey) -> Data? {
+    public func getOpaqueData(key: KeychainSharedStorageKey) -> Data? {
         guard let value = self.keychainWrapper.data(forKey: key.rawValue) else {
             return nil
         }
@@ -125,17 +127,17 @@ extension KeychainManager: KeychainManagerProtocol {
         return value
     }
     
-    func saveOpaqueData(_ data: Data, key: KeychainSharedStorageKey) -> Bool {
+    public func saveOpaqueData(_ data: Data, key: KeychainSharedStorageKey) -> Bool {
         return self.keychainWrapper.set(data, forKey: key.rawValue)
     }
     
-    func removeValue(key: KeychainSharedStorageKey) -> Bool {
+    public func removeValue(key: KeychainSharedStorageKey) -> Bool {
         return self.keychainWrapper.removeObject(forKey: key.rawValue)
     }
     
     // User data
     
-    func hasKeyDataForMainAccount() -> Bool {
+    public func hasKeyDataForMainAccount() -> Bool {
         guard let mainAccount = self.getMainAccount() else {
             return false
         }
@@ -143,7 +145,7 @@ extension KeychainManager: KeychainManagerProtocol {
         return self.hasKeyData(account: mainAccount)
     }
     
-    func saveAccount(_ account: String) -> Bool {
+    public func saveAccount(_ account: String) -> Bool {
         var allAccounts: [String]
         if let accounts = self.getAllAccounts() {
             allAccounts = accounts
@@ -160,7 +162,7 @@ extension KeychainManager: KeychainManagerProtocol {
         }
     }
     
-    func removeAccount(_ account: String) -> Bool {
+    public func removeAccount(_ account: String) -> Bool {
         var allAccounts: [String]
         if let accounts = self.getAllAccounts() {
             allAccounts = accounts
@@ -173,11 +175,11 @@ extension KeychainManager: KeychainManagerProtocol {
         return self.saveAccounts(allAccounts)
     }
     
-    func getMainAccount() -> String? {
+    public func getMainAccount() -> String? {
         return self.getAllAccounts()?.first
     }
     
-    func getKeyData(account: String) -> ECDSA.KeyData? {
+    public func getKeyData(account: String) -> ECDSA.KeyData? {
         let keychainKey = self.keychainKey(account: account, postfix: KeychainKeyPostfix.keyDataSeed)
         
         guard let seed = self.keychainWrapper.string(forKey: keychainKey) else {
@@ -193,7 +195,7 @@ extension KeychainManager: KeychainManagerProtocol {
         return keyData
     }
     
-    func saveKeyData(_ keyData: ECDSA.KeyData, account: String) -> Bool {
+    public func saveKeyData(_ keyData: ECDSA.KeyData, account: String) -> Bool {
         guard self.checkAccountSaved(account) else {
             return false
         }
@@ -205,13 +207,13 @@ extension KeychainManager: KeychainManagerProtocol {
         return self.keychainWrapper.set(encoded, forKey: keychainKey)
     }
     
-    func removeKeyData(account: String) -> Bool {
+    public func removeKeyData(account: String) -> Bool {
         let keychainKey = self.keychainKey(account: account, postfix: KeychainKeyPostfix.keyDataSeed)
         
         return self.keychainWrapper.removeObject(forKey: keychainKey)
     }
     
-    func validateDerivedKeyData(_ keyData: ECDSA.KeyData, account: String) -> Bool {
+    public func validateDerivedKeyData(_ keyData: ECDSA.KeyData, account: String) -> Bool {
         guard let savedKeyData = self.getKeyData(account: account) else {
             return false
         }
@@ -222,38 +224,38 @@ extension KeychainManager: KeychainManagerProtocol {
         return savedSeedData == seedData
     }
     
-    func hasOpaqueData(account: String, keyPostfix: KeychainKeyPostfix) -> Bool {
+    public func hasOpaqueData(account: String, keyPostfix: KeychainKeyPostfix) -> Bool {
         let keychainKey = self.keychainKey(account: account, postfix: keyPostfix)
         
         return self.keychainWrapper.hasValue(forKey: keychainKey)
     }
     
-    func getOpaqueData(account: String, keyPostfix: KeychainKeyPostfix) -> Data? {
+    public func getOpaqueData(account: String, keyPostfix: KeychainKeyPostfix) -> Data? {
         let keychainKey = self.keychainKey(account: account, postfix: keyPostfix)
         
         return self.keychainWrapper.data(forKey: keychainKey)
     }
     
-    func saveOpaqueData(_ data: Data, account: String, keyPostfix: KeychainKeyPostfix) -> Bool {
+    public func saveOpaqueData(_ data: Data, account: String, keyPostfix: KeychainKeyPostfix) -> Bool {
         let keychainKey = self.keychainKey(account: account, postfix: keyPostfix)
         
         return self.keychainWrapper.set(data, forKey: keychainKey)
     }
     
-    func removeOpaqueData(account: String, keyPostfix: KeychainKeyPostfix) -> Bool {
+    public func removeOpaqueData(account: String, keyPostfix: KeychainKeyPostfix) -> Bool {
         let keychainKey = self.keychainKey(account: account, postfix: keyPostfix)
         
         return self.keychainWrapper.removeObject(forKey: keychainKey)
     }
     
-    func clearAllData() {
+    public func clearAllData() {
         KeychainWrapper.wipeKeychain()
     }
 }
 
 // MARK: - RequestSignKeyDataProvider
 
-class RequestSignKeyDataProvider: RequestSignKeyDataProviderProtocol {
+public class RequestSignKeyDataProvider: RequestSignKeyDataProviderProtocol {
     
     // MARK: - Public properties
     
@@ -261,13 +263,13 @@ class RequestSignKeyDataProvider: RequestSignKeyDataProviderProtocol {
     
     // MARK: -
     
-    init(keychainManager: KeychainManagerProtocol) {
+    public init(keychainManager: KeychainManagerProtocol) {
         self.keychainManager = keychainManager
     }
     
     // MARK: - RequestSignKeyDataProviderProtocol
     
-    func getPrivateKeyData(completion: @escaping (ECDSA.KeyData?) -> Void) {
+    public func getPrivateKeyData(completion: @escaping (ECDSA.KeyData?) -> Void) {
         guard let mainAccount = self.keychainManager.getMainAccount() else {
             completion(nil)
             return
@@ -277,7 +279,7 @@ class RequestSignKeyDataProvider: RequestSignKeyDataProviderProtocol {
         completion(keyData)
     }
     
-    func getPublicKeyString(completion: @escaping (String?) -> Void) {
+    public func getPublicKeyString(completion: @escaping (String?) -> Void) {
         guard let mainAccount = self.keychainManager.getMainAccount() else {
             completion(nil)
             return

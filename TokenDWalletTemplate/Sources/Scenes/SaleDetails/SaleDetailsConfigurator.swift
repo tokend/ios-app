@@ -1,14 +1,14 @@
 import Foundation
 
-extension SaleInfo {
+extension SaleDetails {
     
-    enum Configurator {
-        static func configure(
+    public enum Configurator {
+        
+        public static func configure(
             viewController: ViewController,
-            sceneModel: Model.SceneModel,
             dataProvider: DataProvider,
-            dateFormatter: SaleInfo.DateFormatter,
-            amountFormatter: SaleInfo.AmountFormatter,
+            dateFormatter: SaleDetails.DateFormatter,
+            amountFormatter: SaleDetails.AmountFormatter,
             routing: Routing?
             ) {
             
@@ -19,7 +19,6 @@ extension SaleInfo {
                 amountFormatter: amountFormatter
             )
             let interactor = Interactor(
-                sceneModel: sceneModel,
                 presenter: presenter,
                 dataProvider: dataProvider
             )
@@ -29,9 +28,9 @@ extension SaleInfo {
     }
 }
 
-extension SaleInfo {
+extension SaleDetails {
     
-    class InteractorDispatch {
+    public class InteractorDispatch {
         
         private let queue: DispatchQueue = DispatchQueue(
             label: "\(NSStringFromClass(InteractorDispatch.self))\(BusinessLogic.self)".queueLabel,
@@ -40,32 +39,32 @@ extension SaleInfo {
         
         private let businessLogic: BusinessLogic
         
-        init(businessLogic: BusinessLogic) {
+        public init(businessLogic: BusinessLogic) {
             self.businessLogic = businessLogic
         }
         
-        func sendRequest(requestBlock: @escaping (_ businessLogic: BusinessLogic) -> Void) {
+        public func sendRequest(requestBlock: @escaping (_ businessLogic: BusinessLogic) -> Void) {
             self.queue.async {
                 requestBlock(self.businessLogic)
             }
         }
         
-        func sendSyncRequest<ReturnType: Any>(
+        public func sendSyncRequest<ReturnType: Any>(
             requestBlock: @escaping (_ businessLogic: BusinessLogic) -> ReturnType
             ) -> ReturnType {
             return requestBlock(self.businessLogic)
         }
     }
     
-    class PresenterDispatch {
+    public class PresenterDispatch {
         
         private weak var displayLogic: DisplayLogic?
         
-        init(displayLogic: DisplayLogic) {
+        public init(displayLogic: DisplayLogic) {
             self.displayLogic = displayLogic
         }
         
-        func display(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
+        public func display(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
             guard let displayLogic = self.displayLogic else { return }
             
             DispatchQueue.main.async {
@@ -73,7 +72,7 @@ extension SaleInfo {
             }
         }
         
-        func displaySync(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
+        public func displaySync(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
             guard let displayLogic = self.displayLogic else { return }
             
             displayBlock(displayLogic)

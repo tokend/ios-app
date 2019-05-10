@@ -90,7 +90,7 @@ extension TabsContainer.Event {
     
     public enum TabWasSelected {
         
-        public  struct Request {
+        public struct Request {
             
             public let identifier: Model.TabIdentifier
             
@@ -98,6 +98,32 @@ extension TabsContainer.Event {
                 self.identifier = identifier
             }
         }
+        
+        public struct Response {
+            
+            public let selectedTabIndex: Int
+            
+            public init(selectedTabIndex: Int) {
+                self.selectedTabIndex = selectedTabIndex
+            }
+        }
+        
+        public typealias ViewModel = Response
+    }
+    
+    public enum TabScrolled {
+        
+        public struct Request {
+            
+            public let tabIndex: Int
+            
+            public init(tabIndex: Int) {
+                self.tabIndex = tabIndex
+            }
+        }
+    }
+    
+    public enum SelectedTabChanged {
         
         public struct Response {
             

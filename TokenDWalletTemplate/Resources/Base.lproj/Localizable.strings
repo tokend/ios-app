@@ -99,6 +99,7 @@
 "description_optional" = "Description(optional)";
 "destination_address" = "Destination address";
 "destination_address_colon" = "Destination address:";
+"details" = "Details";
 "document_max_size" = "image (Max $(file_size))";
 "document_max_size_replace_file_size" = "file_size";
 "done" = "Done";

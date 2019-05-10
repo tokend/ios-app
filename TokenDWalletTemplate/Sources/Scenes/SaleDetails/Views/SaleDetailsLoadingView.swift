@@ -2,13 +2,15 @@ import UIKit
 import SnapKit
 import Foundation
 
-extension SaleInfo {
-    enum LoadingContent {
+extension SaleDetails {
+    
+    public enum LoadingContent {
         
-        struct Model {}
-        struct ViewModel {}
+        public struct Model {}
         
-        class View: UIView {
+        public struct ViewModel {}
+        
+        public class View: UIView {
             
             // MARK: - Override
             

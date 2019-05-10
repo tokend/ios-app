@@ -6,6 +6,7 @@ public protocol TabsContainerPresentationLogic {
     
     func presentTabsUpdated(response: Event.TabsUpdated.Response)
     func presentTabWasSelected(response: Event.TabWasSelected.Response)
+    func presentSelectedTabChanged(response: Event.SelectedTabChanged.Response)
 }
 
 extension TabsContainer {
@@ -40,6 +41,16 @@ extension TabsContainer.Presenter: TabsContainer.PresentationLogic {
     }
     
     public func presentTabWasSelected(response: Event.TabWasSelected.Response) {
-        
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayTabWasSelected(viewModel: viewModel)
+        }
+    }
+    
+    public func presentSelectedTabChanged(response: Event.SelectedTabChanged.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displaySelectedTabChanged(viewModel: viewModel)
+        }
     }
 }

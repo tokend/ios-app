@@ -102,6 +102,7 @@ enum LocKey: String {
     case description_optional
     case destination_address
     case destination_address_colon
+    case details
     case document_max_size
     case document_max_size_replace_file_size
     case done

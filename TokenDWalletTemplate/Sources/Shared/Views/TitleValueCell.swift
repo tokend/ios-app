@@ -3,22 +3,23 @@ import RxSwift
 import SnapKit
 import UIKit
 
-enum TitleValueTableViewCell {
-    typealias CellIdentifier = TransactionDetails.CellIdentifier
+public enum TitleValueTableViewCell {
     
-    struct Model: CellViewModel {
+    public typealias CellIdentifier = TransactionDetails.CellIdentifier
+    
+    public struct Model: CellViewModel {
         
-        let title: String
-        let identifier: CellIdentifier
-        let value: String
+        public let title: String
+        public let identifier: CellIdentifier
+        public let value: String
         
-        func setup(cell: TitleValueTableViewCell.View) {
+        public func setup(cell: TitleValueTableViewCell.View) {
             cell.title = self.title
             cell.value = self.value
         }
     }
     
-    class View: UITableViewCell {
+    public class View: UITableViewCell {
         
         // MARK: - Private properties
         

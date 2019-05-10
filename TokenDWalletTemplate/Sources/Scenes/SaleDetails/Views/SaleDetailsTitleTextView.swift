@@ -2,31 +2,34 @@ import Foundation
 import UIKit
 import RxSwift
 
-extension SaleInfo {
-    enum GeneralContent {
+extension SaleDetails {
+    
+    public enum GeneralContent {
         
-        typealias SectionViewModel = TransactionDetails.Model.SectionViewModel
-        typealias TitleValueCellModel = TitleValueTableViewCell.Model
+        public typealias SectionViewModel = TransactionDetails.Model.SectionViewModel
+        public typealias TitleValueCellModel = TitleValueTableViewCell.Model
         
-        struct Model {
-            let baseAsset: String
-            let defaultQuoteAsset: String
-            let hardCap: Decimal
-            let baseHardCap: Decimal
-            let softCap: Decimal
-            let startTime: Date
-            let endTime: Date
+        public struct Model {
+            
+            public let baseAsset: String
+            public let defaultQuoteAsset: String
+            public let hardCap: Decimal
+            public let baseHardCap: Decimal
+            public let softCap: Decimal
+            public let startTime: Date
+            public let endTime: Date
         }
         
-        struct ViewModel {
-            let sections: [SectionViewModel]
+        public struct ViewModel {
             
-            func setup(_ view: View) {
+            public let sections: [SectionViewModel]
+            
+            public func setup(_ view: View) {
                 view.sections = self.sections
             }
         }
         
-        class View: UIView {
+        public class View: UIView {
             
             // MARK: - Public properties
             
@@ -88,26 +91,27 @@ extension SaleInfo {
     }
 }
 
-extension SaleInfo.GeneralContent.View: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+extension SaleDetails.GeneralContent.View: UITableViewDataSource {
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.sections[section].cells.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = self.sections[indexPath.section].cells[indexPath.row]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         return cell
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.sections[section].title
     }
     
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return self.sections[section].description
     }
 }

@@ -3,32 +3,34 @@ import UIKit
 import SnapKit
 import Nuke
 
-extension SaleInfo {
+extension SaleDetails {
     
-    typealias TokenCellModel = TitleValueTableViewCell.Model
-    typealias SectionViewModel = TransactionDetails.Model.SectionViewModel
-    typealias SectionModel = TransactionDetails.Model.SectionModel
+    public typealias TokenCellModel = TitleValueTableViewCell.Model
+    public typealias SectionViewModel = TransactionDetails.Model.SectionViewModel
+    public typealias SectionModel = TransactionDetails.Model.SectionModel
     
-    enum TokenContent {
+    public enum TokenContent {
         
-        struct Model {
-            let assetName: String?
-            let assetCode: String
-            let imageUrl: URL?
-            let balanceState: BalanceState
-            let availableTokenAmount: Decimal
-            let issuedTokenAmount: Decimal
-            let maxTokenAmount: Decimal
+        public struct Model {
+            
+            public let assetName: String?
+            public let assetCode: String
+            public let imageUrl: URL?
+            public let balanceState: BalanceState
+            public let availableTokenAmount: Decimal
+            public let issuedTokenAmount: Decimal
+            public let maxTokenAmount: Decimal
         }
         
-        struct ViewModel {
-            let assetCode: String
-            let assetName: String?
-            let balanceStateImage: UIImage?
-            let iconUrl: URL?
-            let sections: [SectionViewModel]
+        public struct ViewModel {
             
-            func setup(_ view: TokenContent.View) {
+            public let assetCode: String
+            public let assetName: String?
+            public let balanceStateImage: UIImage?
+            public let iconUrl: URL?
+            public let sections: [SectionViewModel]
+            
+            public func setup(_ view: TokenContent.View) {
                 view.tokenCode = self.assetCode
                 view.tokenName = self.assetName
                 view.iconUrl = self.iconUrl
@@ -37,7 +39,7 @@ extension SaleInfo {
             }
         }
         
-        class View: UIView {
+        public class View: UIView {
             
             // MARK: - Public properties
             
@@ -275,32 +277,35 @@ extension SaleInfo {
     }
 }
 
-extension SaleInfo.TokenContent.View: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+extension SaleDetails.TokenContent.View: UITableViewDataSource {
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.sections[section].cells.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = self.sections[indexPath.section].cells[indexPath.row]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         return cell
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.sections[section].title
     }
     
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return self.sections[section].description
     }
 }
 
-extension SaleInfo.TokenContent {
-    enum BalanceState {
+extension SaleDetails.TokenContent {
+    
+    public enum BalanceState {
+        
         case created
         case notCreated
     }

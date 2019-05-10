@@ -218,6 +218,17 @@
 		7FB435282283168C00422746 /* TabsContainerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB435222283168C00422746 /* TabsContainerInteractor.swift */; };
 		7FB435292283168C00422746 /* TabsContainerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB435232283168C00422746 /* TabsContainerConfigurator.swift */; };
 		7FB4352C228316B700422746 /* TabsContainerContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB4352B228316B700422746 /* TabsContainerContentProvider.swift */; };
+		7FB4353B228586D000422746 /* SaleDetailsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB4352E228586D000422746 /* SaleDetailsModels.swift */; };
+		7FB4353C228586D000422746 /* SaleDetailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB4352F228586D000422746 /* SaleDetailsPresenter.swift */; };
+		7FB4353D228586D000422746 /* SaleDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43530228586D000422746 /* SaleDetailsViewController.swift */; };
+		7FB4353E228586D000422746 /* SaleDetailsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43531228586D000422746 /* SaleDetailsConfigurator.swift */; };
+		7FB4353F228586D100422746 /* SaleDetailsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43532228586D000422746 /* SaleDetailsInteractor.swift */; };
+		7FB43540228586D100422746 /* SaleDetailsDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43534228586D000422746 /* SaleDetailsDataProvider.swift */; };
+		7FB43541228586D100422746 /* SaleDetailsRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43535228586D000422746 /* SaleDetailsRouting.swift */; };
+		7FB43542228586D100422746 /* SaleDetailsLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43537228586D000422746 /* SaleDetailsLoadingView.swift */; };
+		7FB43543228586D100422746 /* SaleDetailsTitleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43538228586D000422746 /* SaleDetailsTitleTextView.swift */; };
+		7FB43544228586D100422746 /* SaleDetailsTokenContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB43539228586D000422746 /* SaleDetailsTokenContent.swift */; };
+		7FB43545228586D100422746 /* SaleDetailsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB4353A228586D000422746 /* SaleDetailsEmptyView.swift */; };
 		7FB9E46C20BEB3E2005BFE0E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46B20BEB3E2005BFE0E /* Theme.swift */; };
 		7FB9E46F20BEB6B7005BFE0E /* BaseFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */; };
 		7FB9E47120BEB6D2005BFE0E /* LaunchFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */; };
@@ -706,6 +717,17 @@
 		7FB435222283168C00422746 /* TabsContainerInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsContainerInteractor.swift; sourceTree = "<group>"; };
 		7FB435232283168C00422746 /* TabsContainerConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsContainerConfigurator.swift; sourceTree = "<group>"; };
 		7FB4352B228316B700422746 /* TabsContainerContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsContainerContentProvider.swift; sourceTree = "<group>"; };
+		7FB4352E228586D000422746 /* SaleDetailsModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsModels.swift; sourceTree = "<group>"; };
+		7FB4352F228586D000422746 /* SaleDetailsPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsPresenter.swift; sourceTree = "<group>"; };
+		7FB43530228586D000422746 /* SaleDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsViewController.swift; sourceTree = "<group>"; };
+		7FB43531228586D000422746 /* SaleDetailsConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsConfigurator.swift; sourceTree = "<group>"; };
+		7FB43532228586D000422746 /* SaleDetailsInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInteractor.swift; sourceTree = "<group>"; };
+		7FB43534228586D000422746 /* SaleDetailsDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsDataProvider.swift; sourceTree = "<group>"; };
+		7FB43535228586D000422746 /* SaleDetailsRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsRouting.swift; sourceTree = "<group>"; };
+		7FB43537228586D000422746 /* SaleDetailsLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsLoadingView.swift; sourceTree = "<group>"; };
+		7FB43538228586D000422746 /* SaleDetailsTitleTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsTitleTextView.swift; sourceTree = "<group>"; };
+		7FB43539228586D000422746 /* SaleDetailsTokenContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsTokenContent.swift; sourceTree = "<group>"; };
+		7FB4353A228586D000422746 /* SaleDetailsEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsEmptyView.swift; sourceTree = "<group>"; };
 		7FB9E46B20BEB3E2005BFE0E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7FB9E46E20BEB6B7005BFE0E /* BaseFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFlowController.swift; sourceTree = "<group>"; };
 		7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchFlowController.swift; sourceTree = "<group>"; };
@@ -737,17 +759,17 @@
 		7FEB45C720DD5D94001CA31C /* VerifyEmailResendWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyEmailResendWorkerProtocol.swift; sourceTree = "<group>"; };
 		7FEB45C920DD5FC4001CA31C /* VerifyEmailWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyEmailWorker.swift; sourceTree = "<group>"; };
 		7FEB45CB20E1030E001CA31C /* AppController+UserActivitySubscribers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppController+UserActivitySubscribers.swift"; sourceTree = "<group>"; };
-		7FEC94822148170500F41EE6 /* SaleDetailsModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsModels.swift; sourceTree = "<group>"; };
-		7FEC94832148170500F41EE6 /* SaleDetailsPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsPresenter.swift; sourceTree = "<group>"; };
-		7FEC94842148170500F41EE6 /* SaleDetailsInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInteractor.swift; sourceTree = "<group>"; };
-		7FEC94852148170500F41EE6 /* SaleDetailsConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsConfigurator.swift; sourceTree = "<group>"; };
+		7FEC94822148170500F41EE6 /* SaleDetailsModels1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsModels1.swift; sourceTree = "<group>"; };
+		7FEC94832148170500F41EE6 /* SaleDetailsPresenter1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsPresenter1.swift; sourceTree = "<group>"; };
+		7FEC94842148170500F41EE6 /* SaleDetailsInteractor1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInteractor1.swift; sourceTree = "<group>"; };
+		7FEC94852148170500F41EE6 /* SaleDetailsConfigurator1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsConfigurator1.swift; sourceTree = "<group>"; };
 		7FEC94872148170500F41EE6 /* SaleDetailsDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsDateFormatter.swift; sourceTree = "<group>"; };
 		7FEC94882148170500F41EE6 /* SaleDetailsDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsDataProvider.swift; sourceTree = "<group>"; };
 		7FEC94892148170500F41EE6 /* SaleDetailsChartCardValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartCardValueFormatter.swift; sourceTree = "<group>"; };
-		7FEC948A2148170500F41EE6 /* SaleDetailsRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsRouting.swift; sourceTree = "<group>"; };
+		7FEC948A2148170500F41EE6 /* SaleDetailsRouting1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsRouting1.swift; sourceTree = "<group>"; };
 		7FEC948C2148170500F41EE6 /* SaleDetailsChartTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartTab.swift; sourceTree = "<group>"; };
 		7FEC948D2148170500F41EE6 /* SaleDetailsInvestTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInvestTab.swift; sourceTree = "<group>"; };
-		7FEC948F2148170500F41EE6 /* SaleDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsViewController.swift; sourceTree = "<group>"; };
+		7FEC948F2148170500F41EE6 /* SaleDetailsViewController1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsViewController1.swift; sourceTree = "<group>"; };
 		7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsAmountFormatter.swift; sourceTree = "<group>"; };
 		7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRepo.swift; sourceTree = "<group>"; };
 		7FF5AE50215BEA760066A2ED /* ValueValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueValidator.swift; sourceTree = "<group>"; };
@@ -1598,16 +1620,8 @@
 				7FB434F92281DB5D00422746 /* Details */,
 				7FB434FC2281DCD500422746 /* Empty */,
 				7FB434FB2281DC3900422746 /* Invest */,
-				7FB434F82281DB5500422746 /* Overview */,
 			);
 			path = ContentProviders;
-			sourceTree = "<group>";
-		};
-		7FB434F82281DB5500422746 /* Overview */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Overview;
 			sourceTree = "<group>";
 		};
 		7FB434F92281DB5D00422746 /* Details */ = {
@@ -1717,6 +1731,40 @@
 			path = Workers;
 			sourceTree = "<group>";
 		};
+		7FB4352D228586D000422746 /* SaleDetails */ = {
+			isa = PBXGroup;
+			children = (
+				7FB43531228586D000422746 /* SaleDetailsConfigurator.swift */,
+				7FB43532228586D000422746 /* SaleDetailsInteractor.swift */,
+				7FB4352E228586D000422746 /* SaleDetailsModels.swift */,
+				7FB4352F228586D000422746 /* SaleDetailsPresenter.swift */,
+				7FB43535228586D000422746 /* SaleDetailsRouting.swift */,
+				7FB43530228586D000422746 /* SaleDetailsViewController.swift */,
+				7FB43536228586D000422746 /* Views */,
+				7FB43533228586D000422746 /* Workers */,
+			);
+			path = SaleDetails;
+			sourceTree = "<group>";
+		};
+		7FB43533228586D000422746 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				7FB43534228586D000422746 /* SaleDetailsDataProvider.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		7FB43536228586D000422746 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7FB4353A228586D000422746 /* SaleDetailsEmptyView.swift */,
+				7FB43537228586D000422746 /* SaleDetailsLoadingView.swift */,
+				7FB43538228586D000422746 /* SaleDetailsTitleTextView.swift */,
+				7FB43539228586D000422746 /* SaleDetailsTokenContent.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		7FB9E46A20BEB3BF005BFE0E /* Theme */ = {
 			isa = PBXGroup;
 			children = (
@@ -1824,12 +1872,12 @@
 		7FEC94812148170500F41EE6 /* SaleDetailsOld */ = {
 			isa = PBXGroup;
 			children = (
-				7FEC94852148170500F41EE6 /* SaleDetailsConfigurator.swift */,
-				7FEC94842148170500F41EE6 /* SaleDetailsInteractor.swift */,
-				7FEC94822148170500F41EE6 /* SaleDetailsModels.swift */,
-				7FEC94832148170500F41EE6 /* SaleDetailsPresenter.swift */,
-				7FEC948A2148170500F41EE6 /* SaleDetailsRouting.swift */,
-				7FEC948F2148170500F41EE6 /* SaleDetailsViewController.swift */,
+				7FEC94852148170500F41EE6 /* SaleDetailsConfigurator1.swift */,
+				7FEC94842148170500F41EE6 /* SaleDetailsInteractor1.swift */,
+				7FEC94822148170500F41EE6 /* SaleDetailsModels1.swift */,
+				7FEC94832148170500F41EE6 /* SaleDetailsPresenter1.swift */,
+				7FEC948A2148170500F41EE6 /* SaleDetailsRouting1.swift */,
+				7FEC948F2148170500F41EE6 /* SaleDetailsViewController1.swift */,
 				7FB434FF2282D2CB00422746 /* SaleChart */,
 				7FB434FE2282D2C100422746 /* SaleDetails */,
 				7FEC948B2148170500F41EE6 /* Views */,
@@ -1943,6 +1991,7 @@
 				7FA0114621C964F900CA5586 /* MarkdownViewer */,
 				710E85F32105E1AA007204D4 /* ReceiveAddress */,
 				7F7187142138470100F5C0BD /* RecoverySeed */,
+				7FB4352D228586D000422746 /* SaleDetails */,
 				7FEC94812148170500F41EE6 /* SaleDetailsOld */,
 				7FB434FD2282D2B800422746 /* SaleOverview */,
 				719AAFC92142AEB600279B9D /* Sales */,
@@ -2848,6 +2897,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB59386E227B46EC00C8997C /* ConfirmationSceneBaseCell.swift in Sources */,
+				7FB43543228586D100422746 /* SaleDetailsTitleTextView.swift in Sources */,
 				7FABEA5720FD08810005E751 /* RegisterSceneView.swift in Sources */,
 				E929EA5E20CC1B7C00835EA7 /* ImagesUtility.swift in Sources */,
 				7F3D002D2181FD93002D7F53 /* Bundle+Version.swift in Sources */,
@@ -2868,6 +2918,7 @@
 				713363262122F98000B000C9 /* WithdrawConfirmationSectionsProvider.swift in Sources */,
 				E9A5CBA921188004009112CA /* TokenDWallet.PublicKey+base32EncodedString.swift in Sources */,
 				7F74962D2260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift in Sources */,
+				7FB4353E228586D000422746 /* SaleDetailsConfigurator.swift in Sources */,
 				DB1AFBAC21C9338300D87D5D /* AuthenticatorAuthModels.swift in Sources */,
 				7F749607225E2BDC0065EE8E /* TradesListAssetPairsFetcher.swift in Sources */,
 				DB593835226E0A0600C8997C /* SendPaymentDestinationModels.swift in Sources */,
@@ -2927,6 +2978,7 @@
 				E911320020C69E5D00A8AC4D /* KeyboardController.swift in Sources */,
 				710E86342105FA95007204D4 /* BXFGroupedHeaderFooterLabel.swift in Sources */,
 				E9A5CBC42119A64C009112CA /* PendingOffersRepo.swift in Sources */,
+				7FB43541228586D100422746 /* SaleDetailsRouting.swift in Sources */,
 				7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */,
 				DB1AFBAE21C9338300D87D5D /* AuthenticatorAuthInteractor.swift in Sources */,
 				E9A5CBC22119A594009112CA /* TransactionsListScenePendingOffersFetcher.swift in Sources */,
@@ -2955,6 +3007,7 @@
 				7F4F1194210B647F00651554 /* ConfirmationSectionsProviderDummy.swift in Sources */,
 				E91131EC20C532D700A8AC4D /* ExploreTokensFlowController.swift in Sources */,
 				E93F075020D7C87F000C0991 /* TransactionsListRouting.swift in Sources */,
+				7FB4353C228586D000422746 /* SaleDetailsPresenter.swift in Sources */,
 				713D684B20FF9552009FEBA3 /* SettingsPresenter.swift in Sources */,
 				E92F1BCD2138410800D4695E /* CreateOfferAmountFormatterProtocol.swift in Sources */,
 				719AAFD02142AEEA00279B9D /* SalesPresenter.swift in Sources */,
@@ -2964,6 +3017,7 @@
 				DB59381C226DD77500C8997C /* SendPaymentAmountModels.swift in Sources */,
 				710E860F2105E1AB007204D4 /* ReceiveAddressManagerProtocol.swift in Sources */,
 				DB992AE521CD18E2003533FC /* AppController+OpenUrlSubscriber.swift in Sources */,
+				7FB43545228586D100422746 /* SaleDetailsEmptyView.swift in Sources */,
 				713D684D20FF9552009FEBA3 /* SettingsSectionsProvider.swift in Sources */,
 				717873932124366B0009C5EE /* ConfirmationAmountFormatter.swift in Sources */,
 				DB593838226E0A0600C8997C /* SendPaymentDestinationConfigurator.swift in Sources */,
@@ -3068,6 +3122,7 @@
 				DB593836226E0A0600C8997C /* SendPaymentDestinationViewController.swift in Sources */,
 				713E665B2143D021009A36A3 /* SalesSectionsProvider.swift in Sources */,
 				E9A5CBDD211B338C009112CA /* DashboardConfigurator.swift in Sources */,
+				7FB4353F228586D100422746 /* SaleDetailsInteractor.swift in Sources */,
 				7FB435282283168C00422746 /* TabsContainerInteractor.swift in Sources */,
 				7FEB45BF20DD4143001CA31C /* VerifyEmailViewController.swift in Sources */,
 				DB1AFBB721C9577200D87D5D /* AuthRequestQRCodeGenerator.swift in Sources */,
@@ -3075,6 +3130,7 @@
 				7F7495FE225E027E0065EE8E /* DynamicTableViewDataSourceDelegate.swift in Sources */,
 				DB593825226DD77500C8997C /* SendPaymentAmountViewController.swift in Sources */,
 				710E86332105FA95007204D4 /* BXFInteractiveLabel.swift in Sources */,
+				7FB4353B228586D000422746 /* SaleDetailsModels.swift in Sources */,
 				710D30AA2114A3B1007BCCB0 /* Hashable+Iterate.swift in Sources */,
 				E92F1C102139B77D00D4695E /* OrderBookTableViewCellModel.swift in Sources */,
 				E980D87420D1830800C53841 /* DepositSceneAssetsFetcher.swift in Sources */,
@@ -3092,6 +3148,7 @@
 				710E862B2105ECAD007204D4 /* BXFStaticTableViewSectionHeaderFooterView.swift in Sources */,
 				7FEB45C120DD4143001CA31C /* VerifyEmailConfigurator.swift in Sources */,
 				71A9B74C2136ABBF003CCC34 /* QRCodeReaderView.swift in Sources */,
+				7FB4353D228586D000422746 /* SaleDetailsViewController.swift in Sources */,
 				710E86272105ECAD007204D4 /* BXFStaticTableView.swift in Sources */,
 				7FABEA6820FD08B30005E751 /* TextEditingContext.swift in Sources */,
 				7FB9E47B20C01455005BFE0E /* UIImage+ButtonImage.swift in Sources */,
@@ -3185,6 +3242,7 @@
 				7F74964B226727410065EE8E /* TradesView.swift in Sources */,
 				E92F1BD821386D0600D4695E /* CreateOfferFeeLoader.swift in Sources */,
 				7FF6761920BDA0910074E9A8 /* RegisterSceneInteractor.swift in Sources */,
+				7FB43542228586D100422746 /* SaleDetailsLoadingView.swift in Sources */,
 				E9A5CBF6211DBCCB009112CA /* DashboardPaymentsPlugInConfigurator.swift in Sources */,
 				7F7187102137F74300F5C0BD /* KDFParamsSerializable.swift in Sources */,
 				E92F1C0F2139B77D00D4695E /* OrderBookTableViewSellCell.swift in Sources */,
@@ -3228,6 +3286,7 @@
 				E9908EEF2110799B00A0EA1C /* BalanceBinderProtocol.swift in Sources */,
 				E91131E720C532AC00A8AC4D /* ExploreTokensModels.swift in Sources */,
 				E911321120C6D0D800A8AC4D /* TokenDetailsInteractor.swift in Sources */,
+				7FB43544228586D100422746 /* SaleDetailsTokenContent.swift in Sources */,
 				E9908ED021088D3200A0EA1C /* UserDataProvider.swift in Sources */,
 				DB59381F226DD77500C8997C /* SendPaymentAmountInteractor.swift in Sources */,
 				E9A5CBD9211B338C009112CA /* DashboardRouting.swift in Sources */,
@@ -3241,6 +3300,7 @@
 				E9BCDD502121C9A900EB0DF2 /* DashboardPaymentsPlugInAmountFormatterProtocol.swift in Sources */,
 				E9A5CBE6211C8C2C009112CA /* DashboardPlugInsProviderProtocol.swift in Sources */,
 				E9BCDD632121F64500EB0DF2 /* DashboardPendingOffersPreviewPlugInConfigurator.swift in Sources */,
+				7FB43540228586D100422746 /* SaleDetailsDataProvider.swift in Sources */,
 				E9A5CBD8211B338C009112CA /* DashboardPresenter.swift in Sources */,
 				710E86082105E1AB007204D4 /* ReceiveAddressConfigurator.swift in Sources */,
 				7FB435182282D47700422746 /* SaleOverviewInteractor.swift in Sources */,

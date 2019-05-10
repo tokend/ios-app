@@ -5,8 +5,9 @@ extension SendPaymentDestination {
     public enum ContactCell {
         
         public struct ViewModel: CellViewModel {
-            let name: String
-            let email: String
+            
+            public let name: String
+            public let email: String
             
             public func setup(cell: View) {
                 cell.name = self.name
