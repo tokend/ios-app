@@ -218,8 +218,9 @@ public class TradesView: UIView {
         }
         
         self.tableView.snp.makeConstraints { (make) in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
             make.top.equalTo(self.separatorView.snp.bottom)
+            make.bottom.equalTo(self.safeArea.bottom)
         }
         
         self.emptyViewLabel.snp.makeConstraints { (make) in
