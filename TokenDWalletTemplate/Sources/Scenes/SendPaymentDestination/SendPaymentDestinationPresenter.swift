@@ -30,28 +30,48 @@ extension SendPaymentDestination {
         public init(presenterDispatch: PresenterDispatch) {
             self.presenterDispatch = presenterDispatch
         }
+        
+        // MARK: - Private
+        
+        private func getEmptySectionViewModel(message: String? = nil) -> Model.SectionViewModel {
+            let cell = SendPaymentDestination.EmptyCell.ViewModel(
+                message: message ?? Localized(.no_contacts_available)
+            )
+            let section = Model.SectionViewModel.init(
+                title: Localized(.contacts),
+                cells: [cell]
+            )
+            return section
+        }
     }
 }
 
 extension SendPaymentDestination.Presenter: SendPaymentDestination.PresentationLogic {
     
     public func presentContactsUpdated(response: Event.ContactsUpdated.Response) {
-        let viewModel: Event.ContactsUpdated.ViewModel
+        let sections: [Model.SectionViewModel]
+        
         switch response {
             
-        case .error(let message):
-            viewModel = .error(message)
+        case .empty:
+            let section = self.getEmptySectionViewModel()
+            sections = [section]
             
-        case .sections(let sections):
-            let sectionsViewModels = sections.map { (section) -> Model.SectionViewModel in
+        case .error(let message):
+            let section = self.getEmptySectionViewModel(message: message)
+            sections = [section]
+            
+        case .sections(let sectionModels):
+            let sectionsViewModels = sectionModels.map { (section) -> Model.SectionViewModel in
                 let cells = section.cells.map({ (cell) -> ContactViewModel in
                     return ContactViewModel(name: cell.name, email: cell.email)
                 })
                 return Model.SectionViewModel(title: section.title, cells: cells)
             }
-            viewModel = .sections(sectionsViewModels)
+            sections = sectionsViewModels
         }
         
+        let viewModel = Event.ContactsUpdated.ViewModel(sections: sections)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayContactsUpdated(viewModel: viewModel)
         }

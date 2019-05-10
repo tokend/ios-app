@@ -17,6 +17,7 @@ public protocol TradeOffersDisplayLogic: class {
     func displayLoading(viewModel: Event.Loading.ViewModel)
     func displayChartFormatterDidChange(viewModel: Event.ChartFormatterDidChange.ViewModel)
     func displayCreateOffer(viewModel: Event.CreateOffer.ViewModel)
+    func displaySwipeRecognized(viewModel: Event.SwipeRecognized.ViewModel)
 }
 
 extension TradeOffers {
@@ -32,6 +33,8 @@ extension TradeOffers {
         
         private let picker: HorizontalPicker = HorizontalPicker(frame: CGRect.zero)
         private let containerView: UIView = UIView()
+        private let leftSwipeRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
+        private let rightSwipeRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer()
         
         private let chartCardValueFormatter: ChartCardValueFormatter = ChartCardValueFormatter()
         
@@ -43,7 +46,7 @@ extension TradeOffers {
         
         private lazy var chartView: TradeChartCard = {
             let view = TradeChartCard(frame: CGRect.zero)
-            self.layoutContentView(view, maxHeight: 450.0)
+            self.layoutContentView(view)
             return view
         }()
         
@@ -90,6 +93,8 @@ extension TradeOffers {
             self.setupChartView()
             self.setupTradesView()
             self.setupNavigationBar()
+            self.setupSwipeRecognizer(direction: .left)
+            self.setupSwipeRecognizer(direction: .right)
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request(
@@ -111,6 +116,40 @@ extension TradeOffers {
         }
         
         // MARK: - Private
+        
+        private func setupSwipeRecognizer(direction: UISwipeGestureRecognizer.Direction) {
+            switch direction {
+                
+            case .left:
+                self.leftSwipeRecognizer.direction = .left
+                self.leftSwipeRecognizer
+                    .rx
+                    .event
+                    .asDriver()
+                    .drive(onNext: { [weak self] (_) in
+                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                            businessLogic.onSwipeRecognized(request: .left)
+                        })
+                    })
+                    .disposed(by: self.disposeBag)
+                
+            case .right:
+                self.rightSwipeRecognizer.direction = .right
+                self.rightSwipeRecognizer
+                    .rx
+                    .event
+                    .asDriver()
+                    .drive(onNext: { [weak self] (_) in
+                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                            businessLogic.onSwipeRecognized(request: .right)
+                        })
+                    })
+                    .disposed(by: self.disposeBag)
+                
+            default:
+                break
+            }
+        }
         
         private func setupPicker() {
             self.picker.backgroundColor = Theme.Colors.mainColor
@@ -158,18 +197,12 @@ extension TradeOffers {
             }
         }
         
-        private func layoutContentView(_ contentView: UIView, maxHeight: CGFloat? = nil) {
+        private func layoutContentView(_ contentView: UIView) {
             contentView.isHidden = true
             self.containerView.addSubview(contentView)
             self.containerView.sendSubviewToBack(contentView)
             contentView.snp.makeConstraints({ (make) in
-                make.leading.trailing.top.equalToSuperview()
-                if let maxHeight = maxHeight {
-                    make.height.lessThanOrEqualTo(maxHeight)
-                    make.bottom.lessThanOrEqualToSuperview()
-                } else {
-                    make.bottom.equalToSuperview()
-                }
+                make.edges.equalToSuperview()
             })
         }
         
@@ -212,6 +245,8 @@ extension TradeOffers {
         private func setupLayout() {
             self.view.addSubview(self.picker)
             self.view.addSubview(self.containerView)
+            self.view.addGestureRecognizer(self.leftSwipeRecognizer)
+            self.view.addGestureRecognizer(self.rightSwipeRecognizer)
             
             self.picker.snp.makeConstraints { (make) in
                 make.leading.trailing.top.equalToSuperview()
@@ -461,6 +496,11 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         } else {
             self.routing?.onDidSelectNewOffer(viewModel.baseAsset, viewModel.quoteAsset)
         }
+    }
+    
+    public func displaySwipeRecognized(viewModel: Event.SwipeRecognized.ViewModel) {
+        self.picker.setSelectedItemAtIndex(viewModel.index, animated: true)
+        self.picker.items[viewModel.index].onSelect()
     }
 }
 

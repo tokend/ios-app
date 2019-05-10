@@ -59,6 +59,9 @@ enum Theme {
         static let negativeSeedValidationColor: UIColor = negativeColor
         static let positiveSeedValidationColor: UIColor = positiveColor
         static let neutralSeedValidationColor: UIColor = neutralColor
+        
+        static let orderBookVolumeColor: UIColor = UIColor.lightGray.withAlphaComponent(0.25)
+        static let clear: UIColor = UIColor.clear
     }
     
     enum Fonts {

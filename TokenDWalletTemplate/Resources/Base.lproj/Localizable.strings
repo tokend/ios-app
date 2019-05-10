@@ -197,6 +197,8 @@
 "iban" = "IBAN";
 "iban_colon" = "IBAN:";
 "id_document" = "ID document";
+"in_asset" = "In $(asset)";
+"in_asset_replace_asset" = "asset";
 "incoming" = "Incoming";
 "incoming_outgoing" = "Incoming & Outgoing";
 "incorrect_or_corrupted_recovery_seed" = "Incorrect or corrupted recovery seed";
@@ -252,6 +254,7 @@
 "no_balances" = "No balances";
 "no_bids" = "No bids";
 "no_chart_entries" = "No chart entries";
+"no_contacts_available" = "No contacts available";
 "no_fees" = "No fees";
 "no_fees_to_overview" = "No fees to overview";
 "no_growth" = "No growth";
@@ -468,6 +471,7 @@
 "verify_email" = "Verify Email";
 "view_history" = "View history";
 "view_more" = "View more";
+"volume" = "Volume";
 "wallet" = "Wallet";
 "week" = "Week";
 "withdraw" = "Withdraw";

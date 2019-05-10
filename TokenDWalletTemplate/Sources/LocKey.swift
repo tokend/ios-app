@@ -200,6 +200,8 @@ enum LocKey: String {
     case iban
     case iban_colon
     case id_document
+    case in_asset
+    case in_asset_replace_asset
     case incoming
     case incoming_outgoing
     case incorrect_or_corrupted_recovery_seed
@@ -255,6 +257,7 @@ enum LocKey: String {
     case no_balances
     case no_bids
     case no_chart_entries
+    case no_contacts_available
     case no_fees
     case no_fees_to_overview
     case no_growth
@@ -471,6 +474,7 @@ enum LocKey: String {
     case verify_email
     case view_history
     case view_more
+    case volume
     case wallet
     case week
     case withdraw

@@ -54,7 +54,7 @@ public extension SendPaymentDestination.Model {
     
     public struct SectionViewModel {
         let title: String
-        let cells: [SendPaymentDestination.ContactCell.ViewModel]
+        let cells: [CellViewAnyModel]
     }
     
     public struct ViewConfig {
@@ -150,11 +150,11 @@ extension SendPaymentDestination.Event {
         public enum Response {
             case sections([Model.SectionModel])
             case error(String)
+            case empty
         }
         
-        public enum ViewModel {
-            case sections([Model.SectionViewModel])
-            case error(String)
+        public struct ViewModel {
+            let sections: [Model.SectionViewModel]
         }
     }
     

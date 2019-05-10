@@ -8,7 +8,7 @@ extension TradeOffers {
     
     public class OffersFetcher {
         
-        public typealias Item = TradeOffers.Model.Offer
+        public typealias OrderBook = TradeOffers.Model.OrderBook
         
         // MARK: - Private properties
         
@@ -20,8 +20,8 @@ extension TradeOffers {
         private var pageSize: Int = 10
         private var cancelable: TokenDSDK.Cancelable?
         
-        private let items: BehaviorRelay<(buyItems: [Item], sellItems: [Item])> =
-            BehaviorRelay(value: (buyItems: [], sellItems: []))
+        private let orderBook: BehaviorRelay<OrderBook> =
+            BehaviorRelay(value: OrderBook(buyItems: [], sellItems: []))
         private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
         private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
         
@@ -83,7 +83,7 @@ extension TradeOffers {
             let buyItems = self.mapItems(resource?.buyEntries)
             let sellItems = self.mapItems(resource?.sellEntries)
             
-            self.items.accept((buyItems: buyItems, sellItems: sellItems))
+            self.orderBook.accept(OrderBook(buyItems: buyItems, sellItems: sellItems))
         }
         
         private func mapItems(_ items: [OrderBookEntryResource]?) -> [Model.Offer] {
@@ -102,15 +102,15 @@ extension TradeOffers {
 
 extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
     
-    public func getItemsValue() -> (buyItems: [Item], sellItems: [Item]) {
-        return self.items.value
+    public func getOrderBookValue() -> OrderBook {
+        return self.orderBook.value
     }
     
     public func getLoadingStatusValue() -> LoadingStatus {
         return self.loadingStatus.value
     }
     
-    public func observeItems(pageSize: Int) -> Observable<(buyItems: [Item], sellItems: [Item])> {
+    public func observeOrderBook(pageSize: Int) -> Observable<OrderBook> {
         self.loadOffers(pageSize: pageSize)
         
         self.pendingOffersRepo.observeOffers()
@@ -119,10 +119,10 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
             })
             .disposed(by: self.disposeBag)
         
-        return self.items.asObservable()
+        return self.orderBook.asObservable()
     }
     
-    public func reloadItems() {
+    public func reloadOrderBook() {
         self.reloadOffers()
     }
     
@@ -159,6 +159,7 @@ extension OrderBookEntryResource {
         return Model.Offer(
             amount: amount,
             price: price,
+            volume: self.cumulativeBaseAmount,
             isBuy: self.isBuy
         )
     }

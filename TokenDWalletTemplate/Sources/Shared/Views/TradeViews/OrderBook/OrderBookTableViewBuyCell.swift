@@ -17,10 +17,18 @@ public class OrderBookTableViewBuyCell: UITableViewCell {
         }
     }
     
+    public var coefficient: Double? {
+        didSet {
+            self.updateProgress()
+        }
+    }
+    
     // MARK: - Private properties
     
     private let priceLabel: UILabel = UILabel()
     private let amountLabel: UILabel = UILabel()
+    private let gradientView: UIView = UIView()
+    private let progressView: UIView = UIView()
     private let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
     
     // MARK: - Overridden methods
@@ -41,6 +49,7 @@ public class OrderBookTableViewBuyCell: UITableViewCell {
         self.selectionStyle = .none
         self.setupPriceLabel()
         self.setupAmountLabel()
+        self.setupProgressView()
         self.setupLoadingIndicator()
         
         self.setupLayout()
@@ -60,20 +69,34 @@ public class OrderBookTableViewBuyCell: UITableViewCell {
         self.amountLabel.textAlignment = .right
     }
     
+    private func setupProgressView() {
+        self.progressView.backgroundColor = Theme.Colors.orderBookVolumeColor
+    }
+    
     private func setupLoadingIndicator() {
         self.loadingIndicator.hidesWhenStopped = true
     }
     
     private func setupLayout() {
+        self.contentView.addSubview(self.gradientView)
         self.contentView.addSubview(self.amountLabel)
         self.contentView.addSubview(self.priceLabel)
         self.contentView.addSubview(self.loadingIndicator)
+        
+        self.gradientView.addSubview(self.progressView)
         
         let sideInset: CGFloat = 14
         
         self.priceLabel.snp.makeConstraints { (make) in
             make.leading.equalToSuperview().inset(sideInset)
             make.centerY.equalToSuperview()
+        }
+        
+        self.gradientView.snp.makeConstraints { (make) in
+            make.leading.equalTo(self.contentView.snp.centerX)
+            make.trailing.equalToSuperview().inset(sideInset)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(self.amountLabel.snp.height).offset(5.0)
         }
         
         self.amountLabel.snp.makeConstraints { (make) in
@@ -83,6 +106,16 @@ public class OrderBookTableViewBuyCell: UITableViewCell {
         
         self.loadingIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
+        }
+    }
+    
+    private func updateProgress() {
+        guard let coefficient = self.coefficient else {
+            return
+        }
+        self.progressView.snp.remakeConstraints { (make) in
+            make.trailing.top.bottom.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(coefficient)
         }
     }
 }
@@ -95,6 +128,10 @@ extension OrderBookTableViewBuyCell: OrderBookTableViewCellProtocol {
     
     public func setAmount(_ amount: String) {
         self.amountLabel.text = amount
+    }
+    
+    public func setVolumeCoefficient(_ coefficient: Double) {
+        self.coefficient = coefficient
     }
     
     public func setLoading(_ isLoading: Bool) {

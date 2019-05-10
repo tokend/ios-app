@@ -180,12 +180,12 @@ class ChartView: UIView {
         self.addSubview(self.chart)
         self.chart.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
-            make.height.equalTo(250)
         }
     }
 }
 
 extension ChartView: ChartViewDelegate {
+    
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         if let entryIndex = chartView.data?.getDataSetByIndex(highlight.dataSetIndex)?.entryIndex(entry: entry) {
             self.onDidSelectEntry?(highlight.dataSetIndex, entryIndex, self)

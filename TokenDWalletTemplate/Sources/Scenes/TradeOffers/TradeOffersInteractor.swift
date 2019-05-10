@@ -13,6 +13,7 @@ public protocol TradeOffersBusinessLogic {
     func onCreateOffer(request: Event.CreateOffer.Request)
     func onPullToRefresh(request: Event.PullToRefresh.Request)
     func onLoadMore(request: Event.LoadMore.Request)
+    func onSwipeRecognized(request: Event.SwipeRecognized.Request)
 }
 
 extension TradeOffers {
@@ -139,10 +140,9 @@ extension TradeOffers {
                 })
                 .disposed(by: self.disposeBag)
             
-            self.offersFetcher.observeItems(pageSize: pageSize)
-                .subscribe(onNext: { [weak self] (offers) in
-                    self?.sceneModel.buyOffers = offers.buyItems
-                    self?.sceneModel.sellOffers = offers.sellItems
+            self.offersFetcher.observeOrderBook(pageSize: pageSize)
+                .subscribe(onNext: { [weak self] (orderBook) in
+                    self?.sceneModel.orderBook = orderBook
                     
                     self?.onOffersDidUpdate()
                 })
@@ -181,8 +181,9 @@ extension TradeOffers {
         
         private func onOffersDidUpdate() {
             let response = Event.OffersDidUpdate.Response.offers(
-                buy: self.sceneModel.buyOffers,
-                sell: self.sceneModel.sellOffers
+                buy: self.sceneModel.orderBook.buyItems,
+                sell: self.sceneModel.orderBook.sellItems,
+                maxVolume: self.sceneModel.orderBook.maxVolume
             )
             self.presenter.presentOffersDidUpdate(response: response)
         }
@@ -326,7 +327,7 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
         switch request {
             
         case .orderBook:
-            self.offersFetcher.reloadItems()
+            self.offersFetcher.reloadOrderBook()
             
         case .chart:
             break
@@ -344,6 +345,25 @@ extension TradeOffers.Interactor: TradeOffers.BusinessLogic {
             
         case .trades:
             self.tradesFetcher.loadMoreItems()
+        }
+    }
+    
+    public func onSwipeRecognized(request: Event.SwipeRecognized.Request) {
+        guard let selectedTabIndex = self.sceneModel.tabs.indexOf(self.sceneModel.selectedTab) else {
+            return
+        }
+        
+        let indexToGo: Int
+        switch request {
+            
+        case .left:
+            indexToGo = selectedTabIndex + 1
+        case .right:
+            indexToGo = selectedTabIndex - 1
+        }
+        if self.sceneModel.tabs.indexInBounds(indexToGo) {
+            let response = Event.SwipeRecognized.Response(index: indexToGo)
+            self.presenter.presentSwipeRecognized(response: response)
         }
     }
 }
