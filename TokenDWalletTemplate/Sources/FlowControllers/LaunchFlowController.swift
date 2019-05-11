@@ -272,23 +272,25 @@ class LaunchFlowController: BaseFlowController {
     }
     
     private func showRecoverySeedScreen(
-        account: String,
-        walletData: RegisterScene.Model.WalletData,
-        seed: String
+        model: RegisterScene.TokenDRegisterWorker.SignUpModel
         ) {
         
-        let vc = self.setupRecoverySeedScreen(account: account, walletData: walletData, seed: seed)
+        let vc = self.setupRecoverySeedScreen(model: model)
         
         self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func setupRecoverySeedScreen(
-        account: String,
-        walletData: RegisterScene.Model.WalletData,
-        seed: String
+        model: RegisterScene.TokenDRegisterWorker.SignUpModel
         ) -> RecoverySeed.ViewController {
         
         let vc = RecoverySeed.ViewController()
+        
+        let signUpWorker = RecoverySeed.SignUpWorker(
+            keyServerApi: self.flowControllerStack.keyServerApi,
+            userDataManager: self.userDataManager,
+            signUpModel: model
+        )
         
         let routing = RecoverySeed.Routing(
             onShowMessage: { [weak self] message in
@@ -306,6 +308,13 @@ class LaunchFlowController: BaseFlowController {
                     presentViewController: present
                 )
             },
+            onRegisterFailure: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(
+                    message,
+                    completion: {
+                        self?.navigationController.popViewController(true)
+                })
+            },
             onShowAlertDialog: { [weak self] (message, options, onSelected) in
                 guard let present = self?.navigationController.getPresentViewControllerClosure() else {
                     return
@@ -321,21 +330,18 @@ class LaunchFlowController: BaseFlowController {
                     presentViewController: present
                 )
             },
-            onProceed: { [weak self] in
-                if walletData.verified {
-                    if self?.keychainManager.hasKeyDataForMainAccount() ?? false {
-                        self?.onAuthorized(account)
-                    } else {
-                        self?.showSignInScreenOnVerified()
-                    }
-                } else {
-                    self?.showVerifyEmailScreen(walletId: walletData.walletId)
-                }
-        })
+            onSuccessfulRegister: { [weak self] (account, walletData) in
+                self?.handleSuccessfulRegister(account: account, walletData: walletData)
+            }, showLoading: { [weak self] in
+                self?.navigationController.showProgress()
+            }, hideLoading: { [weak self] in
+                self?.navigationController.hideProgress()
+            })
         
         RecoverySeed.Configurator.configure(
             viewController: vc,
-            seed: seed,
+            signUpWorker: signUpWorker,
+            seed: model.recoverySeed,
             routing: routing
         )
         
@@ -369,7 +375,7 @@ class LaunchFlowController: BaseFlowController {
             signUpRequestBuilder: signUpRequestBuilder,
             onSubmitEmail: { [weak self] (email) in
                 self?.submittedEmail = email
-        })
+            })
         
         let passwordValidator = PasswordValidator()
         
@@ -392,8 +398,8 @@ class LaunchFlowController: BaseFlowController {
             onPresentQRCodeReader: { [weak self] (completion) in
                 self?.presentQRCodeReader(completion: completion)
             },
-            onSuccessfulRegister: { [weak self] (account, walletData, recoverySeed) in
-                self?.showRecoverySeedScreen(account: account, walletData: walletData, seed: recoverySeed)
+            onShowRecoverySeed: { [weak self] (model) in
+                self?.showRecoverySeedScreen(model: model)
             },
             onRecovery: { [weak self] in
                 self?.showRecoveryScreen()
@@ -432,6 +438,22 @@ class LaunchFlowController: BaseFlowController {
         vc.navigationItem.title = Localized(.tokend)
         
         return vc
+    }
+    
+    private func handleSuccessfulRegister(
+        account: String,
+        walletData: RegisterScene.Model.WalletData
+        ) {
+        
+        if walletData.verified {
+            if self.keychainManager.hasKeyDataForMainAccount() {
+                self.onAuthorized(account)
+            } else {
+                self.showSignInScreenOnVerified()
+            }
+        } else {
+            self.showVerifyEmailScreen(walletId: walletData.walletId)
+        }
     }
     
     private func runAuthenticatorAuthFlow() {

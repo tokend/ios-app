@@ -199,8 +199,8 @@ extension RegisterScene {
             case .succeededSignIn(let account):
                 viewModel = .succeededSignIn(account: account)
                 
-            case .succeededSignUp(let account, let walletData, let recoverySeed):
-                viewModel = .succeededSignUp(account: account, walletData: walletData, recoverySeed: recoverySeed)
+            case .showRecoverySeed(let model):
+                viewModel = .showRecoverySeed(model: model)
             }
             
             self.presenterDispatch.display { (displayLogic) in

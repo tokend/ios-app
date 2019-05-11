@@ -4,7 +4,8 @@ protocol RecoverySeedPresentationLogic {
     func presentViewDidLoad(response: RecoverySeed.Event.ViewDidLoad.Response)
     func presentValidationSeedEditing(response: RecoverySeed.Event.ValidationSeedEditing.Response)
     func presentCopyAction(response: RecoverySeed.Event.CopyAction.Response)
-    func presentProceedAction(response: RecoverySeed.Event.ProceedAction.Response)
+    func presentShowWarning(response: RecoverySeed.Event.ShowWarning.Response)
+    func presentSignUpAction(response: RecoverySeed.Event.SignUpAction.Response)
 }
 
 extension RecoverySeed {
@@ -45,19 +46,30 @@ extension RecoverySeed.Presenter: RecoverySeed.PresentationLogic {
         }
     }
     
-    func presentProceedAction(response: RecoverySeed.Event.ProceedAction.Response) {
-        let viewModel: RecoverySeed.Event.ProceedAction.ViewModel
+    func presentShowWarning(response: RecoverySeed.Event.ShowWarning.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { displayLogic in
+            displayLogic.displayShowWarning(viewModel: viewModel)
+        }
+    }
+    
+    func presentSignUpAction(response: RecoverySeed.Event.SignUpAction.Response) {
+        let viewModel: RecoverySeed.Event.SignUpAction.ViewModel
+        
         switch response {
             
-        case .proceed:
-            viewModel = .proceed
-            
-        case .showMessage:
-            viewModel = .showMessage
+        case .loading:
+            viewModel = .loading
+        case .loaded:
+            viewModel = .loaded
+        case .success(let account, let walletData):
+            viewModel = .success(account: account, walletData: walletData)
+        case .error(let error):
+            viewModel = .error(error.localizedDescription)
         }
         
-        self.presenterDispatch.display { displayLogic in
-            displayLogic.displayProceedAction(viewModel: viewModel)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displaySignUpAction(viewModel: viewModel)
         }
     }
 }

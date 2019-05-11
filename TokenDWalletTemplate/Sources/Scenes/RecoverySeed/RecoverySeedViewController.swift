@@ -6,7 +6,8 @@ protocol RecoverySeedDisplayLogic: class {
     func displayViewDidLoad(viewModel: RecoverySeed.Event.ViewDidLoad.ViewModel)
     func displayValidationSeedEditing(viewModel: RecoverySeed.Event.ValidationSeedEditing.ViewModel)
     func displayCopyAction(viewModel: RecoverySeed.Event.CopyAction.ViewModel)
-    func displayProceedAction(viewModel: RecoverySeed.Event.ProceedAction.ViewModel)
+    func displayShowWarning(viewModel: RecoverySeed.Event.ShowWarning.ViewModel)
+    func displaySignUpAction(viewModel: RecoverySeed.Event.SignUpAction.ViewModel)
 }
 
 extension RecoverySeed {
@@ -255,16 +256,29 @@ extension RecoverySeed.ViewController: RecoverySeed.DisplayLogic {
         self.routing?.onShowMessage(viewModel.message)
     }
     
-    func displayProceedAction(viewModel: RecoverySeed.Event.ProceedAction.ViewModel) {
+    func displayShowWarning(viewModel: RecoverySeed.Event.ShowWarning.ViewModel) {
+        self.showLastChanceAlert(onUnderstood: { [weak self] in
+            let request = RecoverySeed.Event.SignUpAction.Request()
+            self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                businessLogic.onSignUpAction(request: request)
+            })
+        })
+    }
+    
+    func displaySignUpAction(viewModel: RecoverySeed.Event.SignUpAction.ViewModel) {
         switch viewModel {
             
-        case .proceed:
-            self.routing?.onProceed()
+        case .loading:
+            self.routing?.showLoading()
             
-        case .showMessage:
-            self.showLastChanceAlert(onUnderstood: { [weak self] in
-                self?.routing?.onProceed()
-            })
+        case .loaded:
+            self.routing?.hideLoading()
+            
+        case .success(let account, let walletData):
+            self.routing?.onSuccessfulRegister(account, walletData)
+            
+        case .error(let error):
+            self.routing?.onRegisterFailure(error)
         }
     }
 }
