@@ -267,8 +267,8 @@ enum LocKey: String {
     case no_pending_offers
     case no_personal_address
     case no_personal_address_replace_assets_asset
-    case no_token
-    case no_tokens
+    case no_asset
+    case no_assets
     case no_trade_entries
     case not_enough_data
     case not_enough_money_on_balance
@@ -429,9 +429,8 @@ enum LocKey: String {
     case to_pay
     case to_receive
     case to_sell
-    case token
-    case token_details
-    case token_summary
+    case asset_details
+    case asset_summary
     case tokend
     case total
     case total_colon
@@ -446,13 +445,13 @@ enum LocKey: String {
     case transaction_details
     case twofactor_authentication
     case twofactor_authentication_failed
-    case unable_to_encode_token_to_data
+    case unable_to_encode_asset_to_data
     case unable_to_get_keychaindata_or_create_key_pair
     case unable_to_read_keychain_data
     case unable_to_read_user_data
     case unable_to_read_wallet_data
-    case unable_to_sign_tfa_token_with_password
-    case unable_to_sign_token_data
+    case unable_to_sign_tfa_asset_with_password
+    case unable_to_sign_asset_data
     case unathorized_request
     case unathorized_request_replace_message
     case undefined
