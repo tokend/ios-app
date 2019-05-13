@@ -290,6 +290,7 @@ extension TransactionDetails {
             )
             sections.append(offerInfoSection)
             
+            var chargedCells: [Model.CellModel] = []
             let chargedAmount = TransactionDetails.Model.Amount(
                 value: charged.amount + charged.fee.fixed,
                 asset: charged.assetCode
@@ -300,14 +301,29 @@ extension TransactionDetails {
                 hint: Localized(.amount),
                 identifier: .amount
             )
+            chargedCells.append(chargedCell)
+            let chargedFeeAmount = charged.fee.calculatedPercent + charged.fee.fixed
+            if chargedFeeAmount > 0 {
+                let chargedFee = Model.Amount(
+                    value: chargedFeeAmount,
+                    asset: charged.assetCode
+                )
+                let chargedFeeCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(chargedFee),
+                    hint: Localized(.fee),
+                    identifier: .fee
+                )
+                chargedCells.append(chargedFeeCell)
+            }
             
             let chargedSection = TransactionDetails.Model.SectionModel(
                 title: Localized(.charged),
-                cells: [chargedCell],
+                cells: chargedCells,
                 description: ""
             )
             sections.append(chargedSection)
             
+            var fundedCells: [Model.CellModel] = []
             let fundedAmount = TransactionDetails.Model.Amount(
                 value: funded.amount - funded.fee.fixed,
                 asset: funded.assetCode
@@ -318,10 +334,25 @@ extension TransactionDetails {
                 hint: Localized(.amount),
                 identifier: .amount
             )
+            fundedCells.append(fundedCell)
+            
+            let fundedFeeAmount = funded.fee.calculatedPercent + funded.fee.fixed
+            if fundedFeeAmount > 0 {
+                let fundedFee = Model.Amount(
+                    value: fundedFeeAmount,
+                    asset: funded.assetCode
+                )
+                let fundedFeeCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(fundedFee),
+                    hint: Localized(.fee),
+                    identifier: .fee
+                )
+                fundedCells.append(fundedFeeCell)
+            }
             
             let fundedSection = TransactionDetails.Model.SectionModel(
                 title: Localized(.funded),
-                cells: [fundedCell],
+                cells: fundedCells,
                 description: ""
             )
             sections.append(fundedSection)
