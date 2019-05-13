@@ -11,7 +11,6 @@ protocol SendPaymentPresentationLogic {
     func presentEditAmount(response: Event.EditAmount.Response)
     func presentPaymentAction(response: Event.PaymentAction.Response)
     func presentWithdrawAction(response: Event.WithdrawAction.Response)
-    func presentCopyAction(response: Event.CopyAction.Response)
 }
 
 extension SendPaymentAmount {
@@ -173,13 +172,6 @@ extension SendPaymentAmount.Presenter: SendPaymentAmount.PresentationLogic {
         
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayWithdrawAction(viewModel: viewModel)
-        }
-    }
-    
-    func presentCopyAction(response: Event.CopyAction.Response) {
-        let viewModel = response
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayCopyAction(viewModel: viewModel)
         }
     }
 }

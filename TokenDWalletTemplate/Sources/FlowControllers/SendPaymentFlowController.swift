@@ -130,18 +130,8 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onSendAction: { [weak self] (sendModel) in
                 self?.showPaymentConfirmationScreen(sendPaymentModel: sendModel)
             },
-            onShowWithdrawDestination: nil,
-            onShowMessage: { [weak self] (message) in
-                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
-                    return
-                }
-                self?.showSuccessMessage(
-                    title: message,
-                    message: nil,
-                    completion: nil,
-                    presentViewController: present
-                )
-            })
+            onShowWithdrawDestination: nil
+        )
         
         SendPaymentAmount.Configurator.configure(
             viewController: vc,

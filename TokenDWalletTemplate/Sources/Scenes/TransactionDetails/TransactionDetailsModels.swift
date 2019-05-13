@@ -153,4 +153,14 @@ extension TransactionDetails.Event {
         typealias Response = Action
         typealias ViewModel = Action
     }
+    
+    enum SelectedCell {
+        struct Request {
+            let model: CellViewAnyModel
+        }
+        struct Response {
+            let message: String
+        }
+        typealias ViewModel = Response
+    }
 }

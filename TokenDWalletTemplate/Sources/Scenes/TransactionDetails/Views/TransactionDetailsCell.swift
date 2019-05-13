@@ -9,11 +9,13 @@ enum TransactionDetailsCell {
         let icon: UIImage
         let title: String
         let hint: String?
+        var isTruncatable: Bool
         
         func setup(cell: TransactionDetailsCell.View) {
             cell.icon = self.icon.withRenderingMode(.alwaysTemplate)
             cell.title = self.title
             cell.hint = self.hint
+            cell.isTruncatable = self.isTruncatable
         }
     }
     
@@ -49,6 +51,12 @@ enum TransactionDetailsCell {
             }
         }
         
+        public var isTruncatable: Bool = false {
+            didSet {
+                self.updateTitleTruncatability()
+            }
+        }
+        
         // MARK: -
         
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -70,6 +78,15 @@ enum TransactionDetailsCell {
             self.setupHintLabel()
             
             self.setupLayout()
+        }
+        
+        private func updateTitleTruncatability() {
+            if self.isTruncatable {
+                self.titleLabel.numberOfLines = 1
+                self.titleLabel.lineBreakMode = .byTruncatingMiddle
+            } else {
+                self.titleLabel.numberOfLines = 0
+            }
         }
         
         private func setupView() {

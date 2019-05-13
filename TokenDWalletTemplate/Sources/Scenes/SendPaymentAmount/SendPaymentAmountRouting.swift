@@ -12,6 +12,5 @@ extension SendPaymentAmount {
         ) -> Void
         let onSendAction: ((_ sendModel: Model.SendPaymentModel) -> Void)?
         let onShowWithdrawDestination: ((_ sendModel: Model.SendWithdrawModel) -> Void)?
-        let onShowMessage: (_ message: String) -> Void
     }
 }

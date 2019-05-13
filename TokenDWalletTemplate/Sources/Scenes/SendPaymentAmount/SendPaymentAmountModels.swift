@@ -214,14 +214,6 @@ extension SendPaymentAmount.Event {
             case succeeded(Model.SendPaymentModel)
         }
     }
-    
-    struct CopyAction {
-        struct Request {}
-        struct Response {
-            let message: String
-        }
-        typealias ViewModel = Response
-    }
 }
 
 extension SendPaymentAmount.Event.PaymentAction {

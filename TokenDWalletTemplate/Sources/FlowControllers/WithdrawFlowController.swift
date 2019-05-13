@@ -123,17 +123,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
             onSendAction: nil,
             onShowWithdrawDestination: { [weak self] (sendModel) in
                 self?.showWithdrawDestinationScreen(withdrawAmountModel: sendModel)
-            }, onShowMessage: { [weak self] (message) in
-                guard let present = self?.navigationController?.getPresentViewControllerClosure() else {
-                    return
-                }
-                self?.showSuccessMessage(
-                    title: message,
-                    message: nil,
-                    completion: nil,
-                    presentViewController: present
-                )
-            })
+        })
         
         SendPaymentAmount.Configurator.configure(
             viewController: vc,
@@ -189,8 +179,8 @@ class WithdrawFlowController: BaseSignedInFlowController {
                 self?.showWithdrawConfirmationScreen(sendWithdrawModel: model)
             }, showSendAmount: { _ in
                 
-            }, showProgress: { [weak self] in
-                self?.navigationController?.showProgress()
+        }, showProgress: { [weak self] in
+            self?.navigationController?.showProgress()
             }, hideProgress: { [weak self] in
                 self?.navigationController?.hideProgress()
             }, showError: { [weak self] (message) in
