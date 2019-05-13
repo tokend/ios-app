@@ -13,6 +13,7 @@ protocol SendPaymentBusinessLogic {
     func onEditAmount(request: Event.EditAmount.Request)
     func onDescriptionUpdated(request: Event.DescriptionUpdated.Request)
     func onSubmitAction(request: Event.SubmitAction.Request)
+    func onCopyAction(request: Event.CopyAction.Request)
 }
 
 extension SendPaymentAmount {
@@ -374,5 +375,16 @@ extension SendPaymentAmount.Interactor: SendPaymentAmount.BusinessLogic {
         case .handleWithdraw:
             self.handleWithdrawSendAction()
         }
+    }
+    
+    func onCopyAction(request: Event.CopyAction.Request) {
+        guard let accountId = self.sceneModel.recipientAddress else {
+            return
+        }
+        UIPasteboard.general.string = accountId
+        let response = Event.CopyAction.Response(
+            message: Localized(.recipient_address_is_copied_to_pasteboard)
+        )
+        self.presenter.presentCopyAction(response: response)
     }
 }

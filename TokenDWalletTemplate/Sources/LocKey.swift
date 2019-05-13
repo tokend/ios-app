@@ -333,6 +333,7 @@ enum LocKey: String {
     case received_amount_may_be_lower_due_to_network_fees
     case received_amount_may_be_lower_due_to_network_fees_replace_destasset
     case recipient
+    case recipient_address_is_copied_to_pasteboard
     case recipients_email
     case recipients_fee
     case recipients_fee_has_been_paid

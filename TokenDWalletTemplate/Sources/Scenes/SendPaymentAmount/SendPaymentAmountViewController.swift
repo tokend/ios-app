@@ -12,6 +12,7 @@ protocol SendPaymentDisplayLogic: class {
     func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
     func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
     func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
+    func displayCopyAction(viewModel: Event.CopyAction.ViewModel)
 }
 
 extension SendPaymentAmount {
@@ -32,6 +33,7 @@ extension SendPaymentAmount {
         private let descritionTextView: DescriptionTextView = DescriptionTextView()
         private let actionButton: UIButton = UIButton()
         
+        private let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer()
         private let disposeBag = DisposeBag()
         
         private let buttonHeight: CGFloat = 45.0
@@ -62,6 +64,7 @@ extension SendPaymentAmount {
             
             self.setupView()
             self.setupRecipientLabel()
+            self.setupTapRecognizer()
             self.setupStackView()
             self.setupBalanceView()
             self.setupEnterAmountView()
@@ -116,6 +119,21 @@ extension SendPaymentAmount {
             self.recipientLabel.textAlignment = .center
             self.recipientLabel.numberOfLines = 1
             self.recipientLabel.lineBreakMode = .byTruncatingMiddle
+            self.recipientLabel.isUserInteractionEnabled = true
+        }
+        
+        private func setupTapRecognizer() {
+            self.tapGestureRecognizer
+                .rx
+                .event
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    let request = Event.CopyAction.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onCopyAction(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupStackView() {
@@ -207,10 +225,12 @@ extension SendPaymentAmount {
         }
         
         private func setupLayout() {
-            self.view.addSubview(self.recipientLabel)
             self.view.addSubview(self.stackView)
             self.view.addSubview(self.descritionTextView)
             self.view.addSubview(self.actionButton)
+            
+            self.recipientLabel.addGestureRecognizer(self.tapGestureRecognizer)
+            self.view.addSubview(self.recipientLabel)
             
             self.recipientLabel.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview().inset(20.0)
@@ -318,5 +338,9 @@ extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
             self.routing?.onHideProgress()
             self.routing?.onShowWithdrawDestination?(sendModel)
         }
+    }
+    
+    func displayCopyAction(viewModel: Event.CopyAction.ViewModel) {
+        self.routing?.onShowMessage(viewModel.message)
     }
 }

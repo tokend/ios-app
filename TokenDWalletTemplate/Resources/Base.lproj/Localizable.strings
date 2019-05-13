@@ -330,6 +330,7 @@
 "received_amount_may_be_lower_due_to_network_fees" = "Received amount may be lower due to $(destasset) network fees";
 "received_amount_may_be_lower_due_to_network_fees_replace_destasset" = "destasset";
 "recipient" = "Recipient";
+"recipient_address_is_copied_to_pasteboard" = "Recipient address is copied to pasteboard";
 "recipients_email" = "Recipient's email";
 "recipients_fee" = "Recipient's fee";
 "recipients_fee_has_been_paid" = "Recipient's fee has been paid by the sender";
