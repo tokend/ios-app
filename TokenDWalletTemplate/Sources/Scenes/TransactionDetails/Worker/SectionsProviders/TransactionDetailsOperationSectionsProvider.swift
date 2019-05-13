@@ -3,7 +3,7 @@ import RxCocoa
 import RxSwift
 import TokenDSDK
 
-// swiftlint:disable type_body_length
+// swiftlint:disable file_length
 extension TransactionDetails {
     class OperationSectionsProvider {
         
@@ -130,12 +130,21 @@ extension TransactionDetails {
             )
             cells.append(contentsOf: descriptionCell)
             
-            let amountCell = TransactionDetails.Model.CellModel(
+            var amountCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(amount),
                 hint: Localized(.amount),
                 identifier: .amount
             )
             cells.append(amountCell)
+            
+            if let paymentFee = self.createPaymentFeeCell(
+                details: details,
+                balanceChangeEffect: balanceChangeEffect
+                ) {
+                
+                amountCell.isSeparatorHidden = true
+                cells.append(paymentFee)
+            }
             
             let detailsCells = self.createDetailsCells(
                 details: details,
@@ -296,7 +305,7 @@ extension TransactionDetails {
                 asset: charged.assetCode
             )
             
-            let chargedCell = TransactionDetails.Model.CellModel(
+            var chargedCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(chargedAmount),
                 hint: Localized(.amount),
                 identifier: .amount
@@ -304,6 +313,7 @@ extension TransactionDetails {
             chargedCells.append(chargedCell)
             let chargedFeeAmount = charged.fee.calculatedPercent + charged.fee.fixed
             if chargedFeeAmount > 0 {
+                chargedCell.isSeparatorHidden = true
                 let chargedFee = Model.Amount(
                     value: chargedFeeAmount,
                     asset: charged.assetCode
@@ -329,7 +339,7 @@ extension TransactionDetails {
                 asset: funded.assetCode
             )
             
-            let fundedCell = TransactionDetails.Model.CellModel(
+            var fundedCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(fundedAmount),
                 hint: Localized(.amount),
                 identifier: .amount
@@ -338,6 +348,7 @@ extension TransactionDetails {
             
             let fundedFeeAmount = funded.fee.calculatedPercent + funded.fee.fixed
             if fundedFeeAmount > 0 {
+                fundedCell.isSeparatorHidden = true
                 let fundedFee = Model.Amount(
                     value: fundedFeeAmount,
                     asset: funded.assetCode
@@ -544,6 +555,46 @@ extension TransactionDetails {
             return priceCell
         }
         
+        private func createPaymentFeeCell(
+            details: OperationDetailsResource,
+            balanceChangeEffect: EffectBalanceChangeResource
+            ) -> TransactionDetails.Model.CellModel? {
+            
+            switch details.operationDetailsRelatedToBalance {
+                
+            case .opPaymentDetails(let resource):
+                guard balanceChangeEffect as? EffectChargedResource != nil,
+                    let assetResource = resource.asset,
+                    let asset = assetResource.id,
+                    let fee = balanceChangeEffect.fee,
+                    fee.fixed + fee.calculatedPercent > 0 else {
+                        return nil
+                }
+                let feeAmount = TransactionDetails.Model.Amount(
+                    value: fee.fixed + fee.calculatedPercent,
+                    asset: asset
+                )
+                
+                let feeCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(feeAmount),
+                    hint: Localized(.fee),
+                    identifier: .fee
+                )
+                return feeCell
+                
+            case .`self`,
+                 .opCreateIssuanceRequestDetails,
+                 .opCreateAMLAlertRequestDetails,
+                 .opCreateAtomicSwapBidRequestDetails,
+                 .opCreateWithdrawRequestDetails,
+                 .opPayoutDetails:
+                
+                break
+            }
+            
+            return nil
+        }
+        
         private func createDetailsCells(
             details: OperationDetailsResource,
             balanceChangeEffect: EffectBalanceChangeResource
@@ -562,23 +613,9 @@ extension TransactionDetails {
                 detailsCells.append(referenceCell)
                 
             case .opPaymentDetails(let resource):
-                guard balanceChangeEffect as? EffectChargedResource != nil,
-                    let assetResource = resource.asset,
-                    let asset = assetResource.id,
-                    let fee = balanceChangeEffect.fee else {
-                        return []
+                guard balanceChangeEffect as? EffectChargedResource != nil else {
+                    return []
                 }
-                let feeAmount = TransactionDetails.Model.Amount(
-                    value: fee.fixed + fee.calculatedPercent,
-                    asset: asset
-                )
-                
-                let feeCell = TransactionDetails.Model.CellModel(
-                    title: self.amountFormatter.formatAmount(feeAmount),
-                    hint: Localized(.fee),
-                    identifier: .fee
-                )
-                detailsCells.append(feeCell)
                 
                 if resource.sourcePayForDestination {
                     let senderPaysCell = TransactionDetails.Model.CellModel(
@@ -728,7 +765,6 @@ extension TransactionDetails {
         }
     }
 }
-// swiftlint:enable type_body_length
 
 extension TransactionDetails.OperationSectionsProvider: TransactionDetails.SectionsProviderProtocol {
     
@@ -774,3 +810,4 @@ extension TransactionDetails.OperationSectionsProvider {
         case currentPriceRestriction = 4
     }
 }
+// swiftlint:enable file_length

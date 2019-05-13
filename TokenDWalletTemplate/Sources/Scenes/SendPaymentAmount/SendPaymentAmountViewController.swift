@@ -12,6 +12,8 @@ protocol SendPaymentDisplayLogic: class {
     func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
     func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
     func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
+    func displayFeeOverviewAvailability(viewModel: Event.FeeOverviewAvailability.ViewModel)
+    func displayFeeOverviewAction(viewModel: Event.FeeOverviewAction.ViewModel)
 }
 
 extension SendPaymentAmount {
@@ -31,6 +33,12 @@ extension SendPaymentAmount {
         private let enterAmountView: EnterAmountView = EnterAmountView()
         private let descritionTextView: DescriptionTextView = DescriptionTextView()
         private let actionButton: UIButton = UIButton()
+        private let feesAction: UIBarButtonItem = UIBarButtonItem(
+            title: Localized(.fees),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         
         private let disposeBag = DisposeBag()
         
@@ -67,6 +75,7 @@ extension SendPaymentAmount {
             self.setupEnterAmountView()
             self.setupDescriptionTextView()
             self.setupActionButton()
+            self.setupFeesAction()
             self.setupLayout()
             
             self.observeKeyboard()
@@ -173,6 +182,20 @@ extension SendPaymentAmount {
                     let request = Event.SubmitAction.Request()
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         businessLogic.onSubmitAction(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
+        }
+        
+        private func setupFeesAction() {
+            self.feesAction
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    let request = Event.FeeOverviewAction.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onFeeOverviewAction(request: request)
                     })
                 })
                 .disposed(by: self.disposeBag)
@@ -318,5 +341,17 @@ extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
             self.routing?.onHideProgress()
             self.routing?.onShowWithdrawDestination?(sendModel)
         }
+    }
+    
+    func displayFeeOverviewAvailability(viewModel: Event.FeeOverviewAvailability.ViewModel) {
+        if viewModel.available {
+            self.navigationItem.rightBarButtonItem = self.feesAction
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    func displayFeeOverviewAction(viewModel: Event.FeeOverviewAction.ViewModel) {
+        self.routing?.showFeesOverview(viewModel.asset, viewModel.feeType)
     }
 }

@@ -91,6 +91,20 @@ extension TransactionDetails.Model {
         let title: String
         let hint: String
         let identifier: TransactionDetails.CellIdentifier
+        var isSeparatorHidden: Bool
+        
+        init(
+            title: String,
+            hint: String,
+            identifier: TransactionDetails.CellIdentifier,
+            isSeparatorHidden: Bool = false
+            ) {
+            
+            self.title = title
+            self.hint = hint
+            self.identifier = identifier
+            self.isSeparatorHidden = isSeparatorHidden
+        }
     }
     
     struct SectionViewModel {

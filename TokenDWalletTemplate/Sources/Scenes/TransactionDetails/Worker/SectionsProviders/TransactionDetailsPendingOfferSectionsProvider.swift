@@ -71,13 +71,14 @@ extension TransactionDetails {
                 offer.quoteAmount,
                 currency: offer.quoteAssetCode
             )
-            let toPayCell = Model.CellModel(
+            var toPayCell = Model.CellModel(
                 title: quoteAmountTitle,
                 hint: Localized(.amount),
                 identifier: .amount
             )
             toPayCells.append(toPayCell)
             if offer.fee > 0 {
+                toPayCell.isSeparatorHidden = true
                 let formattedAmount = amountFormatter.assetAmountToString(offer.fee)
                 let feeCellText = formattedAmount + " " + offer.quoteAssetCode
                 
