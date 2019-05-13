@@ -6,6 +6,7 @@
 "account_id" = "Account ID";
 "account_id_or_email_colon" = "Account ID or email:";
 "acknowledgements" = "Acknowledgements";
+"address_is_copied_to_pasteboard" = "Address is copied to pasteboard";
 "already_have_an_account" = "Already have an account? ";
 "aml_alert_request" = "AML alert request";
 "amount" = "Amount";

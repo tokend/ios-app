@@ -280,6 +280,17 @@ class TradeFlowController: BaseSignedInFlowController {
         },
             showError: { (error) in
                 navigationController.showErrorMessage(error, completion: nil)
+        },
+            showMessage: { [weak self] (message) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showSuccessMessage(
+                    title: message,
+                    message: nil,
+                    completion: nil,
+                    presentViewController: present
+                )
         })
         let sectionsProvider = TransactionDetails.PendingOfferSectionsProvider(
             pendingOffersRepo: self.reposController.pendingOffersRepo,

@@ -7,6 +7,7 @@ protocol TransactionDetailsDisplayLogic: class {
     func displayTransactionUpdated(viewModel: TransactionDetails.Event.TransactionUpdated.ViewModel)
     func displayTransactionActionsDidUpdate(viewModel: TransactionDetails.Event.TransactionActionsDidUpdate.ViewModel)
     func displayTransactionAction(viewModel: TransactionDetails.Event.TransactionAction.ViewModel)
+    func displaySelectedCell(viewModel: TransactionDetails.Event.SelectedCell.ViewModel)
 }
 
 extension TransactionDetails {
@@ -43,6 +44,7 @@ extension TransactionDetails {
             ]
             self.tableView.register(classes: cellClasses)
             self.tableView.dataSource = self
+            self.tableView.delegate = self
             self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
         }
@@ -124,6 +126,21 @@ extension TransactionDetails.ViewController: TransactionDetails.DisplayLogic {
         case .error(let error):
             self.routing?.showError(error)
         }
+    }
+    
+    func displaySelectedCell(viewModel: TransactionDetails.Event.SelectedCell.ViewModel) {
+        self.routing?.showMessage(viewModel.message)
+    }
+}
+
+extension TransactionDetails.ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let model = self.sections[indexPath.section].cells[indexPath.row]
+        let request = TransactionDetails.Event.SelectedCell.Request(model: model)
+        self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+            businessLogic.onSelectedCell(request: request)
+        })
     }
 }
 

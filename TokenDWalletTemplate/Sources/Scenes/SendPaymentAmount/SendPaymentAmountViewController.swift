@@ -207,8 +207,8 @@ extension SendPaymentAmount {
         }
         
         private func setupLayout() {
-            self.view.addSubview(self.recipientLabel)
             self.view.addSubview(self.stackView)
+            self.view.addSubview(self.recipientLabel)
             self.view.addSubview(self.descritionTextView)
             self.view.addSubview(self.actionButton)
             

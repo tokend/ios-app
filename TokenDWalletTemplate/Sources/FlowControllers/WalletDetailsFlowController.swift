@@ -133,6 +133,17 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
             },
             showError: { [weak self] (error) in
                 self?.navigationController.showErrorMessage(error, completion: nil)
+            },
+            showMessage: { [weak self] (message) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showSuccessMessage(
+                    title: message,
+                    message: nil,
+                    completion: nil,
+                    presentViewController: present
+                )
         })
         
         let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)

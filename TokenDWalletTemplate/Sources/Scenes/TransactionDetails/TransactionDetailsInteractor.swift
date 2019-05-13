@@ -5,6 +5,7 @@ import RxCocoa
 protocol TransactionDetailsBusinessLogic {
     func onViewDidLoad(request: TransactionDetails.Event.ViewDidLoad.Request)
     func onTransactionAction(request: TransactionDetails.Event.TransactionAction.Request)
+    func onSelectedCell(request: TransactionDetails.Event.SelectedCell.Request)
 }
 
 extension TransactionDetails {
@@ -85,5 +86,23 @@ extension TransactionDetails.Interactor: TransactionDetails.BusinessLogic {
             onError: { [weak self] (error) in
                 self?.presenter.presentTransactionAction(response: .error(error))
         })
+    }
+    
+    func onSelectedCell(request: TransactionDetails.Event.SelectedCell.Request) {
+        guard let detailsModel = request.model as? TransactionDetailsCell.Model else {
+            return
+        }
+        switch detailsModel.identifier {
+            
+        case .recipient, .sender:
+            UIPasteboard.general.string = detailsModel.title
+            let response = TransactionDetails.Event.SelectedCell.Response(
+                message: Localized(.address_is_copied_to_pasteboard)
+            )
+            self.presenter.presentSelectedCell(response: response)
+            
+        default:
+            break
+        }
     }
 }

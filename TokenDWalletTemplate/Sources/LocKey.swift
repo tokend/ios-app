@@ -9,6 +9,7 @@ enum LocKey: String {
     case account_id
     case account_id_or_email_colon
     case acknowledgements
+    case address_is_copied_to_pasteboard
     case already_have_an_account
     case aml_alert_request
     case amount
