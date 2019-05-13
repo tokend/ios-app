@@ -220,7 +220,7 @@ extension TransactionDetails {
             } else {
                 let tokenCell = Model.CellModel(
                     title: baseAsset,
-                    hint: Localized(.token),
+                    hint: Localized(.asset),
                     identifier: .token
                 )
                 let dateCell = self.createDateCell(date: operation.appliedAt)
