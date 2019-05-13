@@ -81,7 +81,7 @@ extension SaleInfo {
                         let tab = self?.getAssetDetailsTab(assetStatus: asset) {
                         tabs.append(tab)
                     } else {
-                        self?.addLoadingTab(to: &tabs, title: Localized(.token))
+                        self?.addLoadingTab(to: &tabs, title: Localized(.asset))
                     }
                     
                     self?.tabs.onNext(tabs)
@@ -144,7 +144,7 @@ extension SaleInfo {
                 
             case .failure(let error):
                 let model = SaleInfo.EmptyContent.Model(message: error.localizedDescription)
-                let tabModel = Model.TabModel(title: Localized(.token), contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.asset), contentModel: model)
                 return tabModel
                 
             case .success(let asset):
@@ -173,7 +173,7 @@ extension SaleInfo {
                     maxTokenAmount: asset.maxIssuanceAmount
                 )
                 
-                let tabModel = Model.TabModel(title: Localized(.token), contentModel: model)
+                let tabModel = Model.TabModel(title: Localized(.asset), contentModel: model)
                 
                 return tabModel
             }
@@ -240,7 +240,7 @@ extension SaleInfo.SaleInfoDataProvider {
             switch self {
                 
             case .noToken:
-                return Localized(.no_token)
+                return Localized(.no_asset)
             }
         }
     }

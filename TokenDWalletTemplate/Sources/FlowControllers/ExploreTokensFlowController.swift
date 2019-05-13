@@ -112,7 +112,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        viewController.navigationItem.title = Localized(.token_details)
+        viewController.navigationItem.title = Localized(.asset_details)
         self.navigationController.pushViewController(viewController, animated: true)
     }
     

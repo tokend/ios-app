@@ -373,7 +373,7 @@ class BaseFlowController {
                     salt: tokenSignData.salt
                 )
             ) else {
-                print(Localized(.unable_to_sign_tfa_token_with_password))
+                print(Localized(.unable_to_sign_tfa_asset_with_password))
                 cancel()
                 return
         }
@@ -402,12 +402,12 @@ class BaseFlowController {
         }
         
         guard let data = token.data(using: .utf8) else {
-            print(Localized(.unable_to_encode_token_to_data))
+            print(Localized(.unable_to_encode_asset_to_data))
             return nil
         }
         
         guard let signedToken = try? ECDSA.signED25519(data: data, keyData: keyPair).base64EncodedString() else {
-            print(Localized(.unable_to_sign_token_data))
+            print(Localized(.unable_to_sign_asset_data))
             return nil
         }
         

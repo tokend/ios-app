@@ -42,7 +42,7 @@ extension TransactionDetails {
             
             let tokenCell = Model.CellModel(
                 title: offer.baseAssetCode,
-                hint: Localized(.token),
+                hint: Localized(.asset),
                 identifier: .token
             )
             let dateCell = TransactionDetails.Model.CellModel(
