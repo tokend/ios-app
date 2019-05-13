@@ -179,8 +179,8 @@ class WithdrawFlowController: BaseSignedInFlowController {
                 self?.showWithdrawConfirmationScreen(sendWithdrawModel: model)
             }, showSendAmount: { _ in
                 
-            }, showProgress: { [weak self] in
-                self?.navigationController?.showProgress()
+        }, showProgress: { [weak self] in
+            self?.navigationController?.showProgress()
             }, hideProgress: { [weak self] in
                 self?.navigationController?.hideProgress()
             }, showError: { [weak self] (message) in
