@@ -5,6 +5,7 @@ import TokenDSDK
 
 // swiftlint:disable file_length
 extension TransactionDetails {
+    // swiftlint:disable type_body_length
     class OperationSectionsProvider {
         
         private let transactionsHistoryRepo: TransactionsHistoryRepo
@@ -77,7 +78,6 @@ extension TransactionDetails {
             
             guard let assetResource = participantEffect.asset,
                 let asset = assetResource.id,
-                let fee = balanceChangeEffect.fee,
                 let details = operation.details else {
                     return []
             }
@@ -105,7 +105,7 @@ extension TransactionDetails {
                  .effectWithdrawn:
                 
                 amount = TransactionDetails.Model.Amount(
-                    value: balanceChangeEffect.amount + fee.fixed + fee.calculatedPercent,
+                    value: balanceChangeEffect.amount,
                     asset: asset
                 )
                 
@@ -113,7 +113,7 @@ extension TransactionDetails {
                  .effectIssued:
                 
                 amount = TransactionDetails.Model.Amount(
-                    value: balanceChangeEffect.amount - fee.fixed - fee.calculatedPercent,
+                    value: balanceChangeEffect.amount,
                     asset: asset
                 )
                 
@@ -130,20 +130,22 @@ extension TransactionDetails {
             )
             cells.append(contentsOf: descriptionCell)
             
-            var amountCell = TransactionDetails.Model.CellModel(
+            let amountCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(amount),
                 hint: Localized(.amount),
                 identifier: .amount
             )
             cells.append(amountCell)
             
-            if let paymentFee = self.createPaymentFeeCell(
+            let paymentFees = self.createPaymentFeeCell(
                 details: details,
                 balanceChangeEffect: balanceChangeEffect
-                ) {
-                
-                amountCell.isSeparatorHidden = true
-                cells.append(paymentFee)
+            )
+            if !paymentFees.isEmpty {
+                if let index = cells.indexOf(amountCell) {
+                    cells[index].isSeparatorHidden = true
+                }
+                cells.append(contentsOf: paymentFees)
             }
             
             let detailsCells = self.createDetailsCells(
@@ -301,11 +303,11 @@ extension TransactionDetails {
             
             var chargedCells: [Model.CellModel] = []
             let chargedAmount = TransactionDetails.Model.Amount(
-                value: charged.amount + charged.fee.fixed,
+                value: charged.amount,
                 asset: charged.assetCode
             )
             
-            var chargedCell = TransactionDetails.Model.CellModel(
+            let chargedCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(chargedAmount),
                 hint: Localized(.amount),
                 identifier: .amount
@@ -313,7 +315,9 @@ extension TransactionDetails {
             chargedCells.append(chargedCell)
             let chargedFeeAmount = charged.fee.calculatedPercent + charged.fee.fixed
             if chargedFeeAmount > 0 {
-                chargedCell.isSeparatorHidden = true
+                if let index = chargedCells.indexOf(chargedCell) {
+                    chargedCells[index].isSeparatorHidden = true
+                }
                 let chargedFee = Model.Amount(
                     value: chargedFeeAmount,
                     asset: charged.assetCode
@@ -321,9 +325,21 @@ extension TransactionDetails {
                 let chargedFeeCell = TransactionDetails.Model.CellModel(
                     title: self.amountFormatter.formatAmount(chargedFee),
                     hint: Localized(.fee),
-                    identifier: .fee
+                    identifier: .fee,
+                    isSeparatorHidden: true
                 )
                 chargedCells.append(chargedFeeCell)
+                
+                let totalChargedFee = Model.Amount(
+                    value: charged.amount + chargedFeeAmount,
+                    asset: charged.assetCode
+                )
+                let totalChargedFeeCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(totalChargedFee),
+                    hint: Localized(.total),
+                    identifier: .total
+                )
+                chargedCells.append(totalChargedFeeCell)
             }
             
             let chargedSection = TransactionDetails.Model.SectionModel(
@@ -335,11 +351,11 @@ extension TransactionDetails {
             
             var fundedCells: [Model.CellModel] = []
             let fundedAmount = TransactionDetails.Model.Amount(
-                value: funded.amount - funded.fee.fixed,
+                value: funded.amount,
                 asset: funded.assetCode
             )
             
-            var fundedCell = TransactionDetails.Model.CellModel(
+            let fundedCell = TransactionDetails.Model.CellModel(
                 title: self.amountFormatter.formatAmount(fundedAmount),
                 hint: Localized(.amount),
                 identifier: .amount
@@ -348,7 +364,9 @@ extension TransactionDetails {
             
             let fundedFeeAmount = funded.fee.calculatedPercent + funded.fee.fixed
             if fundedFeeAmount > 0 {
-                fundedCell.isSeparatorHidden = true
+                if let index = fundedCells.indexOf(fundedCell) {
+                    fundedCells[index].isSeparatorHidden = true
+                }
                 let fundedFee = Model.Amount(
                     value: fundedFeeAmount,
                     asset: funded.assetCode
@@ -356,9 +374,21 @@ extension TransactionDetails {
                 let fundedFeeCell = TransactionDetails.Model.CellModel(
                     title: self.amountFormatter.formatAmount(fundedFee),
                     hint: Localized(.fee),
-                    identifier: .fee
+                    identifier: .fee,
+                    isSeparatorHidden: true
                 )
                 fundedCells.append(fundedFeeCell)
+                
+                let totalFundedAmount = Model.Amount(
+                    value: funded.amount - fundedFeeAmount,
+                    asset: funded.assetCode
+                )
+                let totalFundedAmountCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(totalFundedAmount),
+                    hint: Localized(.total),
+                    identifier: .total
+                )
+                fundedCells.append(totalFundedAmountCell)
             }
             
             let fundedSection = TransactionDetails.Model.SectionModel(
@@ -558,8 +588,9 @@ extension TransactionDetails {
         private func createPaymentFeeCell(
             details: OperationDetailsResource,
             balanceChangeEffect: EffectBalanceChangeResource
-            ) -> TransactionDetails.Model.CellModel? {
+            ) -> [TransactionDetails.Model.CellModel] {
             
+            var cells: [Model.CellModel] = []
             switch details.operationDetailsRelatedToBalance {
                 
             case .opPaymentDetails(let resource):
@@ -568,7 +599,7 @@ extension TransactionDetails {
                     let asset = assetResource.id,
                     let fee = balanceChangeEffect.fee,
                     fee.fixed + fee.calculatedPercent > 0 else {
-                        return nil
+                        return cells
                 }
                 let feeAmount = TransactionDetails.Model.Amount(
                     value: fee.fixed + fee.calculatedPercent,
@@ -578,9 +609,21 @@ extension TransactionDetails {
                 let feeCell = TransactionDetails.Model.CellModel(
                     title: self.amountFormatter.formatAmount(feeAmount),
                     hint: Localized(.fee),
-                    identifier: .fee
+                    identifier: .fee,
+                    isSeparatorHidden: true
                 )
-                return feeCell
+                cells.append(feeCell)
+                let totalAmount = Model.Amount(
+                    value: feeAmount.value + resource.amount,
+                    asset: asset
+                )
+                let totalCell = TransactionDetails.Model.CellModel(
+                    title: self.amountFormatter.formatAmount(totalAmount),
+                    hint: Localized(.total),
+                    identifier: .total
+                )
+                cells.append(totalCell)
+                return cells
                 
             case .`self`,
                  .opCreateIssuanceRequestDetails,
@@ -592,7 +635,7 @@ extension TransactionDetails {
                 break
             }
             
-            return nil
+            return cells
         }
         
         private func createDetailsCells(
@@ -765,6 +808,7 @@ extension TransactionDetails {
         }
     }
 }
+// swiftlint:enable type_body_length
 
 extension TransactionDetails.OperationSectionsProvider: TransactionDetails.SectionsProviderProtocol {
     

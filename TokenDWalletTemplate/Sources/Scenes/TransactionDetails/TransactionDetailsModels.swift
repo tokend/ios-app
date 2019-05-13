@@ -87,7 +87,7 @@ extension TransactionDetails.Model {
         let description: String
     }
     
-    struct CellModel {
+    struct CellModel: Equatable {
         let title: String
         let hint: String
         let identifier: TransactionDetails.CellIdentifier
