@@ -65,7 +65,7 @@ class DashboardFlowController: BaseSignedInFlowController {
         let pendingOffersPreviewList = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: pendingOffersPreviewFetcher,
             actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_offers),
+            emptyTitle: Localized(.no_pending_orders),
             viewConfig: viewConfig,
             routing: pendingOffersPreviewRouting
         )
@@ -253,12 +253,12 @@ class DashboardFlowController: BaseSignedInFlowController {
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_offers),
+            emptyTitle: Localized(.no_pending_orders),
             viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        viewController.navigationItem.title = Localized(.pending_offers)
+        viewController.navigationItem.title = Localized(.pending_orders)
         
         self.navigationController.pushViewController(viewController, animated: true)
     }
@@ -278,7 +278,7 @@ class DashboardFlowController: BaseSignedInFlowController {
         let vc = self.setupTransactionDetailsScreen(
             navigationController: self.navigationController,
             sectionsProvider: sectionsProvider,
-            title: Localized(.pending_offer_details)
+            title: Localized(.pending_order_details)
         )
         self.navigationController.pushViewController(vc, animated: true)
     }

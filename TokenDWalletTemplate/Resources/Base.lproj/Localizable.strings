@@ -83,7 +83,7 @@
 "copy" = "Copy";
 "corrupted_keychain_data" = "Corrupted keychain data";
 "create_balance" = "Create balance";
-"create_offer" = "Create offer";
+"create_order" = "Create order";
 "credit_card" = "Credit card";
 "cvv" = "CVV";
 "dashboard" = "Dashboard";
@@ -261,7 +261,7 @@
 "no_open_sales" = "No open sales";
 "no_opportunities" = "No opportunities";
 "no_payments" = "No payments";
-"no_pending_offers" = "No pending offers";
+"no_pending_orders" = "No pending orders";
 "no_personal_address" = "No personal $(assets_asset) address";
 "no_personal_address_replace_assets_asset" = "assets_asset";
 "no_asset" = "No asset";
@@ -270,8 +270,8 @@
 "not_enough_data" = "Not enough data";
 "not_enough_money_on_balance" = "Not enough money on balance $(asset)";
 "not_enough_money_on_balance_replace_asset" = "asset";
-"offer" = "Offer";
-"offers_cap" = "OFFERS";
+"order" = "Order";
+"orders_cap" = "ORDERS";
 "ok" = "OK";
 "old_password" = "Old Password";
 "old_password_lowercased" = "old password";
@@ -305,9 +305,9 @@
 "payout" = "Payout";
 "pending" = "Pending";
 "pending_investment" = "Pending investment";
-"pending_offer" = "Pending offer";
-"pending_offer_details" = "Pending offer details";
-"pending_offers" = "Pending offers";
+"pending_order" = "Pending order";
+"pending_order_details" = "Pending order details";
+"pending_orders" = "Pending orders";
 "percent" = "Percent";
 "percent_fee" = "Percent Fee";
 "percent_funded" = "$(percent)\nfunded";
