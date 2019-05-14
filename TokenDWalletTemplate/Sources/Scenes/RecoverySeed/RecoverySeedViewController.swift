@@ -67,7 +67,7 @@ extension RecoverySeed {
             self.messageLabel.textColor = Theme.Colors.textOnContentBackgroundColor
             self.messageLabel.textAlignment = .left
             self.messageLabel.numberOfLines = 0
-            self.messageLabel.text = Localized(.save_this_seed_in_x)
+            self.messageLabel.text = Localized(.save_this_seed_to_x)
         }
         
         private func setupValidateTitleLabel() {
@@ -147,8 +147,8 @@ extension RecoverySeed {
             self.view.addSubview(topSeparator)
             self.view.addSubview(self.textFieldView)
             self.view.addSubview(bottomSeparator)
-            self.view.addSubview(self.inputSeedValidImage)
             self.view.addSubview(self.copyButton)
+            self.view.addSubview(self.inputSeedValidImage)
             
             let offset: CGFloat = 20.0
             let bordersInset: CGFloat = 20.0
@@ -163,9 +163,15 @@ extension RecoverySeed {
                 make.top.equalToSuperview().inset(topInset)
             }
             
+            self.copyButton.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(bordersInset)
+                make.height.equalTo(buttonHeight)
+                make.top.equalTo(self.messageLabel.snp.bottom).offset(offset)
+            }
+            
             self.validateTitleLabel.snp.makeConstraints { (make) in
                 make.leading.trailing.equalTo(self.messageLabel)
-                make.top.equalTo(self.messageLabel.snp.bottom).offset(offset)
+                make.top.equalTo(self.copyButton.snp.bottom).offset(offset)
             }
             
             topSeparator.snp.makeConstraints { (make) in
@@ -192,26 +198,11 @@ extension RecoverySeed {
                 make.centerY.equalTo(self.textFieldView)
                 make.size.equalTo(iconSize)
             }
-            
-            self.copyButton.snp.makeConstraints { (make) in
-                make.leading.trailing.equalTo(bottomSeparator)
-                make.top.equalTo(bottomSeparator.snp.bottom).offset(offset)
-                make.height.equalTo(buttonHeight)
-            }
         }
         
         private func setupSeparator(_ separator: UIView) {
             separator.backgroundColor = Theme.Colors.separatorOnContentBackgroundColor
             separator.isUserInteractionEnabled = false
-        }
-        
-        private func setupLabelsWithSeed(_ seed: String) {
-            self.messageLabel.text = Localized(
-                .save_this_seed_in,
-                replace: [
-                    .save_this_seed_in_replace_seed: seed
-                ]
-            )
         }
         
         private func updateInputSeedValid(_ valid: Model.InputSeedValidation) {
@@ -244,7 +235,7 @@ extension RecoverySeed {
 
 extension RecoverySeed.ViewController: RecoverySeed.DisplayLogic {
     func displayViewDidLoad(viewModel: RecoverySeed.Event.ViewDidLoad.ViewModel) {
-        self.setupLabelsWithSeed(viewModel.seed)
+        self.messageLabel.attributedText = viewModel.text
         self.updateInputSeedValid(viewModel.inputSeedValid)
     }
     

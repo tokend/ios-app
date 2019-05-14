@@ -41,7 +41,7 @@ extension RecoverySeed.Event {
         }
         
         struct ViewModel {
-            let seed: String
+            let text: NSAttributedString
             let inputSeedValid: RecoverySeed.Model.InputSeedValidation
         }
     }
