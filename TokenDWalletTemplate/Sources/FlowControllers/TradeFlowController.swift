@@ -205,7 +205,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = Localized(.create_offer)
+        vc.navigationItem.title = Localized(.create_order)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
@@ -242,12 +242,12 @@ class TradeFlowController: BaseSignedInFlowController {
         let vc = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_offers),
+            emptyTitle: Localized(.no_pending_orders),
             viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        vc.navigationItem.title = Localized(.pending_offers)
+        vc.navigationItem.title = Localized(.pending_orders)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
@@ -305,7 +305,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = Localized(.pending_offer_details)
+        vc.navigationItem.title = Localized(.pending_order_details)
         
         return vc
     }

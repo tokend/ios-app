@@ -84,7 +84,7 @@ extension DashboardPendingOffersPreviewPlugIn {
         private func setupTitleLabel() {
             self.titleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
             self.titleLabel.font = Theme.Fonts.largeTitleFont
-            self.titleLabel.text = Localized(.pending_offers)
+            self.titleLabel.text = Localized(.pending_order)
             self.titleLabel.numberOfLines = 0
         }
         

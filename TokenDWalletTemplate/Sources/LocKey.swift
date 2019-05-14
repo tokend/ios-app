@@ -86,7 +86,7 @@ enum LocKey: String {
     case copy
     case corrupted_keychain_data
     case create_balance
-    case create_offer
+    case create_order
     case credit_card
     case cvv
     case dashboard
@@ -264,7 +264,7 @@ enum LocKey: String {
     case no_open_sales
     case no_opportunities
     case no_payments
-    case no_pending_offers
+    case no_pending_orders
     case no_personal_address
     case no_personal_address_replace_assets_asset
     case no_asset
@@ -273,8 +273,8 @@ enum LocKey: String {
     case not_enough_data
     case not_enough_money_on_balance
     case not_enough_money_on_balance_replace_asset
-    case offer
-    case offers_cap
+    case order
+    case orders_cap
     case ok
     case old_password
     case old_password_lowercased
@@ -308,9 +308,9 @@ enum LocKey: String {
     case payout
     case pending
     case pending_investment
-    case pending_offer
-    case pending_offer_details
-    case pending_offers
+    case pending_order
+    case pending_order_details
+    case pending_orders
     case percent
     case percent_fee
     case percent_funded
