@@ -47,6 +47,7 @@ extension TransactionDetails {
             self.tableView.delegate = self
             self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
+            self.tableView.separatorStyle = .none
         }
         
         private func setupLayout() {
