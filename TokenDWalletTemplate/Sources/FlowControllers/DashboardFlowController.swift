@@ -29,7 +29,10 @@ class DashboardFlowController: BaseSignedInFlowController {
     private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let viewController = DashboardScene.ViewController()
         
-        let routing = DashboardScene.Routing()
+        let routing = DashboardScene.Routing(
+            showExploreAssets: { [weak self] in
+                self?.runExploreTokensFlow()
+        })
         
         let previewMaxLength: Int = 3
         
@@ -281,5 +284,22 @@ class DashboardFlowController: BaseSignedInFlowController {
             title: Localized(.pending_order_details)
         )
         self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func runExploreTokensFlow() {
+        let exploreTokensFlowController = ExploreTokensFlowController(
+            navigationController: self.navigationController,
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation
+        )
+        self.currentFlowController = exploreTokensFlowController
+        exploreTokensFlowController.run(showRootScreen: { [weak self] (vc) in
+            self?.navigationController.pushViewController(vc, animated: true)
+        })
     }
 }
