@@ -69,6 +69,9 @@ extension TransactionDetails {
             )
             toPayCells.append(toPayCell)
             if offer.fee > 0 {
+                if let index = toPayCells.indexOf(toPayCell) {
+                    toPayCells[index].isSeparatorHidden = true
+                }
                 let formattedAmount = amountFormatter.assetAmountToString(offer.fee)
                 let feeCellText = formattedAmount + " " + offer.quoteAssetCode
                 

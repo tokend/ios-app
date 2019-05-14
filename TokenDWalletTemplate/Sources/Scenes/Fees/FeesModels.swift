@@ -38,6 +38,12 @@ extension Fees.Model {
     struct SceneModel {
         var fees: [(asset: String, fees: [FeeModel])]
         var selectedAsset: String?
+        let target: Target?
+    }
+    
+    struct Target {
+        let asset: String
+        let feeType: FeeType
     }
     
     enum FeeType: Int32 {

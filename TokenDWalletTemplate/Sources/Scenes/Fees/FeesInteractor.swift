@@ -41,7 +41,7 @@ extension Fees {
         
         private func observeFeesOverview() {
             self.feesOverviewProvider
-                .observeFees()
+                .observeFees(target: self.sceneModel.target)
                 .subscribe(onNext: { [weak self] (fees) in
                     self?.sceneModel.fees = fees
                     self?.updateSelectedAsset()

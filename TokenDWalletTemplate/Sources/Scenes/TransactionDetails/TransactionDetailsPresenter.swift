@@ -75,6 +75,7 @@ extension TransactionDetails {
                             icon: icon,
                             title: cellData.title,
                             hint: cellData.hint,
+                            isSeparatorHidden: cellData.isSeparatorHidden,
                             isTruncatable: isTruncatable
                         )
                         arrayCellModels.append(cellModel)
