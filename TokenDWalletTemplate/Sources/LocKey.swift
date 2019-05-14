@@ -26,7 +26,9 @@ enum LocKey: String {
     case asset
     case assets
     case asset_balance_is_not_found
+    case asset_details
     case asset_pair
+    case asset_summary
     case at_date
     case at_date_replace_date
     case authenticator
@@ -246,6 +248,7 @@ enum LocKey: String {
     case more_info
     case network_info_error
     case network_info_error_replace_message
+    case never
     case new_password
     case new_password_lowercased
     case next
@@ -357,9 +360,11 @@ enum LocKey: String {
     case sales
     case sale_details
     case sale_is_not_found
-    case save_this_seed_in
-    case save_this_seed_in_replace_seed
-    case save_this_seed_in_x
+    case save_this_seed_to_x
+    case save_this_seed_to
+    case save_this_seed_to_replace_seed
+    case save_this_seed_to_replace_never
+    case save_this_seed_to_replace_we_do_not_know_your_seed
     case scan_qr_code_via_authenticator
     case scan_server_info_qr_code
     case search
@@ -429,8 +434,6 @@ enum LocKey: String {
     case to_pay
     case to_receive
     case to_sell
-    case asset_details
-    case asset_summary
     case tokend
     case total
     case total_colon
@@ -474,6 +477,7 @@ enum LocKey: String {
     case view_more
     case volume
     case wallet
+    case we_do_not_know_your_seed
     case week
     case withdraw
     case withdraw_amount
