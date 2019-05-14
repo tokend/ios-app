@@ -34,7 +34,7 @@ extension Fees.FeeDataFormatter: FeeDataFormatterProtocol {
         switch feeType {
             
         case .offerFee:
-            return Localized(.offer)
+            return Localized(.order)
             
         case .paymentFee:
             return Localized(.payment)
