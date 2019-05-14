@@ -23,8 +23,31 @@ extension RecoverySeed {
 
 extension RecoverySeed.Presenter: RecoverySeed.PresentationLogic {
     func presentViewDidLoad(response: RecoverySeed.Event.ViewDidLoad.Response) {
+        let seed = NSAttributedString(string: response.seed)
+        let boldNever = NSAttributedString(
+            string: Localized(.never),
+            attributes: [
+                .font: Theme.Fonts.plainBoldTextFont
+            ]
+        )
+        let weDontKnow = NSAttributedString(
+            string: Localized(.we_do_not_know_your_seed),
+            attributes: [
+                .font: Theme.Fonts.plainBoldTextFont
+            ]
+        )
+        let text = LocalizedAtrributed(
+            .save_this_seed_to,
+            attributes: [
+                .font: Theme.Fonts.plainTextFont
+            ],
+            replace: [
+                .save_this_seed_to_replace_seed: seed,
+                .save_this_seed_to_replace_never: boldNever,
+                .save_this_seed_to_replace_we_do_not_know_your_seed: weDontKnow
+            ])
         let viewModel = RecoverySeed.Event.ViewDidLoad.ViewModel(
-            seed: response.seed,
+            text: text,
             inputSeedValid: response.inputSeedValid
         )
         self.presenterDispatch.display { displayLogic in

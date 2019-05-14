@@ -23,7 +23,9 @@
 "asset" = "Asset";
 "assets" = "Assets";
 "asset_balance_is_not_found" = "Asset balance is not found";
+"asset_details" = "Asset details";
 "asset_pair" = "Asset pair";
+"asset_summary" = "Asset Summary";
 "at_date" = " at $(date)";
 "at_date_replace_date" = "date";
 "authenticator" = "Authenticator";
@@ -243,6 +245,7 @@
 "more_info" = "MORE INFO";
 "network_info_error" = "Network info error: $(message)";
 "network_info_error_replace_message" = "message";
+"never" = "never";
 "new_password" = "New Password";
 "new_password_lowercased" = "new password";
 "next" = "Next";
@@ -354,9 +357,11 @@
 "sales" = "Sales";
 "sale_details" = "Sale details";
 "sale_is_not_found" = "Sale is not found";
-"save_this_seed_in" = "Save this seed in a secure place:\n$(seed)\nIn case you lose your password you will be able to recover access to your account by using this seed.";
-"save_this_seed_in_replace_seed" = "seed";
-"save_this_seed_in_x" = "Save this seed in a secure place./nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/nIn case you lose your password you will be able to recover access to your account by using this seed.";
+"save_this_seed_to_x" = "Save this seed to a safe place and do not show it to anyone.\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nIt is used to recover account in case of password loss. If you lose your password and seed, you will never access your account.\nWe do not know your seed and it will never be shown again";
+"save_this_seed_to" = "Save this seed to a safe place and do not show it to anyone.\nIt is used to recover account in case of password loss. If you lose your password and seed, you will $(never) access your account.\n$(we_do_not_know_your_seed) and it will never be shown again\n\n$(seed)";
+"save_this_seed_to_replace_seed"= "seed";
+"save_this_seed_to_replace_never" = "never";
+"save_this_seed_to_replace_we_do_not_know_your_seed" = "we_do_not_know_your_seed";
 "scan_qr_code_via_authenticator" = "Scan QR code via Authenticator";
 "scan_server_info_qr_code" = "Scan server info QR code";
 "search" = "Search";
@@ -426,8 +431,6 @@
 "to_pay" = "To pay";
 "to_receive" = "To receive";
 "to_sell" = " to sell";
-"asset_details" = "Asset details";
-"asset_summary" = "Asset Summary";
 "tokend" = "TokenD";
 "total" = "Total";
 "total_colon" = "Total:";
@@ -471,6 +474,7 @@
 "view_more" = "View more";
 "volume" = "Volume";
 "wallet" = "Wallet";
+"we_do_not_know_your_seed" = "We do not know your seed";
 "week" = "Week";
 "withdraw" = "Withdraw";
 "withdraw_amount" = "Withdraw amount";
