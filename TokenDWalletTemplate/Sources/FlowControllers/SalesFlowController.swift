@@ -142,9 +142,10 @@ class SalesFlowController: BaseSignedInFlowController {
     }
     
     private func showSaleDetailsScreen(identifier: String) {
-        let vc = self.setupSaleDetailsScreen(identifier: identifier)
-        
-        self.navigationController.pushViewController(vc, animated: true)
+        self.showSaleInvest(identifier: identifier)
+//        let vc = self.setupSaleDetailsScreen(identifier: identifier)
+//
+//        self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func setupSaleDetailsScreen(identifier: String) -> SaleDetails.ViewController {
@@ -211,7 +212,7 @@ class SalesFlowController: BaseSignedInFlowController {
                 )
             },
             onSaleInvestAction: { [weak self] (investModel) in
-                self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
+                // self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
             },
             showDialog: { [weak self] (title, message, options, onSelected) in
                 guard let present = self?.navigationController.getPresentViewControllerClosure() else {
@@ -250,14 +251,14 @@ class SalesFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showSaleInvestConfirmationScreen(saleInvestModel: SaleDetails.Model.SaleInvestModel) {
+    private func showSaleInvestConfirmationScreen(saleInvestModel: SaleInvest.Model.SaleInvestModel) {
         let vc = self.setupSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
         
         self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func setupSaleInvestConfirmationScreen(
-        saleInvestModel: SaleDetails.Model.SaleInvestModel
+        saleInvestModel: SaleInvest.Model.SaleInvestModel
         ) -> ConfirmationScene.ViewController {
         
         let vc = ConfirmationScene.ViewController()
@@ -347,6 +348,91 @@ class SalesFlowController: BaseSignedInFlowController {
             dataProvider: dataProvider,
             dateFormatter: dateFormatter,
             amountFormatter: amountFormatter,
+            routing: routing
+        )
+        return vc
+    }
+    
+    private func showSaleInvest(identifier: String) {
+        let vc = self.setupSaleInvest(identifier: identifier)
+        
+        vc.navigationItem.title = Localized(.invest)
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupSaleInvest(identifier: String) -> UIViewController {
+        let vc = SaleInvest.ViewController()
+        
+        let dataProvider = SaleInvest.SaleInvestProvider(
+            saleIdentifier: identifier,
+            salesRepo: self.reposController.salesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            balancesRepo: self.reposController.balancesRepo,
+            walletRepo: self.reposController.walletRepo,
+            offersRepo: self.reposController.pendingOffersRepo
+        )
+        
+        let amountFormatter = SaleInvest.AmountFormatter()
+        let investedAmountFormatter = SaleInvest.InvestAmountFormatter()
+        
+        let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
+        
+        let transactionSender = TransactionSender(
+            api: self.flowControllerStack.api.transactionsApi,
+            keychainDataProvider: self.keychainDataProvider
+        )
+        
+        let sceneModel = SaleInvest.Model.SceneModel(
+            investorAccountId: self.userDataProvider.walletData.accountId,
+            inputAmount: 0.0,
+            selectedBalance: nil
+            )
+        
+        let cancelInvestWorker = SaleInvest.CancelInvestWorker(
+            transactionSender: transactionSender,
+            amountConverter: AmountConverter(),
+            networkInfoFetcher: self.flowControllerStack.networkInfoFetcher,
+            userDataProvider: self.userDataProvider
+        )
+        
+        let routing = SaleInvest.Routing(
+            onShowProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            onHideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+            },
+            onShowError: { [weak self] (errorMessage) in
+                self?.navigationController.showErrorMessage(errorMessage, completion: nil)
+            },
+            onPresentPicker: { [weak self] (title, options, onSelected) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                
+                self?.showDialog(
+                    title: title,
+                    message: nil,
+                    style: .actionSheet,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )
+            },
+            onSaleInvestAction: { [weak self] (investModel) in
+                self?.showSaleInvestConfirmationScreen(saleInvestModel: investModel)
+            }
+        )
+        
+        SaleInvest.Configurator.configure(
+            viewController: vc,
+            investedAmountFormatter: investedAmountFormatter,
+            amountFormatter: amountFormatter,
+            dataProvider: dataProvider,
+            cancelInvestWorker: cancelInvestWorker,
+            feeLoader: feeLoader,
+            sceneModel: sceneModel,
             routing: routing
         )
         return vc
