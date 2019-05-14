@@ -34,6 +34,7 @@ extension DashboardScene {
             
             self.setupView()
             self.setupScrollView()
+            self.setupBarButtonItem()
             
             self.setupLayout()
             
@@ -70,6 +71,25 @@ extension DashboardScene {
                     self?.scrollView.endRefreshing(at: .top)
                 }
             }
+        }
+        
+        private func setupBarButtonItem() {
+            let rightBarButtonItem = UIBarButtonItem(
+                image: Assets.plusIcon.image,
+                style: .plain,
+                target: nil,
+                action: nil
+            )
+            
+            rightBarButtonItem
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    self?.routing?.showExploreAssets()
+                })
+            .disposed(by: self.disposeBag)
+            self.navigationItem.rightBarButtonItem = rightBarButtonItem
         }
         
         private func createRefresher() -> PullToRefresh {
