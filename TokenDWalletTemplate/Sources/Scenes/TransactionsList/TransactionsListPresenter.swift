@@ -155,7 +155,7 @@ extension TransactionsListScene {
                 amountColor = Theme.Colors.negativeAmountColor
                 
             case .pending:
-                title = Localized(.pending_offer)
+                title = Localized(.pending_order)
                 icon = Assets.outgoing.image
                 iconTint = Theme.Colors.neutralColor
                 amountColor = Theme.Colors.neutralAmountColor

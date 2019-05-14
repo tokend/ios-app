@@ -13,6 +13,7 @@ enum RecoverySeed {
 // MARK: - Models
 
 extension RecoverySeed.Model {
+    typealias WalletData = RegisterScene.Model.WalletData
     
     struct SceneModel {
         let seed: String
@@ -29,6 +30,8 @@ extension RecoverySeed.Model {
 // MARK: - Events
 
 extension RecoverySeed.Event {
+    typealias Model = RecoverySeed.Model
+    
     enum ViewDidLoad {
         struct Request {}
         
@@ -38,7 +41,7 @@ extension RecoverySeed.Event {
         }
         
         struct ViewModel {
-            let seed: String
+            let text: NSAttributedString
             let inputSeedValid: RecoverySeed.Model.InputSeedValidation
         }
     }
@@ -71,15 +74,27 @@ extension RecoverySeed.Event {
     
     enum ProceedAction {
         struct Request {}
-        
+    }
+    
+    enum ShowWarning {
+        struct Response {}
+        typealias ViewModel = Response
+    }
+    
+    enum SignUpAction {
+        struct Request {}
         enum Response {
-            case showMessage
-            case proceed
+            case loading
+            case loaded
+            case success(account: String, walletData: Model.WalletData)
+            case error(RecoverySeedSignUpWorkerResult.SignUpError)
         }
         
         enum ViewModel {
-            case showMessage
-            case proceed
+            case loading
+            case loaded
+            case success(account: String, walletData: Model.WalletData)
+            case error(String)
         }
     }
 }

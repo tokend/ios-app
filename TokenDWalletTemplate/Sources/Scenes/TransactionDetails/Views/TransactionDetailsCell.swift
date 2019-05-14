@@ -9,11 +9,15 @@ enum TransactionDetailsCell {
         let icon: UIImage
         let title: String
         let hint: String?
+        let isSeparatorHidden: Bool
+        var isTruncatable: Bool
         
         func setup(cell: TransactionDetailsCell.View) {
             cell.icon = self.icon.withRenderingMode(.alwaysTemplate)
             cell.title = self.title
             cell.hint = self.hint
+            cell.isSeparatorHidden = self.isSeparatorHidden
+            cell.isTruncatable = self.isTruncatable
         }
     }
     
@@ -24,6 +28,7 @@ enum TransactionDetailsCell {
         private let iconView: UIImageView = UIImageView()
         private let titleLabel: UILabel = UILabel()
         private let hintLabel: UILabel = UILabel()
+        private let separator: UIView = UIView()
         
         private let iconSize: CGFloat = 24
         private let sideInset: CGFloat = 20
@@ -49,6 +54,17 @@ enum TransactionDetailsCell {
             }
         }
         
+        public var isSeparatorHidden: Bool {
+            get { return self.separator.isHidden }
+            set { self.separator.isHidden = newValue }
+        }
+        
+        public var isTruncatable: Bool = false {
+            didSet {
+                self.updateTitleTruncatability()
+            }
+        }
+        
         // MARK: -
         
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -68,8 +84,18 @@ enum TransactionDetailsCell {
             self.setupIconView()
             self.setupTitleLabel()
             self.setupHintLabel()
+            self.setupSeparator()
             
             self.setupLayout()
+        }
+        
+        private func updateTitleTruncatability() {
+            if self.isTruncatable {
+                self.titleLabel.numberOfLines = 1
+                self.titleLabel.lineBreakMode = .byTruncatingMiddle
+            } else {
+                self.titleLabel.numberOfLines = 0
+            }
         }
         
         private func setupView() {
@@ -104,9 +130,14 @@ enum TransactionDetailsCell {
             self.hintLabel.numberOfLines = 1
         }
         
+        private func setupSeparator() {
+            self.separator.backgroundColor = Theme.Colors.separatorOnContentBackgroundColor
+        }
+        
         private func setupLayout() {
             self.addSubview(self.iconView)
             self.addSubview(self.titleLabel)
+            self.addSubview(self.separator)
             
             self.titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
             self.titleLabel.setContentHuggingPriority(.required, for: .horizontal)
@@ -115,6 +146,12 @@ enum TransactionDetailsCell {
                 make.leading.equalToSuperview().inset(self.sideInset)
                 make.centerY.equalToSuperview()
                 make.width.height.equalTo(self.iconSize)
+            }
+            
+            self.separator.snp.makeConstraints { (make) in
+                make.leading.equalToSuperview().inset(self.sideInset * 2 + self.iconSize)
+                make.trailing.bottom.equalToSuperview()
+                make.height.equalTo(1.0/UIScreen.main.scale)
             }
             
             self.updateLayout()

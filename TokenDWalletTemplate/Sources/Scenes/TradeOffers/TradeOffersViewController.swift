@@ -360,7 +360,7 @@ extension TradeOffers.ViewController: TradeOffers.DisplayLogic {
         })
         self.picker.setSelectedItemAtIndex(viewModel.selectedIndex ?? 0, animated: false)
         
-        self.orderBookView.baseCurrency = viewModel.assetPair.baseAsset
+        self.orderBookView.quoteCurrency = viewModel.assetPair.quoteAsset
         
         self.setPeriods(viewModel.periods)
         self.setSelectedPeriodIndex(viewModel.selectedPeriodIndex)

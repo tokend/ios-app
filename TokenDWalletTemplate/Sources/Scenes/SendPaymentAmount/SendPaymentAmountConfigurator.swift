@@ -11,6 +11,7 @@ extension SendPaymentAmount {
             balanceDetailsLoader: BalanceDetailsLoader,
             amountFormatter: AmountFormatterProtocol,
             feeLoader: FeeLoaderProtocol,
+            feeOverviewer: FeeOverviewerProtocol,
             viewConfig: Model.ViewConfig,
             routing: Routing?
             ) {
@@ -32,7 +33,8 @@ extension SendPaymentAmount {
                 senderAccountId: senderAccountId,
                 selectedBalanceId: selectedBalanceId,
                 balanceDetailsLoader: balanceDetailsLoader,
-                feeLoader: feeLoader
+                feeLoader: feeLoader,
+                feeOverviewer: feeOverviewer
             )
             let interactorDispatch = InteractorDispatch(
                 queue: queue,

@@ -88,10 +88,24 @@ extension TransactionDetails.Model {
         public let description: String
     }
     
-    public struct CellModel {
+    public struct CellModel: Equatable {
         let title: String
         let hint: String
         let identifier: TransactionDetails.CellIdentifier
+        var isSeparatorHidden: Bool
+        
+        init(
+            title: String,
+            hint: String,
+            identifier: TransactionDetails.CellIdentifier,
+            isSeparatorHidden: Bool = false
+            ) {
+            
+            self.title = title
+            self.hint = hint
+            self.identifier = identifier
+            self.isSeparatorHidden = isSeparatorHidden
+        }
     }
     
     public struct SectionViewModel {
@@ -153,5 +167,15 @@ extension TransactionDetails.Event {
         }
         typealias Response = Action
         typealias ViewModel = Action
+    }
+    
+    enum SelectedCell {
+        struct Request {
+            let model: CellViewAnyModel
+        }
+        struct Response {
+            let message: String
+        }
+        typealias ViewModel = Response
     }
 }

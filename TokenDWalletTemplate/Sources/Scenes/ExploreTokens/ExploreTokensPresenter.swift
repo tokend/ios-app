@@ -65,7 +65,7 @@ extension ExploreTokensScene.Presenter: ExploreTokensScene.PresentationLogic {
         
         let viewModel: ExploreTokensScene.Event.TokensDidChange.ViewModel = {
             if sections.isEmpty {
-                return .empty(title: Localized(.no_tokens))
+                return .empty(title: Localized(.no_assets))
             }
             return .sections(sections)
         }()

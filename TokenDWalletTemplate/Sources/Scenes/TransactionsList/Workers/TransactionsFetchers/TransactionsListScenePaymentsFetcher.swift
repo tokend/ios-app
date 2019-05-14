@@ -248,7 +248,7 @@ extension TransactionsListScene {
             )
             
             let counterparty = matchedEffect.orderBookId == 0 ?
-                Localized(.pending_offer) : Localized(.pending_investment)
+                Localized(.pending_order) : Localized(.pending_investment)
             
             let transaction = Transaction(
                 identifier: identifier,
@@ -294,7 +294,7 @@ extension TransactionsListScene {
         private func getCounterparty(details: OperationDetailsResource) -> String? {
             if let manageOfferDetails = details as? OpManageOfferDetailsResource {
                 return manageOfferDetails.orderBookId == 0 ?
-                    Localized(.pending_offer) : Localized(.pending_investment)
+                    Localized(.pending_order) : Localized(.pending_investment)
             } else if details as? OpManageAssetPairDetailsResource != nil {
                 return Localized(.manage_asset_pair)
             } else if details as? OpCheckSaleStateDetailsResource != nil {

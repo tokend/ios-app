@@ -13,6 +13,7 @@ protocol SendPaymentBusinessLogic {
     func onEditAmount(request: Event.EditAmount.Request)
     func onDescriptionUpdated(request: Event.DescriptionUpdated.Request)
     func onSubmitAction(request: Event.SubmitAction.Request)
+    func onFeeOverviewAction(request: Event.FeeOverviewAction.Request)
 }
 
 extension SendPaymentAmount {
@@ -31,6 +32,7 @@ extension SendPaymentAmount {
         private let balanceDetailsLoader: BalanceDetailsLoader
         
         private let feeLoader: FeeLoaderProtocol
+        private let feeOverviewer: FeeOverviewerProtocol
         
         private var balances: [Model.BalanceDetails] = []
         private var shouldLoadBalances: Bool = true
@@ -44,7 +46,8 @@ extension SendPaymentAmount {
             senderAccountId: String,
             selectedBalanceId: String?,
             balanceDetailsLoader: BalanceDetailsLoader,
-            feeLoader: FeeLoaderProtocol
+            feeLoader: FeeLoaderProtocol,
+            feeOverviewer: FeeOverviewerProtocol
             ) {
             
             self.presenter = presenter
@@ -54,6 +57,7 @@ extension SendPaymentAmount {
             self.selectedBalanceId = selectedBalanceId
             self.balanceDetailsLoader = balanceDetailsLoader
             self.feeLoader = feeLoader
+            self.feeOverviewer = feeOverviewer
         }
         
         // MARK: - Private
@@ -108,6 +112,15 @@ extension SendPaymentAmount {
                     self?.presenter.presentLoadBalances(response: .failed(error))
                 })
                 .disposed(by: self.disposeBag)
+        }
+        
+        private func updateFeeOverviewAvailability() {
+            let available = self.feeOverviewer.checkFeeExistanceFor(
+                asset: self.sceneModel.selectedBalance?.asset ?? "",
+                feeType: self.sceneModel.feeType
+            )
+            let response = Event.FeeOverviewAvailability.Response(available: available)
+            self.presenter.presentFeeOverviewAvailability(response: response)
         }
         
         // MARK: - Send
@@ -346,6 +359,7 @@ extension SendPaymentAmount.Interactor: SendPaymentAmount.BusinessLogic {
     func onBalanceSelected(request: Event.BalanceSelected.Request) {
         guard let balance = self.getBalanceWith(balanceId: request.balanceId) else { return }
         self.sceneModel.selectedBalance = balance
+        self.updateFeeOverviewAvailability()
         
         let response = Event.BalanceSelected.Response(
             sceneModel: self.sceneModel,
@@ -374,5 +388,17 @@ extension SendPaymentAmount.Interactor: SendPaymentAmount.BusinessLogic {
         case .handleWithdraw:
             self.handleWithdrawSendAction()
         }
+    }
+    
+    func onFeeOverviewAction(request: Event.FeeOverviewAction.Request) {
+        guard let asset = self.sceneModel.selectedBalance?.asset else {
+            return
+        }
+        let feeType = self.feeOverviewer.getSystemFeeType(feeType: self.sceneModel.feeType)
+        let response = Event.FeeOverviewAction.Response(
+            asset: asset,
+            feeType: feeType
+        )
+        self.presenter.presentFeeOverviewAction(response: response)
     }
 }

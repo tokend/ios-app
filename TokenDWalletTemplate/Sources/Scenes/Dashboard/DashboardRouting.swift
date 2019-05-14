@@ -1,5 +1,7 @@
 import Foundation
 
 extension DashboardScene {
-    struct Routing { }
+    struct Routing {
+        let showExploreAssets: () -> Void
+    }
 }

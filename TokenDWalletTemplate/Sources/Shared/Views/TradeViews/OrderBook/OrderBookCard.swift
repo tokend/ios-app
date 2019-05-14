@@ -4,18 +4,18 @@ class OrderBookCard: UIView {
     
     // MARK: - Public properties
     
-    public var baseCurrency: String = "" {
+    public var quoteCurrency: String = "" {
         didSet {
             self.priceBidTitleLabel.text = Localized(
                 .bid_base,
                 replace: [
-                    .bid_base_replace_base: self.baseCurrency
+                    .bid_base_replace_base: self.quoteCurrency
                 ]
             )
             self.priceAskTitleLabel.text = Localized(
                 .ask_base,
                 replace: [
-                    .ask_base_replace_base: self.baseCurrency
+                    .ask_base_replace_base: self.quoteCurrency
                 ]
             )
         }
@@ -151,14 +151,14 @@ class OrderBookCard: UIView {
             make.leading.equalToSuperview()
             make.trailing.equalTo(self.verticalSeparator.snp.leading)
             make.top.equalTo(self.horizontalSeparator.snp.bottom)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(self.safeArea.bottom)
         }
         
         self.sellTable.snp.makeConstraints { (make) in
             make.leading.equalTo(self.verticalSeparator.snp.trailing)
             make.trailing.equalToSuperview()
             make.top.equalTo(self.horizontalSeparator.snp.bottom)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(self.safeArea.bottom)
         }
     }
     

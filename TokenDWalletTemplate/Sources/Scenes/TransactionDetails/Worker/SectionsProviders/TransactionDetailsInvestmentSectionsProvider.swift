@@ -42,7 +42,7 @@ extension TransactionDetails {
             
             let tokenCell = Model.CellModel(
                 title: offer.baseAssetCode,
-                hint: Localized(.token),
+                hint: Localized(.asset),
                 identifier: .token
             )
             let dateCell = TransactionDetails.Model.CellModel(
@@ -69,6 +69,9 @@ extension TransactionDetails {
             )
             toPayCells.append(toPayCell)
             if offer.fee > 0 {
+                if let index = toPayCells.indexOf(toPayCell) {
+                    toPayCells[index].isSeparatorHidden = true
+                }
                 let formattedAmount = amountFormatter.assetAmountToString(offer.fee)
                 let feeCellText = formattedAmount + " " + offer.quoteAssetCode
                 
