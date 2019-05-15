@@ -8,7 +8,6 @@ protocol SaleInvestDataProviderProtocol {
     func observeSale() -> Observable<SaleInvest.Model.SaleModel?>
     func observeAsset(assetCode: String) -> Observable<SaleInvest.Model.AssetModel?>
     func observeBalances() -> Observable<[SaleInvest.Model.BalanceDetails]>
-    func observeAccount() -> Observable<SaleInvest.Model.AccountModel>
     func observeOffers() -> Observable<[SaleInvest.Model.InvestmentOffer]>
     func observeErrors() -> Observable<Swift.Error>
     
@@ -26,7 +25,6 @@ extension SaleInvest {
         private let salesRepo: SalesRepo
         private let assetsRepo: AssetsRepo
         private let balancesRepo: BalancesRepo
-        private let walletRepo: WalletRepo
         private let offersRepo: PendingOffersRepo
         
         private let pendingOffers: BehaviorRelay<[PendingOffersRepo.Offer]> = BehaviorRelay(value: [])
@@ -48,7 +46,6 @@ extension SaleInvest {
             self.salesRepo = salesRepo
             self.assetsRepo = assetsRepo
             self.balancesRepo = balancesRepo
-            self.walletRepo = walletRepo
             self.offersRepo = offersRepo
         }
         
@@ -106,13 +103,9 @@ extension SaleInvest {
             }
         }
         
-        func observeAccount() -> Observable<Model.AccountModel> {
-            return self.walletRepo.observeWallet().map({ (walletData) -> Model.AccountModel in
-                return Model.AccountModel(isVerified: walletData.verified)
-            })
-        }
-        
         func observeOffers() -> Observable<[Model.InvestmentOffer]> {
+            self.loadPendingOffers(saleId: self.saleIdentifier)
+            
             return self.pendingOffers.map({ (offers) -> [Model.InvestmentOffer] in
                 return offers.map({ (offer) -> Model.InvestmentOffer in
                     return Model.InvestmentOffer(

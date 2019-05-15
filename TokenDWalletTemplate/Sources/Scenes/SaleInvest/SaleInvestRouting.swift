@@ -10,6 +10,12 @@ extension SaleInvest {
         _ options: [String],
         _ onSelect: @escaping (_ index: Int) -> Void
         ) -> Void
+        let showDialog: (
+        _ title: String,
+        _ message: String,
+        _ options: [String],
+        _ onSelect: @escaping (_ index: Int) -> Void
+        ) -> Void
         let onSaleInvestAction: (_ sendInvestModel: Model.SaleInvestModel) -> Void
     }
 }

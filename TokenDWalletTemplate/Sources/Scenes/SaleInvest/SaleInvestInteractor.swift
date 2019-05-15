@@ -59,11 +59,7 @@ extension SaleInvest {
                 self.updateRelay.emitEvent()
             }
         }
-        private var account: Model.AccountModel? {
-            didSet {
-                self.updateRelay.emitEvent()
-            }
-        }
+        
         private var offers: [Model.InvestmentOffer] = [] {
             didSet {
                 self.updateSelectedBalance()
@@ -109,21 +105,6 @@ extension SaleInvest {
         }
         
         // MARK: - Private
-        
-        // MARK: - Observe
-        
-        private func observeAccount() {
-            self.dataProvider
-                .observeAccount()
-                .subscribe(onNext: { (account) in
-                    if account.isVerified {
-                        
-                    } else {
-                        
-                    }
-                })
-                .disposed(by: self.disposeBag)
-        }
         
         private func observeSaleBalance() {
             guard let sale = self.sale else {
@@ -174,12 +155,12 @@ extension SaleInvest {
         }
         
         private func updateScene() {
-            let investingModel = self.getInvestingTabModel()
+            let investingModel = self.getInvestingModel()
             let response = Event.SceneUpdated.Response(model: investingModel)
             self.presenter.presentSceneUpdated(response: response)
         }
         
-        private func getInvestingTabModel() -> Model.InvestingModel {
+        private func getInvestingModel() -> Model.InvestingModel {
             let availableAmount = self.getAvailableInputAmount()
             let isCancellable = self.sceneModel.inputAmount != 0.0
             let actionTitle = isCancellable ? Localized(.update) : Localized(.invest)
@@ -468,13 +449,6 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
             .disposed(by: self.disposeBag)
         
         self.dataProvider
-            .observeAccount()
-            .subscribe(onNext: { [weak self] (account) in
-                self?.account = account
-            })
-            .disposed(by: self.disposeBag)
-        
-        self.dataProvider
             .observeErrors()
             .subscribe(onNext: { [weak self] (error) in
                 self?.errors.accept(error)
@@ -501,7 +475,7 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
         self.sceneModel.selectedBalance = balance
         self.updateInputAmountFromSelectedBalance()
         
-        let investingTabModel = self.getInvestingTabModel()
+        let investingTabModel = self.getInvestingModel()
         let response = Event.BalanceSelected.Response(updatedTab: investingTabModel)
         self.presenter.presentBalanceSelected(response: response)
     }

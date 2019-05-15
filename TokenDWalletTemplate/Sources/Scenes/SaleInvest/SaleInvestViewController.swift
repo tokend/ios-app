@@ -73,10 +73,10 @@ extension SaleInvest {
             super.viewDidLoad()
             
             self.commonInit()
-//            let request = Event.ViewDidLoad.Request()
-//            self.interactorDispatch?.sendRequest { businessLogic in
-//                businessLogic.onViewDidLoad(request: request)
-//            }
+            let request = Event.ViewDidLoad.Request()
+            self.interactorDispatch?.sendRequest { businessLogic in
+                businessLogic.onViewDidLoad(request: request)
+            }
         }
         
         // MARK: - Private
@@ -170,10 +170,18 @@ extension SaleInvest {
                 .controlEvent(.touchUpInside)
                 .asDriver()
                 .drive(onNext: { [weak self] in
-                    let requset = Event.CancelInvestAction.Request()
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onCancelInvestAction(request: requset)
-                    })
+                    let onSelected: ((Int) -> Void) = { _ in
+                        let request = Event.CancelInvestAction.Request()
+                        self?.interactorDispatch?.sendRequest { businessLogic in
+                            businessLogic.onCancelInvestAction(request: request)
+                        }
+                    }
+                    self?.routing?.showDialog(
+                        Localized(.cancel_investment),
+                        Localized(.are_you_sure_you_want_to_cancel_investment),
+                        [Localized(.yes)],
+                        onSelected
+                    )
                 })
                 .disposed(by: self.disposeBag)
         }
