@@ -143,7 +143,7 @@ class SalesFlowController: BaseSignedInFlowController {
     
     private func showSaleDetailsScreen(identifier: String) {
         let vc = self.setupSaleDetailsScreen(identifier: identifier)
-
+        
         self.navigationController.pushViewController(vc, animated: true)
     }
     
