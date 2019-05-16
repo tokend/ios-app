@@ -30,6 +30,9 @@
 "at_date_replace_date" = "date";
 "authenticator" = "Authenticator";
 "available" = "Available";
+"available_amount" = "Available: $(amount)";
+"available_amount_replace_amount" = "amount";
+"available_assets_for_this_operations" = "Available assets for this operations were not found";
 "available_date" = "Available: $(formatted)";
 "available_date_replace_formatted" = "formatted";
 "back" = "Back";
@@ -72,6 +75,7 @@
 "chart" = "Chart";
 "chart_cap" = "CHART";
 "check_sale_state" = "Check sale state";
+"choose_asset" = "Choose asset";
 "choose_email" = "Choose email";
 "close_time" = "Close time";
 "code" = "Code";
