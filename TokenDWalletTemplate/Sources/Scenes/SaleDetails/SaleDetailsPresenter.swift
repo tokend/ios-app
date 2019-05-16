@@ -116,7 +116,7 @@ extension SaleDetails {
             )
             
             let tokenSummerySections = SaleDetails.SectionViewModel(
-                title: Localized(.token_summary),
+                title: Localized(.asset_summary),
                 cells: [
                     availableCell,
                     issuedCell,

@@ -78,18 +78,18 @@ extension SaleDetails {
                 .subscribe(onNext: { [weak self] (_) in
                     var tabs: [Model.TabModel] = []
                     
+                    if let asset = self?.assetModel,
+                        let tab = self?.getAssetDetailsTab(assetStatus: asset) {
+                        tabs.append(tab)
+                    } else {
+                        self?.addLoadingTab(to: &tabs, title: Localized(.asset))
+                    }
+                    
                     if let saleDetails = self?.saleDetailsStatus,
                         let tab = self?.getSaleDetailsTab(saleDetailsStatus: saleDetails) {
                         tabs.append(tab)
                     } else {
                         self?.addLoadingTab(to: &tabs, title: Localized(.general))
-                    }
-                    
-                    if let asset = self?.assetModel,
-                        let tab = self?.getAssetDetailsTab(assetStatus: asset) {
-                        tabs.append(tab)
-                    } else {
-                        self?.addLoadingTab(to: &tabs, title: Localized(.token))
                     }
                     
                     self?.tabs.onNext(tabs)
@@ -253,7 +253,7 @@ extension SaleDetails.SaleDetailsDataProvider {
             switch self {
                 
             case .noToken:
-                return Localized(.no_token)
+                return Localized(.no_asset)
             }
         }
     }

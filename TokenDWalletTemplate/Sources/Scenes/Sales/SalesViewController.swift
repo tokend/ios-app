@@ -212,9 +212,11 @@ extension Sales.ViewController: Sales.DisplayLogic {
         switch viewModel {
             
         case .loaded:
+            self.emptyView.alpha = 1.0
             self.routing?.onHideLoading()
             
         case .loading:
+            self.emptyView.alpha = 0.0
             self.routing?.onShowLoading()
         }
     }

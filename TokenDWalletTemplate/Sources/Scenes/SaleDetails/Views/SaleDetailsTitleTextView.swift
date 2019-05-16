@@ -54,6 +54,29 @@ extension SaleDetails {
                 fatalError("init(coder:) has not been implemented")
             }
             
+            public override var intrinsicContentSize: CGSize {
+                return self.saleDetailsTableView.contentSize
+            }
+            
+            // MARK: - Public
+            
+            public func observeContentSize() -> Observable<(UIView?, CGSize)> {
+                return self.saleDetailsTableView
+                    .rx
+                    .observe(
+                        CGSize.self,
+                        "contentSize",
+                        options: [.new],
+                        retainSelf: false
+                    ).map({ [weak self] (tableSize) -> (UIView?, CGSize) in
+                        guard let sSelf = self, let tableSize = tableSize else {
+                            return (nil, CGSize.zero)
+                        }
+                        
+                        return (sSelf, tableSize)
+                    })
+            }
+            
             // MARK: - Private
             
             private func customInit() {
@@ -75,7 +98,7 @@ extension SaleDetails {
                 self.saleDetailsTableView.register(classes: cellClasses)
                 self.saleDetailsTableView.dataSource = self
                 self.saleDetailsTableView.rowHeight = UITableView.automaticDimension
-                self.saleDetailsTableView.estimatedRowHeight = 125
+                self.saleDetailsTableView.estimatedRowHeight = 35
                 self.saleDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
                 self.saleDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor
                 self.saleDetailsTableView.isUserInteractionEnabled = false

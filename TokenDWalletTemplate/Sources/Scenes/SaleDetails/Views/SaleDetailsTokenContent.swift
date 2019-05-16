@@ -1,7 +1,9 @@
 import Foundation
-import UIKit
-import SnapKit
 import Nuke
+import RxCocoa
+import RxSwift
+import SnapKit
+import UIKit
 
 extension SaleDetails {
     
@@ -74,15 +76,8 @@ extension SaleDetails {
                 }
             }
             
-            // MARK: - Override
-            
-            override init(frame: CGRect) {
-                super.init(frame: frame)
-                self.commonInit()
-            }
-            
-            required init?(coder aDecoder: NSCoder) {
-                fatalError("init(coder:) has not been implemented")
+            public var topHeight: CGFloat {
+                return self.infoViewHeight + 2 * self.topInset
             }
             
             // MARK: - Private properties
@@ -105,8 +100,18 @@ extension SaleDetails {
             private let iconSize: CGFloat = 45
             private let topInset: CGFloat = 15
             private let sideInset: CGFloat = 20
+            private let infoViewHeight: CGFloat = 100
             
-            // MARK: - Private
+            // MARK: -
+            
+            override init(frame: CGRect) {
+                super.init(frame: frame)
+                self.commonInit()
+            }
+            
+            required init?(coder aDecoder: NSCoder) {
+                fatalError("init(coder:) has not been implemented")
+            }
             
             private func commonInit() {
                 self.setupView()
@@ -120,6 +125,17 @@ extension SaleDetails {
                 self.setupTokenDetailsTableView()
                 self.setupLayout()
             }
+            
+            // MARK: - Override
+            
+            public override var intrinsicContentSize: CGSize {
+                var size = self.tokenDetailsTableView.contentSize
+                size.height += self.topHeight
+                
+                return size
+            }
+            
+            // MARK: - Private
             
             private func updateIcon() {
                 if let iconUrl = self.iconUrl {
@@ -143,6 +159,26 @@ extension SaleDetails {
                 self.tokenAbbreviationView.backgroundColor = TokenColoringProvider.shared.coloringForCode(code)
                 let abbreviation = "\(firstCharacter)".uppercased()
                 self.tokenAbbreviationLabel.text = abbreviation
+            }
+            
+            public func observeContentSize() -> Observable<(UIView?, CGSize)> {
+                return self.tokenDetailsTableView
+                    .rx
+                    .observe(
+                        CGSize.self,
+                        "contentSize",
+                        options: [.new],
+                        retainSelf: false
+                    ).map({ [weak self] (tableSize) -> (UIView?, CGSize) in
+                        guard let sSelf = self, let tableSize = tableSize else {
+                            return (nil, CGSize.zero)
+                        }
+                        
+                        var size = tableSize
+                        size.height += sSelf.topHeight
+                        
+                        return (sSelf, size)
+                    })
             }
             
             // MARK: - Setup
@@ -200,7 +236,7 @@ extension SaleDetails {
                 self.tokenDetailsTableView.register(classes: cellClasses)
                 self.tokenDetailsTableView.dataSource = self
                 self.tokenDetailsTableView.rowHeight = UITableView.automaticDimension
-                self.tokenDetailsTableView.estimatedRowHeight = 125
+                self.tokenDetailsTableView.estimatedRowHeight = 35
                 self.tokenDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
                 self.tokenDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor
                 self.tokenDetailsTableView.isUserInteractionEnabled = false
@@ -225,8 +261,8 @@ extension SaleDetails {
                 
                 self.tokenInfoView.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview()
-                    make.top.equalToSuperview().inset(self.sideInset)
-                    make.height.equalTo(100)
+                    make.top.equalToSuperview().inset(self.topInset)
+                    make.height.equalTo(self.infoViewHeight)
                 }
                 
                 self.tokenIconView.snp.makeConstraints { (make) in
@@ -269,7 +305,7 @@ extension SaleDetails {
                 }
                 
                 self.tokenDetailsTableView.snp.makeConstraints { (make) in
-                    make.top.equalTo(self.tokenInfoView.snp.bottom).offset(self.sideInset)
+                    make.top.equalTo(self.tokenInfoView.snp.bottom).offset(self.topInset)
                     make.trailing.leading.bottom.equalToSuperview()
                 }
             }
