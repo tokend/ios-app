@@ -122,7 +122,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
                 guard let present = self?.navigationController.getPresentViewControllerClosure() else {
                     return
                 }
-
+                
                 self?.showDialog(
                     title: title,
                     message: nil,
@@ -139,7 +139,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onShowWithdrawDestination: nil,
             showFeesOverview: { [weak self] (asset, feeType) in
                 self?.showFees(asset: asset, feeType: feeType)
-            })
+        })
         
         SendPaymentAmount.Configurator.configure(
             viewController: vc,
@@ -173,7 +173,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             },
             showWithdrawConformation: { (_) in
                 
-            },
+        },
             showSendAmount: { [weak self] (destination) in
                 self?.showSendPaymentAmountScene(destination: destination)
             },
