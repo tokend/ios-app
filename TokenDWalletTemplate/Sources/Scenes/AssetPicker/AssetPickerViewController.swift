@@ -184,6 +184,9 @@ extension AssetPicker.ViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let asset = self.assets[indexPath.row]
+        if self.searchController.isActive {
+            self.searchController.dismiss(animated: true, completion: nil)
+        }
         self.dismiss(
             animated: true,
             completion: { [weak self] in
