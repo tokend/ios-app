@@ -76,7 +76,6 @@ extension ExploreTokensScene {
         
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
-            self.extendedLayoutIncludesOpaqueBars = true
             if #available(iOS 11, *) {
                 self.navigationItem.searchController = self.searchController
                 self.navigationItem.hidesSearchBarWhenScrolling = true

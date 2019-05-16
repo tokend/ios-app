@@ -33,6 +33,9 @@ enum LocKey: String {
     case at_date_replace_date
     case authenticator
     case available
+    case available_amount
+    case available_amount_replace_amount
+    case available_assets_for_this_operations
     case available_date
     case available_date_replace_formatted
     case back
@@ -75,6 +78,7 @@ enum LocKey: String {
     case chart
     case chart_cap
     case check_sale_state
+    case choose_asset
     case choose_email
     case close_time
     case code
