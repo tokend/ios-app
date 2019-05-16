@@ -15,10 +15,6 @@ extension AssetPicker {
         public typealias Event = AssetPicker.Event
         public typealias Model = AssetPicker.Model
         
-        // MARK: - Public properties
-        
-        var onAssetPicked: ((String) -> Void)?
-        
         // MARK: - Private properties
         
         private let searchController: UISearchController = UISearchController(searchResultsController: nil)
@@ -190,7 +186,7 @@ extension AssetPicker.ViewController: UITableViewDelegate {
         self.dismiss(
             animated: true,
             completion: { [weak self] in
-                self?.onAssetPicked?(asset.balanceId)
+                self?.routing?.onAssetPicked(asset.balanceId)
             })
     }
 }
@@ -216,10 +212,10 @@ extension AssetPicker.ViewController: UITableViewDataSource {
 extension AssetPicker.ViewController: UISearchResultsUpdating {
     
     public func updateSearchResults(for searchController: UISearchController) {
-        let filterPrefix = searchController.searchBar.text ?? ""
+        let filter = searchController.searchBar.text
         
         self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-            let request = Event.DidFilter.Request(filterPrefix: filterPrefix)
+            let request = Event.DidFilter.Request(filter: filter)
             businessLogic.onDidFilter(request: request)
         })
     }

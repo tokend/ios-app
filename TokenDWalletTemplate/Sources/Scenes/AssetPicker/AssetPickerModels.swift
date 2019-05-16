@@ -18,7 +18,7 @@ extension AssetPicker.Model {
     
     struct SceneModel {
         var assets: [Asset]
-        var filterPrefix: String?
+        var filter: String?
     }
     
     public struct Asset {
@@ -57,7 +57,7 @@ extension AssetPicker.Event {
     
     public enum DidFilter {
         public struct Request {
-            let filterPrefix: String
+            let filter: String?
         }
     }
 }

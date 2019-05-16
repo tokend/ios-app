@@ -293,8 +293,9 @@ extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
     
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel) {
         let options: [String] = viewModel.balances.map({ $0.asset })
-        self.routing?.onPresentPicker(options, { [weak self] (selectedBalanceId) in
-            let request = Event.BalanceSelected.Request(balanceId: selectedBalanceId)
+        self.routing?.onPresentPicker(Localized(.select_asset), options, { [weak self] (selectedIndex) in
+            let balance = viewModel.balances[selectedIndex]
+            let request = Event.BalanceSelected.Request(balanceId: balance.balanceId)
             self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                 businessLogic.onBalanceSelected(request: request)
             })

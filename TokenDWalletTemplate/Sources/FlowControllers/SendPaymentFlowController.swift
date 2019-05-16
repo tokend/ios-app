@@ -118,21 +118,20 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onShowError: { [weak self] (errorMessage) in
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)
             },
-            onPresentPicker: { [weak self] (options, onSelected) in
-                self?.showAssetPicker(targetAssets: options, onSelected: onSelected)
-//                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
-//                    return
-//                }
-//
-//                self?.showDialog(
-//                    title: title,
-//                    message: nil,
-//                    style: .actionSheet,
-//                    options: options,
-//                    onSelected: onSelected,
-//                    onCanceled: nil,
-//                    presentViewController: present
-//                )
+            onPresentPicker: { [weak self] (title, options, onSelected) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+
+                self?.showDialog(
+                    title: title,
+                    message: nil,
+                    style: .actionSheet,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )
             },
             onSendAction: { [weak self] (sendModel) in
                 self?.showPaymentConfirmationScreen(sendPaymentModel: sendModel)
@@ -397,9 +396,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         ) -> UIViewController {
         
         let vc = AssetPicker.ViewController()
-        vc.onAssetPicked = { (asset) in
-            onSelected(asset)
-        }
+        
         let assetsFetcher = AssetPicker.AssetsFetcher(
             balancesRepo: self.reposController.balancesRepo,
             assetsRepo: self.reposController.assetsRepo,
@@ -407,10 +404,13 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         )
         let sceneModel = AssetPicker.Model.SceneModel(
             assets: [],
-            filterPrefix: nil
+            filter: nil
         )
         let amountFormatter = AssetPicker.AmountFormatter()
-        let routing = AssetPicker.Routing()
+        let routing = AssetPicker.Routing(
+            onAssetPicked: { (balanceId) in
+                onSelected(balanceId)
+        })
         
         AssetPicker.Configurator.configure(
             viewController: vc,

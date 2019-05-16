@@ -53,11 +53,11 @@ extension AssetPicker {
         private func updateAssets() {
             let response: Event.AssetsUpdated.Response
             var assets = self.sceneModel.assets
-            if let filterPrefix = self.sceneModel.filterPrefix,
-                !filterPrefix.isEmpty {
+            if let filter = self.sceneModel.filter,
+                !filter.isEmpty {
                 
                 assets = assets.filter({ (asset) -> Bool in
-                    asset.code.hasPrefix(filterPrefix)
+                    return asset.code.localizedCaseInsensitiveContains(filter)
                 })
             }
             if assets.isEmpty {
@@ -77,7 +77,7 @@ extension AssetPicker.Interactor: AssetPicker.BusinessLogic {
     }
     
     public func onDidFilter(request: Event.DidFilter.Request) {
-        self.sceneModel.filterPrefix = request.filterPrefix.uppercased()
+        self.sceneModel.filter = request.filter
         self.updateAssets()
     }
 }
