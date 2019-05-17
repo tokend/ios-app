@@ -19,6 +19,7 @@ def main_app_pods
   pod 'RxSwift',                  '~> 4.1'
   pod 'SnapKit',                  '~> 4.0'
   pod 'SwiftKeychainWrapper',     '3.0.1'
+  pod 'ActionsList', 		  '~> 0.9.1'
   
   pod 'PullToRefresher', '~> 3.0'
   pod 'Nuke'
@@ -58,7 +59,7 @@ target 'TokenDWalletTemplate' do
       end
     end
     
-    swift4Targets = ['QRCodeReader.swift']
+    swift4Targets = ['QRCodeReader.swift', 'ActionsList']
     
     installer.pods_project.targets.each do |target|
       next unless swift4Targets.include? target.name
