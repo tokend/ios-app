@@ -1,6 +1,6 @@
 import UIKit
 import RxSwift
-import Floaty
+import ActionsList
 
 // MARK: - TransactionsListSceneDisplayLogic
 
@@ -40,7 +40,7 @@ extension TransactionsListScene {
         private let emptyLabel: UILabel = SharedViewsBuilder.createEmptyLabel()
         private let tableView: UITableView = UITableView(frame: .zero, style: .plain)
         private let stickyHeader: TableViewStickyHeader = TableViewStickyHeader()
-        private let floatActionButton: Floaty = Floaty()
+        private let floatyActionButton: UIButton = UIButton()
         private let refreshControl: UIRefreshControl = UIRefreshControl()
         private var sections: [Model.SectionViewModel] = []
         private var oldPanTranslation: CGFloat = 0.0
@@ -54,6 +54,8 @@ extension TransactionsListScene {
         }
         private let iconSize: CGFloat = 60.0
         private let disposeBag = DisposeBag()
+        private var actions: [ActionsListDefaultButtonModel] = []
+        private var actionsList: ActionsListModel?
         
         // MARK: -
         
@@ -61,10 +63,6 @@ extension TransactionsListScene {
         
         var asset: String = "" {
             didSet {
-                if !self.floatActionButton.closed {
-                    self.floatActionButton.close()
-                }
-                
                 self.interactorDispatch?.sendRequest(requestBlock: { [weak self] (businessLogic) in
                     guard let asset = self?.asset else { return }
                     let request = Event.AssetDidChange.Request(asset: asset)
@@ -74,9 +72,6 @@ extension TransactionsListScene {
         }
         var balanceId: String? {
             didSet {
-                if !self.floatActionButton.closed {
-                    self.floatActionButton.close()
-                }
                 self.interactorDispatch?.sendRequest(requestBlock: { [weak self] (businessLogic) in
                     let request = Event.BalanceDidChange.Request(balanceId: self?.balanceId)
                     businessLogic.onBalanceDidChange(request: request)
@@ -171,6 +166,15 @@ extension TransactionsListScene {
         
         // MARK: - Private
         
+        private func showActions() {
+            self.actionsList = self.floatyActionButton.createActionsList()
+            
+            self.actions.forEach { (action) in
+                self.actionsList?.add(action: action)
+            }
+            self.actionsList?.present()
+        }
+        
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.contentBackgroundColor
         }
@@ -191,12 +195,24 @@ extension TransactionsListScene {
         
         private func setupFloatActionButton() {
             if let isHidden = self.viewConfig?.actionButtonIsHidden {
-                self.floatActionButton.isHidden = isHidden
+                self.floatyActionButton.isHidden = isHidden
             }
-            self.floatActionButton.openAnimationType = .slideLeft
-            self.floatActionButton.buttonColor = Theme.Colors.accentColor
-            self.floatActionButton.plusColor = Theme.Colors.textOnMainColor
-            self.floatActionButton.buttonImage = Assets.walletIcon.image
+            
+            self.floatyActionButton.backgroundColor = Theme.Colors.accentColor
+            self.floatyActionButton.setImage(
+                Assets.walletIcon.image,
+                for: .normal
+            )
+            self.floatyActionButton.tintColor = Theme.Colors.textOnMainColor
+            self.floatyActionButton.layer.cornerRadius = self.iconSize / 2
+            self.floatyActionButton
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    self?.showActions()
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupRefreshControl() {
@@ -207,7 +223,7 @@ extension TransactionsListScene {
             self.view.addSubview(self.emptyLabel)
             self.view.addSubview(self.tableView)
             self.view.addSubview(self.stickyHeader)
-            self.view.addSubview(self.floatActionButton)
+            self.view.addSubview(self.floatyActionButton)
             
             self.emptyLabel.snp.makeConstraints { (make) in
                 make.center.equalToSuperview()
@@ -217,6 +233,12 @@ extension TransactionsListScene {
             
             self.tableView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
+            }
+            
+            self.floatyActionButton.snp.makeConstraints { (make) in
+                make.trailing.equalToSuperview().inset(15.0)
+                make.bottom.equalTo(self.view.safeArea.bottom).inset(15.0)
+                make.height.width.equalTo(self.iconSize)
             }
             
             self.stickyHeader.snp.makeConstraints { (make) in
@@ -364,38 +386,44 @@ extension TransactionsListScene.ViewController: TransactionsListScene.DisplayLog
             viewConfig.actionButtonIsHidden {
             return
         } else if viewModel.actions.isEmpty {
-            self.floatActionButton.isHidden = true
+            self.floatyActionButton.isHidden = true
             return
         } else {
-            self.floatActionButton.isHidden = false
+            self.floatyActionButton.isHidden = false
         }
         
-        let floatyItems = viewModel.actions.map { [weak self] (item) -> FloatyItem in
-            let floatyItem = FloatyItem()
-            floatyItem.title = item.title
-            floatyItem.icon = item.image
-            floatyItem.buttonColor = Theme.Colors.accentColor
-            floatyItem.iconTintColor = Theme.Colors.textOnMainColor
-            floatyItem.handler = { [weak self] _ in
-                switch item.type {
-                    
-                case .deposit(let assetId):
-                    self?.routing?.showDeposit(assetId)
-                    
-                case .receive:
-                    self?.routing?.showReceive()
-                    
-                case .send(let balanceId):
-                    self?.routing?.showSendPayment(balanceId)
-                    
-                case .withdraw(let balanceId):
-                    self?.routing?.showWithdraw(balanceId)
-                }
-            }
+        let actions = viewModel.actions.map { [weak self] (item) -> ActionsListDefaultButtonModel in
             
-            return floatyItem
+            let action: (ActionsListDefaultButtonModel) -> Void = { (model) in
+                self?.actionsList?.dismiss({
+                    switch item.type {
+                        
+                    case .deposit(let assetId):
+                        self?.routing?.showDeposit(assetId)
+                        
+                    case .receive:
+                        self?.routing?.showReceive()
+                        
+                    case .send(let balanceId):
+                        self?.routing?.showSendPayment(balanceId)
+                        
+                    case .withdraw(let balanceId):
+                        self?.routing?.showWithdraw(balanceId)
+                    }
+                })
+            }
+            let actionModel = ActionsListDefaultButtonModel(
+                localizedTitle: item.title,
+                image: item.image,
+                action: action,
+                isEnabled: true
+            )
+            actionModel.appearance.backgroundColor = Theme.Colors.clear
+            actionModel.appearance.tint = Theme.Colors.accentColor
+            return actionModel
         }
-        self.floatActionButton.items = floatyItems
+        
+        self.actions = actions
     }
     
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
