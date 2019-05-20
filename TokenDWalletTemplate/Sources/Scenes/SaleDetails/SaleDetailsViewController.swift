@@ -58,7 +58,8 @@ extension SaleDetails {
         }
         
         private func setupContainerView() {
-            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+//            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.containerView.backgroundColor = UIColor.green
         }
         
         private func setupLayout() {
@@ -112,19 +113,21 @@ extension SaleDetails {
                 let view = SaleDetails.GeneralContent.View()
                 sectionsViewModel.setup(view)
                 
-                let disposable = view.observeContentSize()
-                    .throttle(0.100, scheduler: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] (aView, size) in
-                        print("general size: \(size)")
-                        self?.relayoutContents()
-                        aView?.snp.makeConstraints({ (make) in
-                            make.height.equalTo(size.height)
-                        })
-                        self?.containerView.setNeedsLayout()
-                    })
-                
-                return (view, disposable)
-            } else if let tokenViewModel = contentViewModel as? SaleDetails.TokenContent.ViewModel {
+//                let disposable = view.observeContentSize()
+//                    .throttle(0.100, scheduler: MainScheduler.instance)
+//                    .subscribe(onNext: { [weak self] (aView, size) in
+//                        print("general size: \(size)")
+//                        self?.relayoutContents()
+//                        aView?.snp.makeConstraints({ (make) in
+//                            make.height.equalTo(size.height)
+//                        })
+//                        self?.containerView.setNeedsLayout()
+//                    })
+//
+//                return (view, disposable)
+                return (view, nil)
+            } else if let tokenViewModel = contentViewModel as?
+                SaleDetails.TokenContent.ViewModel {
                 let view = SaleDetails.TokenContent.View()
                 tokenViewModel.setup(view)
                 
@@ -138,8 +141,9 @@ extension SaleDetails {
                         })
                         self?.containerView.setNeedsLayout()
                     })
-                
+
                 return (view, disposable)
+//                return (view, nil)
             } else if let emptyViewModel = contentViewModel as? SaleDetails.EmptyContent.ViewModel {
                 let view = SaleDetails.EmptyContent.View()
                 emptyViewModel.setup(view)

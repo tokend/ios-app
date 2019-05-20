@@ -85,12 +85,12 @@ extension SaleDetails {
                         self?.addLoadingTab(to: &tabs, title: Localized(.asset))
                     }
                     
-                    if let saleDetails = self?.saleDetailsStatus,
-                        let tab = self?.getSaleDetailsTab(saleDetailsStatus: saleDetails) {
-                        tabs.append(tab)
-                    } else {
-                        self?.addLoadingTab(to: &tabs, title: Localized(.general))
-                    }
+//                    if let saleDetails = self?.saleDetailsStatus,
+//                        let tab = self?.getSaleDetailsTab(saleDetailsStatus: saleDetails) {
+//                        tabs.append(tab)
+//                    } else {
+//                        self?.addLoadingTab(to: &tabs, title: Localized(.general))
+//                    }
                     
                     self?.tabs.onNext(tabs)
                 })

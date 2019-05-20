@@ -89,7 +89,7 @@ extension SaleDetails {
             private let tokenAbbreviationView: UIView = UIView()
             private let tokenAbbreviationLabel: UILabel = UILabel()
             
-            private let labelStackView: UIView = UIView()
+            private let labelContainerView: UIView = UIView()
             private let tokenCodeLabel: UILabel = UILabel()
             private let tokenNameLabel: UILabel = UILabel()
             
@@ -119,7 +119,7 @@ extension SaleDetails {
                 self.setupIconView()
                 self.setupTokenAbbreviationView()
                 self.setupTokenAbbreviationLabel()
-                self.setupLabelStackView()
+                self.setupLabelContainerView()
                 self.setupTokenCodeLabel()
                 self.setupTokenNameLabel()
                 self.setupTokenDetailsTableView()
@@ -206,8 +206,8 @@ extension SaleDetails {
                 self.tokenAbbreviationLabel.textAlignment = .center
             }
             
-            private func setupLabelStackView() {
-                self.labelStackView.backgroundColor = Theme.Colors.contentBackgroundColor
+            private func setupLabelContainerView() {
+                self.labelContainerView.backgroundColor = Theme.Colors.contentBackgroundColor
             }
             
             private func setupTokenCodeLabel() {
@@ -244,18 +244,7 @@ extension SaleDetails {
             
             private func setupLayout() {
                 self.addSubview(self.tokenInfoView)
-                self.tokenInfoView.addSubview(self.tokenIconContainerView)
-                self.tokenInfoView.addSubview(self.labelStackView)
-                
-                self.tokenIconContainerView.addSubview(self.tokenIconView)
-                self.tokenIconContainerView.addSubview(self.tokenAbbreviationView)
-                
-                self.tokenAbbreviationView.addSubview(self.tokenAbbreviationLabel)
-                
-                self.labelStackView.addSubview(self.tokenCodeLabel)
-                self.labelStackView.addSubview(self.tokenNameLabel)
-                
-                self.tokenInfoView.addSubview(self.tokenBalanceStateIcon)
+                self.setupTokenInfoViewLayout()
                 
                 self.addSubview(self.tokenDetailsTableView)
                 
@@ -265,6 +254,45 @@ extension SaleDetails {
                     make.height.equalTo(self.infoViewHeight)
                 }
                 
+                self.tokenDetailsTableView.snp.makeConstraints { (make) in
+                    make.top.equalTo(self.tokenInfoView.snp.bottom).offset(self.topInset)
+                    make.trailing.leading.bottom.equalToSuperview()
+                }
+            }
+            
+            private func setupTokenInfoViewLayout() {
+                self.tokenInfoView.addSubview(self.tokenIconContainerView)
+                self.setupTokenIconContainerViewLayout()
+                
+                self.tokenInfoView.addSubview(self.labelContainerView)
+                self.setupLabelContainerViewLayout()
+                
+                self.tokenInfoView.addSubview(self.tokenBalanceStateIcon)
+                
+                self.tokenIconContainerView.snp.makeConstraints { (make) in
+                    make.leading.equalToSuperview().inset(self.sideInset)
+                    make.top.equalToSuperview().inset(self.topInset)
+                    make.width.height.equalTo(self.iconSize)
+                }
+                
+                self.labelContainerView.snp.makeConstraints { (make) in
+                    make.leading.equalTo(self.tokenIconContainerView.snp.trailing).offset(self.sideInset)
+                    make.top.equalTo(self.tokenIconContainerView)
+                }
+                
+                self.tokenBalanceStateIcon.snp.makeConstraints { (make) in
+                    make.leading.equalTo(self.labelContainerView.snp.trailing).offset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.centerY.equalToSuperview()
+                }
+            }
+            
+            private func setupTokenIconContainerViewLayout() {
+                self.tokenIconContainerView.addSubview(self.tokenIconView)
+                
+                self.tokenIconContainerView.addSubview(self.tokenAbbreviationView)
+                self.setupTokenAbbreviationViewLayout()
+                
                 self.tokenIconView.snp.makeConstraints { (make) in
                     make.edges.equalToSuperview()
                 }
@@ -272,22 +300,11 @@ extension SaleDetails {
                 self.tokenAbbreviationView.snp.makeConstraints { (make) in
                     make.edges.equalToSuperview()
                 }
-                
-                self.tokenAbbreviationLabel.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
-                }
-                
-                self.tokenIconContainerView.snp.makeConstraints { (make) in
-                    make.top.equalToSuperview().inset(self.topInset)
-                    make.leading.equalToSuperview().inset(self.sideInset)
-                    make.width.height.equalTo(self.iconSize)
-                }
-                
-                self.labelStackView.snp.makeConstraints { (make) in
-                    make.leading.equalTo(self.tokenIconContainerView.snp.trailing).offset(self.sideInset)
-                    make.trailing.equalTo(self.tokenBalanceStateIcon).offset(self.sideInset)
-                    make.top.equalTo(self.tokenIconView)
-                }
+            }
+            
+            private func setupLabelContainerViewLayout() {
+                self.labelContainerView.addSubview(self.tokenCodeLabel)
+                self.labelContainerView.addSubview(self.tokenNameLabel)
                 
                 self.tokenCodeLabel.snp.makeConstraints { (make) in
                     make.top.equalToSuperview()
@@ -296,17 +313,15 @@ extension SaleDetails {
                 
                 self.tokenNameLabel.snp.makeConstraints { (make) in
                     make.top.equalTo(self.tokenCodeLabel.snp.bottom).offset(self.topInset)
-                    make.leading.trailing.equalToSuperview()
+                    make.leading.trailing.bottom.equalToSuperview()
                 }
+            }
+            
+            private func setupTokenAbbreviationViewLayout() {
+                self.tokenAbbreviationView.addSubview(self.tokenAbbreviationLabel)
                 
-                self.tokenBalanceStateIcon.snp.makeConstraints { (make) in
-                    make.trailing.equalToSuperview().inset(self.sideInset)
-                    make.centerY.equalToSuperview()
-                }
-                
-                self.tokenDetailsTableView.snp.makeConstraints { (make) in
-                    make.top.equalTo(self.tokenInfoView.snp.bottom).offset(self.topInset)
-                    make.trailing.leading.bottom.equalToSuperview()
+                self.tokenAbbreviationLabel.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview()
                 }
             }
         }

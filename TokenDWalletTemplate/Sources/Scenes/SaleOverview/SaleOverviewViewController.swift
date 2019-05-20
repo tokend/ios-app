@@ -256,6 +256,12 @@ extension SaleOverview {
             self.scrollView.addSubview(self.videoWebView)
             self.scrollView.addSubview(self.overviewContentView)
             
+            self.nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+            self.shortDescriptionLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+            
+            self.nameLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+            self.shortDescriptionLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+            
             self.scrollView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }

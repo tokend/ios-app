@@ -151,11 +151,11 @@ class SalesFlowController: BaseSignedInFlowController {
         let vc = TabsContainer.ViewController()
         
         let overviewTab = self.setupSaleOverviewTabModel(identifier: identifier)
-        let detailsTab = self.setupSaleDetailsTabModel(identifier: identifier, asset: asset)
+//        let detailsTab = self.setupSaleDetailsTabModel(identifier: identifier, asset: asset)
         
         let tabs: [TabsContainer.Model.TabModel] = [
-            overviewTab,
-            detailsTab
+            overviewTab
+//            detailsTab
         ]
         
         let contentProvider = TabsContainer.InfoContentProvider(tabs: tabs)
