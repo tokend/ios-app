@@ -43,7 +43,8 @@ class SalesFlowController: BaseSignedInFlowController {
         
         let routing = Sales.Routing(
             onDidSelectSale: { [weak self] (identifier) in
-                self?.showSaleDetailsScreen(identifier: identifier)
+                self?.showChartAsset(saleIdentifier: identifier)
+                //self?.showSaleDetailsScreen(identifier: identifier)
             },
             onShowInvestments: { [weak self] in
                 self?.showInvestments()
@@ -246,6 +247,41 @@ class SalesFlowController: BaseSignedInFlowController {
         )
         
         vc.navigationItem.title = Localized(.sale_details)
+        
+        return vc
+    }
+    
+    private func showChartAsset(saleIdentifier: String) {
+        let vc = self.setupSaleChartScene(saleIdentifier: saleIdentifier)
+        
+        vc.navigationItem.title = Localized(.chart)
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupSaleChartScene(saleIdentifier: String) -> UIViewController {
+        let vc = Chart.ViewController()
+        
+        let sceneModel = Chart.Model.SceneModel()
+        let dataProvider = Chart.DataProvider(
+            saleIdentifier: saleIdentifier,
+            salesRepo: self.reposController.salesRepo,
+            chartsApi: self.flowControllerStack.api.chartsApi
+        )
+        let amountFormatter = Chart.AmountFormatter()
+        let dateFormatter = Chart.DateFormatter()
+        let chartDateFormatter = Chart.ChartDateFormatter()
+        
+        let routing = Chart.Routing()
+        
+        Chart.Configurator.configure(
+            viewController: vc,
+            sceneModel: sceneModel,
+            dataProvider: dataProvider,
+            amountFormatter: amountFormatter,
+            dateFormatter: dateFormatter,
+            chartDateFormatter: chartDateFormatter,
+            routing: routing
+        )
         
         return vc
     }
