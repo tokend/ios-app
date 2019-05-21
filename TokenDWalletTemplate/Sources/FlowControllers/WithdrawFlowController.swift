@@ -1,4 +1,5 @@
 import UIKit
+import RxSwift
 
 class WithdrawFlowController: BaseSignedInFlowController {
     
@@ -6,6 +7,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
     
     private var navigationController: NavigationControllerProtocol?
     private let selectedBalanceId: String?
+    private let disposeBag: DisposeBag = DisposeBag()
     
     private var onShowWalletScreen: ((_ selectedBalanceId: String?) -> Void)?
     
@@ -342,5 +344,76 @@ class WithdrawFlowController: BaseSignedInFlowController {
                     completion(.success(value: value, metadataType: metadataType))
                 }
         })
+    }
+    
+    private func showAssetPicker(
+        targetAssets: [String],
+        onSelected: @escaping ((String) -> Void)
+        ) {
+        
+        let navController = NavigationController()
+        
+        let vc = self.setupAssetPicker(
+            targetAssets: targetAssets,
+            onSelected: onSelected
+        )
+        vc.navigationItem.title = Localized(.choose_asset)
+        let closeBarItem = UIBarButtonItem(
+            title: Localized(.back),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        closeBarItem
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: { _ in
+                navController
+                    .getViewController()
+                    .dismiss(animated: true, completion: nil)
+            })
+            .disposed(by: self.disposeBag)
+        
+        vc.navigationItem.leftBarButtonItem = closeBarItem
+        navController.setViewControllers([vc], animated: false)
+        
+        self.navigationController?.present(
+            navController.getViewController(),
+            animated: true,
+            completion: nil
+        )
+    }
+    
+    private func setupAssetPicker(
+        targetAssets: [String],
+        onSelected: @escaping ((String) -> Void)
+        ) -> UIViewController {
+        
+        let vc = AssetPicker.ViewController()
+        
+        let assetsFetcher = AssetPicker.AssetsFetcher(
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            targetAssets: targetAssets
+        )
+        let sceneModel = AssetPicker.Model.SceneModel(
+            assets: [],
+            filter: nil
+        )
+        let amountFormatter = AssetPicker.AmountFormatter()
+        let routing = AssetPicker.Routing(
+            onAssetPicked: { (balanceId) in
+                onSelected(balanceId)
+        })
+        
+        AssetPicker.Configurator.configure(
+            viewController: vc,
+            assetsFetcher: assetsFetcher,
+            sceneModel: sceneModel,
+            amountFormatter: amountFormatter,
+            routing: routing
+        )
+        return vc
     }
 }
