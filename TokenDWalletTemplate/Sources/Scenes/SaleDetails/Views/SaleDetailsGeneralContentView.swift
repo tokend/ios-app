@@ -92,7 +92,7 @@ extension SaleDetails {
                         retainSelf: false
                     )
                     .throttle(0.100, scheduler: MainScheduler.instance)
-                    .subscribe { [weak self] (size) in
+                    .subscribe { [weak self] _ in
                         self?.invalidateIntrinsicContentSize()
                 }
             }

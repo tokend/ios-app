@@ -68,15 +68,12 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - Nuke (7.5.2)
+  - Nuke (7.6.3)
   - PullToRefresher (3.1)
   - QRCodeReader.swift (8.1.1)
-  - ReachabilitySwift (4.3.0)
-  - RxAtomic (4.4.1)
-  - RxCocoa (4.4.1):
-    - RxSwift (~> 4.0)
-  - RxSwift (4.4.1):
-    - RxAtomic (~> 4.4)
+  - RxCocoa (4.5.0):
+    - RxSwift (>= 4.4.2, ~> 4.4)
+  - RxSwift (4.5.0)
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
@@ -115,7 +112,6 @@ DEPENDENCIES:
   - Nuke
   - PullToRefresher (~> 3.0)
   - QRCodeReader.swift (= 8.1.1)
-  - ReachabilitySwift (~> 4.1)
   - RxCocoa (~> 4.1)
   - RxSwift (~> 4.1)
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
@@ -152,8 +148,6 @@ SPEC REPOS:
     - Nuke
     - PullToRefresher
     - QRCodeReader.swift
-    - ReachabilitySwift
-    - RxAtomic
     - RxCocoa
     - RxSwift
     - SnapKit
@@ -198,23 +192,17 @@ SPEC CHECKSUMS:
   GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
   MarkdownView: 5bbee438c823db1cd189002d44c84fa909b3a896
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  Nuke: 0350d346a688426e8f2331253ef28dc2fc4f6178
+  Nuke: 44130e95e09463f8773ae4b96b90de1eba6b3350
   PullToRefresher: ec8c1942bd61bb512ff520c49f9f00903cfa86c7
   QRCodeReader.swift: b164a681887de276d405ff02bce854d82cd6360b
-  ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
-  RxAtomic: f8d6adc1ccb87a767811269e4875887bc74dbf19
-  RxCocoa: 2f35a76bf8887872e28a1914112395b11b8e0e64
-  RxSwift: 92fcf68dfef21f3e2ab1965363d9e7b3d787597e
+  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
+  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
   TokenDSDK: 9ab63a677cbecf92e87d2b2becbe0f75d799be99
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-<<<<<<< HEAD
-PODFILE CHECKSUM: 8df5c11d22544027a0102ab60578ddbead44fb8e
-=======
-PODFILE CHECKSUM: 317c6738baaf2a2622486f03486f002f11a82f4b
->>>>>>> origin/master
+PODFILE CHECKSUM: 1c190ac2775facf00dfebc2db078343555c6a51b
 
 COCOAPODS: 1.6.1

@@ -14,7 +14,7 @@ def main_app_pods
   pod 'TokenDSDK/KeyServer'
   
   pod 'QRCodeReader.swift',       '8.1.1'
-  pod 'ReachabilitySwift',        '~> 4.1'
+#  pod 'ReachabilitySwift',        '~> 4.1'
   pod 'RxCocoa',                  '~> 4.1'
   pod 'RxSwift',                  '~> 4.1'
   pod 'SnapKit',                  '~> 4.0'
