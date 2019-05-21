@@ -72,8 +72,7 @@ extension SaleDetails {
                 self.addSubview(self.emptyContentLabel)
                 
                 self.emptyContentLabel.snp.makeConstraints { (make) in
-                    make.centerX.centerY.equalToSuperview()
-                    make.leading.trailing.equalToSuperview().inset(15)
+                    make.edges.equalToSuperview().inset(15)
                 }
             }
         }

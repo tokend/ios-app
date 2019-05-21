@@ -43,7 +43,9 @@ extension SaleDetails {
             
             private let saleDetailsTableView: UITableView = UITableView(frame: .zero, style: .grouped)
             
-            // MARK: - Override
+            private var disposable: Disposable?
+            
+            // MARK: -
             
             override init(frame: CGRect) {
                 super.init(frame: frame)
@@ -58,31 +60,46 @@ extension SaleDetails {
                 return self.saleDetailsTableView.contentSize
             }
             
-            // MARK: - Public
+            private func customInit() {
+                self.setupView()
+                self.setupSaleDetailsTableView()
+                self.setupLayout()
+            }
             
-            public func observeContentSize() -> Observable<(UIView?, CGSize)> {
-                return self.saleDetailsTableView
+            // MARK: - Override
+            
+            public override func didMoveToSuperview() {
+                super.didMoveToSuperview()
+                
+                if self.superview == nil {
+                    self.unobserveContentSize()
+                } else {
+                    self.observeContentSize()
+                }
+            }
+            
+            // MARK: - Private
+            
+            private func observeContentSize() {
+                self.unobserveContentSize()
+                
+                self.disposable = self.saleDetailsTableView
                     .rx
                     .observe(
                         CGSize.self,
                         "contentSize",
                         options: [.new],
                         retainSelf: false
-                    ).map({ [weak self] (tableSize) -> (UIView?, CGSize) in
-                        guard let sSelf = self, let tableSize = tableSize else {
-                            return (nil, CGSize.zero)
-                        }
-                        
-                        return (sSelf, tableSize)
-                    })
+                    )
+                    .throttle(0.100, scheduler: MainScheduler.instance)
+                    .subscribe { [weak self] (size) in
+                        self?.invalidateIntrinsicContentSize()
+                }
             }
             
-            // MARK: - Private
-            
-            private func customInit() {
-                self.setupView()
-                self.setupSaleDetailsTableView()
-                self.setupLayout()
+            private func unobserveContentSize() {
+                self.disposable?.dispose()
+                self.disposable = nil
             }
             
             // MARK: - Setup

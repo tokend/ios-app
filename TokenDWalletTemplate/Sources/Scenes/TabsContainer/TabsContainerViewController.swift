@@ -140,7 +140,7 @@ extension TabsContainer {
                     self.addChild(vc, to: self.containerView, layoutFulledge: false)
                     vc.view.snp.makeConstraints { (make) in
                         make.top.bottom.equalToSuperview()
-                        make.width.height.equalTo(self.view)
+                        make.width.height.equalToSuperview()
                         if let prev = prevContentView {
                             make.leading.equalTo(prev.snp.trailing)
                         } else {

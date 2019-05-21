@@ -310,24 +310,22 @@ extension SaleOverview {
             
             self.progressView.snp.makeConstraints { (make) in
                 make.leading.trailing.top.equalToSuperview()
+                make.bottom.equalToSuperview().inset(55.0)
             }
             
             self.investedAmountLabel.snp.makeConstraints { (make) in
                 make.leading.equalTo(self.progressView.snp.leading)
                 make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-                make.bottom.lessThanOrEqualToSuperview()
             }
             
             self.percentLabel.snp.makeConstraints { (make) in
                 make.leading.equalTo(self.investedAmountLabel.snp.trailing).offset(sideInset)
                 make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-                make.bottom.lessThanOrEqualToSuperview()
             }
             
             self.timeLabel.snp.makeConstraints { (make) in
                 make.leading.equalTo(self.percentLabel.snp.trailing).offset(sideInset)
                 make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-                make.bottom.lessThanOrEqualToSuperview()
             }
         }
         

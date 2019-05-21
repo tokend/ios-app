@@ -35,6 +35,14 @@ extension SaleDetails {
                 self.setupLayout()
             }
             
+            // MARK: - Overridden
+            
+            public override var intrinsicContentSize: CGSize {
+                var size = self.loadingView.intrinsicContentSize
+                size.height += 30.0
+                return size
+            }
+            
             // MARK: - Setup
             
             private func setupView() {
@@ -50,7 +58,7 @@ extension SaleDetails {
                 self.addSubview(self.loadingView)
                 
                 self.loadingView.snp.makeConstraints { (make) in
-                    make.centerX.centerY.equalToSuperview()
+                    make.center.equalToSuperview()
                 }
             }
         }

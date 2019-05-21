@@ -16,7 +16,7 @@ extension SaleDetails {
         // MARK: - Private properties
         
         private let containerView: UIScrollView = UIScrollView()
-        private var contents: [(UIView, Disposable?)] = []
+        private var contents: [UIView] = []
         
         private let disposeBag = DisposeBag()
         
@@ -28,12 +28,6 @@ extension SaleDetails {
         public func inject(interactorDispatch: InteractorDispatch?, routing: Routing?) {
             self.interactorDispatch = interactorDispatch
             self.routing = routing
-        }
-        
-        deinit {
-            for (_, disposable) in self.contents {
-                disposable?.dispose()
-            }
         }
         
         // MARK: - Overridden
@@ -58,8 +52,7 @@ extension SaleDetails {
         }
         
         private func setupContainerView() {
-//            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
-            self.containerView.backgroundColor = UIColor.green
+            self.containerView.backgroundColor = Theme.Colors.containerBackgroundColor
         }
         
         private func setupLayout() {
@@ -70,7 +63,7 @@ extension SaleDetails {
             }
         }
         
-        private func changeContentViews(views: [(UIView, Disposable?)]) {
+        private func changeContentViews(views: [UIView]) {
             self.cleanContentViews()
             
             self.contents = views
@@ -80,7 +73,7 @@ extension SaleDetails {
         
         private func relayoutContents() {
             var previousView: UIView?
-            for (view, _) in self.contents {
+            for view in self.contents {
                 self.containerView.addSubview(view)
                 view.snp.remakeConstraints { (make) in
                     make.leading.trailing.equalToSuperview()
@@ -95,63 +88,43 @@ extension SaleDetails {
                 previousView = view
             }
             
-            previousView?.snp.remakeConstraints({ (make) in
+            previousView?.snp.makeConstraints({ (make) in
                 make.bottom.equalToSuperview()
             })
         }
         
         private func cleanContentViews() {
-            for (view, disposable) in self.contents {
+            for view in self.contents {
                 view.removeFromSuperview()
-                disposable?.dispose()
             }
             self.contents = []
         }
         
-        private func getContentView(from contentViewModel: Any) -> (UIView, Disposable?) {
+        private func getContentView(from contentViewModel: Any) -> UIView {
+            let content: UIView
+            
             if let sectionsViewModel = contentViewModel as? SaleDetails.GeneralContent.ViewModel {
                 let view = SaleDetails.GeneralContent.View()
                 sectionsViewModel.setup(view)
                 
-//                let disposable = view.observeContentSize()
-//                    .throttle(0.100, scheduler: MainScheduler.instance)
-//                    .subscribe(onNext: { [weak self] (aView, size) in
-//                        print("general size: \(size)")
-//                        self?.relayoutContents()
-//                        aView?.snp.makeConstraints({ (make) in
-//                            make.height.equalTo(size.height)
-//                        })
-//                        self?.containerView.setNeedsLayout()
-//                    })
-//
-//                return (view, disposable)
-                return (view, nil)
-            } else if let tokenViewModel = contentViewModel as?
-                SaleDetails.TokenContent.ViewModel {
+                content = view
+            } else if let tokenViewModel = contentViewModel as? SaleDetails.TokenContent.ViewModel {
                 let view = SaleDetails.TokenContent.View()
                 tokenViewModel.setup(view)
                 
-                let disposable = view.observeContentSize()
-                    .throttle(0.100, scheduler: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] (aView, size) in
-                        print("token size: \(size)")
-                        self?.relayoutContents()
-                        aView?.snp.makeConstraints({ (make) in
-                            make.height.equalTo(size.height)
-                        })
-                        self?.containerView.setNeedsLayout()
-                    })
-
-                return (view, disposable)
-//                return (view, nil)
+                content = view
             } else if let emptyViewModel = contentViewModel as? SaleDetails.EmptyContent.ViewModel {
                 let view = SaleDetails.EmptyContent.View()
                 emptyViewModel.setup(view)
-                return (view, nil)
+                
+                content = view
             } else {
                 let view = SaleDetails.LoadingContent.View()
-                return (view, nil)
+                
+                content = view
             }
+            
+            return content
         }
     }
 }
@@ -159,7 +132,7 @@ extension SaleDetails {
 extension SaleDetails.ViewController: SaleDetails.DisplayLogic {
     
     public func displayTabsUpdated(viewModel: SaleDetails.Event.OnTabsUpdated.ViewModel) {
-        let views = viewModel.contentViewModels.map { (contentModel) -> (UIView, Disposable?) in
+        let views = viewModel.contentViewModels.map { (contentModel) -> UIView in
             return self.getContentView(from: contentModel)
         }
         self.changeContentViews(views: views)

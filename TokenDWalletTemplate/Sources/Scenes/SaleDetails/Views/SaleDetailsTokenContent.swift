@@ -102,6 +102,8 @@ extension SaleDetails {
             private let sideInset: CGFloat = 20
             private let infoViewHeight: CGFloat = 100
             
+            private var disposable: Disposable?
+            
             // MARK: -
             
             override init(frame: CGRect) {
@@ -111,6 +113,11 @@ extension SaleDetails {
             
             required init?(coder aDecoder: NSCoder) {
                 fatalError("init(coder:) has not been implemented")
+            }
+            
+            deinit {
+                self.disposable?.dispose()
+                self.disposable = nil
             }
             
             private func commonInit() {
@@ -133,6 +140,16 @@ extension SaleDetails {
                 size.height += self.topHeight
                 
                 return size
+            }
+            
+            public override func didMoveToSuperview() {
+                super.didMoveToSuperview()
+                
+                if self.superview == nil {
+                    self.unobserveContentSize()
+                } else {
+                    self.observeContentSize()
+                }
             }
             
             // MARK: - Private
@@ -161,24 +178,26 @@ extension SaleDetails {
                 self.tokenAbbreviationLabel.text = abbreviation
             }
             
-            public func observeContentSize() -> Observable<(UIView?, CGSize)> {
-                return self.tokenDetailsTableView
+            private func observeContentSize() {
+                self.unobserveContentSize()
+                
+                self.disposable = self.tokenDetailsTableView
                     .rx
                     .observe(
                         CGSize.self,
                         "contentSize",
                         options: [.new],
                         retainSelf: false
-                    ).map({ [weak self] (tableSize) -> (UIView?, CGSize) in
-                        guard let sSelf = self, let tableSize = tableSize else {
-                            return (nil, CGSize.zero)
-                        }
-                        
-                        var size = tableSize
-                        size.height += sSelf.topHeight
-                        
-                        return (sSelf, size)
-                    })
+                    )
+                    .throttle(0.100, scheduler: MainScheduler.instance)
+                    .subscribe { [weak self] (size) in
+                        self?.invalidateIntrinsicContentSize()
+                    }
+            }
+            
+            private func unobserveContentSize() {
+                self.disposable?.dispose()
+                self.disposable = nil
             }
             
             // MARK: - Setup
@@ -268,6 +287,24 @@ extension SaleDetails {
                 self.setupLabelContainerViewLayout()
                 
                 self.tokenInfoView.addSubview(self.tokenBalanceStateIcon)
+                
+                self.tokenBalanceStateIcon.setContentCompressionResistancePriority(
+                    .defaultHigh,
+                    for: .horizontal
+                )
+                self.labelContainerView.setContentCompressionResistancePriority(
+                    .defaultLow,
+                    for: .horizontal
+                )
+                
+                self.tokenBalanceStateIcon.setContentHuggingPriority(
+                    .defaultHigh,
+                    for: .horizontal
+                )
+                self.labelContainerView.setContentHuggingPriority(
+                    .defaultLow,
+                    for: .horizontal
+                )
                 
                 self.tokenIconContainerView.snp.makeConstraints { (make) in
                     make.leading.equalToSuperview().inset(self.sideInset)
