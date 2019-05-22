@@ -20,6 +20,7 @@ extension Chart {
         
         // MARK: - Private properties
         
+        private let scrollView: UIScrollView = UIScrollView()
         private let containerView: UIView = UIView()
         
         private let titleLabel: UILabel = UILabel()
@@ -208,6 +209,10 @@ extension Chart {
             self.view.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
+        private func setupScrollView() {
+            self.scrollView.backgroundColor = Theme.Colors.clear
+        }
+        
         private func setupContainerView() {
             self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
         }
@@ -269,7 +274,8 @@ extension Chart {
         }
         
         private func setupLayout() {
-            self.view.addSubview(self.containerView)
+            self.view.addSubview(self.scrollView)
+            self.scrollView.addSubview(self.containerView)
             self.view.addSubview(self.emptyView)
             self.containerView.addSubview(self.titleLabel)
             self.containerView.addSubview(self.subTitleLabel)
@@ -278,9 +284,13 @@ extension Chart {
             self.containerView.addSubview(self.growthSinceDateLabel)
             self.containerView.addSubview(self.chartView)
             
+            self.scrollView.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+            }
+            
             self.containerView.snp.makeConstraints { (make) in
-                make.leading.trailing.top.equalToSuperview()
-                make.bottom.equalTo(self.view.safeArea.bottom)
+                make.edges.equalToSuperview()
+                make.size.equalTo(self.view.snp.size)
             }
             
             self.emptyView.snp.makeConstraints { (make) in
