@@ -53,6 +53,15 @@ extension TabsContainer.Model {
         
         case viewController(UIViewController)
     }
+    
+    public struct ViewConfig {
+        let actionButtonAppearence: ActionButtonAppearence
+    }
+    
+    public enum ActionButtonAppearence {
+        case visible(title: String)
+        case hidden
+    }
 }
 
 // MARK: - Events
