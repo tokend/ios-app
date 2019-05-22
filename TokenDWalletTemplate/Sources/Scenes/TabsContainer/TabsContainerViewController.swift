@@ -44,13 +44,15 @@ extension TabsContainer {
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
-        private var viewConfig: Model.ViewConfig?
+        private var viewConfig: Model.ViewConfig = Model.ViewConfig(
+            actionButtonAppearence: .hidden
+        )
         private var routing: Routing?
         private var onDeinit: DeinitCompletion = nil
         
         public func inject(
             interactorDispatch: InteractorDispatch?,
-            viewConfig: Model.ViewConfig?,
+            viewConfig: Model.ViewConfig,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
@@ -116,9 +118,6 @@ extension TabsContainer {
         }
         
         private func setupActionButton() {
-            guard let viewConfig = self.viewConfig else {
-                return
-            }
             switch viewConfig.actionButtonAppearence {
                 
             case .hidden:

@@ -7,7 +7,7 @@ extension TabsContainer {
         public static func configure(
             viewController: ViewController,
             contentProvider: ContentProvider,
-            viewConfig: Model.ViewConfig?,
+            viewConfig: Model.ViewConfig,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
