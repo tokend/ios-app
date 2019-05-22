@@ -129,6 +129,7 @@ extension SaleDetails {
                 self.setupLabelContainerView()
                 self.setupTokenCodeLabel()
                 self.setupTokenNameLabel()
+                self.setupTokenBalanceStateIcon()
                 self.setupTokenDetailsTableView()
                 self.setupLayout()
             }
@@ -239,6 +240,10 @@ extension SaleDetails {
                 self.tokenCodeLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
             }
             
+            private func setupTokenBalanceStateIcon() {
+                self.tokenBalanceStateIcon.contentMode = .center
+            }
+            
             private func setupTokenNameLabel() {
                 self.tokenNameLabel.textAlignment = .left
                 self.tokenNameLabel.textColor = Theme.Colors.textOnContentBackgroundColor
@@ -321,6 +326,7 @@ extension SaleDetails {
                     make.leading.equalTo(self.labelContainerView.snp.trailing).offset(self.sideInset)
                     make.trailing.equalToSuperview().inset(self.sideInset)
                     make.centerY.equalToSuperview()
+                    make.height.equalTo(30.0)
                 }
             }
             

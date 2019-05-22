@@ -89,6 +89,8 @@ extension TabsContainer {
             self.containerView.showsHorizontalScrollIndicator = false
             self.containerView.showsVerticalScrollIndicator = false
             self.containerView.isDirectionalLockEnabled = true
+            self.containerView.canCancelContentTouches = false
+            self.containerView.delaysContentTouches = false
             
             let scheduler = MainScheduler.instance
             self.containerView.rx
