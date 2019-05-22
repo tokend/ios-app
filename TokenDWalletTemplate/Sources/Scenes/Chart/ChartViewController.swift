@@ -36,10 +36,41 @@ extension Chart {
         
         private let chartCardValueFormatter: ChartValueFormatter = ChartValueFormatter()
         
+        private var hardCapLimitLine: ChartLimitLine? {
+            willSet {
+                if let hardCapLimit = self.hardCapLimitLine {
+                    self.chartView.removeYAxisLimitLine(hardCapLimit)
+                }
+            }
+            didSet {
+                if let hardCapLimit = self.hardCapLimitLine {
+                    self.chartView.addYAxisLimitLine(hardCapLimit)
+                }
+            }
+        }
+        
         private var currentLimitLine: ChartLimitLine? {
+            willSet {
+                if let currLimit = self.currentLimitLine {
+                    self.chartView.removeYAxisLimitLine(currLimit)
+                }
+            }
             didSet {
                 if let currLimit = self.currentLimitLine {
                     self.chartView.addYAxisLimitLine(currLimit)
+                }
+            }
+        }
+        
+        private var softCapLimitLine: ChartLimitLine? {
+            willSet {
+                if let softCapLimit = self.softCapLimitLine {
+                    self.chartView.removeYAxisLimitLine(softCapLimit)
+                }
+            }
+            didSet {
+                if let softCapLimit = self.softCapLimitLine {
+                    self.chartView.addYAxisLimitLine(softCapLimit)
                 }
             }
         }
@@ -106,14 +137,31 @@ extension Chart {
             }
         }
         
-        private func setYAxisLimitLine(value: Double, label: String) {
+        private func addYAxisLimitLine(
+            value: Double,
+            label: String,
+            type: Model.LimitLineType
+            ) {
+            
             let limitLine = ChartLimitLine(limit: value, label: label)
             limitLine.lineDashLengths = [5.0, 5.0]
             limitLine.lineColor = Theme.Colors.separatorOnContentBackgroundColor
             limitLine.valueTextColor = Theme.Colors.textOnContentBackgroundColor
             limitLine.valueFont = Theme.Fonts.smallTextFont
             limitLine.lineWidth = 1.0
-            self.currentLimitLine = limitLine
+            limitLine.labelPosition = .leftBottom
+            
+            switch type {
+                
+            case .current:
+                self.currentLimitLine = limitLine
+                
+            case .hardCap:
+                self.hardCapLimitLine = limitLine
+                
+            case .softCap:
+                self.softCapLimitLine = limitLine
+            }
         }
         
         // MARK: - Setup
@@ -147,18 +195,13 @@ extension Chart {
             self.chartView.entries = entries.map({ (chartEntry) -> ChartDataEntry in
                 return ChartDataEntry(x: chartEntry.x, y: chartEntry.y)
             })
-            self.setYAxisLimitLine(
-                value: viewModel.chartInfoViewModel.maxValue,
-                label: viewModel.chartInfoViewModel.formattedMaxValue
-            )
-            self.setYAxisLimitLine(
-                value: viewModel.chartInfoViewModel.softCap,
-                label: viewModel.chartInfoViewModel.formattedSoftCap
-            )
-            self.setYAxisLimitLine(
-                value: viewModel.chartInfoViewModel.hardCap,
-                label: viewModel.chartInfoViewModel.formattedHardCap
-            )
+            viewModel.chartInfoViewModel.limits.forEach { (limit) in
+                self.addYAxisLimitLine(
+                    value: limit.value,
+                    label: limit.label,
+                    type: limit.type
+                )
+            }
         }
         
         private func setupView() {
@@ -320,18 +363,14 @@ extension Chart.ViewController: Chart.DisplayLogic {
         self.chartView.entries = entries.map({ (chartEntry) -> ChartDataEntry in
             return ChartDataEntry(x: chartEntry.x, y: chartEntry.y)
         })
-        self.setYAxisLimitLine(
-            value: viewModel.viewModel.chartInfoViewModel.maxValue,
-            label: viewModel.viewModel.chartInfoViewModel.formattedMaxValue
-        )
-        self.setYAxisLimitLine(
-            value: viewModel.viewModel.chartInfoViewModel.softCap / 100000,
-            label: viewModel.viewModel.chartInfoViewModel.formattedSoftCap
-        )
-        self.setYAxisLimitLine(
-            value: viewModel.viewModel.chartInfoViewModel.hardCap / 100000,
-            label: viewModel.viewModel.chartInfoViewModel.formattedHardCap
-        )
+        
+        viewModel.viewModel.chartInfoViewModel.limits.forEach { (limit) in
+            self.addYAxisLimitLine(
+                value: limit.value,
+                label: limit.label,
+                type: limit.type
+            )
+        }
     }
     
     public func displaySelectChartEntry(viewModel: Event.SelectChartEntry.ViewModel) {

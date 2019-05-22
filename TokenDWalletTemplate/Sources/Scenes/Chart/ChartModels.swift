@@ -107,9 +107,12 @@ extension Chart.Model {
     
     public struct ChartInfoModel {
         let entries: [ChartEntry]
-        let maxValue: Decimal
-        let softCap: Decimal
-        let hardCap: Decimal
+        let limits: [LimitLineModel]
+    }
+    
+    public struct LimitLineModel {
+        let value: Decimal
+        let type: LimitLineType
     }
     
     public struct ChartEntry {
@@ -119,17 +122,18 @@ extension Chart.Model {
     
     public struct ChartInfoViewModel {
         let entries: [ChartDataEntry]
-        let maxValue: Double
-        let softCap: Double
-        let hardCap: Double
-        let formattedMaxValue: String
-        let formattedSoftCap: String
-        let formattedHardCap: String
+        let limits: [LimitLineViewModel]
     }
     
     public struct ChartDataEntry {
         let x: Double
         let y: Double
+    }
+    
+    public struct LimitLineViewModel {
+        let value: Double
+        let label: String
+        let type: LimitLineType
     }
     
     public struct AxisFormatters {
@@ -142,6 +146,12 @@ extension Chart.Model {
         let quoteAsset: String
         let softCap: Decimal
         let hardCap: Decimal
+    }
+    
+    public enum LimitLineType {
+        case current
+        case hardCap
+        case softCap
     }
 }
 

@@ -43,8 +43,7 @@ class SalesFlowController: BaseSignedInFlowController {
         
         let routing = Sales.Routing(
             onDidSelectSale: { [weak self] (identifier) in
-                self?.showChartAsset(saleIdentifier: identifier)
-                //self?.showSaleDetailsScreen(identifier: identifier)
+                self?.showSaleDetailsScreen(identifier: identifier)
             },
             onShowInvestments: { [weak self] in
                 self?.showInvestments()

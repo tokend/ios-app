@@ -142,11 +142,24 @@ extension Chart {
             let chartMaxValue = charts.max { (entry1, entry2) -> Bool in
                 return entry1.value < entry2.value
                 }?.value ?? 0.0
+            
+            let currentLimit = Model.LimitLineModel(
+                value: chartMaxValue,
+                type: .current
+            )
+            
+            let hardCapLimit = Model.LimitLineModel(
+                value: hardCap,
+                type: .hardCap
+            )
+            
+            let softCapLimit = Model.LimitLineModel(
+                value: softCap,
+                type: .softCap
+            )
             let chartModel = Model.ChartInfoModel(
                 entries: charts,
-                maxValue: chartMaxValue,
-                softCap: softCap,
-                hardCap: hardCap
+                limits: [currentLimit, hardCapLimit, softCapLimit]
             )
             
             return chartModel

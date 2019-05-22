@@ -149,29 +149,28 @@ extension Chart {
                 )
             }
             
-            let formattedMaxValue = self.amountFormatter.formatAmount(
-                chartModel.maxValue,
-                currency: asset
-            )
+            let hardCapDecimal = chartModel.limits.first { (limit) -> Bool in
+                return limit.type == .hardCap
+            }?.value ?? 0
             
-            let formattedSoftCap = self.amountFormatter.formatAmount(
-                chartModel.softCap,
-                currency: asset
-            )
-            
-            let formattedHardCap = self.amountFormatter.formatAmount(
-                chartModel.hardCap,
-                currency: asset
-            )
+            let hardCap = (hardCapDecimal as NSDecimalNumber).doubleValue
+            let limitsViewModels = chartModel.limits.map { (limit) -> Model.LimitLineViewModel in
+                let doubleValue = (limit.value as NSDecimalNumber).doubleValue
+                let label = self.amountFormatter.formatAmount(
+                    limit.value,
+                    currency: asset
+                )
+                let percent = doubleValue / hardCap
+                return Model.LimitLineViewModel(
+                    value: percent,
+                    label: label,
+                    type: limit.type
+                )
+            }
             
             let chartInfoViewModel = Model.ChartInfoViewModel(
                 entries: chartEntries,
-                maxValue: (chartModel.maxValue as NSDecimalNumber).doubleValue,
-                softCap: (chartModel.softCap as NSDecimalNumber).doubleValue,
-                hardCap: (chartModel.hardCap as NSDecimalNumber).doubleValue,
-                formattedMaxValue: formattedMaxValue,
-                formattedSoftCap: formattedSoftCap,
-                formattedHardCap: formattedHardCap
+                limits: limitsViewModels
             )
             
             return chartInfoViewModel
