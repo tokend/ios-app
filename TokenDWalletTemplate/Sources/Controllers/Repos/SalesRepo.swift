@@ -3,10 +3,10 @@ import TokenDSDK
 import RxCocoa
 import RxSwift
 
-class SalesRepo {
+public class SalesRepo {
     
-    typealias Sale = TokenDSDK.SaleResponse
-    typealias SaleDetails = TokenDSDK.SaleDetailsResponse
+    public typealias Sale = TokenDSDK.SaleResponse
+    public typealias SaleDetails = TokenDSDK.SaleDetailsResponse
     
     // MARK: - Private properties
     
@@ -155,7 +155,9 @@ class SalesRepo {
 }
 
 extension SalesRepo {
-    enum LoadingStatus {
+    
+    public enum LoadingStatus {
+        
         case loading
         case loaded
     }

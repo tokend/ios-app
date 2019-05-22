@@ -306,7 +306,8 @@ class SettingsFlowController: BaseSignedInFlowController {
         
         let sceneModel = Fees.Model.SceneModel(
             fees: [],
-            selectedAsset: nil
+            selectedAsset: nil,
+            target: nil
         )
         
         let feeDataFormatter = Fees.FeeDataFormatter()

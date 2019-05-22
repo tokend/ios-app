@@ -6,5 +6,6 @@ extension TransactionDetails {
         let showProgress: () -> Void
         let hideProgress: () -> Void
         let showError: (String) -> Void
+        let showMessage: (String) -> Void
     }
 }

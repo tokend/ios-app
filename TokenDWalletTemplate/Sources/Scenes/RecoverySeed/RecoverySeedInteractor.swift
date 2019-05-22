@@ -5,6 +5,7 @@ protocol RecoverySeedBusinessLogic {
     func onValidationSeedEditing(request: RecoverySeed.Event.ValidationSeedEditing.Request)
     func onCopyAction(request: RecoverySeed.Event.CopyAction.Request)
     func onProceedAction(request: RecoverySeed.Event.ProceedAction.Request)
+    func onSignUpAction(request: RecoverySeed.Event.SignUpAction.Request)
 }
 
 extension RecoverySeed {
@@ -13,14 +14,17 @@ extension RecoverySeed {
     class Interactor {
         
         private let presenter: PresentationLogic
+        private let signUpWorker: SignUpWorkerProtocol
         private var sceneModel: Model.SceneModel
         
         init(
             presenter: PresentationLogic,
+            signUpWorker: SignUpWorkerProtocol,
             seed: String
             ) {
             
             self.presenter = presenter
+            self.signUpWorker = signUpWorker
             self.sceneModel = Model.SceneModel(
                 seed: seed,
                 userInputSeed: nil
@@ -69,7 +73,24 @@ extension RecoverySeed.Interactor: RecoverySeed.BusinessLogic {
     }
     
     func onProceedAction(request: RecoverySeed.Event.ProceedAction.Request) {
-        let response = RecoverySeed.Event.ProceedAction.Response.showMessage
-        self.presenter.presentProceedAction(response: response)
+        let response = RecoverySeed.Event.ShowWarning.Response()
+        self.presenter.presentShowWarning(response: response)
+    }
+    
+    func onSignUpAction(request: RecoverySeed.Event.SignUpAction.Request) {
+        self.presenter.presentSignUpAction(response: .loading)
+        self.signUpWorker.signUp(
+            completion: { [weak self] (result) in
+                self?.presenter.presentSignUpAction(response: .loaded)
+                let response: RecoverySeed.Event.SignUpAction.Response
+                switch result {
+                case .failure(let error):
+                    response = .error(error)
+                    
+                case .success(let account, let walletData):
+                    response = .success(account: account, walletData: walletData)
+                }
+                self?.presenter.presentSignUpAction(response: response)
+        })
     }
 }

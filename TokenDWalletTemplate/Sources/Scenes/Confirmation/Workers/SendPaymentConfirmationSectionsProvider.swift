@@ -158,71 +158,125 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
     
     func loadConfirmationSections() {
         var sections: [ConfirmationScene.Model.SectionModel] = []
+        var destinationCells: [ConfirmationScene.Model.CellModel] = []
         let recipientCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.recipient),
+            hint: Localized(.recipient),
             cellType: .text(value: self.sendPaymentModel.recipientAccountId),
             identifier: .recipient
         )
-        let recipientSection = ConfirmationScene.Model.SectionModel(cells: [recipientCell])
-        sections.append(recipientSection)
+        destinationCells.append(recipientCell)
         
+        if !self.sendPaymentModel.description.isEmpty {
+            let descriptionCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.description),
+                cellType: .text(value: self.sendPaymentModel.description),
+                identifier: .description
+            )
+            destinationCells.append(descriptionCell)
+        }
+        let destinationSection = ConfirmationScene.Model.SectionModel(
+            title: "",
+            cells: destinationCells
+        )
+        sections.append(destinationSection)
+        
+        var toPayCells: [ConfirmationScene.Model.CellModel] = []
         let amountCellText = self.amountFormatter.assetAmountToString(
             self.sendPaymentModel.amount
             ) + " " + self.sendPaymentModel.asset
         
         let amountCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.amount),
+            hint: Localized(.amount),
             cellType: .text(value: amountCellText),
             identifier: .amount
         )
+        toPayCells.append(amountCell)
         
-        let feeAmount = self.sendPaymentModel.senderFee.fixed + self.sendPaymentModel.senderFee.percent
-        let formattedAmount = self.amountFormatter.assetAmountToString(feeAmount)
-        let feeCellText = formattedAmount + " " + self.sendPaymentModel.senderFee.asset
-        
-        let feeCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.fee),
-            cellType: .text(value: feeCellText),
-            identifier: .fee
-        )
-        
-        let recipientFeeCellText = self.percentFormatter.percentToString(
-            value: self.sendPaymentModel.recipientFee.fixed
-            ) + " " + self.sendPaymentModel.recipientFee.asset
-        
-        let recipientFeeCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.recipients_fee),
-            cellType: .text(value: recipientFeeCellText),
-            identifier: .recipientFee
-        )
-        
-        let payRecipientFeeCell = ConfirmationScene.Model.CellModel(
-            title: Localized(.pay_recipients_fee),
-            cellType: .boolSwitch(value: self.payRecipientFeeCellState),
-            identifier: .payRecipientFee
-        )
-        
-        let amountSection = ConfirmationScene.Model.SectionModel(
-            cells: [
-                amountCell,
-                feeCell,
-                recipientFeeCell,
-                payRecipientFeeCell
-            ]
-        )
-        sections.append(amountSection)
-        
-        if !self.sendPaymentModel.description.isEmpty {
-            let descriptionCell = ConfirmationScene.Model.CellModel(
-                title: Localized(.description),
-                cellType: .text(value: self.sendPaymentModel.description),
-                identifier: .description
-            )
-            let descriptionSection = ConfirmationScene.Model.SectionModel(
-                cells: [descriptionCell]
-            )
-            sections.append(descriptionSection)
+        var senderFeeAmount = self.sendPaymentModel.senderFee.fixed + self.sendPaymentModel.senderFee.percent
+        if self.payRecipientFeeCellState {
+            senderFeeAmount += self.sendPaymentModel.recipientFee.fixed + self.sendPaymentModel.recipientFee.percent
         }
+        
+        if senderFeeAmount > 0 {
+            let formattedAmount = self.amountFormatter.assetAmountToString(senderFeeAmount)
+            let feeCellText = formattedAmount + " " + self.sendPaymentModel.senderFee.asset
+            
+            let feeCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.fee),
+                cellType: .text(value: feeCellText),
+                identifier: .fee
+            )
+            
+            let totalAmount = self.sendPaymentModel.amount + senderFeeAmount
+            let formattedTotalAmount = self.amountFormatter.assetAmountToString(totalAmount)
+            let totalAmountCellText = formattedTotalAmount + " " + self.sendPaymentModel.senderFee.asset
+            
+            let totalCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.total),
+                cellType: .text(value: totalAmountCellText),
+                identifier: .total
+            )
+            toPayCells.append(feeCell)
+            toPayCells.append(totalCell)
+        }
+        let toPaySection = ConfirmationScene.Model.SectionModel(
+            title: Localized(.to_pay),
+            cells: toPayCells
+        )
+        sections.append(toPaySection)
+        
+        var toReceiveCells: [ConfirmationScene.Model.CellModel] = []
+        let toReceiveAmountCellText = self.amountFormatter.assetAmountToString(
+            self.sendPaymentModel.amount
+            ) + " " + self.sendPaymentModel.asset
+        
+        let toReceiveAmountCell = ConfirmationScene.Model.CellModel(
+            hint: Localized(.amount),
+            cellType: .text(value: toReceiveAmountCellText),
+            identifier: .amount
+        )
+        toReceiveCells.append(toReceiveAmountCell)
+        
+        let recepientFeeAmount = self.sendPaymentModel.recipientFee.fixed + self.sendPaymentModel.recipientFee.percent
+        
+        if recepientFeeAmount > 0 {
+            let formattedAmount = self.amountFormatter.assetAmountToString(recepientFeeAmount)
+            let feeCellText = formattedAmount + " " + self.sendPaymentModel.senderFee.asset
+            
+            let feeCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.fee),
+                cellType: .text(value: feeCellText),
+                identifier: .fee,
+                isDisabled: self.payRecipientFeeCellState
+            )
+            
+            var totalAmount = self.sendPaymentModel.amount
+            if !self.payRecipientFeeCellState {
+                totalAmount -= self.sendPaymentModel.recipientFee.fixed + self.sendPaymentModel.recipientFee.percent
+            }
+            totalAmount = totalAmount > 0 ? totalAmount : 0
+            let formattedTotalAmount = self.amountFormatter.assetAmountToString(totalAmount)
+            let totalAmountCellText = formattedTotalAmount + " " + self.sendPaymentModel.senderFee.asset
+            
+            let totalCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.total),
+                cellType: .text(value: totalAmountCellText),
+                identifier: .total
+            )
+            let payRecipientFeeCell = ConfirmationScene.Model.CellModel(
+                hint: Localized(.pay_recipients_fee),
+                cellType: .boolSwitch(value: self.payRecipientFeeCellState),
+                identifier: .payRecipientFee
+            )
+            toReceiveCells.append(feeCell)
+            toReceiveCells.append(totalCell)
+            toReceiveCells.append(payRecipientFeeCell)
+        }
+        let toReceiveSection = ConfirmationScene.Model.SectionModel(
+            title: Localized(.to_receive),
+            cells: toReceiveCells
+        )
+        sections.append(toReceiveSection)
         
         self.sectionsRelay.accept(sections)
     }
@@ -238,8 +292,10 @@ extension ConfirmationScene.SendPaymentConfirmationSectionsProvider: Confirmatio
         identifier: ConfirmationScene.CellIdentifier,
         value: Bool
         ) {
+        
         if identifier == .payRecipientFee {
             self.payRecipientFeeCellState = value
+            self.loadConfirmationSections()
         }
     }
     

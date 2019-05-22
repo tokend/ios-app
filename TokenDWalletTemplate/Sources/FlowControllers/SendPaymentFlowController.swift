@@ -1,4 +1,5 @@
 import UIKit
+import RxSwift
 
 class SendPaymentFlowController: BaseSignedInFlowController {
     
@@ -6,6 +7,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     
     private let navigationController: NavigationControllerProtocol
     private let selectedBalanceId: String?
+    private let disposeBag: DisposeBag = DisposeBag()
     
     private var onShowWalletScreen: ((_ selectedBalanceId: String?) -> Void)?
     
@@ -92,6 +94,10 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         let feeLoaderWorker = SendPaymentAmount.FeeLoaderWorker(
             feeLoader: feeLoader
         )
+        let feeOverviewer = SendPaymentAmount.FeeOverviewer(
+            generalApi: self.flowControllerStack.api.generalApi,
+            accountId: self.userDataProvider.walletData.accountId
+        )
         
         let sceneModel = SendPaymentAmount.Model.SceneModel(
             feeType: .payment,
@@ -130,8 +136,10 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             onSendAction: { [weak self] (sendModel) in
                 self?.showPaymentConfirmationScreen(sendPaymentModel: sendModel)
             },
-            onShowWithdrawDestination: nil
-        )
+            onShowWithdrawDestination: nil,
+            showFeesOverview: { [weak self] (asset, feeType) in
+                self?.showFees(asset: asset, feeType: feeType)
+        })
         
         SendPaymentAmount.Configurator.configure(
             viewController: vc,
@@ -141,6 +149,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             balanceDetailsLoader: balanceDetailsLoader,
             amountFormatter: amountFormatter,
             feeLoader: feeLoaderWorker,
+            feeOverviewer: feeOverviewer,
             viewConfig: viewConfig,
             routing: routing
         )
@@ -164,7 +173,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             },
             showWithdrawConformation: { (_) in
                 
-            },
+        },
             showSendAmount: { [weak self] (destination) in
                 self?.showSendPaymentAmountScene(destination: destination)
             },
@@ -276,6 +285,55 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         return vc
     }
     
+    private func showFees(asset: String, feeType: Int32) {
+        let vc = self.setupFees(asset: asset, feeType: feeType)
+        
+        vc.navigationItem.title = Localized(.fees)
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func setupFees(asset: String, feeType: Int32) -> UIViewController {
+        let vc = Fees.ViewController()
+        let feesOverviewProvider = Fees.FeesProvider(
+            generalApi: self.flowControllerStack.api.generalApi,
+            accountId: self.userDataProvider.walletData.accountId
+        )
+        
+        var target: Fees.Model.Target?
+        if let systemFeeType = Fees.Model.FeeType(rawValue: feeType) {
+            target = Fees.Model.Target(asset: asset, feeType: systemFeeType)
+        }
+        
+        let sceneModel = Fees.Model.SceneModel(
+            fees: [],
+            selectedAsset: nil,
+            target: target
+        )
+        
+        let feeDataFormatter = Fees.FeeDataFormatter()
+        
+        let routing = Fees.Routing(
+            showProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            },
+            hideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
+            },
+            showMessage: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(message, completion: nil)
+        })
+        
+        Fees.Configurator.configure(
+            viewController: vc,
+            feesOverviewProvider: feesOverviewProvider,
+            sceneModel: sceneModel,
+            feeDataFormatter: feeDataFormatter,
+            routing: routing
+        )
+        
+        return vc
+    }
+    
     // MARK: -
     
     private func presentQRCodeReader(completion: @escaping SendPaymentDestination.QRCodeReaderCompletion) {
@@ -291,5 +349,76 @@ class SendPaymentFlowController: BaseSignedInFlowController {
                     completion(.success(value: value, metadataType: metadataType))
                 }
         })
+    }
+    
+    private func showAssetPicker(
+        targetAssets: [String],
+        onSelected: @escaping ((String) -> Void)
+        ) {
+        
+        let navController = NavigationController()
+        
+        let vc = self.setupAssetPicker(
+            targetAssets: targetAssets,
+            onSelected: onSelected
+        )
+        vc.navigationItem.title = Localized(.choose_asset)
+        let closeBarItem = UIBarButtonItem(
+            title: Localized(.back),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        closeBarItem
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: { _ in
+                navController
+                    .getViewController()
+                    .dismiss(animated: true, completion: nil)
+            })
+            .disposed(by: self.disposeBag)
+        
+        vc.navigationItem.leftBarButtonItem = closeBarItem
+        navController.setViewControllers([vc], animated: false)
+        
+        self.navigationController.present(
+            navController.getViewController(),
+            animated: true,
+            completion: nil
+        )
+    }
+    
+    private func setupAssetPicker(
+        targetAssets: [String],
+        onSelected: @escaping ((String) -> Void)
+        ) -> UIViewController {
+        
+        let vc = AssetPicker.ViewController()
+        
+        let assetsFetcher = AssetPicker.AssetsFetcher(
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            targetAssets: targetAssets
+        )
+        let sceneModel = AssetPicker.Model.SceneModel(
+            assets: [],
+            filter: nil
+        )
+        let amountFormatter = AssetPicker.AmountFormatter()
+        let routing = AssetPicker.Routing(
+            onAssetPicked: { (balanceId) in
+                onSelected(balanceId)
+        })
+        
+        AssetPicker.Configurator.configure(
+            viewController: vc,
+            assetsFetcher: assetsFetcher,
+            sceneModel: sceneModel,
+            amountFormatter: amountFormatter,
+            routing: routing
+        )
+        return vc
     }
 }

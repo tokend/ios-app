@@ -4,18 +4,18 @@ class OrderBookCard: UIView {
     
     // MARK: - Public properties
     
-    public var baseCurrency: String = "" {
+    public var quoteCurrency: String = "" {
         didSet {
             self.priceBidTitleLabel.text = Localized(
                 .bid_base,
                 replace: [
-                    .bid_base_replace_base: self.baseCurrency
+                    .bid_base_replace_base: self.quoteCurrency
                 ]
             )
             self.priceAskTitleLabel.text = Localized(
                 .ask_base,
                 replace: [
-                    .ask_base_replace_base: self.baseCurrency
+                    .ask_base_replace_base: self.quoteCurrency
                 ]
             )
         }
@@ -34,7 +34,7 @@ class OrderBookCard: UIView {
     // MARK: - Private properties
     
     private let priceBidTitleLabel: UILabel = UILabel()
-    private let amountTitleLabel: UILabel = UILabel()
+    private let volumeTitleLabel: UILabel = UILabel()
     private let priceAskTitleLabel: UILabel = UILabel()
     
     private let verticalSeparator: UIView = UIView()
@@ -63,7 +63,7 @@ class OrderBookCard: UIView {
         self.setupCard()
         
         self.setupPriceBidTitleLabel()
-        self.setupAmountTitleLabel()
+        self.setupVolumeTitleLabel()
         self.setupPriceAskTitleLabel()
         self.setupSeparators()
         self.setupTables()
@@ -91,12 +91,12 @@ class OrderBookCard: UIView {
         self.priceBidTitleLabel.text = Localized(.bid_base)
     }
     
-    private func setupAmountTitleLabel() {
-        self.amountTitleLabel.textAlignment = .center
-        self.amountTitleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
-        self.amountTitleLabel.font = Theme.Fonts.smallTextFont
-        self.amountTitleLabel.numberOfLines = 1
-        self.amountTitleLabel.text = Localized(.amount)
+    private func setupVolumeTitleLabel() {
+        self.volumeTitleLabel.textAlignment = .center
+        self.volumeTitleLabel.textColor = Theme.Colors.sideTextOnContentBackgroundColor
+        self.volumeTitleLabel.font = Theme.Fonts.smallTextFont
+        self.volumeTitleLabel.numberOfLines = 1
+        self.volumeTitleLabel.text = Localized(.volume)
     }
     
     private func setupPriceAskTitleLabel() {
@@ -109,7 +109,7 @@ class OrderBookCard: UIView {
     
     private func setupLayout() {
         self.addSubview(self.priceBidTitleLabel)
-        self.addSubview(self.amountTitleLabel)
+        self.addSubview(self.volumeTitleLabel)
         self.addSubview(self.priceAskTitleLabel)
         self.addSubview(self.buyTable)
         self.addSubview(self.sellTable)
@@ -118,19 +118,19 @@ class OrderBookCard: UIView {
         
         let sideInset: CGFloat = 14.0
         
-        self.amountTitleLabel.snp.makeConstraints { (make) in
+        self.volumeTitleLabel.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(sideInset)
         }
         
         self.priceBidTitleLabel.snp.makeConstraints { (make) in
             make.leading.equalToSuperview().inset(sideInset)
-            make.centerY.equalTo(self.amountTitleLabel)
+            make.centerY.equalTo(self.volumeTitleLabel)
         }
         
         self.priceAskTitleLabel.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().inset(sideInset)
-            make.centerY.equalTo(self.amountTitleLabel)
+            make.centerY.equalTo(self.volumeTitleLabel)
         }
         
         let separatorWidth: CGFloat = 1.0 / UIScreen.main.scale
@@ -151,14 +151,14 @@ class OrderBookCard: UIView {
             make.leading.equalToSuperview()
             make.trailing.equalTo(self.verticalSeparator.snp.leading)
             make.top.equalTo(self.horizontalSeparator.snp.bottom)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(self.safeArea.bottom)
         }
         
         self.sellTable.snp.makeConstraints { (make) in
             make.leading.equalTo(self.verticalSeparator.snp.trailing)
             make.trailing.equalToSuperview()
             make.top.equalTo(self.horizontalSeparator.snp.bottom)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(self.safeArea.bottom)
         }
     }
     

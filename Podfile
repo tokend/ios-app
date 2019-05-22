@@ -12,19 +12,24 @@ def main_app_pods
   pod 'TokenDSDK/JSONAPI'
   pod 'TokenDSDK/AlamofireNetworkJSONAPI'
   pod 'TokenDSDK/KeyServer'
-
+  
   pod 'QRCodeReader.swift',       '8.1.1'
-  pod 'ReachabilitySwift',        '~> 4.1'
+#  pod 'ReachabilitySwift',        '~> 4.1'
   pod 'RxCocoa',                  '~> 4.1'
   pod 'RxSwift',                  '~> 4.1'
   pod 'SnapKit',                  '~> 4.0'
   pod 'SwiftKeychainWrapper',     '3.0.1'
-
+  pod 'ActionsList', 		  '~> 0.9.1'
+  
   pod 'PullToRefresher', '~> 3.0'
   pod 'Nuke'
-  pod 'Down'
+  pod 'MarkdownView'
   pod 'AFDateHelper', '~> 4.2.2'
-
+  
+  pod 'Firebase/Core'
+  pod 'Fabric'
+  pod 'Crashlytics'
+  
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'
   pod 'Floaty', git: 'https://github.com/tokend/Floaty.git'
@@ -54,7 +59,7 @@ target 'TokenDWalletTemplate' do
       end
     end
     
-    swift4Targets = ['QRCodeReader.swift']
+    swift4Targets = ['QRCodeReader.swift', 'ActionsList']
     
     installer.pods_project.targets.each do |target|
       next unless swift4Targets.include? target.name

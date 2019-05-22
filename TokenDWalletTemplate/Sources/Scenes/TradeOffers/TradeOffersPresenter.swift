@@ -15,6 +15,7 @@ public protocol TradeOffersPresentationLogic {
     func presentLoading(response: Event.Loading.Response)
     func presentChartFormatterDidChange(response: Event.ChartFormatterDidChange.Response)
     func presentCreateOffer(response: Event.CreateOffer.Response)
+    func presentSwipeRecognized(response: Event.SwipeRecognized.Response)
 }
 
 extension TradeOffers {
@@ -105,16 +106,21 @@ extension TradeOffers {
         
         private func cellModelFrom<CellType: OrderBookTableViewCell>(
             _ offer: Model.Offer,
+            maxVolume: Decimal,
             isLoading: Bool
             ) -> OrderBookTableViewCellModel<CellType> {
             
             let anOffer = offer.getOffer(CellType.self)
+            let volumeCoefficient = NSDecimalNumber(
+                decimal: ((offer.volume)/maxVolume)
+                ).doubleValue
             
             return OrderBookTableViewCellModel<CellType>(
                 price: self.amountFormatter.formatTradeOrderToken(value: offer.price.value),
                 priceCurrency: offer.price.currency,
                 amount: self.amountFormatter.formatTradeOrderToken(value: offer.amount.value),
                 amountCurrency: offer.amount.currency,
+                coefficient: volumeCoefficient,
                 isBuy: offer.isBuy,
                 offer: anOffer,
                 isLoading: isLoading,
@@ -265,12 +271,12 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         case .error(let error):
             viewModel = .error(error: error.localizedDescription)
             
-        case .offers(let buy, let sell):
+        case .offers(let buy, let sell, let maxVolume):
             let buyCells = buy.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewBuyCell> in
-                return self.cellModelFrom(offer, isLoading: false)
+                return self.cellModelFrom(offer, maxVolume: maxVolume, isLoading: false)
             }
             let sellCells = sell.map { (offer) -> OrderBookTableViewCellModel<OrderBookTableViewSellCell> in
-                return self.cellModelFrom(offer, isLoading: false)
+                return self.cellModelFrom(offer, maxVolume: maxVolume, isLoading: false)
             }
             viewModel = .cells(buy: buyCells, sell: sellCells)
         }
@@ -336,6 +342,13 @@ extension TradeOffers.Presenter: TradeOffers.PresentationLogic {
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayCreateOffer(viewModel: viewModel)
+        }
+    }
+    
+    public func presentSwipeRecognized(response: Event.SwipeRecognized.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displaySwipeRecognized(viewModel: viewModel)
         }
     }
 }

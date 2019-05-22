@@ -93,6 +93,10 @@ public extension SendPaymentAmount.Model {
         case offer
         case withdraw
     }
+    
+    public struct FeeOverviewModel {
+        let asset: String
+    }
 }
 
 // MARK: - Events
@@ -110,6 +114,7 @@ extension SendPaymentAmount.Event {
         }
         
         struct ViewModel {
+            let recipientInfo: String
             let sceneModel: Model.SceneViewModel
         }
     }
@@ -212,6 +217,22 @@ extension SendPaymentAmount.Event {
             case failed(errorMessage: String)
             case succeeded(Model.SendPaymentModel)
         }
+    }
+    
+    struct FeeOverviewAvailability {
+        struct Response {
+            let available: Bool
+        }
+        typealias ViewModel = Response
+    }
+    
+    struct FeeOverviewAction {
+        struct Request {}
+        struct Response {
+            let asset: String
+            let feeType: Int32
+        }
+        typealias ViewModel = Response
     }
 }
 

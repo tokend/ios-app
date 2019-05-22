@@ -12,6 +12,8 @@ protocol SendPaymentDisplayLogic: class {
     func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
     func displayPaymentAction(viewModel: Event.PaymentAction.ViewModel)
     func displayWithdrawAction(viewModel: Event.WithdrawAction.ViewModel)
+    func displayFeeOverviewAvailability(viewModel: Event.FeeOverviewAvailability.ViewModel)
+    func displayFeeOverviewAction(viewModel: Event.FeeOverviewAction.ViewModel)
 }
 
 extension SendPaymentAmount {
@@ -26,10 +28,17 @@ extension SendPaymentAmount {
         
         private let stackView: ScrollableStackView = ScrollableStackView()
         
+        private let recipientLabel: UILabel = UILabel()
         private let balanceView: BalanceView = BalanceView()
         private let enterAmountView: EnterAmountView = EnterAmountView()
         private let descritionTextView: DescriptionTextView = DescriptionTextView()
         private let actionButton: UIButton = UIButton()
+        private let feesAction: UIBarButtonItem = UIBarButtonItem(
+            title: Localized(.fees),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         
         private let disposeBag = DisposeBag()
         
@@ -60,11 +69,13 @@ extension SendPaymentAmount {
             super.viewDidLoad()
             
             self.setupView()
+            self.setupRecipientLabel()
             self.setupStackView()
             self.setupBalanceView()
             self.setupEnterAmountView()
             self.setupDescriptionTextView()
             self.setupActionButton()
+            self.setupFeesAction()
             self.setupLayout()
             
             self.observeKeyboard()
@@ -106,6 +117,14 @@ extension SendPaymentAmount {
         
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
+        private func setupRecipientLabel() {
+            self.recipientLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.recipientLabel.font = Theme.Fonts.plainTextFont
+            self.recipientLabel.textAlignment = .center
+            self.recipientLabel.numberOfLines = 1
+            self.recipientLabel.lineBreakMode = .byTruncatingMiddle
         }
         
         private func setupStackView() {
@@ -168,6 +187,20 @@ extension SendPaymentAmount {
                 .disposed(by: self.disposeBag)
         }
         
+        private func setupFeesAction() {
+            self.feesAction
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    let request = Event.FeeOverviewAction.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onFeeOverviewAction(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
+        }
+        
         private func observeKeyboard() {
             let keyboardObserver = KeyboardObserver(
                 self,
@@ -176,7 +209,7 @@ extension SendPaymentAmount {
                     if attributes.showingIn(view: self.view) {
                         self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
-                            make.bottom.equalTo(self.view.safeArea.bottom).inset(keyboardHeight)
+                            make.bottom.equalToSuperview().inset(keyboardHeight)
                             make.height.equalTo(self.buttonHeight)
                         }
                     } else {
@@ -198,8 +231,14 @@ extension SendPaymentAmount {
         
         private func setupLayout() {
             self.view.addSubview(self.stackView)
+            self.view.addSubview(self.recipientLabel)
             self.view.addSubview(self.descritionTextView)
             self.view.addSubview(self.actionButton)
+            
+            self.recipientLabel.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(20.0)
+                make.top.equalToSuperview().inset(15.0)
+            }
             
             self.stackView.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
@@ -229,7 +268,9 @@ extension SendPaymentAmount {
 // MARK: - DisplayLogic
 
 extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
+    
     func displayViewDidLoad(viewModel: Event.ViewDidLoad.ViewModel) {
+        self.recipientLabel.text = viewModel.recipientInfo
         self.updateWithSceneModel(viewModel.sceneModel)
     }
     
@@ -300,5 +341,17 @@ extension SendPaymentAmount.ViewController: SendPaymentAmount.DisplayLogic {
             self.routing?.onHideProgress()
             self.routing?.onShowWithdrawDestination?(sendModel)
         }
+    }
+    
+    func displayFeeOverviewAvailability(viewModel: Event.FeeOverviewAvailability.ViewModel) {
+        if viewModel.available {
+            self.navigationItem.rightBarButtonItem = self.feesAction
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    func displayFeeOverviewAction(viewModel: Event.FeeOverviewAction.ViewModel) {
+        self.routing?.showFeesOverview(viewModel.asset, viewModel.feeType)
     }
 }

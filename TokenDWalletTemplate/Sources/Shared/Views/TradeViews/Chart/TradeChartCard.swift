@@ -169,7 +169,7 @@ class TradeChartCard: UIView {
         self.chartView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(self.periodPicker.snp.bottom).offset(16.0)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(self.safeArea.bottom)
         }
         
         self.emptyMessageLabel.snp.makeConstraints { (make) in

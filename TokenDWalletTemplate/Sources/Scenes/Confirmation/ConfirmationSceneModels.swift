@@ -26,6 +26,8 @@ enum ConfirmationScene {
         case destination
         case price
         case test
+        case sale
+        case total
     }
     
     enum Model {}
@@ -39,52 +41,70 @@ extension ConfirmationScene.Model {
     typealias CellIdentifier = ConfirmationScene.CellIdentifier
     
     class SectionModel {
+        let title: String
         var cells: [CellModel]
         
-        init(cells: [CellModel]) {
+        init(
+            title: String,
+            cells: [CellModel]
+            ) {
+            
+            self.title = title
             self.cells = cells
         }
     }
     
     class CellModel {
-        let title: String
+        let hint: String?
         var cellType: CellType
         let identifier: CellIdentifier
+        let isDisabled: Bool
         
         init(
-            title: String,
+            hint: String?,
             cellType: CellType,
-            identifier: CellIdentifier
+            identifier: CellIdentifier,
+            isDisabled: Bool = false
             ) {
             
-            self.title = title
+            self.hint = hint
             self.cellType = cellType
             self.identifier = identifier
+            self.isDisabled = isDisabled
         }
     }
     
     class SectionViewModel {
-        var cells: [CellViewModel]
+        let title: String
+        var cells: [CellViewAnyModel]
         
-        init(cells: [CellViewModel]) {
+        init(
+            title: String,
+            cells: [CellViewAnyModel]
+            ) {
+            
+            self.title = title
             self.cells = cells
         }
     }
     
     class CellViewModel {
-        let title: String
+        let hint: String?
         var cellType: CellModel.CellType
         let identifier: CellIdentifier
+        let isDisabled: Bool
         
         init(
-            title: String,
+            hint: String?,
             cellType: CellModel.CellType,
-            identifier: CellIdentifier
+            identifier: CellIdentifier,
+            isDisabled: Bool = false
             ) {
             
-            self.title = title
+            self.hint = hint
             self.cellType = cellType
             self.identifier = identifier
+            self.isDisabled = isDisabled
         }
     }
     
@@ -116,6 +136,7 @@ extension ConfirmationScene.Model {
         let isBuy: Bool
         let baseAmount: Decimal
         let quoteAmount: Decimal
+        let baseAssetName: String
         let price: Decimal
         let fee: Decimal
         let type: Int
@@ -202,7 +223,6 @@ extension ConfirmationScene.Event {
 extension ConfirmationScene.Model.CellModel {
     enum CellType {
         case text(value: String?)
-        case textField(value: String?, placeholder: String?, maxCharacters: Int)
         case boolSwitch(value: Bool)
     }
 }

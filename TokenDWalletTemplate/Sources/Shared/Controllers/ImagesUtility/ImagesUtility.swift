@@ -1,6 +1,6 @@
 import Foundation
 
-class ImagesUtility {
+public class ImagesUtility {
     
     // MARK: - Private properties
     
@@ -55,7 +55,9 @@ class ImagesUtility {
 // MARK: -
 
 extension ImagesUtility {
-    enum ImageKey {
+    
+    public enum ImageKey {
+        
         case url(String)
         case key(String)
     }

@@ -66,6 +66,7 @@ extension TransactionDetails {
             )
             sections.append(infoSection)
             
+            var toPayCells: [Model.CellModel] = []
             let quoteAmountTitle = amountFormatter.formatAmount(
                 offer.quoteAmount,
                 currency: offer.quoteAssetCode
@@ -75,9 +76,37 @@ extension TransactionDetails {
                 hint: Localized(.amount),
                 identifier: .amount
             )
+            toPayCells.append(toPayCell)
+            if offer.fee > 0 {
+                if let index = toPayCells.indexOf(toPayCell) {
+                    toPayCells[index].isSeparatorHidden = true
+                }
+                let formattedAmount = amountFormatter.assetAmountToString(offer.fee)
+                let feeCellText = formattedAmount + " " + offer.quoteAssetCode
+                
+                let feeCell = Model.CellModel(
+                    title: feeCellText,
+                    hint: Localized(.fee),
+                    identifier: .fee,
+                    isSeparatorHidden: true
+                )
+                toPayCells.append(feeCell)
+                
+                let totalAmount = offer.fee + offer.quoteAmount
+                let totalFormattedAmount = amountFormatter.formatAmount(
+                    totalAmount,
+                    currency: offer.quoteAssetCode
+                )
+                let totalCell = Model.CellModel(
+                    title: totalFormattedAmount,
+                    hint: Localized(.total),
+                    identifier: .total
+                )
+                toPayCells.append(totalCell)
+            }
             let toPaySection = Model.SectionModel(
                 title: Localized(.to_pay),
-                cells: [toPayCell],
+                cells: toPayCells,
                 description: ""
             )
             sections.append(toPaySection)

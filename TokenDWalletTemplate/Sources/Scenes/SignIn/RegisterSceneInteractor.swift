@@ -296,13 +296,8 @@ extension RegisterScene {
                     case .failed(let error):
                         self?.presenter.presentSignAction(response: .failed(.signUpRequestError(error)))
                         
-                    case .succeeded(let account, let walletData, let recoverySeed):
-                        self?.presenter.presentSignAction(response: .succeededSignUp(
-                            account: account,
-                            walletData: walletData,
-                            recoverySeed: recoverySeed
-                            )
-                        )
+                    case .succeeded(let model):
+                        self?.presenter.presentSignAction(response: .showRecoverySeed(model: model))
                     }
             })
         }

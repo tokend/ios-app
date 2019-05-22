@@ -1,4 +1,5 @@
 import UIKit
+import Firebase
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -11,6 +12,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
         ) -> Bool {
+        
+        //To enable crash reporting - add GoogleService-Info.plist into the project
+        //FirebaseApp.configure()
         
         self.rootNavigationController = RootNavigationViewController()
         

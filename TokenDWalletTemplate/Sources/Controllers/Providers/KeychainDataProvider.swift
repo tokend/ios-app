@@ -2,20 +2,21 @@ import Foundation
 import TokenDSDK
 import DLCryptoKit
 
-protocol KeychainDataProviderProtocol {
+public protocol KeychainDataProviderProtocol {
+    
     func getKeyData() -> ECDSA.KeyData
 }
 
-class KeychainDataProvider {
+public class KeychainDataProvider {
     
     // MARK: - Public properties
     
-    let account: String
-    let keychainManager: KeychainManagerProtocol
+    public let account: String
+    public let keychainManager: KeychainManagerProtocol
     
     // MARK: -
     
-    init?(account: String, keychainManager: KeychainManagerProtocol) {
+    public init?(account: String, keychainManager: KeychainManagerProtocol) {
         let keyData = keychainManager.getKeyData(account: account)
         guard keyData != nil else {
             return nil
@@ -27,7 +28,8 @@ class KeychainDataProvider {
 }
 
 extension KeychainDataProvider: KeychainDataProviderProtocol {
-    func getKeyData() -> ECDSA.KeyData {
+    
+    public func getKeyData() -> ECDSA.KeyData {
         guard let keyData = self.keychainManager.getKeyData(account: self.account) else {
             fatalError(Localized(.keychaindataprovider_should_always_provide_key))
         }

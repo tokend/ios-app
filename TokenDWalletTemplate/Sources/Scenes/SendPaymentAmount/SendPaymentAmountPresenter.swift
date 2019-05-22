@@ -11,6 +11,8 @@ protocol SendPaymentPresentationLogic {
     func presentEditAmount(response: Event.EditAmount.Response)
     func presentPaymentAction(response: Event.PaymentAction.Response)
     func presentWithdrawAction(response: Event.WithdrawAction.Response)
+    func presentFeeOverviewAvailability(response: Event.FeeOverviewAvailability.Response)
+    func presentFeeOverviewAction(response: Event.FeeOverviewAction.Response)
 }
 
 extension SendPaymentAmount {
@@ -65,7 +67,21 @@ extension SendPaymentAmount {
 extension SendPaymentAmount.Presenter: SendPaymentAmount.PresentationLogic {
     func presentViewDidLoad(response: Event.ViewDidLoad.Response) {
         let sceneViewModel = self.getSceneViewModel(response.sceneModel, amountValid: response.amountValid)
-        let viewModel = Event.ViewDidLoad.ViewModel(sceneModel: sceneViewModel)
+        
+        var recipientInfo = ""
+        if let recipientAddress = response.sceneModel.recipientAddress {
+            recipientInfo =  Localized(
+                .to,
+                replace: [
+                    .to_replace_address: recipientAddress
+                ]
+            )
+        }
+        
+        let viewModel = Event.ViewDidLoad.ViewModel(
+            recipientInfo: recipientInfo,
+            sceneModel: sceneViewModel
+        )
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayViewDidLoad(viewModel: viewModel)
         }
@@ -158,6 +174,20 @@ extension SendPaymentAmount.Presenter: SendPaymentAmount.PresentationLogic {
         
         self.presenterDispatch.display { displayLogic in
             displayLogic.displayWithdrawAction(viewModel: viewModel)
+        }
+    }
+    
+    func presentFeeOverviewAvailability(response: Event.FeeOverviewAvailability.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayFeeOverviewAvailability(viewModel: viewModel)
+        }
+    }
+    
+    func presentFeeOverviewAction(response: Event.FeeOverviewAction.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayFeeOverviewAction(viewModel: viewModel)
         }
     }
 }

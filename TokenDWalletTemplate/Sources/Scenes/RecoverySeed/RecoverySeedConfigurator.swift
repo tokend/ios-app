@@ -5,6 +5,7 @@ extension RecoverySeed {
     enum Configurator {
         static func configure(
             viewController: ViewController,
+            signUpWorker: SignUpWorkerProtocol,
             seed: String,
             routing: Routing?
             ) {
@@ -13,6 +14,7 @@ extension RecoverySeed {
             let presenter = Presenter(presenterDispatch: presenterDispatch)
             let interactor = Interactor(
                 presenter: presenter,
+                signUpWorker: signUpWorker,
                 seed: seed
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)

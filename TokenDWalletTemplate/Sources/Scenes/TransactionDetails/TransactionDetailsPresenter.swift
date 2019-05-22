@@ -5,6 +5,7 @@ protocol TransactionDetailsPresentationLogic {
     func presentTransactionUpdated(response: TransactionDetails.Event.TransactionUpdated.Response)
     func presentTransactionActionsDidUpdate(response: TransactionDetails.Event.TransactionActionsDidUpdate.Response)
     func presentTransactionAction(response: TransactionDetails.Event.TransactionAction.Response)
+    func presentSelectedCell(response: TransactionDetails.Event.SelectedCell.Response)
 }
 
 extension TransactionDetails {
@@ -28,6 +29,7 @@ extension TransactionDetails {
                     
                     for cellData in section.cells {
                         let icon: UIImage
+                        var isTruncatable: Bool = false
                         
                         switch cellData.identifier {
                         case .amount:
@@ -54,10 +56,12 @@ extension TransactionDetails {
                             icon = Assets.incoming.image
                         case .recipient:
                             icon = Assets.recipient.image
+                            isTruncatable = true
                         case .reference:
                             icon = Assets.reference.image
                         case .sender:
                             icon = Assets.recipient.image
+                            isTruncatable = true
                         case .token:
                             icon = Assets.token.image
                         case .unlocked:
@@ -70,7 +74,9 @@ extension TransactionDetails {
                             identifier: cellData.identifier,
                             icon: icon,
                             title: cellData.title,
-                            hint: cellData.hint
+                            hint: cellData.hint,
+                            isSeparatorHidden: cellData.isSeparatorHidden,
+                            isTruncatable: isTruncatable
                         )
                         arrayCellModels.append(cellModel)
                     }
@@ -123,6 +129,13 @@ extension TransactionDetails.Presenter: TransactionDetails.PresentationLogic {
         let viewModel = response
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayTransactionAction(viewModel: viewModel)
+        }
+    }
+    
+    func presentSelectedCell(response: TransactionDetails.Event.SelectedCell.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displaySelectedCell(viewModel: viewModel)
         }
     }
 }

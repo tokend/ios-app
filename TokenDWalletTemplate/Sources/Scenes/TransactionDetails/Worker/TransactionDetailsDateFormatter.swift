@@ -2,7 +2,7 @@ import UIKit
 
 extension TransactionDetails {
     
-    class DateFormatter: DateFormatterProtocol {
+    public class DateFormatter: DateFormatterProtocol {
         
         // MARK: - Private properties
         

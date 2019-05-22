@@ -4,11 +4,37 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
     
-    private let navigationController: NavigationControllerProtocol = NavigationController()
+    private let navigationController: NavigationControllerProtocol
     private weak var walletScene: UIViewController?
     private var operationCompletionScene: UIViewController {
         return self.walletScene ?? UIViewController()
     }
+    
+    // MARK: -
+    
+     init(
+        navigationController: NavigationControllerProtocol,
+        appController: AppControllerProtocol,
+        flowControllerStack: FlowControllerStack,
+        reposController: ReposController,
+        managersController: ManagersController,
+        userDataProvider: UserDataProviderProtocol,
+        keychainDataProvider: KeychainDataProviderProtocol,
+        rootNavigation: RootNavigationProtocol
+        ) {
+        
+        self.navigationController = navigationController
+        super.init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation
+        )
+    }
+    
     // MARK: - Public
     
     public func run(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
@@ -60,15 +86,9 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        viewController.navigationItem.title = Localized(.explore_tokens)
+        viewController.navigationItem.title = Localized(.assets)
         
-        self.navigationController.setViewControllers([viewController], animated: false)
-        
-        if let showRoot = showRootScreen {
-            showRoot(self.navigationController.getViewController())
-        } else {
-            self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
-        }
+        self.navigationController.pushViewController(viewController, animated: true)
     }
     
     private func showTokenDetails(_ tokenIdentifier: String) {
@@ -112,7 +132,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        viewController.navigationItem.title = Localized(.token_details)
+        viewController.navigationItem.title = Localized(.asset_details)
         self.navigationController.pushViewController(viewController, animated: true)
     }
     

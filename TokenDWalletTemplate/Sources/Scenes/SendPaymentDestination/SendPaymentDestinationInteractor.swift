@@ -172,11 +172,15 @@ extension SendPaymentDestination {
                     response = .error(error.localizedDescription)
                     
                 case .success(let cells):
-                    let section = Model.SectionModel(
-                        title: Localized(.contacts),
-                        cells: cells
-                    )
-                    response = .sections([section])
+                    if cells.isEmpty {
+                        response = .empty
+                    } else {
+                        let section = Model.SectionModel(
+                            title: Localized(.contacts),
+                            cells: cells
+                        )
+                        response = .sections([section])
+                    }
                 }
                 self?.presenter.presentContactsUpdated(response: response)
             })

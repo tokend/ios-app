@@ -205,7 +205,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = Localized(.create_offer)
+        vc.navigationItem.title = Localized(.create_order)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
@@ -242,12 +242,12 @@ class TradeFlowController: BaseSignedInFlowController {
         let vc = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_offers),
+            emptyTitle: Localized(.no_pending_orders),
             viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        vc.navigationItem.title = Localized(.pending_offers)
+        vc.navigationItem.title = Localized(.pending_orders)
         self.navigationController.pushViewController(vc, animated: true)
     }
     
@@ -280,6 +280,17 @@ class TradeFlowController: BaseSignedInFlowController {
         },
             showError: { (error) in
                 navigationController.showErrorMessage(error, completion: nil)
+        },
+            showMessage: { [weak self] (message) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showSuccessMessage(
+                    title: message,
+                    message: nil,
+                    completion: nil,
+                    presentViewController: present
+                )
         })
         let sectionsProvider = TransactionDetails.PendingOfferSectionsProvider(
             pendingOffersRepo: self.reposController.pendingOffersRepo,
@@ -294,7 +305,7 @@ class TradeFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
-        vc.navigationItem.title = Localized(.pending_offer_details)
+        vc.navigationItem.title = Localized(.pending_order_details)
         
         return vc
     }

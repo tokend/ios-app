@@ -20,6 +20,7 @@ extension Sales {
             let timeText: NSAttributedString
             
             let saleIdentifier: String
+            let asset: String
             
             func setup(cell: View) {
                 cell.imageURL = self.imageUrl
@@ -49,6 +50,7 @@ extension Sales {
                             into: self.saleImageView
                         )
                     } else {
+                        Nuke.cancelRequest(for: self.saleImageView)
                         self.saleImageView.image = nil
                     }
                 }

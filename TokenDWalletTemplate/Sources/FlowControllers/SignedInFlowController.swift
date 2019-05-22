@@ -166,15 +166,9 @@ class SignedInFlowController: BaseSignedInFlowController {
                 }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.exploreFundsIcon.image,
-                    title: Localized(.explore_funds),
+                    title: Localized(.sales),
                     onSelected: { [weak self] in
                         self?.runExploreFundsFlow()
-                }),
-                SideMenu.Model.MenuItem(
-                    iconImage: Assets.exploreTokensIcon.image,
-                    title: Localized(.explore_tokens),
-                    onSelected: { [weak self] in
-                        self?.runExploreTokensFlow()
                 }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.tradeIcon.image,
@@ -272,22 +266,6 @@ class SignedInFlowController: BaseSignedInFlowController {
             },
             onShowWalletScreen: { [weak self] (balanceId) in
                 self?.runWalletFlow(selectedBalanceId: balanceId)
-        })
-    }
-    
-    private func runExploreTokensFlow() {
-        let exploreTokensFlowController = ExploreTokensFlowController(
-            appController: self.appController,
-            flowControllerStack: self.flowControllerStack,
-            reposController: self.reposController,
-            managersController: self.managersController,
-            userDataProvider: self.userDataProvider,
-            keychainDataProvider: self.keychainDataProvider,
-            rootNavigation: self.rootNavigation
-        )
-        self.currentFlowController = exploreTokensFlowController
-        exploreTokensFlowController.run(showRootScreen: { [weak self] (vc) in
-            self?.sideNavigationController.embed(centerViewController: vc)
         })
     }
     

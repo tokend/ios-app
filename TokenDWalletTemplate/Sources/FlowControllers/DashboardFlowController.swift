@@ -29,7 +29,10 @@ class DashboardFlowController: BaseSignedInFlowController {
     private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         let viewController = DashboardScene.ViewController()
         
-        let routing = DashboardScene.Routing()
+        let routing = DashboardScene.Routing(
+            showExploreAssets: { [weak self] in
+                self?.runExploreTokensFlow()
+        })
         
         let previewMaxLength: Int = 3
         
@@ -65,7 +68,7 @@ class DashboardFlowController: BaseSignedInFlowController {
         let pendingOffersPreviewList = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: pendingOffersPreviewFetcher,
             actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_offers),
+            emptyTitle: Localized(.no_pending_orders),
             viewConfig: viewConfig,
             routing: pendingOffersPreviewRouting
         )
@@ -253,12 +256,12 @@ class DashboardFlowController: BaseSignedInFlowController {
         let viewController = SharedSceneBuilder.createTransactionsListScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_offers),
+            emptyTitle: Localized(.no_pending_orders),
             viewConfig: viewConfig,
             routing: transactionsListRouting
         )
         
-        viewController.navigationItem.title = Localized(.pending_offers)
+        viewController.navigationItem.title = Localized(.pending_orders)
         
         self.navigationController.pushViewController(viewController, animated: true)
     }
@@ -278,8 +281,25 @@ class DashboardFlowController: BaseSignedInFlowController {
         let vc = self.setupTransactionDetailsScreen(
             navigationController: self.navigationController,
             sectionsProvider: sectionsProvider,
-            title: Localized(.pending_offer_details)
+            title: Localized(.pending_order_details)
         )
         self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func runExploreTokensFlow() {
+        let exploreTokensFlowController = ExploreTokensFlowController(
+            navigationController: self.navigationController,
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation
+        )
+        self.currentFlowController = exploreTokensFlowController
+        exploreTokensFlowController.run(showRootScreen: { [weak self] (vc) in
+            self?.navigationController.pushViewController(vc, animated: true)
+        })
     }
 }

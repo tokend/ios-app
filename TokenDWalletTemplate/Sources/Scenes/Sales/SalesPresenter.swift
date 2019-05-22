@@ -106,6 +106,7 @@ extension Sales {
 }
 
 extension Sales.Presenter: Sales.PresentationLogic {
+    
     func presentSectionsUpdated(response: Sales.Event.SectionsUpdated.Response) {
         let sections = response.sections.map { (sectioModel) -> Sales.Model.SectionViewModel in
             return Sales.Model.SectionViewModel(cells: sectioModel.sales.map({ (sale) -> CellViewAnyModel in
@@ -174,7 +175,8 @@ extension Sales.Presenter: Sales.PresentationLogic {
                     investedPercentageText: attributedInvestedPercentage,
                     isUpcomming: timeText.isUpcomming,
                     timeText: timeText.timeText,
-                    saleIdentifier: sale.saleIdentifier
+                    saleIdentifier: sale.saleIdentifier,
+                    asset: sale.asset
                 )
             }))
         }

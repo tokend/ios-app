@@ -56,10 +56,9 @@ class OrderBookTableView<CellType: OrderBookTableViewCell>: UIView {
     private func setupTableView() {
         self.tableView.dataSource = self.delegateDatasource
         self.tableView.delegate = self.delegateDatasource
-        self.tableView.separatorColor = Theme.Colors.separatorOnMainColor
-        self.tableView.separatorInset = .zero
         self.tableView.rowHeight = 44
         self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        self.tableView.separatorStyle = .none
     }
     
     private func setupRefreshControl() {

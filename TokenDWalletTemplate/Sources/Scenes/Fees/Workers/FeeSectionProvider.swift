@@ -4,7 +4,7 @@ import RxSwift
 import RxCocoa
 
 protocol FeesProviderProtocol {
-    func observeFees() -> Observable<[(String, [Fees.Model.FeeModel])]>
+    func observeFees(target: Fees.Model.Target?) -> Observable<[(String, [Fees.Model.FeeModel])]>
     func observeFeesErrorStatus() -> Observable<Swift.Error>
     func observeFeesLoadingStatus() -> Observable<Fees.Model.LoadingStatus>
 }
@@ -34,8 +34,8 @@ extension Fees {
         
         // MARK: - Private
         
-        private func handle(response: FeesOverviewResponse) {
-            let fees = response.fees.mapValues { (feesResponse) -> [Model.FeeModel] in
+        private func handle(response: FeesOverviewResponse, target: Fees.Model.Target?) {
+            var fees = response.fees.mapValues { (feesResponse) -> [Model.FeeModel] in
                 return feesResponse
                     .filter({ (response) -> Bool in
                         response.accountId.isEmpty || response.accountId == self.accountId
@@ -62,6 +62,19 @@ extension Fees {
                 .sorted { (first, second) -> Bool in
                     return first.key < second.key
             }
+            
+            if let target = target,
+                let assetFees = fees.first(where: { (asset, _) -> Bool in
+                    return asset == target.asset
+                }) {
+                let targetFees = assetFees.value.filter { (fee) -> Bool in
+                    guard let feeType = fee.feeType else {
+                        return false
+                    }
+                    return target.feeType == feeType
+                }
+                fees = [(target.asset, targetFees)]
+            }
             self.feesOverview.accept(fees)
         }
     }
@@ -69,7 +82,7 @@ extension Fees {
 
 extension Fees.FeesProvider: FeesProviderProtocol {
     
-    func observeFees() -> Observable<[(String, [Fees.Model.FeeModel])]> {
+    func observeFees(target: Fees.Model.Target?) -> Observable<[(String, [Fees.Model.FeeModel])]> {
         self.feesOverviewLoadingStatus.accept(.loading)
         self.generalApi.requestFeesOverview { [weak self] (result) in
             self?.feesOverviewLoadingStatus.accept(.loaded)
@@ -80,7 +93,7 @@ extension Fees.FeesProvider: FeesProviderProtocol {
                 self?.feesOverviewErrorStatus.accept(errors)
                 
             case .succeeded(let response):
-                self?.handle(response: response)
+                self?.handle(response: response, target: target)
             }
         }
         

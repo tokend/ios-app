@@ -129,11 +129,13 @@ extension SendPaymentDestination {
             
             self.tableView.backgroundColor = Theme.Colors.contentBackgroundColor
             self.tableView.register(classes: [
-                SendPaymentDestination.ContactCell.ViewModel.self
+                SendPaymentDestination.ContactCell.ViewModel.self,
+                SendPaymentDestination.EmptyCell.ViewModel.self
                 ]
             )
             self.tableView.delegate = self
             self.tableView.dataSource = self
+            self.tableView.separatorStyle = .none
         }
         
         private func setupActionButton() {
@@ -168,7 +170,7 @@ extension SendPaymentDestination {
                     if attributes.showingIn(view: self.view) {
                         self.actionButton.snp.remakeConstraints { (make) in
                             make.leading.trailing.equalToSuperview()
-                            make.bottom.equalTo(self.view.safeArea.bottom).inset(keyboardHeight)
+                            make.bottom.equalToSuperview().inset(keyboardHeight)
                             make.height.equalTo(self.buttonHeight)
                         }
                     } else {
@@ -216,15 +218,8 @@ extension SendPaymentDestination {
 extension SendPaymentDestination.ViewController: SendPaymentDestination.DisplayLogic {
     
     public func displayContactsUpdated(viewModel: Event.ContactsUpdated.ViewModel) {
-        switch viewModel {
-            
-        case .error(let message):
-            self.routing?.showError(message)
-            
-        case .sections(let sections):
-            self.sections = sections
+            self.sections = viewModel.sections
             self.tableView.reloadData()
-        }
     }
     
     public func displaySelectedContact(viewModel: Event.SelectedContact.ViewModel) {
@@ -294,10 +289,12 @@ extension SendPaymentDestination.ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = self.sections[indexPath.section].cells[indexPath.row]
         
-        let request = Event.SelectedContact.Request(email: model.email)
-        self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-            businessLogic.onSelectedContact(request: request)
-        })
+        if let model = model as? SendPaymentDestination.ContactCell.ViewModel {
+            let request = Event.SelectedContact.Request(email: model.email)
+            self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                businessLogic.onSelectedContact(request: request)
+            })
+        }
     }
 }
 

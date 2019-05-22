@@ -2,36 +2,25 @@ import Foundation
 
 extension SaleDetails {
     
-    enum Configurator {
-        static func configure(
+    public enum Configurator {
+        
+        public static func configure(
             viewController: ViewController,
             dataProvider: DataProvider,
-            amountFormatter: AmountFormatterProtocol,
-            dateFormatter: DateFormatterProtocol,
-            chartDateFormatter: ChartDateFormatterProtocol,
-            investedAmountFormatter: InvestedAmountFormatter,
-            overviewFormatter: TextFormatter,
-            feeLoader: FeeLoader,
-            cancelInvestWorker: CancelInvestWorkerProtocol,
-            investorAccountId: String,
+            dateFormatter: SaleDetails.DateFormatter,
+            amountFormatter: SaleDetails.AmountFormatter,
             routing: Routing?
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
             let presenter = Presenter(
                 presenterDispatch: presenterDispatch,
-                amountFormatter: amountFormatter,
                 dateFormatter: dateFormatter,
-                chartDateFormatter: chartDateFormatter,
-                investedAmountFormatter: investedAmountFormatter,
-                overviewFormatter: overviewFormatter
+                amountFormatter: amountFormatter
             )
             let interactor = Interactor(
                 presenter: presenter,
-                dataProvider: dataProvider,
-                feeLoader: feeLoader,
-                cancelInvestWorker: cancelInvestWorker,
-                investorAccountId: investorAccountId
+                dataProvider: dataProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(interactorDispatch: interactorDispatch, routing: routing)
@@ -41,7 +30,7 @@ extension SaleDetails {
 
 extension SaleDetails {
     
-    class InteractorDispatch {
+    public class InteractorDispatch {
         
         private let queue: DispatchQueue = DispatchQueue(
             label: "\(NSStringFromClass(InteractorDispatch.self))\(BusinessLogic.self)".queueLabel,
@@ -50,32 +39,32 @@ extension SaleDetails {
         
         private let businessLogic: BusinessLogic
         
-        init(businessLogic: BusinessLogic) {
+        public init(businessLogic: BusinessLogic) {
             self.businessLogic = businessLogic
         }
         
-        func sendRequest(requestBlock: @escaping (_ businessLogic: BusinessLogic) -> Void) {
+        public func sendRequest(requestBlock: @escaping (_ businessLogic: BusinessLogic) -> Void) {
             self.queue.async {
                 requestBlock(self.businessLogic)
             }
         }
         
-        func sendSyncRequest<ReturnType: Any>(
+        public func sendSyncRequest<ReturnType: Any>(
             requestBlock: @escaping (_ businessLogic: BusinessLogic) -> ReturnType
             ) -> ReturnType {
             return requestBlock(self.businessLogic)
         }
     }
     
-    class PresenterDispatch {
+    public class PresenterDispatch {
         
         private weak var displayLogic: DisplayLogic?
         
-        init(displayLogic: DisplayLogic) {
+        public init(displayLogic: DisplayLogic) {
             self.displayLogic = displayLogic
         }
         
-        func display(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
+        public func display(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
             guard let displayLogic = self.displayLogic else { return }
             
             DispatchQueue.main.async {
@@ -83,7 +72,7 @@ extension SaleDetails {
             }
         }
         
-        func displaySync(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
+        public func displaySync(displayBlock: @escaping (_ displayLogic: DisplayLogic) -> Void) {
             guard let displayLogic = self.displayLogic else { return }
             
             displayBlock(displayLogic)
