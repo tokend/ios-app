@@ -4,6 +4,10 @@ extension TabsContainer {
     
     public struct Routing {
         
-        public init() { }
+        let onAction: () -> Void
+        
+        public init(onAction: @escaping () -> Void) {
+            self.onAction = onAction
+        }
     }
 }

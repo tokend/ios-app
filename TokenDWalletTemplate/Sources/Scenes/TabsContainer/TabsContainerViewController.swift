@@ -25,11 +25,13 @@ extension TabsContainer {
         
         private let horizontalPicker: HorizontalPicker = HorizontalPicker()
         private let containerView: UIScrollView = UIScrollView()
+        private let actionButton: UIButton = UIButton()
         
         private var contents: [Model.TabContent] = []
         private var currentContentIndex: Int? {
             return nil
         }
+        private let buttonHeight: CGFloat = 45.0
         
         private let disposeBag = DisposeBag()
         
@@ -44,14 +46,21 @@ extension TabsContainer {
         private var interactorDispatch: InteractorDispatch?
         private var routing: Routing?
         private var onDeinit: DeinitCompletion = nil
+        private var viewConfig: Model.ViewConfig = Model.ViewConfig(actionButtonAppearence: .hidden) {
+            didSet {
+                self.updateActionButton()
+            }
+        }
         
         public func inject(
             interactorDispatch: InteractorDispatch?,
+            viewConfig: Model.ViewConfig,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
             
             self.interactorDispatch = interactorDispatch
+            self.viewConfig = viewConfig
             self.routing = routing
             self.onDeinit = onDeinit
         }
@@ -64,6 +73,7 @@ extension TabsContainer {
             self.setupView()
             self.setupHorizontalPicker()
             self.setupContainerView()
+            self.setupActionButton()
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request()
@@ -73,6 +83,18 @@ extension TabsContainer {
         }
         
         // MARK: - Private
+        
+        private func updateActionButton() {
+            switch viewConfig.actionButtonAppearence {
+                
+            case .hidden:
+                self.actionButton.isHidden = true
+                
+            case .visible(let title):
+                self.actionButton.isHidden = false
+                self.actionButton.setTitle(title, for: .normal)
+            }
+        }
         
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
@@ -109,9 +131,23 @@ extension TabsContainer {
                 .disposed(by: self.disposeBag)
         }
         
+        private func setupActionButton() {
+            self.actionButton.backgroundColor = Theme.Colors.accentColor
+            self.actionButton
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    self?.routing?.onAction()
+                })
+                .disposed(by: self.disposeBag)
+        }
+        
         private func setupLayout() {
             self.view.addSubview(self.horizontalPicker)
             self.view.addSubview(self.containerView)
+            self.view.addSubview(self.actionButton)
+            
             self.horizontalPicker.snp.makeConstraints { (make) in
                 make.leading.trailing.top.equalToSuperview()
             }
@@ -119,6 +155,12 @@ extension TabsContainer {
             self.containerView.snp.makeConstraints { (make) in
                 make.leading.trailing.bottom.equalToSuperview()
                 make.top.equalTo(self.horizontalPicker.snp.bottom)
+            }
+            
+            self.actionButton.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(self.view.safeArea.bottom)
+                make.height.equalTo(self.buttonHeight)
             }
         }
         
