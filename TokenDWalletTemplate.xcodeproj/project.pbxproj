@@ -736,7 +736,6 @@
 		7FABEA832100D44E0005E751 /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
 		7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentFlowController.swift; sourceTree = "<group>"; };
 		7FB432B82279CED700422746 /* UITableView+LastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+LastCell.swift"; sourceTree = "<group>"; };
-		7FB434F52281D22400422746 /* SaleDetailsDetailsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsDetailsTab.swift; sourceTree = "<group>"; };
 		7FB4350E2282D47700422746 /* SaleOverviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleOverviewPresenter.swift; sourceTree = "<group>"; };
 		7FB4350F2282D47700422746 /* SaleOverviewRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleOverviewRouting.swift; sourceTree = "<group>"; };
 		7FB435102282D47700422746 /* SaleOverviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleOverviewModels.swift; sourceTree = "<group>"; };
@@ -773,9 +772,6 @@
 		7FB9E47E20C06D7C005BFE0E /* RegisterSceneRegisterWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneRegisterWorker.swift; sourceTree = "<group>"; };
 		7FB9E48120C06FD1005BFE0E /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		7FB9E48320C15290005BFE0E /* UserDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataManager.swift; sourceTree = "<group>"; };
-		7FC88B79215E8BAD00BED021 /* SaleDetailsChartsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartsFetcher.swift; sourceTree = "<group>"; };
-		7FC88B7B215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartsFetcherProtocol.swift; sourceTree = "<group>"; };
-		7FC88B802164F09A00BED021 /* SaleDetailsChartDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartDateFormatter.swift; sourceTree = "<group>"; };
 		7FC88B822166097C00BED021 /* RegisterSceneFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneFieldView.swift; sourceTree = "<group>"; };
 		7FC88B84216609C600BED021 /* RegisterSceneAggreeOnTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneAggreeOnTermsView.swift; sourceTree = "<group>"; };
 		7FE9FF4D21400E27006ACFEA /* AppInfoUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoUtils.swift; sourceTree = "<group>"; };
@@ -793,18 +789,6 @@
 		7FEB45C720DD5D94001CA31C /* VerifyEmailResendWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyEmailResendWorkerProtocol.swift; sourceTree = "<group>"; };
 		7FEB45C920DD5FC4001CA31C /* VerifyEmailWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyEmailWorker.swift; sourceTree = "<group>"; };
 		7FEB45CB20E1030E001CA31C /* AppController+UserActivitySubscribers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppController+UserActivitySubscribers.swift"; sourceTree = "<group>"; };
-		7FEC94822148170500F41EE6 /* SaleDetailsModels1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsModels1.swift; sourceTree = "<group>"; };
-		7FEC94832148170500F41EE6 /* SaleDetailsPresenter1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsPresenter1.swift; sourceTree = "<group>"; };
-		7FEC94842148170500F41EE6 /* SaleDetailsInteractor1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInteractor1.swift; sourceTree = "<group>"; };
-		7FEC94852148170500F41EE6 /* SaleDetailsConfigurator1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsConfigurator1.swift; sourceTree = "<group>"; };
-		7FEC94872148170500F41EE6 /* SaleDetailsDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsDateFormatter.swift; sourceTree = "<group>"; };
-		7FEC94882148170500F41EE6 /* SaleDetailsDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsDataProvider.swift; sourceTree = "<group>"; };
-		7FEC94892148170500F41EE6 /* SaleDetailsChartCardValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartCardValueFormatter.swift; sourceTree = "<group>"; };
-		7FEC948A2148170500F41EE6 /* SaleDetailsRouting1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsRouting1.swift; sourceTree = "<group>"; };
-		7FEC948C2148170500F41EE6 /* SaleDetailsChartTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsChartTab.swift; sourceTree = "<group>"; };
-		7FEC948D2148170500F41EE6 /* SaleDetailsInvestTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsInvestTab.swift; sourceTree = "<group>"; };
-		7FEC948F2148170500F41EE6 /* SaleDetailsViewController1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleDetailsViewController1.swift; sourceTree = "<group>"; };
-		7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsAmountFormatter.swift; sourceTree = "<group>"; };
 		7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRepo.swift; sourceTree = "<group>"; };
 		7FF5AE50215BEA760066A2ED /* ValueValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueValidator.swift; sourceTree = "<group>"; };
 		7FF5AE54215BEC5A0066A2ED /* DecimalMaxValueValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalMaxValueValidator.swift; sourceTree = "<group>"; };
@@ -828,7 +812,6 @@
 		C691DC1C574FA17B9E6B5DAE /* Pods-TokenDWalletTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TokenDWalletTemplate.release.xcconfig"; path = "Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate.release.xcconfig"; sourceTree = "<group>"; };
 		CC520A204845775964452C95 /* libPods-TokenDWalletTemplate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TokenDWalletTemplate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsEmailFetcher.swift; sourceTree = "<group>"; };
-		DB09402B2264E4F500A9992A /* SaleDetailsEmptyTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsEmptyTab.swift; sourceTree = "<group>"; };
 		DB09402E2266322A00A9992A /* DecimalFloorRoundingBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalFloorRoundingBehavior.swift; sourceTree = "<group>"; };
 		DB10444A2167B4E000FD43BC /* SaleEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleEmptyView.swift; sourceTree = "<group>"; };
 		DB14989B225B896900A9A74C /* SaleInfoTextFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoTextFormatter.swift; sourceTree = "<group>"; };
@@ -908,7 +891,6 @@
 		DB990C3521E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePasswordRequestBuilderProtocol.swift; sourceTree = "<group>"; };
 		DB992AE421CD18E2003533FC /* AppController+OpenUrlSubscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppController+OpenUrlSubscriber.swift"; sourceTree = "<group>"; };
 		DBA0EFAF21C0041700A99325 /* UIResponder+First.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+First.swift"; sourceTree = "<group>"; };
-		DBA1A76D2252562800A52775 /* SaleDetailsCancellationWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleDetailsCancellationWorker.swift; sourceTree = "<group>"; };
 		DBAF878221EF8E9F005423A0 /* LocKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocKey.swift; sourceTree = "<group>"; };
 		DBB5659F21F771140066B5E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		DBB565A221F789820066B5E5 /* String+Index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Index.swift"; sourceTree = "<group>"; };
@@ -1682,56 +1664,6 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		7FB434F72281DB4000422746 /* ContentProviders */ = {
-			isa = PBXGroup;
-			children = (
-				7FB434FA2281DB6B00422746 /* Chart */,
-				7FB434F92281DB5D00422746 /* Details */,
-				7FB434FC2281DCD500422746 /* Empty */,
-				7FB434FB2281DC3900422746 /* Invest */,
-			);
-			path = ContentProviders;
-			sourceTree = "<group>";
-		};
-		7FB434F92281DB5D00422746 /* Details */ = {
-			isa = PBXGroup;
-			children = (
-				7FB434F52281D22400422746 /* SaleDetailsDetailsTab.swift */,
-			);
-			path = Details;
-			sourceTree = "<group>";
-		};
-		7FB434FA2281DB6B00422746 /* Chart */ = {
-			isa = PBXGroup;
-			children = (
-				7FF5AE4C215B761D0066A2ED /* SaleDetailsAmountFormatter.swift */,
-				7FEC94892148170500F41EE6 /* SaleDetailsChartCardValueFormatter.swift */,
-				7FC88B802164F09A00BED021 /* SaleDetailsChartDateFormatter.swift */,
-				7FC88B79215E8BAD00BED021 /* SaleDetailsChartsFetcher.swift */,
-				7FC88B7B215E8C3600BED021 /* SaleDetailsChartsFetcherProtocol.swift */,
-				7FEC948C2148170500F41EE6 /* SaleDetailsChartTab.swift */,
-				7FEC94872148170500F41EE6 /* SaleDetailsDateFormatter.swift */,
-			);
-			path = Chart;
-			sourceTree = "<group>";
-		};
-		7FB434FB2281DC3900422746 /* Invest */ = {
-			isa = PBXGroup;
-			children = (
-				DBA1A76D2252562800A52775 /* SaleDetailsCancellationWorker.swift */,
-				7FEC948D2148170500F41EE6 /* SaleDetailsInvestTab.swift */,
-			);
-			path = Invest;
-			sourceTree = "<group>";
-		};
-		7FB434FC2281DCD500422746 /* Empty */ = {
-			isa = PBXGroup;
-			children = (
-				DB09402B2264E4F500A9992A /* SaleDetailsEmptyTab.swift */,
-			);
-			path = Empty;
-			sourceTree = "<group>";
-		};
 		7FB434FD2282D2B800422746 /* SaleOverview */ = {
 			isa = PBXGroup;
 			children = (
@@ -1745,20 +1677,6 @@
 				7FB4350D2282D42600422746 /* Workers */,
 			);
 			path = SaleOverview;
-			sourceTree = "<group>";
-		};
-		7FB434FE2282D2C100422746 /* SaleDetails */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SaleDetails;
-			sourceTree = "<group>";
-		};
-		7FB434FF2282D2CB00422746 /* SaleChart */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SaleChart;
 			sourceTree = "<group>";
 		};
 		7FB4350C2282D42000422746 /* Views */ = {
@@ -1938,39 +1856,6 @@
 			path = Workers;
 			sourceTree = "<group>";
 		};
-		7FEC94812148170500F41EE6 /* SaleDetailsOld */ = {
-			isa = PBXGroup;
-			children = (
-				7FEC94852148170500F41EE6 /* SaleDetailsConfigurator1.swift */,
-				7FEC94842148170500F41EE6 /* SaleDetailsInteractor1.swift */,
-				7FEC94822148170500F41EE6 /* SaleDetailsModels1.swift */,
-				7FEC94832148170500F41EE6 /* SaleDetailsPresenter1.swift */,
-				7FEC948A2148170500F41EE6 /* SaleDetailsRouting1.swift */,
-				7FEC948F2148170500F41EE6 /* SaleDetailsViewController1.swift */,
-				7FB434FF2282D2CB00422746 /* SaleChart */,
-				7FB434FE2282D2C100422746 /* SaleDetails */,
-				7FEC948B2148170500F41EE6 /* Views */,
-				7FEC94862148170500F41EE6 /* Workers */,
-			);
-			path = SaleDetailsOld;
-			sourceTree = "<group>";
-		};
-		7FEC94862148170500F41EE6 /* Workers */ = {
-			isa = PBXGroup;
-			children = (
-				7FEC94882148170500F41EE6 /* SaleDetailsDataProvider.swift */,
-				7FB434F72281DB4000422746 /* ContentProviders */,
-			);
-			path = Workers;
-			sourceTree = "<group>";
-		};
-		7FEC948B2148170500F41EE6 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		7FF5AE52215BEC2D0066A2ED /* Formatters */ = {
 			isa = PBXGroup;
 			children = (
@@ -2064,7 +1949,6 @@
 				7F7187142138470100F5C0BD /* RecoverySeed */,
 				DBED51E6228AE68E0040632E /* SaleInvest */,
 				7FB4352D228586D000422746 /* SaleDetails */,
-				7FEC94812148170500F41EE6 /* SaleDetailsOld */,
 				7FB434FD2282D2B800422746 /* SaleOverview */,
 				719AAFC92142AEB600279B9D /* Sales */,
 				DB59380B226DD77400C8997C /* SendPaymentAmount */,
