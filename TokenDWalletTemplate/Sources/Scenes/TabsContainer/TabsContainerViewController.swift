@@ -44,11 +44,13 @@ extension TabsContainer {
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
-        private var viewConfig: Model.ViewConfig = Model.ViewConfig(
-            actionButtonAppearence: .hidden
-        )
         private var routing: Routing?
         private var onDeinit: DeinitCompletion = nil
+        private var viewConfig: Model.ViewConfig = Model.ViewConfig(actionButtonAppearence: .hidden) {
+            didSet {
+                self.updateActionButton()
+            }
+        }
         
         public func inject(
             interactorDispatch: InteractorDispatch?,
@@ -81,6 +83,18 @@ extension TabsContainer {
         }
         
         // MARK: - Private
+        
+        private func updateActionButton() {
+            switch viewConfig.actionButtonAppearence {
+                
+            case .hidden:
+                self.actionButton.isHidden = true
+                
+            case .visible(let title):
+                self.actionButton.isHidden = false
+                self.actionButton.setTitle(title, for: .normal)
+            }
+        }
         
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
@@ -118,25 +132,15 @@ extension TabsContainer {
         }
         
         private func setupActionButton() {
-            switch viewConfig.actionButtonAppearence {
-                
-            case .hidden:
-                self.actionButton.isHidden = true
-                
-            case .visible(let title):
-                self.actionButton.isHidden = false
-                self.actionButton.backgroundColor = Theme.Colors.accentColor
-                self.actionButton.setTitle(title, for: .normal)
-                
-                self.actionButton
-                    .rx
-                    .tap
-                    .asDriver()
-                    .drive(onNext: { [weak self] (_) in
-                        self?.routing?.onAction()
-                    })
-                    .disposed(by: self.disposeBag)
-            }
+            self.actionButton.backgroundColor = Theme.Colors.accentColor
+            self.actionButton
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    self?.routing?.onAction()
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupLayout() {
