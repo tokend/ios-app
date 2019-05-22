@@ -335,6 +335,17 @@
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
+		DB76E3AE22940E0900DA0BA8 /* ChartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3A822940E0900DA0BA8 /* ChartPresenter.swift */; };
+		DB76E3AF22940E0900DA0BA8 /* ChartRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3A922940E0900DA0BA8 /* ChartRouting.swift */; };
+		DB76E3B022940E0900DA0BA8 /* ChartModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3AA22940E0900DA0BA8 /* ChartModels.swift */; };
+		DB76E3B122940E0900DA0BA8 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3AB22940E0900DA0BA8 /* ChartViewController.swift */; };
+		DB76E3B222940E0900DA0BA8 /* ChartInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3AC22940E0900DA0BA8 /* ChartInteractor.swift */; };
+		DB76E3B322940E0900DA0BA8 /* ChartConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3AD22940E0900DA0BA8 /* ChartConfigurator.swift */; };
+		DB76E3B822941F2500DA0BA8 /* ChartDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3B722941F2500DA0BA8 /* ChartDataProvider.swift */; };
+		DB76E3BA22942E2400DA0BA8 /* ChartAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3B922942E2400DA0BA8 /* ChartAmountFormatter.swift */; };
+		DB76E3BC22942E5700DA0BA8 /* ChartDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3BB22942E5700DA0BA8 /* ChartDateFormatter.swift */; };
+		DB76E3BE22942FF900DA0BA8 /* ChartChartDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3BD22942FF900DA0BA8 /* ChartChartDateFormatter.swift */; };
+		DB76E3C122944B9200DA0BA8 /* ChartEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB76E3C022944B9200DA0BA8 /* ChartEmptyView.swift */; };
 		DB80461C21D3744500C60939 /* AuthKeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB80461B21D3744500C60939 /* AuthKeychainManager.swift */; };
 		DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */; };
 		DB8C4065222853060018148E /* DepositSceneErrorFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */; };
@@ -879,6 +890,17 @@
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
+		DB76E3A822940E0900DA0BA8 /* ChartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresenter.swift; sourceTree = "<group>"; };
+		DB76E3A922940E0900DA0BA8 /* ChartRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartRouting.swift; sourceTree = "<group>"; };
+		DB76E3AA22940E0900DA0BA8 /* ChartModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartModels.swift; sourceTree = "<group>"; };
+		DB76E3AB22940E0900DA0BA8 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
+		DB76E3AC22940E0900DA0BA8 /* ChartInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInteractor.swift; sourceTree = "<group>"; };
+		DB76E3AD22940E0900DA0BA8 /* ChartConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartConfigurator.swift; sourceTree = "<group>"; };
+		DB76E3B722941F2500DA0BA8 /* ChartDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataProvider.swift; sourceTree = "<group>"; };
+		DB76E3B922942E2400DA0BA8 /* ChartAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartAmountFormatter.swift; sourceTree = "<group>"; };
+		DB76E3BB22942E5700DA0BA8 /* ChartDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDateFormatter.swift; sourceTree = "<group>"; };
+		DB76E3BD22942FF900DA0BA8 /* ChartChartDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartChartDateFormatter.swift; sourceTree = "<group>"; };
+		DB76E3C022944B9200DA0BA8 /* ChartEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartEmptyView.swift; sourceTree = "<group>"; };
 		DB80461B21D3744500C60939 /* AuthKeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthKeychainManager.swift; sourceTree = "<group>"; };
 		DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsHistoryRepo.swift; sourceTree = "<group>"; };
 		DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneErrorFormatter.swift; sourceTree = "<group>"; };
@@ -2030,6 +2052,7 @@
 				DB1AFBA321C9334900D87D5D /* AuthenticatorAuth */,
 				E9063E9A20F669D300A5B343 /* BalanceHeaderWithPicker */,
 				7F967FD0212DB624005527EA /* BiometricsAuth */,
+				DB76E3A722940DEB00DA0BA8 /* Chart */,
 				7F6A8481210A000F00B7FE6B /* Confirmation */,
 				716DCBF720F371F700A8F192 /* CreateOffer */,
 				E9A5CBD1211B333F009112CA /* Dashboard */,
@@ -2322,6 +2345,40 @@
 			isa = PBXGroup;
 			children = (
 				DB6CFC6A21C410CD00160448 /* TitleValueView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DB76E3A722940DEB00DA0BA8 /* Chart */ = {
+			isa = PBXGroup;
+			children = (
+				DB76E3AD22940E0900DA0BA8 /* ChartConfigurator.swift */,
+				DB76E3AC22940E0900DA0BA8 /* ChartInteractor.swift */,
+				DB76E3AA22940E0900DA0BA8 /* ChartModels.swift */,
+				DB76E3A822940E0900DA0BA8 /* ChartPresenter.swift */,
+				DB76E3A922940E0900DA0BA8 /* ChartRouting.swift */,
+				DB76E3AB22940E0900DA0BA8 /* ChartViewController.swift */,
+				DB76E3BF22944B7300DA0BA8 /* Views */,
+				DB76E3B42294121500DA0BA8 /* Workers */,
+			);
+			path = Chart;
+			sourceTree = "<group>";
+		};
+		DB76E3B42294121500DA0BA8 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				DB76E3B922942E2400DA0BA8 /* ChartAmountFormatter.swift */,
+				DB76E3BD22942FF900DA0BA8 /* ChartChartDateFormatter.swift */,
+				DB76E3B722941F2500DA0BA8 /* ChartDataProvider.swift */,
+				DB76E3BB22942E5700DA0BA8 /* ChartDateFormatter.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		DB76E3BF22944B7300DA0BA8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DB76E3C022944B9200DA0BA8 /* ChartEmptyView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3030,6 +3087,7 @@
 				7FF5AE51215BEA760066A2ED /* ValueValidator.swift in Sources */,
 				DBED51E522899BA80040632E /* SendPaymentAmountFeeOverviewer.swift in Sources */,
 				7F967FAD2125B180005527EA /* UpdatePasswordBaseSubmitWorker.swift in Sources */,
+				DB76E3BE22942FF900DA0BA8 /* ChartChartDateFormatter.swift in Sources */,
 				7FB435242283168C00422746 /* TabsContainerPresenter.swift in Sources */,
 				717873912124358F0009C5EE /* ConfirmationAmountFormatterProtocol.swift in Sources */,
 				71C74EBD2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift in Sources */,
@@ -3081,9 +3139,11 @@
 				7F6A848B210A00D700B7FE6B /* ConfirmationSceneViewController.swift in Sources */,
 				E91131E620C532AC00A8AC4D /* ExploreTokensRouting.swift in Sources */,
 				7FABEA5E20FD088F0005E751 /* CreateOfferViewController.swift in Sources */,
+				DB76E3B022940E0900DA0BA8 /* ChartModels.swift in Sources */,
 				7F7495F4225CF9C00065EE8E /* TradesListPresenter.swift in Sources */,
 				7FEB45C420DD430A001CA31C /* SharedViewsBuilder.swift in Sources */,
 				E911320F20C6D0D800A8AC4D /* TokenDetailsModels.swift in Sources */,
+				DB76E3AE22940E0900DA0BA8 /* ChartPresenter.swift in Sources */,
 				7F7495F8225CF9C00065EE8E /* TradesListInteractor.swift in Sources */,
 				7F2A7E2820F62B7D007F8CF8 /* SideMenuPresenter.swift in Sources */,
 				E92F1BC521381F3500D4695E /* UserDataManager.swift in Sources */,
@@ -3182,6 +3242,7 @@
 				E980D87220D1785B00C53841 /* Array+IndexInBounds.swift in Sources */,
 				DB59383C226E0AD200C8997C /* SendPaymentDestinationRecipientAddressView.swift in Sources */,
 				713D684F20FF9552009FEBA3 /* SettingsPushCell.swift in Sources */,
+				DB76E3C122944B9200DA0BA8 /* ChartEmptyView.swift in Sources */,
 				7F74962C2260A1D40065EE8E /* TradeOffersDateFormatter.swift in Sources */,
 				7F6A84802109D82600B7FE6B /* SettingsFlowController.swift in Sources */,
 				7FA0115221C9651F00CA5586 /* MarkdownViewerConfigurator.swift in Sources */,
@@ -3302,6 +3363,7 @@
 				E980D84920CFF2C600C53841 /* BalanceCreator.swift in Sources */,
 				E92F1C112139B77D00D4695E /* OrderBookTableView.swift in Sources */,
 				E9BCDD602121F64500EB0DF2 /* DashboardPendingOffersPreviewPlugInModels.swift in Sources */,
+				DB76E3B822941F2500DA0BA8 /* ChartDataProvider.swift in Sources */,
 				E9BA0BF120C80BA300CE5708 /* TokenDetailsTokenDocumentCell.swift in Sources */,
 				7F7187122138035A00F5C0BD /* SettingsLoadingCell.swift in Sources */,
 				7F2A7E2A20F62B7D007F8CF8 /* SideMenuModels.swift in Sources */,
@@ -3311,8 +3373,10 @@
 				7F0F36B720E2696500E906D5 /* WalletRecoveryPresenter.swift in Sources */,
 				E911321020C6D0D800A8AC4D /* TokenDetailsViewController.swift in Sources */,
 				E9908EF1211079F300A0EA1C /* BalanceBinder.swift in Sources */,
+				DB76E3B222940E0900DA0BA8 /* ChartInteractor.swift in Sources */,
 				E93F075320D7C87F000C0991 /* TransactionsListInteractor.swift in Sources */,
 				E980D85C20D1267900C53841 /* DepositSceneInteractor.swift in Sources */,
+				DB76E3BC22942E5700DA0BA8 /* ChartDateFormatter.swift in Sources */,
 				E9A5CBF2211DBCCB009112CA /* DashboardPaymentsPlugInRouting.swift in Sources */,
 				E911320D20C6D0D800A8AC4D /* TokenDetailsPresenter.swift in Sources */,
 				7F71871D2138471D00F5C0BD /* RecoverySeedModels.swift in Sources */,
@@ -3386,6 +3450,7 @@
 				7FABEA6720FD08B30005E751 /* DecimalFormatter.swift in Sources */,
 				E917DE1E216392B300A0B773 /* SettingsActionCell.swift in Sources */,
 				E9A5CBDF211B34A6009112CA /* DashboardFlowController.swift in Sources */,
+				DB76E3BA22942E2400DA0BA8 /* ChartAmountFormatter.swift in Sources */,
 				E92F1C042139B77D00D4695E /* SharedAmountFormatter.swift in Sources */,
 				E9A5CBF5211DBCCB009112CA /* DashboardPaymentsPlugInInteractor.swift in Sources */,
 				7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */,
@@ -3410,6 +3475,7 @@
 				713D684E20FF9552009FEBA3 /* SettingsBoolCell.swift in Sources */,
 				E92F1C0B2139B77D00D4695E /* ChartView.swift in Sources */,
 				7F6A8488210A00D700B7FE6B /* ConfirmationScenePresenter.swift in Sources */,
+				DB76E3AF22940E0900DA0BA8 /* ChartRouting.swift in Sources */,
 				7F967FCA212C5337005527EA /* KeychainCodableAccountsV1.swift in Sources */,
 				7FF6761820BDA0910074E9A8 /* RegisterSceneViewController.swift in Sources */,
 				710E86072105E1AB007204D4 /* ReceiveAddressRouting.swift in Sources */,
@@ -3458,6 +3524,7 @@
 				7F967FB62127359D005527EA /* ConfirmationSceneModels.swift in Sources */,
 				DBED51F1228AE6B50040632E /* SaleInvestInteractor.swift in Sources */,
 				DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */,
+				DB76E3B122940E0900DA0BA8 /* ChartViewController.swift in Sources */,
 				E9908EDF2108FA1C00A0EA1C /* NetworkInfoRepo.swift in Sources */,
 				E9908EE12109D6C900A0EA1C /* KeychainDataProvider.swift in Sources */,
 				7FB9E47920BED04F005BFE0E /* SnapKit+Extension.swift in Sources */,
@@ -3508,6 +3575,7 @@
 				E92F1C142139B7FF00D4695E /* FeeLoader.swift in Sources */,
 				DB5938462270A1DF00C8997C /* SendPaymentDestinationContactCell.swift in Sources */,
 				E9BCDD542121D74700EB0DF2 /* DashboardPaymentsPlugInRateProviderProtocol.swift in Sources */,
+				DB76E3B322940E0900DA0BA8 /* ChartConfigurator.swift in Sources */,
 				7F967FCF212D79B5005527EA /* RegisterSceneLocalSignInWorker.swift in Sources */,
 				71136B112134433F00D83DD3 /* TransactionDetailsAmountFormatter.swift in Sources */,
 				7F8B55B3212EDAE4003AE5D7 /* main.swift in Sources */,
