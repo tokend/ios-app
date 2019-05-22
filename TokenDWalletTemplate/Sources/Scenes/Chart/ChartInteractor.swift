@@ -42,22 +42,23 @@ extension Chart {
         // MARK: - Private
         
         private func updateChart() {
-            if
+            guard
                 let sale = self.sceneModel.sale,
                 let selected = self.sceneModel.selectedChartsPeriod,
                 let charts = self.getChartsForPeriod(selected),
-                let lastChart = charts.last {
-                
-                let chartModel = self.getChartModel(
-                    charts: charts,
-                    chart: lastChart,
-                    quoteAsset: sale.quoteAsset,
-                    softCap: sale.softCap,
-                    hardCap: sale.hardCap
-                )
-                let response = Event.ChartDidUpdate.Response.chart(chartModel)
-                self.presenter.presentChartDidUpdate(response: response)
+                let lastChart = charts.last else {
+                    return
             }
+            
+            let chartModel = self.getChartModel(
+                charts: charts,
+                chart: lastChart,
+                quoteAsset: sale.quoteAsset,
+                softCap: sale.softCap,
+                hardCap: sale.hardCap
+            )
+            let response = Event.ChartDidUpdate.Response.chart(chartModel)
+            self.presenter.presentChartDidUpdate(response: response)
         }
         
         private func getChartModel(
