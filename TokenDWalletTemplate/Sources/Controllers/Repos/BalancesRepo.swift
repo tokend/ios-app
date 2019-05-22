@@ -5,10 +5,10 @@ import DLCryptoKit
 import RxCocoa
 import RxSwift
 
-class BalancesRepo {
+public class BalancesRepo {
     
-    typealias Asset = String
-    typealias BalanceDetails = TokenDSDK.BalanceDetails
+    public typealias Asset = String
+    public typealias BalanceDetails = TokenDSDK.BalanceDetails
     
     // MARK: - Private properties
     
@@ -39,7 +39,7 @@ class BalancesRepo {
     
     // MARK: -
     
-    init(
+    public init(
         api: TokenDSDK.BalancesApi,
         transactionSender: TransactionSender,
         originalAccountId: String,
@@ -231,6 +231,7 @@ class BalancesRepo {
 // MARK: - Edit sequence methods
 
 extension BalancesRepo {
+    
     private func saveBalancesDetails(_ details: [BalanceState]) {
         var newDetails = self.balancesDetailsValue.filter { (state) -> Bool in
             switch state {
@@ -300,7 +301,9 @@ extension BalancesRepo {
 }
 
 extension BalancesRepo {
-    enum BalanceState {
+    
+    public enum BalanceState {
+        
         /// Balance for the asset is creating
         case creating(Asset)
         
@@ -310,8 +313,10 @@ extension BalancesRepo {
 }
 
 extension BalancesRepo.BalanceState: Equatable {
+    
     public typealias SelfType = BalancesRepo.BalanceState
-    static func ==(left: SelfType, right: SelfType) -> Bool {
+    
+    public static func ==(left: SelfType, right: SelfType) -> Bool {
         switch (left, right) {
         case (.creating(let left), .creating(let right)):
             return left == right
@@ -324,6 +329,7 @@ extension BalancesRepo.BalanceState: Equatable {
 }
 
 extension BalancesRepo.BalanceState {
+    
     var asset: String {
         switch self {
         case .creating(let balanceAsset):
@@ -335,14 +341,18 @@ extension BalancesRepo.BalanceState {
 }
 
 extension TokenDSDK.BalanceDetails: Equatable {
+    
     public typealias SelfType = TokenDSDK.BalanceDetails
+    
     public static func ==(left: SelfType, right: SelfType) -> Bool {
         return left.balanceId == right.balanceId
     }
 }
 
 extension BalancesRepo {
-    enum LoadingStatus {
+    
+    public enum LoadingStatus {
+        
         case loading
         case loaded
     }

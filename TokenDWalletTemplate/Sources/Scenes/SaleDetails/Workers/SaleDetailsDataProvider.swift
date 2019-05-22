@@ -1,350 +1,260 @@
-import UIKit
-import LocalAuthentication
+import Foundation
+import TokenDSDK
 import RxSwift
 import RxCocoa
-import TokenDSDK
 
-enum SaleDetailsDataProviderImageKey {
-    case url(String)
-    case key(String)
-}
-
-protocol SaleDetailsDataProviderProtocol {
-    typealias ImageKey = SaleDetailsDataProviderImageKey
+public protocol SaleDetailsDataProviderProtocol {
     
-    func observeSale() -> Observable<SaleDetails.Model.SaleModel?>
-    func observeAsset(assetCode: String) -> Observable<SaleDetails.Model.AssetModel?>
-    func observeOverview(blobId: String) -> Observable<SaleDetails.Model.SaleOverviewModel?>
-    func observeBalances() -> Observable<[SaleDetails.Model.BalanceDetails]>
-    func observeAccount() -> Observable<SaleDetails.Model.AccountModel>
-    func observeOffers() -> Observable<[SaleDetails.Model.InvestmentOffer]>
-    func observeCharts() -> Observable<[SaleDetails.Model.Period: [SaleDetails.Model.ChartEntry]]>
-    func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]>
-    
-    func refreshBalances()
+    func observeData() -> Observable<[SaleDetails.Model.TabModel]>
 }
 
 extension SaleDetails {
     
-    typealias DataProvider = SaleDetailsDataProviderProtocol
+    public typealias DataProvider = SaleDetailsDataProviderProtocol
     
-    class SaleDataProvider: DataProvider {
-        
-        private typealias ChartPeriod = SaleDetails.Model.Period
-        private typealias ChartEntry = SaleDetails.Model.ChartEntry
-        private typealias TabIdentifier = SaleDetails.TabIdentifier
+    public class SaleDetailsDataProvider: DataProvider {
         
         // MARK: - Private properties
         
-        private let saleIdentifier: String
-        private let salesRepo: SalesRepo
+        private let accountId: String
+        private let saleId: String
+        private let asset: String
+        
+        private let salesApi: SalesApi
+        
         private let assetsRepo: AssetsRepo
-        private let balancesRepo: BalancesRepo
-        private let walletRepo: WalletRepo
-        private let offersRepo: PendingOffersRepo
-        private let chartsApi: ChartsApi
-        private let blobsApi: BlobsApi
         private let imagesUtility: ImagesUtility
+        private let balancesRepo: BalancesRepo
         
-        private let pendingOffers: BehaviorRelay<[PendingOffersRepo.Offer]> = BehaviorRelay(value: [])
-        private let saleOverview: BehaviorRelay<Model.SaleOverviewModel?> = BehaviorRelay(value: nil)
-        private let charts: BehaviorRelay<TokenDSDK.ChartsResponse> = BehaviorRelay(value: [:])
-        private let errors: BehaviorRelay<[TabIdentifier: String]> = BehaviorRelay(value: [:])
+        private let tabs: BehaviorSubject<[Model.TabModel]> = BehaviorSubject(value: [])
+        private let tabsLoadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
+        private let tabsErrorStatus: PublishRelay<Swift.Error> = PublishRelay()
         
-        private var errorsValue: [TabIdentifier: String] = [:] {
+        private let updateRelay: BehaviorRelay<Bool> = BehaviorRelay(value: true)
+        
+        private var blobStatus: BlobResponseStatus? {
             didSet {
-                self.errors.accept(self.errorsValue)
+                self.updateRelay.emitEvent()
             }
         }
+        private var saleDetailsStatus: SaleDetailsResponseStatus? {
+            didSet {
+                self.updateRelay.emitEvent()
+            }
+        }
+        private var assetModel: AssetResponseStatus? {
+            didSet {
+                self.updateRelay.emitEvent()
+            }
+        }
+        
+        private let disposeBag = DisposeBag()
         
         // MARK: -
         
-        init(
-            saleIdentifier: String,
-            salesRepo: SalesRepo,
+        public init(
+            accountId: String,
+            saleId: String,
+            asset: String,
+            salesApi: SalesApi,
             assetsRepo: AssetsRepo,
-            balancesRepo: BalancesRepo,
-            walletRepo: WalletRepo,
-            offersRepo: PendingOffersRepo,
-            chartsApi: ChartsApi,
-            blobsApi: BlobsApi,
-            imagesUtility: ImagesUtility
+            imagesUtility: ImagesUtility,
+            balancesRepo: BalancesRepo
             ) {
             
-            self.saleIdentifier = saleIdentifier
-            self.salesRepo = salesRepo
+            self.accountId = accountId
+            self.saleId = saleId
+            self.asset = asset
+            self.salesApi = salesApi
             self.assetsRepo = assetsRepo
-            self.balancesRepo = balancesRepo
-            self.walletRepo = walletRepo
-            self.offersRepo = offersRepo
-            self.chartsApi = chartsApi
-            self.blobsApi = blobsApi
             self.imagesUtility = imagesUtility
+            self.balancesRepo = balancesRepo
         }
         
-        // MARK: - SectionsProvider
+        // MARK: - DataProvider
         
-        func observeSale() -> Observable<Model.SaleModel?> {
-            return self.salesRepo.observeSale(id: self.saleIdentifier).map({ [weak self] (sale) -> Model.SaleModel? in
-                guard let sale = sale else {
-                    return nil
-                }
-                
-                let quoteAssets: [Model.SaleModel.QuoteAsset] = sale.quoteAssets.quoteAssets.map({ quoteAsset in
-                    return Model.SaleModel.QuoteAsset(
-                        asset: quoteAsset.asset,
-                        currentCap: quoteAsset.currentCap,
-                        price: quoteAsset.price,
-                        quoteBalanceId: quoteAsset.quoteBalanceId
-                    )
-                })
-                
-                let youtubeVideoUrl = self?.youtubeVideoUrlForId(sale.details.youtubeVideoId)
-                
-                let logo = Logo(
-                    key: sale.details.logo.key,
-                    url: sale.details.logo.url
-                )
-                let details = Model.SaleModel.Details(
-                    description: sale.details.description,
-                    logoUrl: self?.logoUrl(logo),
-                    name: sale.details.name,
-                    shortDescription: sale.details.shortDescription,
-                    youtubeVideoUrl: youtubeVideoUrl
-                )
-                
-                guard let type = Model.SaleModel.SaleType(rawValue: sale.saleType.value) else {
-                    return nil
-                }
-                
-                let saleModel = Model.SaleModel(
-                    baseAsset: sale.baseAsset,
-                    currentCap: sale.currentCap,
-                    defaultQuoteAsset: sale.defaultQuoteAsset,
-                    details: details,
-                    endTime: sale.endTime,
-                    id: sale.id,
-                    ownerId: sale.ownerId,
-                    investorsCount: sale.statistics.investors,
-                    quoteAssets: quoteAssets,
-                    type: type,
-                    softCap: sale.softCap,
-                    startTime: sale.startTime
-                )
-                
-                self?.loadPendingOffers(saleId: saleModel.id)
-                self?.loadCharts(saleAsset: sale.baseAsset)
-                
-                return saleModel
-            })
-        }
-        
-        func observeAsset(assetCode: String) -> Observable<Model.AssetModel?> {
-            return self.assetsRepo.observeAsset(code: assetCode).map({ (asset) -> Model.AssetModel? in
-                guard let asset = asset else {
-                    return nil
-                }
-                
-                let logo = Logo(
-                    key: asset.defaultDetails?.logo?.key,
-                    url: asset.defaultDetails?.logo?.url
-                )
-                let assetModel = Model.AssetModel(
-                    logoUrl: self.logoUrl(logo)
-                )
-                
-                return assetModel
-            })
-        }
-        
-        func observeOverview(blobId: String) -> Observable<SaleDetails.Model.SaleOverviewModel?> {
-            self.loadOverview(blobId: blobId)
-            return self.saleOverview.asObservable()
-        }
-        
-        func observeBalances() -> Observable<[Model.BalanceDetails]> {
-            return self.balancesRepo.observeBalancesDetails().map { (balances) -> [Model.BalanceDetails] in
-                return balances.compactMap({ (balanceState) -> BalancesRepo.BalanceDetails? in
-                    switch balanceState {
-                        
-                    case .creating:
-                        return nil
-                        
-                    case .created(let balance):
-                        return balance
-                    }
-                }).map({ (balance) -> Model.BalanceDetails in
-                    return Model.BalanceDetails(
-                        asset: balance.asset,
-                        balance: balance.balance,
-                        balanceId: balance.balanceId,
-                        prevOfferId: nil
-                    )
-                })
-            }
-        }
-        
-        func observeAccount() -> Observable<Model.AccountModel> {
-            return self.walletRepo.observeWallet().map({ (walletData) -> Model.AccountModel in
-                return Model.AccountModel(isVerified: walletData.verified)
-            })
-        }
-        
-        func observeCharts() -> Observable<[Model.Period: [Model.ChartEntry]]> {
-            return self.charts.map({ (chartsResponse) -> [Model.Period: [Model.ChartEntry]] in
-                var charts = [Model.Period: [Model.ChartEntry]]()
-                for key in chartsResponse.keys {
-                    guard let period = Model.Period(string: key),
-                        let chart = chartsResponse[key]
-                        else {
-                            continue
+        public func observeData() -> Observable<[Model.TabModel]> {
+            self.updateRelay
+                .subscribe(onNext: { [weak self] (_) in
+                    var tabs: [Model.TabModel] = []
+                    
+                    if let asset = self?.assetModel,
+                        let tab = self?.getAssetDetailsTab(assetStatus: asset) {
+                        tabs.append(tab)
+                    } else {
+                        self?.addLoadingTab(to: &tabs, title: Localized(.asset))
                     }
                     
-                    charts[period] = chart.map({ (chart) -> Model.ChartEntry in
-                        return chart.chart
-                    })
-                }
-                
-                return charts
-            })
-        }
-        
-        func observeOffers() -> Observable<[Model.InvestmentOffer]> {
-            self.loadPendingOffers(saleId: self.saleIdentifier)
-            
-            return self.pendingOffers.map({ (offers) -> [Model.InvestmentOffer] in
-                return offers.map({ (offer) -> Model.InvestmentOffer in
-                    return Model.InvestmentOffer(
-                        amount: offer.quoteAmount,
-                        asset: offer.quoteAssetCode,
-                        id: offer.offerId
-                    )
+                    if let saleDetails = self?.saleDetailsStatus,
+                        let tab = self?.getSaleDetailsTab(saleDetailsStatus: saleDetails) {
+                        tabs.append(tab)
+                    } else {
+                        self?.addLoadingTab(to: &tabs, title: Localized(.general))
+                    }
+                    
+                    self?.tabs.onNext(tabs)
                 })
-            }).asObservable()
-        }
-        
-        func observeErrors() -> Observable<[SaleDetails.TabIdentifier: String]> {
-            return self.errors.asObservable()
-        }
-        
-        func refreshBalances() {
-            self.balancesRepo.reloadBalancesDetails()
+                .disposed(by: self.disposeBag)
+            
+            self.downloadSaleDetails()
+            self.observeAsset(assetCode: self.asset)
+            
+            return self.tabs.asObservable()
         }
         
         // MARK: - Private
         
-        private func loadPendingOffers(saleId: String) {
-            let parameters = OffersOffersRequestParameters(
-                isBuy: true,
-                order: nil,
-                baseAsset: nil,
-                quoteAsset: nil,
-                orderBookId: saleId,
-                offerId: nil
-            )
+        private func downloadSaleDetails() {
+            self.tabsLoadingStatus.accept(.loading)
             
-            self.offersRepo.loadOffers(
-                parameters: parameters,
-                completion: { [weak self] (result) in
-                    switch result {
-                        
-                    case .failure(let error):
-                        self?.errorsValue[.investing] = error.localizedDescription
-                        
-                    case .success(let offers):
-                        self?.pendingOffers.accept(offers)
-                    }
-            })
-        }
-        
-        private func loadOverview(blobId: String) {
-            self.blobsApi.requestBlob(
-                blobId: blobId,
-                completion: { [weak self] (result) in
-                    switch result {
-                        
-                    case .failure(let error):
-                        self?.errorsValue[.overview] = error.localizedDescription
-                        
-                    case .success(let blob):
-                        let model = Model.SaleOverviewModel(
-                            overview: blob.attributes.value
-                        )
-                        self?.saleOverview.accept(model)
-                    }
+            self.salesApi.getSaleDetails(
+                SaleDetailsResponse.self,
+                saleId: self.saleId
+            ) { [weak self] (result) in
+                self?.tabsLoadingStatus.accept(.loaded)
+                
+                switch result {
+                    
+                case .failure(let error):
+                    self?.tabsErrorStatus.accept(error)
+                    self?.saleDetailsStatus = .failure(error: error)
+                    
+                case .success(let saleDetails):
+                    self?.saleDetailsStatus = .success(response: saleDetails)
                 }
-            )
+            }
         }
         
-        private func loadCharts(saleAsset: String) {
-            self.chartsApi.requestCharts(
-                asset: saleAsset,
-                completion: { [weak self] (result) in
-                    switch result {
-                        
-                    case .failure(let error):
-                        self?.errorsValue[.chart] = error.localizedDescription
-                        
-                    case .success(let charts):
-                        self?.charts.accept(charts)
+        private func getSaleDetailsTab(saleDetailsStatus: SaleDetailsResponseStatus) -> Model.TabModel {
+            switch saleDetailsStatus {
+                
+            case .failure(let error):
+                let model = EmptyContent.Model(message: error.localizedDescription)
+                let tabModel = Model.TabModel(contentModel: model)
+                return tabModel
+                
+            case .success(let saleDetails):
+                let model = GeneralContent.Model(
+                    baseAsset: saleDetails.baseAsset,
+                    defaultQuoteAsset: saleDetails.defaultQuoteAsset,
+                    hardCap: saleDetails.hardCap,
+                    baseHardCap: saleDetails.baseHardCap,
+                    softCap: saleDetails.softCap,
+                    startTime: saleDetails.startTime,
+                    endTime: saleDetails.endTime
+                )
+                let tabModel = Model.TabModel(contentModel: model)
+                
+                return tabModel
+            }
+        }
+        
+        private func getAssetDetailsTab(assetStatus: AssetResponseStatus) -> Model.TabModel {
+            switch assetStatus {
+                
+            case .failure(let error):
+                let model = EmptyContent.Model(message: error.localizedDescription)
+                let tabModel = Model.TabModel(contentModel: model)
+                return tabModel
+                
+            case .success(let asset):
+                var iconUrl: URL?
+                
+                if let key = asset.defaultDetails?.logo?.key {
+                    let imageKey = ImagesUtility.ImageKey.key(key)
+                    iconUrl = imagesUtility.getImageURL(imageKey)
+                }
+                
+                var balanceState: TokenContent.BalanceState = .notCreated
+                let existingBalance = self.balancesRepo.balancesDetailsValue.first(where: { (balance) -> Bool in
+                    return balance.asset == asset.code
+                })
+                if existingBalance != nil {
+                    balanceState = .created
+                }
+                
+                let model = TokenContent.Model(
+                    assetName: asset.defaultDetails?.name,
+                    assetCode: asset.code,
+                    imageUrl: iconUrl,
+                    balanceState: balanceState,
+                    availableTokenAmount: asset.availableForIssuance,
+                    issuedTokenAmount: asset.issued,
+                    maxTokenAmount: asset.maxIssuanceAmount
+                )
+                
+                let tabModel = Model.TabModel(contentModel: model)
+                
+                return tabModel
+            }
+        }
+        
+        private func addLoadingTab(to tabs: inout [Model.TabModel], title: String) {
+            let contentModel = LoadingContent.Model()
+            let tab = Model.TabModel(contentModel: contentModel)
+            tabs.append(tab)
+        }
+        
+        private func observeAsset(assetCode: String) {
+            self.assetsRepo
+                .observeAsset(code: assetCode)
+                .subscribe(onNext: { [weak self] (assetResponse) in
+                    if let asset = assetResponse {
+                        self?.assetModel = .success(response: asset)
+                    } else {
+                        self?.assetModel = .failure(error: Errors.noToken)
                     }
-            })
+                })
+                .disposed(by: self.disposeBag)
         }
         
-        private struct Logo {
-            let key: String?
-            let url: String?
-        }
-        private func logoUrl(_ logo: Logo) -> URL? {
-            var imageKey: ImageKey?
-            
-            if let key = logo.key {
-                imageKey = .key(key)
-            } else if let url = logo.url {
-                imageKey = .url(url)
-            }
-            
-            if let key = imageKey?.repoImageKey {
-                return self.imagesUtility.getImageURL(key)
-            }
-            return nil
-        }
-        
-        private func youtubeVideoUrlForId(_ id: String?) -> URL? {
-            guard let id = id,
-                !id.isEmpty
-                else {
-                    return nil
-            }
-            
-            let urlString = "https://www.youtube.com/embed/\(id)?rel=0"
-            return URL(string: urlString)
+        private func observeAssetErrorStatus() {
+            self.assetsRepo
+                .observeErrorStatus()
+                .subscribe(onNext: { [weak self] (error) in
+                    self?.assetModel = .failure(error: error)
+                })
+                .disposed(by: self.disposeBag)
         }
     }
 }
 
-// MARK: -
-
-extension SaleDetails.DataProvider.ImageKey {
-    var repoImageKey: ImagesUtility.ImageKey {
-        switch self {
-            
-        case .key(let key):
-            return .key(key)
-            
-        case .url(let url):
-            return .url(url)
-        }
-    }
-}
-
-private extension TokenDSDK.ChartResponse {
-    typealias Chart = SaleDetails.Model.ChartEntry
+extension SaleDetails.SaleDetailsDataProvider {
     
-    var chart: Chart {
-        return Chart(
-            date: self.timestamp,
-            value: self.value
-        )
+    public enum LoadingStatus {
+        
+        case loading
+        case loaded
+    }
+    
+    public enum BlobResponseStatus {
+        
+        case success(response: BlobResponse)
+        case failure(error: Swift.Error)
+    }
+    
+    public enum SaleDetailsResponseStatus {
+        
+        case success(response: SaleDetailsResponse)
+        case failure(error: Swift.Error)
+    }
+    
+    public enum AssetResponseStatus {
+        
+        case success(response: AssetsRepo.Asset)
+        case failure(error: Swift.Error)
+    }
+    
+    public enum Errors: Swift.Error, LocalizedError {
+        
+        case noToken
+        
+        public var errorDescription: String? {
+            switch self {
+                
+            case .noToken:
+                return Localized(.no_asset)
+            }
+        }
     }
 }

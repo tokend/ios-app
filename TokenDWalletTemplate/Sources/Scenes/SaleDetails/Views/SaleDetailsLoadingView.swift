@@ -2,13 +2,15 @@ import UIKit
 import SnapKit
 import Foundation
 
-extension SaleInfo {
-    enum LoadingContent {
+extension SaleDetails {
+    
+    public enum LoadingContent {
         
-        struct Model {}
-        struct ViewModel {}
+        public struct Model {}
         
-        class View: UIView {
+        public struct ViewModel {}
+        
+        public class View: UIView {
             
             // MARK: - Override
             
@@ -33,6 +35,14 @@ extension SaleInfo {
                 self.setupLayout()
             }
             
+            // MARK: - Overridden
+            
+            public override var intrinsicContentSize: CGSize {
+                var size = self.loadingView.intrinsicContentSize
+                size.height += 30.0
+                return size
+            }
+            
             // MARK: - Setup
             
             private func setupView() {
@@ -48,7 +58,7 @@ extension SaleInfo {
                 self.addSubview(self.loadingView)
                 
                 self.loadingView.snp.makeConstraints { (make) in
-                    make.centerX.centerY.equalToSuperview()
+                    make.center.equalToSuperview()
                 }
             }
         }

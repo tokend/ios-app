@@ -1,36 +1,36 @@
 import Foundation
 
-extension SaleDetails {
+extension TabsContainer {
     
     public enum Configurator {
         
         public static func configure(
             viewController: ViewController,
-            dataProvider: DataProvider,
-            dateFormatter: SaleDetails.DateFormatter,
-            amountFormatter: SaleDetails.AmountFormatter,
-            routing: Routing?
+            contentProvider: ContentProvider,
+            routing: Routing?,
+            onDeinit: DeinitCompletion = nil
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
-            let presenter = Presenter(
-                presenterDispatch: presenterDispatch,
-                dateFormatter: dateFormatter,
-                amountFormatter: amountFormatter
-            )
+            let presenter = Presenter(presenterDispatch: presenterDispatch)
             let interactor = Interactor(
                 presenter: presenter,
-                dataProvider: dataProvider
+                contentProvider: contentProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
-            viewController.inject(interactorDispatch: interactorDispatch, routing: routing)
+            viewController.inject(
+                interactorDispatch: interactorDispatch,
+                routing: routing,
+                onDeinit: onDeinit
+            )
         }
     }
 }
 
-extension SaleDetails {
+extension TabsContainer {
     
-    public class InteractorDispatch {
+    @objc(TabsContainerInteractorDispatch)
+    public class InteractorDispatch: NSObject {
         
         private let queue: DispatchQueue = DispatchQueue(
             label: "\(NSStringFromClass(InteractorDispatch.self))\(BusinessLogic.self)".queueLabel,
@@ -56,7 +56,8 @@ extension SaleDetails {
         }
     }
     
-    public class PresenterDispatch {
+    @objc(TabsContainerPresenterDispatch)
+    public class PresenterDispatch: NSObject {
         
         private weak var displayLogic: DisplayLogic?
         

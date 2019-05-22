@@ -1,5 +1,5 @@
 import UIKit
-import Down
+import MarkdownView
 
 protocol MarkdownViewerDisplayLogic: class {
     
@@ -19,7 +19,7 @@ extension MarkdownViewer {
         
         // MARK: - Private
         
-        private var markdownView: DownView? {
+        private var markdownView: MarkdownView? {
             didSet {
                 oldValue?.removeFromSuperview()
                 self.layoutMarkdwonView()
@@ -69,16 +69,8 @@ extension MarkdownViewer {
         }
         
         private func showMarkdownString(_ markdownString: String) {
-            guard let markdownView = try? DownView(
-                frame: self.view.bounds,
-                markdownString: markdownString,
-                openLinksInBrowser: false
-                ) else {
-                    self.markdownView = nil
-                    return
-            }
-            
-            self.markdownView = markdownView
+            self.markdownView = MarkdownView()
+            self.markdownView?.load(markdown: markdownString)
         }
         
         private func layoutMarkdwonView() {

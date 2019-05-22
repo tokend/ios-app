@@ -1,18 +1,20 @@
 import Foundation
 import TokenDSDK
 
-enum NetworkInfoFetcherResult {
-    typealias FetchError = GeneralApi.RequestNetworkInfoResult.RequestError
+public enum NetworkInfoFetcherResult {
+    
+    public typealias FetchError = GeneralApi.RequestNetworkInfoResult.RequestError
     
     case failed(FetchError)
     case succeeded(NetworkInfoModel)
 }
 
-protocol NetworkInfoFetcher {
+public protocol NetworkInfoFetcher {
+    
     func fetchNetworkInfo(_ completion: @escaping (NetworkInfoFetcherResult) -> Void)
 }
 
-class NetworkInfoRepo {
+public class NetworkInfoRepo {
     
     private typealias LoadNetworkInfoCompletion = (LoadNetworkInfoResult) -> Void
     
@@ -27,7 +29,7 @@ class NetworkInfoRepo {
     
     // MARK: -
     
-    init(
+    public init(
         api: TokenDSDK.GeneralApi
         ) {
         
@@ -74,7 +76,8 @@ class NetworkInfoRepo {
 }
 
 extension NetworkInfoRepo: NetworkInfoFetcher {
-    func fetchNetworkInfo(_ completion: @escaping (NetworkInfoFetcherResult) -> Void) {
+    
+    public func fetchNetworkInfo(_ completion: @escaping (NetworkInfoFetcherResult) -> Void) {
         if let info = self.networkInfo {
             completion(.succeeded(info))
         } else {

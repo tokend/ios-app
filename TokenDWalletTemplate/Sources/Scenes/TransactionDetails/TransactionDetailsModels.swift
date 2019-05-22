@@ -1,13 +1,13 @@
 import Foundation
 import UIKit
 
-enum TransactionDetails {
+public enum TransactionDetails {
     
     // MARK: - Typealiases
     
     // MARK: -
     
-    enum CellIdentifier: String {
+    public enum CellIdentifier: String {
         case date
         case description
         case recipient
@@ -65,13 +65,14 @@ enum TransactionDetails {
         case email
     }
     
-    enum Model {}
+    public enum Model {}
     enum Event {}
 }
 
 // MARK: - Models
 
 extension TransactionDetails.Model {
+    
     struct Amount {
         let value: Decimal
         let asset: String
@@ -81,13 +82,13 @@ extension TransactionDetails.Model {
         var sections: [SectionModel] = []
     }
     
-    struct SectionModel {
-        let title: String
-        let cells: [CellModel]
-        let description: String
+    public struct SectionModel {
+        public let title: String
+        public let cells: [CellModel]
+        public let description: String
     }
     
-    struct CellModel: Equatable {
+    public struct CellModel: Equatable {
         let title: String
         let hint: String
         let identifier: TransactionDetails.CellIdentifier
@@ -107,7 +108,7 @@ extension TransactionDetails.Model {
         }
     }
     
-    struct SectionViewModel {
+    public struct SectionViewModel {
         let title: String?
         let cells: [CellViewAnyModel]
         let description: String?

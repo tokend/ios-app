@@ -1,6 +1,6 @@
 import Foundation
 
-extension SaleDetails {
+extension TabsContainer {
     
     public struct Routing {
         

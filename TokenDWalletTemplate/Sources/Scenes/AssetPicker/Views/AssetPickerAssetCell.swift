@@ -11,7 +11,7 @@ extension AssetPicker {
             let abbreviationText: String
             let balanceId: String
             
-            func setup(cell: Cell) {
+            public func setup(cell: Cell) {
                 cell.code = self.code
                 cell.balance = self.balance
                 cell.abbreviationBackgroundColor = self.abbreviationBackgroundColor

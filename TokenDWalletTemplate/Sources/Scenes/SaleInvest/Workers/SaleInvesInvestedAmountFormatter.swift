@@ -10,6 +10,6 @@ extension SaleInvest {
     class InvestAmountFormatter: SharedAmountFormatter { }
 }
 
-extension SaleInvest.InvestAmountFormatter: SaleDetails.InvestedAmountFormatter {
+extension SaleInvest.InvestAmountFormatter: SaleInvest.InvestedAmountFormatter {
     
 }

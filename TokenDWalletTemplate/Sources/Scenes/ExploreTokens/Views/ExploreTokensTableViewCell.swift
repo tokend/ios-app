@@ -72,6 +72,7 @@ enum ExploreTokensTableViewCell {
                             self?.hideIconViewLoading()
                     })
                 } else {
+                    Nuke.cancelRequest(for: self.iconView)
                     self.iconView.image = nil
                     self.hideIconViewLoading()
                     self.updateAbbreviation()
