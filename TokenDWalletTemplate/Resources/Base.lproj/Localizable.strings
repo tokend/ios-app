@@ -39,6 +39,7 @@
 "balance_colon" = "Balance:";
 "balance_is_not_created" = "$(asset) balance is not created";
 "balance_is_not_created_replace_asset" = "asset";
+"balances" = "Balances";
 "bank_account" = "Bank account";
 "bank_address" = "Bank address";
 "bank_address_colon" = "Bank address:";
@@ -85,6 +86,7 @@
 "confirm_password_lowercased" = "confirm password";
 "confirmation" = "Confirmation";
 "contacts" = "Contacts";
+"continue_capitalized" = "Continue";
 "copied" = "Copied";
 "copy" = "Copy";
 "corrupted_keychain_data" = "Corrupted keychain data";

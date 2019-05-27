@@ -75,6 +75,7 @@ extension BalancesList {
             self.tableView.delegate = self
             self.tableView.dataSource = self
             self.tableView.separatorStyle = .none
+            self.tableView.sectionFooterHeight = 0.0
         }
         
         private func setupLayout() {

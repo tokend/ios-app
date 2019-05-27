@@ -46,8 +46,13 @@ extension TabsContainer {
         private var interactorDispatch: InteractorDispatch?
         private var routing: Routing?
         private var onDeinit: DeinitCompletion = nil
-        private var viewConfig: Model.ViewConfig = Model.ViewConfig(actionButtonAppearence: .hidden) {
+        private var viewConfig: Model.ViewConfig = Model.ViewConfig(
+            isPickerHidden: false,
+            isTabBarHidden: true,
+            actionButtonAppearence: .hidden
+            ) {
             didSet {
+                self.updateContainerLayout()
                 self.updateActionButton()
             }
         }
@@ -83,6 +88,22 @@ extension TabsContainer {
         }
         
         // MARK: - Private
+        
+        private func updateContainerLayout() {
+            guard self.view.subviews.contains(self.containerView) else {
+                return
+            }
+            if self.viewConfig.isPickerHidden {
+                self.containerView.snp.remakeConstraints { (make) in
+                    make.edges.equalToSuperview()
+                }
+            } else {
+                self.containerView.snp.remakeConstraints { (make) in
+                    make.leading.trailing.bottom.equalToSuperview()
+                    make.top.equalTo(self.horizontalPicker.snp.bottom)
+                }
+            }
+        }
         
         private func updateActionButton() {
             switch viewConfig.actionButtonAppearence {
@@ -273,5 +294,23 @@ extension TabsContainer.ViewController: TabsContainer.DisplayLogic {
     
     public func displaySelectedTabChanged(viewModel: Event.SelectedTabChanged.ViewModel) {
         self.updateSelectedTabIfNeeded(index: viewModel.selectedTabIndex)
+    }
+}
+
+extension TabsContainer.ViewController: TabBarContainerContentProtocol {
+    
+    public func setContentWithIdentifier(_ identifier: TabBarContainer.TabIdentifier) {
+        let request = Event.TabWasSelected.Request(identifier: identifier)
+        self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+            businessLogic.onTabWasSelected(request: request)
+        })
+    }
+    
+    public var viewController: UIViewController {
+        return self
+    }
+    
+    public func setBottomInset(_ inset: CGFloat) {
+        self.containerView.contentInset.bottom = inset
     }
 }
