@@ -54,8 +54,11 @@ extension BalancesList {
                     balance: details.balance,
                     balanceId: details.balanceId,
                     convertedBalance: details.convertedBalance
-                )
-            }
+                )}
+                .sorted(by: { (left, right) -> Bool in
+                    return left.convertedBalance > right.convertedBalance
+                })
+            
             self.balancesRelay.accept(updatedBalances)
         }
     }
@@ -81,7 +84,7 @@ extension BalancesList.BalancesFetcher: BalancesList.BalancesFetcherProtocol {
                     self?.loadingStatus.accept(.loading)
                 }
             })
-        .disposed(by: self.disposeBag)
+            .disposed(by: self.disposeBag)
         
         return self.loadingStatus.asObservable()
     }
