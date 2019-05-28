@@ -55,12 +55,19 @@ extension TabsContainer.Model {
     }
     
     public struct ViewConfig {
+        let isPickerHidden: Bool
+        let isTabBarHidden: Bool
         let actionButtonAppearence: ActionButtonAppearence
     }
     
     public enum ActionButtonAppearence {
         case visible(title: String)
         case hidden
+    }
+    
+    public enum TabItemConfiguration {
+        case storeState(TabIdentifier)
+        case transfer(onSelect: () -> Void)
     }
 }
 

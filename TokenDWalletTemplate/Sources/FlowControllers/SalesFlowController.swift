@@ -162,6 +162,8 @@ class SalesFlowController: BaseSignedInFlowController {
         
         let contentProvider = TabsContainer.InfoContentProvider(tabs: tabs)
         let viewConfig = TabsContainer.Model.ViewConfig(
+            isPickerHidden: false,
+            isTabBarHidden: true,
             actionButtonAppearence: .visible(title: Localized(.invest))
         )
         

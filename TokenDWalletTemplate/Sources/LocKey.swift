@@ -42,6 +42,7 @@ enum LocKey: String {
     case balance_colon
     case balance_is_not_created
     case balance_is_not_created_replace_asset
+    case balances
     case bank_account
     case bank_address
     case bank_address_colon
@@ -88,6 +89,7 @@ enum LocKey: String {
     case confirm_password_lowercased
     case confirmation
     case contacts
+    case continue_capitalized
     case copied
     case copy
     case corrupted_keychain_data

@@ -196,7 +196,7 @@ extension SendPaymentDestination.Model.ViewConfig {
     
     static func sendPayment() -> SendPaymentDestination.Model.ViewConfig {
         let actionButtonTitle = NSAttributedString(
-            string: Localized(.next),
+            string: Localized(.continue_capitalized),
             attributes: [
                 .font: Theme.Fonts.actionButtonFont,
                 .foregroundColor: Theme.Colors.textOnMainColor

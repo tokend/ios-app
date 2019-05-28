@@ -69,9 +69,11 @@ public class BalancesRepo {
         _ completion: ((ReloadBalanceDetailsResult) -> Void)? = nil
         ) {
         
+        self.loadingStatus.accept(.loading)
         self.api.requestDetails(
             accountId: self.originalAccountId,
-            completion: { (result) in
+            completion: { [weak self] (result) in
+                self?.loadingStatus.accept(.loaded)
                 switch result {
                     
                 case .success(let balances):

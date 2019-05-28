@@ -77,25 +77,25 @@ PODS:
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (3.1.0-rc.2):
-    - TokenDSDK/API (= 3.1.0-rc.2)
-    - TokenDSDK/JSONAPI (= 3.1.0-rc.2)
-    - TokenDSDK/KeyServer (= 3.1.0-rc.2)
+  - TokenDSDK (3.1.0-rc.3):
+    - TokenDSDK/API (= 3.1.0-rc.3)
+    - TokenDSDK/JSONAPI (= 3.1.0-rc.3)
+    - TokenDSDK/KeyServer (= 3.1.0-rc.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetwork (3.1.0-rc.2):
+  - TokenDSDK/AlamofireNetwork (3.1.0-rc.3):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-rc.2):
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-rc.3):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/API (3.1.0-rc.2):
+  - TokenDSDK/API (3.1.0-rc.3):
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/JSONAPI (3.1.0-rc.2):
+  - TokenDSDK/JSONAPI (3.1.0-rc.3):
     - DLJSONAPI (>= 1.0.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/KeyServer (3.1.0-rc.2):
+  - TokenDSDK/KeyServer (3.1.0-rc.3):
     - TokenDWallet (>= 3.0.1)
   - TokenDWallet (3.0.1):
     - DLCryptoKit (>= 2.0.1)
@@ -117,7 +117,7 @@ DEPENDENCIES:
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (= 3.1.0-rc.2)
+  - TokenDSDK (= 3.1.0-rc.3)
   - TokenDSDK/AlamofireNetwork
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
@@ -200,9 +200,9 @@ SPEC CHECKSUMS:
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: 9ab63a677cbecf92e87d2b2becbe0f75d799be99
+  TokenDSDK: 523441f10e1079987ef0cac37fbebc0a9ebc388d
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
 
-PODFILE CHECKSUM: 1c190ac2775facf00dfebc2db078343555c6a51b
+PODFILE CHECKSUM: 1bfd078377af7c6328c2c727bdf76536ba6b73b7
 
 COCOAPODS: 1.6.1

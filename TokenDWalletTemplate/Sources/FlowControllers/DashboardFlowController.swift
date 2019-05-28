@@ -6,9 +6,9 @@ class DashboardFlowController: BaseSignedInFlowController {
     
     private let navigationController: NavigationControllerProtocol =
         NavigationController()
-    private weak var walletScene: UIViewController?
+    private weak var dashboardScene: UIViewController?
     private var operationCompletionScene: UIViewController {
-        return self.walletScene ?? UIViewController()
+        return self.dashboardScene ?? UIViewController()
     }
     
     // MARK: - Public
@@ -27,136 +27,93 @@ class DashboardFlowController: BaseSignedInFlowController {
     }
     
     private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        let viewController = DashboardScene.ViewController()
         
-        let routing = DashboardScene.Routing(
-            showExploreAssets: { [weak self] in
-                self?.runExploreTokensFlow()
-        })
-        
-        let previewMaxLength: Int = 3
-        
-        let decimalFormatter = DecimalFormatter()
-        
-        let pendingOffersPreviewFetcher = TransactionsListScene.PreviewTransactionsFetcher(
-            transactionsFetcher: TransactionsListScene.PendingOffersFetcher(
-                pendingOffersRepo: self.reposController.pendingOffersRepo,
-                balancesRepo: self.reposController.balancesRepo,
-                decimalFormatter: decimalFormatter,
-                originalAccountId: self.userDataProvider.walletData.accountId
-            ),
-            previewMaxLength: previewMaxLength
-        )
-        
-        let actionProvider = TransactionsListScene.ActionProvider(
-            assetsRepo: self.reposController.assetsRepo,
-            balancesRepo: self.reposController.balancesRepo
-        )
-        
-        let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
-        
-        let pendingOffersPreviewRouting = TransactionsListScene.Routing(
-            onDidSelectItemWithIdentifier: { [weak self] (identifier, _) in
-                self?.showPendingOfferDetailsScreen(offerId: identifier)
-            },
-            showSendPayment: { _ in },
-            showWithdraw: { _ in },
-            showDeposit: { _ in },
-            showReceive: { }
-        )
-        
-        let pendingOffersPreviewList = SharedSceneBuilder.createTransactionsListScene(
-            transactionsFetcher: pendingOffersPreviewFetcher,
-            actionProvider: actionProvider,
-            emptyTitle: Localized(.no_pending_orders),
-            viewConfig: viewConfig,
-            routing: pendingOffersPreviewRouting
-        )
-        
-        let paymentsPreviewFetcher = TransactionsListScene.PreviewTransactionsFetcher(
-            transactionsFetcher: TransactionsListScene.PaymentsFetcher(
-                reposController: self.reposController,
-                originalAccountId: self.userDataProvider.walletData.accountId
-            ),
-            previewMaxLength: previewMaxLength
-        )
-        let navigationController = self.navigationController
-        let paymentsPreviewRouting = TransactionsListScene.Routing(
-            onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
-                self?.showTransactionDetailsScreen(
-                    navigationController: navigationController,
-                    transactionId: identifier,
-                    balanceId: balanceId
-                )
-            },
-            showSendPayment: { _ in },
-            showWithdraw: { _ in },
-            showDeposit: { _ in },
-            showReceive: { }
-        )
-        
-        let paymentsPreviewList = SharedSceneBuilder.createTransactionsListScene(
-            transactionsFetcher: paymentsPreviewFetcher,
-            actionProvider: actionProvider,
-            emptyTitle: Localized(.no_payments),
-            viewConfig: viewConfig,
-            routing: paymentsPreviewRouting
-        )
-        
-        let paymentsPreviewPlugIn = DashboardPaymentsPlugIn.ViewController()
-        let paymentsPreviewPlugInAmountFormatter = DashboardPaymentsPlugIn.AmountFormatter()
-        let paymentsPreviewPlugInRateProvider: DashboardPaymentsPlugIn.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
-        let paymentsPreviewPlugInRouting = DashboardPaymentsPlugIn.Routing(
-            onViewMoreAction: { [weak self] (balanceId) in
+        let container = TabBarContainer.ViewController()
+        let contentProvider = TabBarContainer.DashboardProvider(
+            balancesRepo: self.reposController.balancesRepo,
+            showPaymentsFor: { [weak self] (balanceId) in
                 self?.showPaymentsFor(selectedBalanceId: balanceId)
+            }, showSendScene: { [weak self] in
+                self?.showSendScene()
+            }, showReceiveScene: { [weak self] in
+                self?.showReceiveScene()
+            }, showProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            }, hideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
         })
-        let paymentsPreviewBalancesFetcher: DashboardPaymentsPlugIn.BalancesFetcherProtocol = BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo
-        )
+        let routing = TabBarContainer.Routing()
         
-        let pendingOffersPreviewPlugIn = DashboardPendingOffersPreviewPlugIn.ViewController()
-        let pendingOffersPreviewPlugInRouting = DashboardPendingOffersPreviewPlugIn.Routing(
-            onViewMoreAction: { [weak self] in
-                self?.showPendingOffers()
-        })
-        DashboardPendingOffersPreviewPlugIn.Configurator.configure(
-            viewController: pendingOffersPreviewPlugIn,
-            routing: pendingOffersPreviewPlugInRouting
-        )
-        
-        DashboardPaymentsPlugIn.Configurator.configure(
-            viewController: paymentsPreviewPlugIn,
-            amountFormatter: paymentsPreviewPlugInAmountFormatter,
-            balancesFetcher: paymentsPreviewBalancesFetcher,
-            rateProvider: paymentsPreviewPlugInRateProvider,
-            routing: paymentsPreviewPlugInRouting
-        )
-        paymentsPreviewPlugIn.transactionsList = paymentsPreviewList
-        pendingOffersPreviewPlugIn.transactionsList = pendingOffersPreviewList
-        
-        let plugInsProvider = DashboardScene.PlugInsProvider(
-            plugIns: [
-                paymentsPreviewPlugIn,
-                pendingOffersPreviewPlugIn
-            ]
-        )
-        
-        DashboardScene.Configurator.configure(
-            viewController: viewController,
-            plugInsProvider: plugInsProvider,
+        self.dashboardScene = container
+        TabBarContainer.Configurator.configure(
+            viewController: container,
+            contentProvider: contentProvider,
             routing: routing
         )
-        viewController.navigationItem.title = Localized(.dashboard)
         
-        self.navigationController.setViewControllers([viewController], animated: false)
+        self.navigationController.setViewControllers([container], animated: false)
         
         if let showRoot = showRootScreen {
             showRoot(self.navigationController.getViewController())
         } else {
             self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
         }
+    }
+    
+    private func showSendScene() {
+        self.runSendPaymentFlow(
+            navigationController: self.navigationController,
+            balanceId: nil,
+            completion: { [weak self] in
+                self?.goBackToWalletScene()
+        })
+    }
+    
+    private func showReceiveScene() {
+        let vc = ReceiveAddress.ViewController()
+        
+        let addressManager = ReceiveAddress.ReceiveAddressManager(
+            accountId: self.userDataProvider.walletData.accountId
+        )
+        
+        let viewConfig = ReceiveAddress.Model.ViewConfig(
+            copiedLocalizationKey: Localized(.copied),
+            tableViewTopInset: 24
+        )
+        
+        let sceneModel = ReceiveAddress.Model.SceneModel()
+        
+        let qrCodeGenerator = QRCodeGenerator()
+        let shareUtil = ReceiveAddress.ReceiveAddressShareUtil(
+            qrCodeGenerator: qrCodeGenerator
+        )
+        
+        let invoiceFormatter = ReceiveAddress.InvoiceFormatter()
+        
+        let routing = ReceiveAddress.Routing(
+            onCopy: { (stringToCopy) in
+                UIPasteboard.general.string = stringToCopy
+        },
+            onShare: { [weak self] (itemsToShare) in
+                self?.shareItems(itemsToShare)
+        })
+        
+        ReceiveAddress.Configurator.configure(
+            viewController: vc,
+            viewConfig: viewConfig,
+            sceneModel: sceneModel,
+            addressManager: addressManager,
+            shareUtil: shareUtil,
+            qrCodeGenerator: qrCodeGenerator,
+            invoiceFormatter: invoiceFormatter,
+            routing: routing
+        )
+        
+        vc.navigationItem.title = Localized(.account_id)
+        vc.tabBarItem.title = Localized(.receive)
+        vc.tabBarItem.image = Assets.receive.image
+        
+        self.navigationController.pushViewController(vc, animated: true)
     }
     
     private func showPaymentsFor(selectedBalanceId: String) {
@@ -223,7 +180,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             balancesFetcher: balancesFetcher,
             selectedBalanceId: selectedBalanceId
         )
-        self.walletScene = container
+        self.dashboardScene = container
         self.navigationController.pushViewController(container, animated: true)
     }
     
@@ -301,5 +258,10 @@ class DashboardFlowController: BaseSignedInFlowController {
         exploreTokensFlowController.run(showRootScreen: { [weak self] (vc) in
             self?.navigationController.pushViewController(vc, animated: true)
         })
+    }
+    
+    private func shareItems(_ items: [Any]) {
+        let activity = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        self.navigationController.present(activity, animated: true, completion: nil)
     }
 }
