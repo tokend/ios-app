@@ -199,7 +199,7 @@ extension SendPaymentDestination.Model.ViewConfig {
             string: Localized(.continue_capitalized),
             attributes: [
                 .font: Theme.Fonts.actionButtonFont,
-                .foregroundColor: Theme.Colors.textOnMainColor
+                .foregroundColor: Theme.Colors.textOnAccentColor
             ]
         )
         return SendPaymentDestination.Model.ViewConfig(
@@ -215,7 +215,7 @@ extension SendPaymentDestination.Model.ViewConfig {
             string: Localized(.confirm),
             attributes: [
                 .font: Theme.Fonts.actionButtonFont,
-                .foregroundColor: Theme.Colors.textOnMainColor
+                .foregroundColor: Theme.Colors.textOnAccentColor
             ]
         )
         return SendPaymentDestination.Model.ViewConfig(

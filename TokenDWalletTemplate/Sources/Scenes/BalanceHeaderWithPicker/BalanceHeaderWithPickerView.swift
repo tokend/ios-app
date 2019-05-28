@@ -122,7 +122,7 @@ extension BalanceHeaderWithPicker {
         
         private func setupBalancePicker() {
             self.balancePicker.backgroundColor = Theme.Colors.mainColor
-            self.balancePicker.tintColor = Theme.Colors.textOnMainColor
+            self.balancePicker.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupLayout() {

@@ -95,12 +95,14 @@ extension TabsContainer {
             }
             if self.viewConfig.isPickerHidden {
                 self.containerView.snp.remakeConstraints { (make) in
-                    make.edges.equalToSuperview()
+                    make.leading.trailing.top.equalToSuperview()
+                    make.bottom.equalTo(self.view.safeArea.bottom)
                 }
             } else {
                 self.containerView.snp.remakeConstraints { (make) in
-                    make.leading.trailing.bottom.equalToSuperview()
+                    make.leading.trailing.equalToSuperview()
                     make.top.equalTo(self.horizontalPicker.snp.bottom)
+                    make.bottom.equalTo(self.view.safeArea.bottom)
                 }
             }
         }
@@ -123,7 +125,7 @@ extension TabsContainer {
         
         private func setupHorizontalPicker() {
             self.horizontalPicker.backgroundColor = Theme.Colors.mainColor
-            self.horizontalPicker.tintColor = Theme.Colors.textOnMainColor
+            self.horizontalPicker.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupContainerView() {
@@ -174,8 +176,9 @@ extension TabsContainer {
             }
             
             self.containerView.snp.makeConstraints { (make) in
-                make.leading.trailing.bottom.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
                 make.top.equalTo(self.horizontalPicker.snp.bottom)
+                make.bottom.equalTo(self.view.safeArea.bottom)
             }
             
             self.actionButton.snp.makeConstraints { (make) in

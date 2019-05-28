@@ -102,7 +102,7 @@ class TradeChartCard: UIView {
     }
     
     private func setupPeriodPicker() {
-        self.periodPicker.backgroundColor = Theme.Colors.textOnMainColor
+        self.periodPicker.backgroundColor = Theme.Colors.darkAccentColor
         self.periodPicker.tintColor = Theme.Colors.mainColor
     }
     

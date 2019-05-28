@@ -95,7 +95,7 @@ extension AssetPicker {
             }
             
             private func setupAbbreviationLabel() {
-                self.abbreviationLabel.textColor = Theme.Colors.textOnMainColor
+                self.abbreviationLabel.textColor = Theme.Colors.textOnAccentColor
                 self.abbreviationLabel.font = Theme.Fonts.hugeTitleFont
                 self.abbreviationLabel.textAlignment = .center
             }

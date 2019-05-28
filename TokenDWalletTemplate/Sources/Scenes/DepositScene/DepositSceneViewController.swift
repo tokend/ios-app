@@ -103,7 +103,7 @@ extension DepositScene {
         
         private func setupAssetPicker() {
             self.assetPicker.backgroundColor = Theme.Colors.mainColor
-            self.assetPicker.tintColor = Theme.Colors.textOnMainColor
+            self.assetPicker.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupScrollContentView() {
@@ -312,7 +312,7 @@ extension DepositScene {
         }
         
         private func showGetAddressButtonLoading() {
-            self.getAddressButton.showLoading(tintColor: Theme.Colors.textOnMainColor)
+            self.getAddressButton.showLoading(tintColor: Theme.Colors.textOnAccentColor)
             self.getAddressButton.isEnabled = false
         }
         
@@ -342,7 +342,7 @@ extension DepositScene {
         }
         
         private func showRenewButtonLoading() {
-            self.renewAddressButton.showLoading(tintColor: Theme.Colors.textOnMainColor)
+            self.renewAddressButton.showLoading(tintColor: Theme.Colors.textOnAccentColor)
             self.renewAddressButton.isEnabled = false
         }
         

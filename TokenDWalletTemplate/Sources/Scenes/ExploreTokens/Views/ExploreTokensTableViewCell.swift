@@ -122,7 +122,7 @@ enum ExploreTokensTableViewCell {
         // MARK: - Public
         
         public func showIconViewLoading() {
-            self.iconContainerView.showLoading(tintColor: Theme.Colors.textOnMainColor)
+            self.iconContainerView.showLoading(tintColor: Theme.Colors.textOnAccentColor)
             self.iconView.alpha = 0.3
             self.abbreviationBackgroundView.alpha = 0.3
         }

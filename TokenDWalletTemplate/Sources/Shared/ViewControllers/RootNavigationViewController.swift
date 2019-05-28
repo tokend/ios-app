@@ -99,7 +99,7 @@ class RootNavigationViewController: UIViewController, RootNavigationProtocol {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        return .default
     }
     
     // MARK: - Private
