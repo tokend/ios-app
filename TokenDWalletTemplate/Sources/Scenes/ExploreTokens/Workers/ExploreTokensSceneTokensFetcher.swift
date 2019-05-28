@@ -130,6 +130,15 @@ extension ExploreTokensScene {
                     balanceState: balanceState
                 )
             })
+            .sorted(by: { (left, right) -> Bool in
+                if case Token.BalanceState.notCreated = left.balanceState {
+                    return true
+                } else if case Token.BalanceState.notCreated = right.balanceState {
+                    return false
+                } else {
+                    return true
+                }
+            })
             self.tokensBehaviorRelay.accept(tokens)
         }
         
