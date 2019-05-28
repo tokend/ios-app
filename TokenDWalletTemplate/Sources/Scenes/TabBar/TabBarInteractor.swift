@@ -34,6 +34,13 @@ extension TabBar {
             self.sceneModel = sceneModel
             self.tabProvider = tabProvider
         }
+        
+        // MARK: - Private
+        
+        private func sendAction(identifier: Model.TabIdentifier) {
+            let response = Event.Action.Response(tabIdentifier: identifier)
+            self.presenter.presenterAction(response: response)
+        }
     }
 }
 
@@ -75,10 +82,5 @@ extension TabBar.Interactor: TabBar.BusinessLogic {
         guard let selectedTab = self.sceneModel.selectedTab else { return }
         let response = Event.TabWasSelected.Response(item: selectedTab)
         self.presenter.presenterTabWasSelected(response: response)
-    }
-    
-    private func sendAction(identifier: Model.TabIdentifier) {
-        let response = Event.Action.Response(tabIdentifier: identifier)
-        self.presenter.presenterAction(response: response)
     }
 }

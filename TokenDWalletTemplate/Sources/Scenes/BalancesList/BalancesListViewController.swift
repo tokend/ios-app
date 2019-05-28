@@ -3,7 +3,7 @@ import UIKit
 public protocol BalancesListDisplayLogic: class {
     typealias Event = BalancesList.Event
     
-    func displayCellsWasUpdated(viewModel: Event.CellsWasUpdated.ViewModel)
+    func displaySectionsUpdated(viewModel: Event.SectionsUpdated.ViewModel)
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
 }
 
@@ -91,7 +91,7 @@ extension BalancesList {
 
 extension BalancesList.ViewController: BalancesList.DisplayLogic {
     
-    public func displayCellsWasUpdated(viewModel: Event.CellsWasUpdated.ViewModel) {
+    public func displaySectionsUpdated(viewModel: Event.SectionsUpdated.ViewModel) {
         self.sections = viewModel.sections
         self.tableView.reloadData()
     }

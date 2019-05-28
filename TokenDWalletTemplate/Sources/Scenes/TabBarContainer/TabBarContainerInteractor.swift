@@ -36,10 +36,8 @@ extension TabBarContainer {
 extension TabBarContainer.Interactor: TabBarContainer.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
-        DispatchQueue.main.sync {
-            let sceneContent = self.contentProvider.getSceneContent()
-            let response = Event.ViewDidLoad.Response(sceneContent: sceneContent)
-            self.presenter.presentViewDidLoad(response: response)
-        }
+        let sceneContent = self.contentProvider.getSceneContent()
+        let response = Event.ViewDidLoad.Response(sceneContent: sceneContent)
+        self.presenter.presentViewDidLoad(response: response)
     }
 }

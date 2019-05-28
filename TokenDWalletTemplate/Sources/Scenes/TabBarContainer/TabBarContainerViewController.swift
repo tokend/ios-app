@@ -79,7 +79,7 @@ extension TabBarContainer {
             super.viewDidLoad()
             
             let request = Event.ViewDidLoad.Request()
-            self.interactorDispatch?.sendRequest { businessLogic in
+            self.interactorDispatch?.sendSyncRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
             }
         }

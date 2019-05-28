@@ -63,7 +63,7 @@ extension BalancesList.Event {
         public struct Request {}
     }
     
-    public enum CellsWasUpdated {
+    public enum SectionsUpdated {
         public struct Response {
             let sections: [Model.SectionModel]
         }

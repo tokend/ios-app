@@ -3,7 +3,7 @@ import Foundation
 public protocol BalancesListPresentationLogic {
     typealias Event = BalancesList.Event
     
-    func presentCellsWasChanged(response: Event.CellsWasUpdated.Response)
+    func presentSectionsUpdated(response: Event.SectionsUpdated.Response)
     func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
 }
 
@@ -36,7 +36,7 @@ extension BalancesList {
 
 extension BalancesList.Presenter: BalancesList.PresentationLogic {
     
-    public func presentCellsWasChanged(response: Event.CellsWasUpdated.Response) {
+    public func presentSectionsUpdated(response: Event.SectionsUpdated.Response) {
         let sections = response.sections.map { (section) -> Model.SectionViewModel in
             let cells = section.cells.map({ (cell) -> Model.CellViewModel in
                 switch cell {
@@ -72,9 +72,9 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
             return Model.SectionViewModel(cells: cells)
         }
         
-        let viewModel = Event.CellsWasUpdated.ViewModel(sections: sections)
+        let viewModel = Event.SectionsUpdated.ViewModel(sections: sections)
         self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displayCellsWasUpdated(viewModel: viewModel)
+            displayLogic.displaySectionsUpdated(viewModel: viewModel)
         }
     }
     
