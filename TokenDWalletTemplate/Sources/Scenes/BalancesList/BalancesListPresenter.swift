@@ -4,6 +4,7 @@ public protocol BalancesListPresentationLogic {
     typealias Event = BalancesList.Event
     
     func presentCellsWasChanged(response: Event.CellsWasUpdated.Response)
+    func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
 }
 
 extension BalancesList {
@@ -74,6 +75,13 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
         let viewModel = Event.CellsWasUpdated.ViewModel(sections: sections)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayCellsWasUpdated(viewModel: viewModel)
+        }
+    }
+    
+    public func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayLoadingStatusDidChange(viewModel: viewModel)
         }
     }
 }

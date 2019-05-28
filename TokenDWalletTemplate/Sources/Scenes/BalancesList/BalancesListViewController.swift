@@ -4,6 +4,7 @@ public protocol BalancesListDisplayLogic: class {
     typealias Event = BalancesList.Event
     
     func displayCellsWasUpdated(viewModel: Event.CellsWasUpdated.ViewModel)
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
 }
 
 extension BalancesList {
@@ -93,6 +94,17 @@ extension BalancesList.ViewController: BalancesList.DisplayLogic {
     public func displayCellsWasUpdated(viewModel: Event.CellsWasUpdated.ViewModel) {
         self.sections = viewModel.sections
         self.tableView.reloadData()
+    }
+    
+    public func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
+        switch viewModel {
+            
+        case .loaded:
+            self.routing?.hideProgress()
+            
+        case .loading:
+            self.routing?.showProgress()
+        }
     }
 }
 

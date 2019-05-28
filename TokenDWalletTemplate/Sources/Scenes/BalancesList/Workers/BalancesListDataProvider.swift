@@ -4,6 +4,7 @@ import RxSwift
 
 protocol BalancesListDataProviderProtocol {
     func observeData() -> Observable<[BalancesList.Model.SectionModel]>
+    func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus>
 }
 
 extension BalancesList {
@@ -17,6 +18,7 @@ extension BalancesList {
         
         private let sections: BehaviorRelay<[Model.SectionModel]> = BehaviorRelay(value: [])
         private var balances: [Model.Balance] = []
+        
         private let disposeBag: DisposeBag = DisposeBag()
         
         private let convertedAsset: String = "USD"
@@ -64,5 +66,9 @@ extension BalancesList.DataProvider: BalancesList.DataProviderProtocol {
             .disposed(by: self.disposeBag)
         
         return self.sections.asObservable()
+    }
+    
+    func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus> {
+        return self.balancesFetcher.observeLoadingStatus()
     }
 }

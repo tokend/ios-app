@@ -45,6 +45,11 @@ extension BalancesList.Model {
         let balanceId: String
         let convertedBalance: Decimal
     }
+    
+    public enum LoadingStatus {
+        case loaded
+        case loading
+    }
 }
 
 // MARK: - Events
@@ -66,5 +71,10 @@ extension BalancesList.Event {
         public struct ViewModel {
             let sections: [Model.SectionViewModel]
         }
+    }
+    
+    public enum LoadingStatusDidChange {
+        public typealias Response = Model.LoadingStatus
+        public typealias ViewModel = Response
     }
 }

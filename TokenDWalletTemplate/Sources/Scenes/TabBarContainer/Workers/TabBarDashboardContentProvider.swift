@@ -10,6 +10,8 @@ extension TabBarContainer {
         private let showPaymentsFor: ((String) -> Void)
         private let showSendScene: (() -> Void)
         private let showReceiveScene: (() -> Void)
+        private let showProgress: (() -> Void)
+        private let hideProgress: (() -> Void)
         
         private var content: ContentProtocol?
         
@@ -19,13 +21,17 @@ extension TabBarContainer {
             balancesRepo: BalancesRepo,
             showPaymentsFor: @escaping ((String) -> Void),
             showSendScene: @escaping (() -> Void),
-            showReceiveScene: @escaping (() -> Void)
+            showReceiveScene: @escaping (() -> Void),
+            showProgress: @escaping (() -> Void),
+            hideProgress: @escaping (() -> Void)
             ) {
             
             self.balancesRepo = balancesRepo
             self.showPaymentsFor = showPaymentsFor
             self.showSendScene = showSendScene
             self.showReceiveScene = showReceiveScene
+            self.showProgress = showProgress
+            self.hideProgress = hideProgress
         }
         
         // MARK: - Private
@@ -87,6 +93,10 @@ extension TabBarContainer {
             let routing = BalancesList.Routing(
                 onBalanceSelected: { [weak self] (balanceId) in
                     self?.showPaymentsFor(balanceId)
+                }, showProgress: { [weak self] in
+                    self?.showProgress()
+                }, hideProgress: { [weak self] in
+                    self?.hideProgress()
             })
             
             let balancesFetcher = BalancesList.BalancesFetcher(

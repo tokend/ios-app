@@ -38,6 +38,14 @@ extension BalancesList {
 extension BalancesList.Interactor: BalancesList.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        
+        self.dataProvider
+            .observeLoadingStatus()
+            .subscribe(onNext: { [weak self] (status) in
+                self?.presenter.presentLoadingStatusDidChange(response: status)
+            })
+            .disposed(by: self.disposeBag)
+        
         self.dataProvider
             .observeData()
             .subscribe(onNext: { [weak self] (sections) in

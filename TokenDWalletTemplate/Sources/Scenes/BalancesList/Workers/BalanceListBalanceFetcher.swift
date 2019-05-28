@@ -4,6 +4,7 @@ import RxSwift
 
 protocol BalanceListBalanceFetcherProtocol {
     func observeBalances() -> Observable<[BalancesList.Model.Balance]>
+    func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus>
 }
 
 extension BalancesList {
@@ -16,6 +17,7 @@ extension BalancesList {
         private let balancesRepo: BalancesRepo
         private let balancesRelay: BehaviorRelay<[Model.Balance]> = BehaviorRelay(value: [])
         
+        private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
@@ -65,5 +67,22 @@ extension BalancesList.BalancesFetcher: BalancesList.BalancesFetcherProtocol {
         self.observeBalancesRepo()
         
         return self.balancesRelay.asObservable()
+    }
+    
+    func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus> {
+        self.balancesRepo
+            .observeLoadingStatus()
+            .subscribe(onNext: { [weak self] (status) in
+                switch status {
+                case .loaded:
+                    self?.loadingStatus.accept(.loaded)
+                    
+                case .loading:
+                    self?.loadingStatus.accept(.loading)
+                }
+            })
+        .disposed(by: self.disposeBag)
+        
+        return self.loadingStatus.asObservable()
     }
 }

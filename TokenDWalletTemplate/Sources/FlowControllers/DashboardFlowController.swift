@@ -37,6 +37,10 @@ class DashboardFlowController: BaseSignedInFlowController {
                 self?.showSendScene()
             }, showReceiveScene: { [weak self] in
                 self?.showReceiveScene()
+            }, showProgress: { [weak self] in
+                self?.navigationController.showProgress()
+            }, hideProgress: { [weak self] in
+                self?.navigationController.hideProgress()
         })
         let routing = TabBarContainer.Routing()
         
