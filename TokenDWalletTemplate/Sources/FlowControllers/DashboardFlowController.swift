@@ -1,4 +1,5 @@
 import UIKit
+import RxSwift
 
 class DashboardFlowController: BaseSignedInFlowController {
     
@@ -10,6 +11,7 @@ class DashboardFlowController: BaseSignedInFlowController {
     private var operationCompletionScene: UIViewController {
         return self.dashboardScene ?? UIViewController()
     }
+    private let disposeBag: DisposeBag = DisposeBag()
     
     // MARK: - Public
     
@@ -51,6 +53,22 @@ class DashboardFlowController: BaseSignedInFlowController {
             routing: routing
         )
         
+        let exploreAssetsItem = UIBarButtonItem(
+            image: Assets.plusIcon.image,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        exploreAssetsItem
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: { [weak self] (_) in
+                self?.runExploreTokensFlow()
+            })
+            .disposed(by: self.disposeBag)
+        
+        container.navigationItem.rightBarButtonItem = exploreAssetsItem
         self.navigationController.setViewControllers([container], animated: false)
         
         if let showRoot = showRootScreen {
