@@ -203,7 +203,7 @@ extension TransactionsListScene {
                 Assets.walletIcon.image,
                 for: .normal
             )
-            self.floatyActionButton.tintColor = Theme.Colors.textOnMainColor
+            self.floatyActionButton.tintColor = Theme.Colors.textOnAccentColor
             self.floatyActionButton.layer.cornerRadius = self.iconSize / 2
             self.floatyActionButton
                 .rx

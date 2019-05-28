@@ -62,7 +62,7 @@ extension SideMenu {
         
         private func setupIconImageView() {
             self.iconImageView.contentMode = .scaleAspectFit
-            self.iconImageView.tintColor = Theme.Colors.textOnMainColor
+            self.iconImageView.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupTitleLabel() {

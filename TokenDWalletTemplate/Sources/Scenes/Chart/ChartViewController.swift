@@ -240,8 +240,8 @@ extension Chart {
         }
         
         private func setupDatePicker() {
-            self.datePicker.backgroundColor = Theme.Colors.textOnMainColor
-            self.datePicker.tintColor = Theme.Colors.mainColor
+            self.datePicker.backgroundColor = Theme.Colors.textOnAccentColor
+            self.datePicker.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupGrowthLabel() {

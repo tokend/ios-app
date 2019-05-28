@@ -42,7 +42,7 @@ extension AuthenticatorAuth {
         
         private func setupButton() {
             self.actionButton.backgroundColor = Theme.Colors.mainColor
-            self.actionButton.setTitleColor(Theme.Colors.textOnMainColor, for: .normal)
+            self.actionButton.setTitleColor(Theme.Colors.textOnAccentColor, for: .normal)
             self.actionButton.titleLabel?.font = Theme.Fonts.actionButtonFont
             self.actionButton
                 .rx

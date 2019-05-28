@@ -309,7 +309,7 @@ extension SendPaymentAmount.Model.ViewConfig {
             string: Localized(.confirm),
             attributes: [
                 .font: Theme.Fonts.actionButtonFont,
-                .foregroundColor: Theme.Colors.textOnMainColor
+                .foregroundColor: Theme.Colors.textOnAccentColor
             ]
         )
         
@@ -324,7 +324,7 @@ extension SendPaymentAmount.Model.ViewConfig {
             string: Localized(.continue_capitalized),
             attributes: [
                 .font: Theme.Fonts.actionButtonFont,
-                .foregroundColor: Theme.Colors.textOnMainColor
+                .foregroundColor: Theme.Colors.textOnAccentColor
             ]
         )
         

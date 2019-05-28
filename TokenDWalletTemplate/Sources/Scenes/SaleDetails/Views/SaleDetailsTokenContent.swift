@@ -221,7 +221,7 @@ extension SaleDetails {
             }
             
             private func setupTokenAbbreviationLabel() {
-                self.tokenAbbreviationLabel.textColor = Theme.Colors.textOnMainColor
+                self.tokenAbbreviationLabel.textColor = Theme.Colors.textOnAccentColor
                 self.tokenAbbreviationLabel.font = Theme.Fonts.largeTitleFont
                 self.tokenAbbreviationLabel.textAlignment = .center
             }

@@ -96,7 +96,7 @@ extension TradesList {
         
         private func setupPairPicker() {
             self.pairPicker.backgroundColor = Theme.Colors.mainColor
-            self.pairPicker.tintColor = Theme.Colors.textOnMainColor
+            self.pairPicker.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupTableView() {

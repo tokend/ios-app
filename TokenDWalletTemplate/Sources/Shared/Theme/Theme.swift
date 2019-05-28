@@ -6,10 +6,12 @@ enum Theme {
         
         private static let disabledColorAlpha: CGFloat = 0.3
         
-        static let mainColor: UIColor = UIColor(red: 0.28, green: 0.27, blue: 0.42, alpha: 1.0)
+        static let mainColor: UIColor = UIColor.white
         static let accentColor: UIColor = UIColor(red: 0.39, green: 0.33, blue: 0.93, alpha: 1.0)
+        static let darkAccentColor: UIColor = UIColor(red: 0.28, green: 0.27, blue: 0.42, alpha: 1.0)
         
-        static let textOnMainColor: UIColor = UIColor.white
+        static let textOnMainColor: UIColor = UIColor.black
+        static let textOnAccentColor: UIColor = UIColor.white
         static let separatorOnMainColor: UIColor = UIColor.lightGray
         
         static let negativeColor: UIColor = UIColor(red: 0.835, green: 0.0, blue: 0.0, alpha: 1.0)
@@ -36,13 +38,13 @@ enum Theme {
         static let textFieldForegroundErrorColor: UIColor = negativeColor
         
         static let actionButtonColor: UIColor = accentColor
-        static let actionTitleButtonColor: UIColor = Theme.Colors.textOnMainColor
+        static let actionTitleButtonColor: UIColor = Theme.Colors.textOnAccentColor
         static let disabledActionButtonColor: UIColor = Theme.Colors
             .actionButtonColor.withAlphaComponent(Theme.Colors.disabledColorAlpha)
         static let disabledActionTitleButtonColor: UIColor = Theme.Colors
             .actionTitleButtonColor.withAlphaComponent(Theme.Colors.disabledColorAlpha)
         
-        static let statusBarStyleOnMain: UIStatusBarStyle = .lightContent
+        static let statusBarStyleOnMain: UIStatusBarStyle = .default
         static let statusBarStyleOnContentBackground: UIStatusBarStyle = .default
         
         static let activitiIndicatorTintColor: UIColor = Theme.Colors.textOnMainColor

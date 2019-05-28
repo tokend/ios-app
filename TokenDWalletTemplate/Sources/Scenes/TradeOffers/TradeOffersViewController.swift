@@ -153,7 +153,7 @@ extension TradeOffers {
         
         private func setupPicker() {
             self.picker.backgroundColor = Theme.Colors.mainColor
-            self.picker.tintColor = Theme.Colors.textOnMainColor
+            self.picker.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupContainerView() {

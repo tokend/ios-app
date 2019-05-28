@@ -125,7 +125,7 @@ extension ExploreTokensScene {
         
         private func setupRefreshControl() {
             if #available(iOS 11, *) {
-                self.refreshControl.tintColor = Theme.Colors.textOnMainColor
+                self.refreshControl.tintColor = Theme.Colors.textOnAccentColor
             }
             self.refreshControl.addTarget(self, action: #selector(self.refreshAction), for: .valueChanged)
         }
