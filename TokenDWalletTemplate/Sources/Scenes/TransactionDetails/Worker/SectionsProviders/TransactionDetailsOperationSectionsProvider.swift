@@ -8,7 +8,7 @@ extension TransactionDetails {
     // swiftlint:disable type_body_length
     class OperationSectionsProvider {
         
-        private let transactionsHistoryRepo: TransactionsHistoryRepo
+        private let transactionsProvider: TransactionsProviderProtocol
         private let identifier: UInt64
         private let accountId: String
         
@@ -23,13 +23,13 @@ extension TransactionDetails {
         private var counterpartyEmail: String?
         
         init(
-            transactionsHistoryRepo: TransactionsHistoryRepo,
+            transactionsProvider: TransactionsProviderProtocol,
             emailFetcher: TransactionDetails.EmailFetcherProtocol,
             identifier: UInt64,
             accountId: String
             ) {
             
-            self.transactionsHistoryRepo = transactionsHistoryRepo
+            self.transactionsProvider = transactionsProvider
             self.emailFetcher = emailFetcher
             self.identifier = identifier
             self.accountId = accountId
@@ -813,8 +813,8 @@ extension TransactionDetails {
 extension TransactionDetails.OperationSectionsProvider: TransactionDetails.SectionsProviderProtocol {
     
     func observeTransaction() -> Observable<[TransactionDetails.Model.SectionModel]> {
-        self.transactionsHistoryRepo
-            .observeHistory()
+        self.transactionsProvider
+            .observeParicipantEffects()
             .subscribe(onNext: { [weak self] (effects) in
                 guard let effect = effects.first(where: { (effect) -> Bool in
                     guard let effectId = effect.id,

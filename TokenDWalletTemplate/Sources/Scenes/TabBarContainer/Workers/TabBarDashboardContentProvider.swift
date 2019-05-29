@@ -6,7 +6,12 @@ extension TabBarContainer {
         
         // MARK: - Private properties
         
-        private let balancesRepo: BalancesRepo
+        private let transactionsFetcher: TransactionsListScene.PaymentsFetcher
+        private let balancesFetcher: BalancesList.BalancesFetcherProtocol
+        private let actionProvider: TransactionsListScene.ActionProvider
+        private let amountFormatter: TransactionsListScene.AmountFormatterProtocol
+        private let dateFormatter: TransactionsListScene.DateFormatterProtocol
+        private let onDidSelectItemWithIdentifier: (_ id: UInt64, _ balanceId: String) -> Void
         private let showPaymentsFor: ((String) -> Void)
         private let showSendScene: (() -> Void)
         private let showReceiveScene: (() -> Void)
@@ -18,7 +23,15 @@ extension TabBarContainer {
         // MARK: -
         
         init(
-            balancesRepo: BalancesRepo,
+            transactionsFetcher: TransactionsListScene.PaymentsFetcher,
+            balancesFetcher: BalancesList.BalancesFetcherProtocol,
+            actionProvider: TransactionsListScene.ActionProvider,
+            amountFormatter: TransactionsListScene.AmountFormatterProtocol,
+            dateFormatter: TransactionsListScene.DateFormatterProtocol,
+            onDidSelectItemWithIdentifier: @escaping(
+            _ id: UInt64,
+            _ balanceId: String
+            ) -> Void,
             showPaymentsFor: @escaping ((String) -> Void),
             showSendScene: @escaping (() -> Void),
             showReceiveScene: @escaping (() -> Void),
@@ -26,7 +39,12 @@ extension TabBarContainer {
             hideProgress: @escaping (() -> Void)
             ) {
             
-            self.balancesRepo = balancesRepo
+            self.balancesFetcher = balancesFetcher
+            self.transactionsFetcher = transactionsFetcher
+            self.actionProvider = actionProvider
+            self.amountFormatter = amountFormatter
+            self.dateFormatter = dateFormatter
+            self.onDidSelectItemWithIdentifier = onDidSelectItemWithIdentifier
             self.showPaymentsFor = showPaymentsFor
             self.showSendScene = showSendScene
             self.showReceiveScene = showReceiveScene
@@ -40,8 +58,10 @@ extension TabBarContainer {
             let vc = TabsContainer.ViewController()
             
             let balancesTab = self.setupBalancesTab()
+            let movementsTab = self.setupMovementsTab()
             let tabs: [TabsContainer.Model.TabModel] = [
-                balancesTab
+                balancesTab,
+                movementsTab
             ]
             
             let contentProvider = TabsContainer.InfoContentProvider(tabs: tabs)
@@ -99,10 +119,7 @@ extension TabBarContainer {
                     self?.hideProgress()
             })
             
-            let balancesFetcher = BalancesList.BalancesFetcher(
-                balancesRepo: balancesRepo
-            )
-            let dataProvider = BalancesList.DataProvider(balancesFetcher: balancesFetcher)
+            let dataProvider = BalancesList.DataProvider(balancesFetcher: self.balancesFetcher)
             let amountFormatter = BalancesList.AmountFormatter()
             
             BalancesList.Configurator.configure(
@@ -116,6 +133,38 @@ extension TabBarContainer {
                 title: Localized(.dashboard),
                 content: .viewController(vc),
                 identifier: Localized(.balances)
+            )
+        }
+        
+        private func setupMovementsTab() -> TabsContainer.Model.TabModel {
+            let vc = TransactionsListScene.ViewController()
+            let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)
+            
+            let routing = TransactionsListScene.Routing (
+                onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
+                    self?.onDidSelectItemWithIdentifier(identifier, balanceId)
+                },
+                showSendPayment: { _ in },
+                showWithdraw: { _ in },
+                showDeposit: { _ in },
+                showReceive: {}
+            )
+            
+            TransactionsListScene.Configurator.configure(
+                viewController: vc,
+                transactionsFetcher: self.transactionsFetcher,
+                actionProvider: self.actionProvider,
+                amountFormatter: self.amountFormatter,
+                dateFormatter: self.dateFormatter,
+                emptyTitle: Localized(.no_movements),
+                viewConfig: viewConfig,
+                routing: routing
+            )
+            
+            return TabsContainer.Model.TabModel(
+                title: Localized(.dashboard),
+                content: .viewController(vc),
+                identifier: Localized(.movements)
             )
         }
         

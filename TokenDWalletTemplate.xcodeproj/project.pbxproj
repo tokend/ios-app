@@ -305,6 +305,11 @@
 		DB15935F229C23E3008D4128 /* TabBarContainerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159359229C23E3008D4128 /* TabBarContainerConfigurator.swift */; };
 		DB159362229C26C4008D4128 /* TabBarContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159361229C26C4008D4128 /* TabBarContentProvider.swift */; };
 		DB159364229C2915008D4128 /* TabBarDashboardContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159363229C2915008D4128 /* TabBarDashboardContentProvider.swift */; };
+		DB159366229E8332008D4128 /* MovementsRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159365229E8332008D4128 /* MovementsRepo.swift */; };
+		DB159369229E86A2008D4128 /* TransactionsListSceneTransactionsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159368229E86A2008D4128 /* TransactionsListSceneTransactionsProviderProtocol.swift */; };
+		DB15936B229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15936A229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift */; };
+		DB15936D229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15936C229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift */; };
+		DB15936F229EB617008D4128 /* TransactionDetailsTransactionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15936E229EB617008D4128 /* TransactionDetailsTransactionProvider.swift */; };
 		DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017C21F5DB0F00CD3DA4 /* Assets.swift */; };
 		DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */; };
 		DB19A7FD215BC4980043CD4A /* SaleInvestConfirmationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */; };
@@ -871,6 +876,11 @@
 		DB159359229C23E3008D4128 /* TabBarContainerConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarContainerConfigurator.swift; sourceTree = "<group>"; };
 		DB159361229C26C4008D4128 /* TabBarContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarContentProvider.swift; sourceTree = "<group>"; };
 		DB159363229C2915008D4128 /* TabBarDashboardContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarDashboardContentProvider.swift; sourceTree = "<group>"; };
+		DB159365229E8332008D4128 /* MovementsRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementsRepo.swift; sourceTree = "<group>"; };
+		DB159368229E86A2008D4128 /* TransactionsListSceneTransactionsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneTransactionsProviderProtocol.swift; sourceTree = "<group>"; };
+		DB15936A229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneMovementsProvider.swift; sourceTree = "<group>"; };
+		DB15936C229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneHistoryProvider.swift; sourceTree = "<group>"; };
+		DB15936E229EB617008D4128 /* TransactionDetailsTransactionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsTransactionProvider.swift; sourceTree = "<group>"; };
 		DB16017C21F5DB0F00CD3DA4 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInvestConfirmationProvider.swift; sourceTree = "<group>"; };
@@ -1257,6 +1267,7 @@
 				71136B022134433E00D83DD3 /* TransactionDetailsDateFormatterProtocol.swift */,
 				DB0940292260F3C400A9992A /* TransactionDetailsEmailFetcher.swift */,
 				71136B082134433E00D83DD3 /* TransactionDetailsSectionsProviderProtocol.swift */,
+				DB15936E229EB617008D4128 /* TransactionDetailsTransactionProvider.swift */,
 				71136B052134433E00D83DD3 /* SectionsProviders */,
 			);
 			path = Worker;
@@ -2240,6 +2251,15 @@
 			path = Workers;
 			sourceTree = "<group>";
 		};
+		DB159367229E8625008D4128 /* TransactionsProviders */ = {
+			isa = PBXGroup;
+			children = (
+				DB15936A229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift */,
+				DB15936C229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift */,
+			);
+			path = TransactionsProviders;
+			sourceTree = "<group>";
+		};
 		DB1AFBA321C9334900D87D5D /* AuthenticatorAuth */ = {
 			isa = PBXGroup;
 			children = (
@@ -2691,7 +2711,9 @@
 				E93F075D20D7F2DC000C0991 /* TransactionsListSceneDateFormatterProtocol.swift */,
 				E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */,
 				E93F075920D7E8BA000C0991 /* TransactionsListSceneTransactionsFetcherProtocol.swift */,
+				DB159368229E86A2008D4128 /* TransactionsListSceneTransactionsProviderProtocol.swift */,
 				E9A5CBC02119A4EF009112CA /* TransactionsFetchers */,
+				DB159367229E8625008D4128 /* TransactionsProviders */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -2800,6 +2822,7 @@
 				7FA02BD22158F855005C1BE4 /* SalesRepo.swift */,
 				DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */,
 				7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */,
+				DB159365229E8332008D4128 /* MovementsRepo.swift */,
 			);
 			path = Repos;
 			sourceTree = "<group>";
@@ -3267,6 +3290,9 @@
 				E92F1C132139B7F100D4695E /* VerifyEmailWorker.swift in Sources */,
 				7FE9FF4E21400E27006ACFEA /* AppInfoUtils.swift in Sources */,
 				E911321A20C7009E00A8AC4D /* TokenDetailsFetcher.swift in Sources */,
+				DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */,
+				DB15936F229EB617008D4128 /* TransactionDetailsTransactionProvider.swift in Sources */,
+				DB15936D229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift in Sources */,
 				7F749619226081E80065EE8E /* TradeOffersViewController.swift in Sources */,
 				71136B172134433F00D83DD3 /* TransactionDetailsSectionsProviderProtocol.swift in Sources */,
 				E9908EEB210F220200A0EA1C /* ManagersController.swift in Sources */,
@@ -3398,7 +3424,6 @@
 				7F0F36B820E2696500E906D5 /* WalletRecoveryRouting.swift in Sources */,
 				7F0F36B920E2696500E906D5 /* WalletRecoveryModels.swift in Sources */,
 				E93F075120D7C87F000C0991 /* TransactionsListModels.swift in Sources */,
-				DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */,
 				710E86062105E1AB007204D4 /* ReceiveAddressInteractor.swift in Sources */,
 				DB8C4065222853060018148E /* DepositSceneErrorFormatter.swift in Sources */,
 				DB1AFBAA21C9338300D87D5D /* AuthenticatorAuthPresenter.swift in Sources */,
@@ -3427,6 +3452,8 @@
 				7F0F36B720E2696500E906D5 /* WalletRecoveryPresenter.swift in Sources */,
 				E911321020C6D0D800A8AC4D /* TokenDetailsViewController.swift in Sources */,
 				E9908EF1211079F300A0EA1C /* BalanceBinder.swift in Sources */,
+				DB159366229E8332008D4128 /* MovementsRepo.swift in Sources */,
+				DB15936B229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift in Sources */,
 				DB76E3B222940E0900DA0BA8 /* ChartInteractor.swift in Sources */,
 				E93F075320D7C87F000C0991 /* TransactionsListInteractor.swift in Sources */,
 				E980D85C20D1267900C53841 /* DepositSceneInteractor.swift in Sources */,
@@ -3437,6 +3464,7 @@
 				7FF896E721ADACFE001A5D48 /* TokenDetailsTokenColoringProviderProtocol.swift in Sources */,
 				E9BCDD612121F64500EB0DF2 /* DashboardPendingOffersPreviewPlugInViewController.swift in Sources */,
 				E980D85920D1267900C53841 /* DepositSceneRouting.swift in Sources */,
+				DB159369229E86A2008D4128 /* TransactionsListSceneTransactionsProviderProtocol.swift in Sources */,
 				7F967FA22125985A005527EA /* UpdatePasswordRouting.swift in Sources */,
 				DB27961621C2B98600106B0C /* FeeDataFormatter.swift in Sources */,
 				7FABEA6020FD088F0005E751 /* CreateOfferConfigurator.swift in Sources */,

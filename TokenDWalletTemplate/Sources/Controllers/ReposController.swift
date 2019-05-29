@@ -12,6 +12,9 @@ class ReposController {
     public private(set) lazy var assetPairsRepo: AssetPairsRepo = {
         return self.createAssetPairsRepo()
     }()
+    public private(set) lazy var movementsRepo: MovementsRepo = {
+        return self.createMovementsRepo()
+    }()
     public private(set) lazy var pendingOffersRepo: PendingOffersRepo = {
         return self.createPendingOffersRepo()
     }()
@@ -88,6 +91,14 @@ class ReposController {
     
     private func createAssetPairsRepo() -> AssetPairsRepo {
         let repo = AssetPairsRepo(api: self.reposControllerStack.api.assetPairsApi)
+        return repo
+    }
+    
+    private func createMovementsRepo() -> MovementsRepo {
+        let repo = MovementsRepo(
+            api: self.reposControllerStack.apiV3.historyApi,
+            accountId: self.userDataProvider.walletData.accountId
+        )
         return repo
     }
     

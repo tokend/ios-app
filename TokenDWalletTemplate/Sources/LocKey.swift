@@ -254,6 +254,7 @@ enum LocKey: String {
     case mm_yy
     case month
     case more_info
+    case movements
     case network_info_error
     case network_info_error_replace_message
     case never
@@ -274,6 +275,7 @@ enum LocKey: String {
     case no_fees_to_overview
     case no_growth
     case no_investments
+    case no_movements
     case no_open_sales
     case no_opportunities
     case no_payments

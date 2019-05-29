@@ -8,20 +8,9 @@ extension TransactionsListScene {
         
         // MARK: - Private properties
         
-        private var transactionsHistoryRepo: TransactionsHistoryRepo?
-        private let errorsStatus: PublishRelay<Swift.Error> = PublishRelay()
-        
-        private var trHistoryRepoTransactionsDisposable: Disposable?
-        private var trHistoryRepoLoadingStatusDisposable: Disposable?
-        private var trHistoryRepoLoadingMoreStatusDisposable: Disposable?
-        private var trHistoryRepoErrorsStatusDisposable: Disposable?
-        
+        private let transactionsProvider: TransactionsProviderProtocol
+        private var effects: [ParticipantEffectResource] = []
         private let disposeBag: DisposeBag = DisposeBag()
-        
-        private let reposController: ReposController
-        
-        private var balanceId: String?
-        private let originalAccountId: String
         
         // MARK: - Public properties
         
@@ -43,31 +32,18 @@ extension TransactionsListScene {
         
         // MARK: -
         
-        init(
-            reposController: ReposController,
-            originalAccountId: String
-            ) {
+        init(transactionsProvider: TransactionsProviderProtocol) {
+            self.transactionsProvider = transactionsProvider
             
-            self.reposController = reposController
-            self.originalAccountId = originalAccountId
+            self.observeEffects()
+            self.observeTransactionsLoadingStatus()
+            self.observeTransactionsLoadingMoreStatus()
         }
         
         // MARK: - Public
         
         func setBalanceId(_ balanceId: String) {
-            guard self.balanceId != balanceId else {
-                return
-            }
-            
-            self.balanceId = balanceId
-            self.transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
-            
-            self.observeHistoryChanges()
-            self.observeHistoryLoadingStatus()
-            self.observeHistoryLoadingMoreStatus()
-            self.observeHistoryErrorsStatus()
-            
-            self.reloadTransactions()
+            self.transactionsProvider.setBalanceId(balanceId)
         }
         
         func observeTransactions() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.Transactions> {
@@ -75,75 +51,57 @@ extension TransactionsListScene {
         }
         
         func observeLoadingStatus() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus> {
-            return self.loadingStatus.asObservable()
+            return self.transactionsProvider.observeLoadingStatus()
         }
         
         func observeLoadingMoreStatus() -> Observable<TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus> {
-            return self.loadingMoreStatus.asObservable()
+            return self.transactionsProvider.observeLoadingMoreStatus()
         }
         
         func observeErrorStatus() -> Observable<Error> {
-            return self.errorsStatus.asObservable()
+            return self.transactionsProvider.observeErrors()
         }
         
         func loadMoreTransactions() {
-            self.transactionsHistoryRepo?.loadMoreHistory()
+            self.transactionsProvider.loadMoreParicipantEffects()
         }
         
         func reloadTransactions() {
-            guard let transactionsHistoryRepo = self.transactionsHistoryRepo else {
-                self.loadingStatus.accept(.loaded)
-                return
-            }
-            
-            transactionsHistoryRepo.reloadTransactions()
+            self.transactionsProvider.reloadParicipantEffects()
         }
         
         // MARK: - Private
         
-        private func observeHistoryChanges() {
-            self.trHistoryRepoTransactionsDisposable?.dispose()
-            
-            self.trHistoryRepoTransactionsDisposable = self.transactionsHistoryRepo?
-                .observeHistory()
-                .subscribe(onNext: { [weak self] (_) in
+        private func observeEffects() {
+            self.transactionsProvider
+                .observeParicipantEffects()
+                .subscribe(onNext: { [weak self] (effects) in
+                    self?.effects = effects
                     self?.transactionsDidChange()
                 })
+                .disposed(by: self.disposeBag)
         }
         
-        private func observeHistoryLoadingStatus() {
-            self.trHistoryRepoLoadingStatusDisposable?.dispose()
-            self.trHistoryRepoLoadingStatusDisposable =
-                self.transactionsHistoryRepo?
-                    .observeLoadingStatus()
-                    .subscribe(onNext: { [weak self] (status) in
-                        self?.loadingStatus.accept(status.status)
-                    })
+        private func observeTransactionsLoadingStatus() {
+            self.transactionsProvider
+                .observeLoadingStatus()
+                .subscribe(onNext: { [weak self] (status) in
+                    self?.loadingStatus.accept(status)
+                })
+                .disposed(by: self.disposeBag)
         }
         
-        private func observeHistoryLoadingMoreStatus() {
-            self.trHistoryRepoLoadingMoreStatusDisposable?.dispose()
-            self.trHistoryRepoLoadingMoreStatusDisposable =
-                self.transactionsHistoryRepo?
-                    .observeLoadingStatus()
-                    .subscribe(onNext: { [weak self] (status) in
-                        self?.loadingMoreStatus.accept(status.status)
-                    })
-        }
-        
-        private func observeHistoryErrorsStatus() {
-            self.trHistoryRepoErrorsStatusDisposable?.dispose()
-            self.trHistoryRepoErrorsStatusDisposable =
-                self.transactionsHistoryRepo?
-                    .observeErrors()
-                    .subscribe(onNext: { [weak self] (error) in
-                        self?.errorsStatus.accept(error)
-                    })
+        private func observeTransactionsLoadingMoreStatus() {
+            self.transactionsProvider
+                .observeLoadingMoreStatus()
+                .subscribe(onNext: { [weak self] (status) in
+                    self?.loadingMoreStatus.accept(status)
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func transactionsDidChange() {
-            let effects = self.transactionsHistoryRepo?.history ?? []
-            let transactions = self.parseEffects(effects)
+            let transactions = self.parseEffects(self.effects)
             
             self.transactions.accept(transactions)
         }
@@ -323,17 +281,6 @@ extension TransactionsListScene {
                     return nil
                 }
             }
-        }
-    }
-}
-
-private extension TransactionsHistoryRepo.LoadingStatus {
-    var status: TransactionsListSceneTransactionsFetcherProtocol.LoadingStatus {
-        switch self {
-        case .loading:
-            return .loading
-        case .loaded:
-            return .loaded
         }
     }
 }

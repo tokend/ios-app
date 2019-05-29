@@ -31,17 +31,17 @@ class BaseSignedInFlowController: BaseFlowController {
     // MARK: - Public
     
     func showTransactionDetailsScreen(
+        transactionsProvider: TransactionDetails.TransactionsProviderProtocol,
         navigationController: NavigationControllerProtocol,
         transactionId: UInt64,
         balanceId: String
         ) {
         
-        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
         let emailFetcher = TransactionDetails.EmailFetcher(
             generalApi: self.flowControllerStack.api.generalApi
         )
         let sectionsProvider = TransactionDetails.OperationSectionsProvider(
-            transactionsHistoryRepo: transactionsHistoryRepo,
+            transactionsProvider: transactionsProvider,
             emailFetcher: emailFetcher,
             identifier: transactionId,
             accountId: self.userDataProvider.walletData.accountId
