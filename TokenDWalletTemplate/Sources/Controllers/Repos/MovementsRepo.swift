@@ -129,7 +129,6 @@ class MovementsRepo {
                     
                 case .success(let document):
                     guard let movements = document.data else {
-                        completion()
                         return
                     }
                     self?.prevLinks = document.links
