@@ -1,4 +1,5 @@
 import UIKit
+import Nuke
 
 extension AssetPicker {
     
@@ -6,6 +7,7 @@ extension AssetPicker {
         
         public struct ViewModel: CellViewModel {
             let code: String
+            let imageRepresentation: AssetPicker.Model.ImageRepresentation
             let balance: String
             let abbreviationBackgroundColor: UIColor
             let abbreviationText: String
@@ -13,6 +15,7 @@ extension AssetPicker {
             
             public func setup(cell: Cell) {
                 cell.code = self.code
+                cell.imageRepresentation = imageRepresentation
                 cell.balance = self.balance
                 cell.abbreviationBackgroundColor = self.abbreviationBackgroundColor
                 cell.abbreviationText = self.abbreviationText
@@ -26,6 +29,12 @@ extension AssetPicker {
             var code: String? {
                 get { return self.codeLabel.text }
                 set { self.codeLabel.text = newValue }
+            }
+            
+            var imageRepresentation: AssetPicker.Model.ImageRepresentation? {
+                didSet {
+                    self.updateImage()
+                }
             }
             
             var balance: String? {
@@ -49,6 +58,7 @@ extension AssetPicker {
             private let codeLabel: UILabel = UILabel()
             private let balanceLabel: UILabel = UILabel()
             
+            private let iconView: UIImageView = UIImageView()
             private let abbreviationView: UIView = UIView()
             private let abbreviationLabel: UILabel = UILabel()
             
@@ -64,6 +74,7 @@ extension AssetPicker {
                 self.setupView()
                 self.setupNameLabel()
                 self.setupBalanceLabel()
+                self.setupIconView()
                 self.setupAbbreviationView()
                 self.setupAbbreviationLabel()
                 self.setupLayout()   
@@ -74,6 +85,21 @@ extension AssetPicker {
             }
             
             // MARK: - Private
+            
+            private func updateImage() {
+                guard let imageRepresentation = self.imageRepresentation else {
+                    return
+                }
+                switch imageRepresentation {
+                    
+                case .abbreviation:
+                    self.iconView.isHidden = true
+                    
+                case .image(let url):
+                    self.iconView.isHidden = false
+                    Nuke.loadImage(with: url, into: self.iconView)
+                }
+            }
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.contentBackgroundColor
@@ -90,6 +116,13 @@ extension AssetPicker {
                 self.balanceLabel.font = Theme.Fonts.plainTextFont
             }
             
+            private func setupIconView() {
+                self.iconView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.iconView.layer.cornerRadius = self.iconSize / 2
+                self.iconView.layer.masksToBounds = true
+                self.iconView.contentMode = .scaleAspectFit
+            }
+            
             private func setupAbbreviationView() {
                 self.abbreviationView.layer.cornerRadius = self.iconSize / 2
             }
@@ -103,6 +136,7 @@ extension AssetPicker {
             private func setupLayout() {
                 self.addSubview(self.abbreviationView)
                 self.abbreviationView.addSubview(self.abbreviationLabel)
+                self.addSubview(self.iconView)
                 self.addSubview(self.codeLabel)
                 self.addSubview(self.balanceLabel)
                 
@@ -114,6 +148,10 @@ extension AssetPicker {
                 
                 self.abbreviationLabel.snp.makeConstraints { (make) in
                     make.edges.equalToSuperview()
+                }
+                
+                self.iconView.snp.makeConstraints { (make) in
+                    make.edges.equalTo(self.abbreviationView)
                 }
                 
                 self.codeLabel.snp.makeConstraints { (make) in

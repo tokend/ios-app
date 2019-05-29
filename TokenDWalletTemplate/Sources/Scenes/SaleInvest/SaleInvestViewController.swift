@@ -205,7 +205,7 @@ extension SaleInvest {
         }
         
         private func setupSelectAssetButton() {
-            self.selectAssetButton.setTitleColor(Theme.Colors.mainColor, for: .normal)
+            self.selectAssetButton.setTitleColor(Theme.Colors.darkAccentColor, for: .normal)
             self.selectAssetButton.titleLabel?.font = Theme.Fonts.actionButtonFont
             self.selectAssetButton.contentEdgeInsets = UIEdgeInsets(
                 top: 0.0, left: self.sideInset, bottom: 0.0, right: 0.0

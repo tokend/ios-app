@@ -184,6 +184,8 @@ enum ExploreTokensTableViewCell {
         }
         
         private func setupIconView() {
+            self.iconView.layer.cornerRadius = self.iconSize / 2
+            self.iconView.layer.masksToBounds = true
             self.iconView.contentMode = .scaleAspectFit
         }
         

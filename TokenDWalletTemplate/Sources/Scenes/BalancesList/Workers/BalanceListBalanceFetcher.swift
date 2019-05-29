@@ -15,15 +15,27 @@ extension BalancesList {
         // MARK: - Private properties
         
         private let balancesRepo: BalancesRepo
-        private let balancesRelay: BehaviorRelay<[Model.Balance]> = BehaviorRelay(value: [])
+        private let assetsRepo: AssetsRepo
         
+        private let imageUtility: ImagesUtility
+        private let balancesRelay: BehaviorRelay<[Model.Balance]> = BehaviorRelay(value: [])
         private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
+        
+        private var balances: [BalancesRepo.BalanceDetails] = []
+        private var assets: [AssetsRepo.Asset] = []
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
-        init(balancesRepo: BalancesRepo) {
+        init(
+            balancesRepo: BalancesRepo,
+            assetsRepo: AssetsRepo,
+            imageUtility: ImagesUtility
+            ) {
+            
             self.balancesRepo = balancesRepo
+            self.assetsRepo = assetsRepo
+            self.imageUtility = imageUtility
         }
         
         // MARK: - Private
@@ -32,7 +44,7 @@ extension BalancesList {
             self.balancesRepo
                 .observeBalancesDetails()
                 .subscribe(onNext: { [weak self] (states) in
-                    let balances = states.compactMap({ (state) -> BalancesRepo.BalanceDetails? in
+                    self?.balances = states.compactMap({ (state) -> BalancesRepo.BalanceDetails? in
                         switch state {
                             
                         case .created(let balance):
@@ -42,15 +54,34 @@ extension BalancesList {
                             return nil
                         }
                     })
-                    self?.updateBalances(balances: balances)
+                    self?.updateBalances()
                 })
                 .disposed(by: self.disposeBag)
         }
         
-        private func updateBalances(balances: [BalancesRepo.BalanceDetails]) {
-            let updatedBalances = balances.map { (details) -> Model.Balance in
+        private func observeAssetsRepo() {
+            self.assetsRepo
+                .observeAssets()
+                .subscribe(onNext: { [weak self] (assets) in
+                    self?.assets = assets
+                    self?.updateBalances()
+                })
+                .disposed(by: self.disposeBag)
+        }
+        
+        private func updateBalances() {
+            let updatedBalances = self.balances.map { (details) -> Model.Balance in
+                var iconUrl: URL?
+                if let asset = self.assets.first(where: { (asset) -> Bool in
+                    return details.asset == asset.code
+                }), let key = asset.defaultDetails?.logo?.key {
+                    let imageKey = ImagesUtility.ImageKey.key(key)
+                    iconUrl = self.imageUtility.getImageURL(imageKey)
+                }
+                
                 return Model.Balance(
                     code: details.asset,
+                    iconUrl: iconUrl,
                     balance: details.balance,
                     balanceId: details.balanceId,
                     convertedBalance: details.convertedBalance
@@ -67,6 +98,7 @@ extension BalancesList {
 extension BalancesList.BalancesFetcher: BalancesList.BalancesFetcherProtocol {
     
     func observeBalances() -> Observable<[BalancesList.Model.Balance]> {
+        self.observeAssetsRepo()
         self.observeBalancesRepo()
         
         return self.balancesRelay.asObservable()

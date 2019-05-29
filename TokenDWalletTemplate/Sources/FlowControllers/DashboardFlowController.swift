@@ -36,8 +36,13 @@ class DashboardFlowController: BaseSignedInFlowController {
         let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
             transactionsProvider: transactionsProvider
         )
+        let imagesUtility = ImagesUtility(
+            storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
+        )
         let balancesFetcher = BalancesList.BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            imageUtility: imagesUtility
         )
         let actionProvider = TransactionsListScene.ActionProvider(
             assetsRepo: self.reposController.assetsRepo,

@@ -41,6 +41,7 @@ extension BalancesList.Model {
     
     public struct Balance {
         let code: String
+        let iconUrl: URL?
         let balance: Decimal
         let balanceId: String
         let convertedBalance: Decimal
@@ -49,6 +50,11 @@ extension BalancesList.Model {
     public enum LoadingStatus {
         case loaded
         case loading
+    }
+    
+    public enum ImageRepresentation {
+        case image(URL)
+        case abbreviation
     }
 }
 
