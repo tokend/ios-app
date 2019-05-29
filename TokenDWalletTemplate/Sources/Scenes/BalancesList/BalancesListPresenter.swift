@@ -43,7 +43,7 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
                     
                 case .balance(let balanceModel):
                     let balance = self.amountFormatter.formatAmount(
-                        balanceModel.convertedBalance,
+                        balanceModel.balance,
                         currency: balanceModel.code
                     )
                     
