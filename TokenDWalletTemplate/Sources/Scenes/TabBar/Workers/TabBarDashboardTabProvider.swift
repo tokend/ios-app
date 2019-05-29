@@ -13,6 +13,12 @@ extension TabBar {
                 identifier: Localized(.balances),
                 isSelectable: true
             )
+            let movementsTab = Model.TabItem(
+                title: Localized(.movements),
+                image: Assets.tradeIcon.image,
+                identifier: Localized(.movements),
+                isSelectable: true
+            )
             let sendTab = Model.TabItem(
                 title: Localized(.send),
                 image: Assets.send.image,
@@ -26,7 +32,7 @@ extension TabBar {
                 isSelectable: false
             )
             
-            return [balancesTab, sendTab, receiveTab]
+            return [balancesTab, movementsTab, sendTab, receiveTab]
         }
     }
 }

@@ -37,9 +37,12 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
         selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
         ) {
         
-        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+        let transactionsProvider = TransactionsListScene.HistoryProvider(
             reposController: self.reposController,
             originalAccountId: self.userDataProvider.walletData.accountId
+        )
+        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+            transactionsProvider: transactionsProvider
         )
         let actionProvider = TransactionsListScene.ActionProvider(
             assetsRepo: self.reposController.assetsRepo,
@@ -50,7 +53,11 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
         let navigationController = self.navigationController
         let transactionsRouting = TransactionsListScene.Routing (
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
-                self?.showTransactionDetailsScreen(transactionId: identifier, balanceId: balanceId)
+                self?.showTransactionDetailsScreen(
+                    transactionsProvider: transactionsProvider,
+                    transactionId: identifier,
+                    balanceId: balanceId
+                )
             },
             showSendPayment: { [weak self] (balanceId) in
                 self?.runSendPaymentFlow(
@@ -106,10 +113,12 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     }
     
     private func showTransactionDetailsScreen(
+        transactionsProvider: TransactionDetails.TransactionsProviderProtocol,
         transactionId: UInt64,
         balanceId: String
         ) {
         let vc = self.setupTransactionDetailsScreen(
+            transactionsProvider: transactionsProvider,
             transactionId: transactionId,
             balanceId: balanceId
         )
@@ -117,6 +126,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     }
     
     private func setupTransactionDetailsScreen(
+        transactionsProvider: TransactionDetails.TransactionsProviderProtocol,
         transactionId: UInt64,
         balanceId: String
         ) -> TransactionDetails.ViewController {
@@ -146,12 +156,11 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
                 )
         })
         
-        let transactionsHistoryRepo = self.reposController.getTransactionsHistoryRepo(for: balanceId)
         let emailFetcher = TransactionDetails.EmailFetcher(
             generalApi: self.flowControllerStack.api.generalApi
         )
         let sectionsProvider = TransactionDetails.OperationSectionsProvider(
-            transactionsHistoryRepo: transactionsHistoryRepo,
+            transactionsProvider: transactionsProvider,
             emailFetcher: emailFetcher,
             identifier: transactionId,
             accountId: self.userDataProvider.walletData.accountId

@@ -31,8 +31,39 @@ class DashboardFlowController: BaseSignedInFlowController {
     private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         
         let container = TabBarContainer.ViewController()
+        let transactionsProvider = TransactionsListScene.MovementsProvider(
+            movementsRepo: self.reposController.movementsRepo
+        )
+        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+            transactionsProvider: transactionsProvider
+        )
+        let balancesFetcher = BalancesList.BalancesFetcher(
+            balancesRepo: self.reposController.balancesRepo
+        )
+        let actionProvider = TransactionsListScene.ActionProvider(
+            assetsRepo: self.reposController.assetsRepo,
+            balancesRepo: self.reposController.balancesRepo
+        )
+        let amountFormatter = TransactionsListScene.AmountFormatter()
+        let dateFormatter = TransactionsListScene.DateFormatter()
+        
         let contentProvider = TabBarContainer.DashboardProvider(
-            balancesRepo: self.reposController.balancesRepo,
+            transactionsFetcher: transactionsFetcher,
+            balancesFetcher: balancesFetcher,
+            actionProvider: actionProvider,
+            amountFormatter: amountFormatter,
+            dateFormatter: dateFormatter,
+            onDidSelectItemWithIdentifier: { [weak self] (transactionId, balanceId) in
+                guard let navigationContrpller = self?.navigationController else {
+                    return
+                }
+                self?.showTransactionDetailsScreen(
+                    transactionsProvider: transactionsProvider,
+                    navigationController: navigationContrpller,
+                    transactionId: transactionId,
+                    balanceId: balanceId
+                )
+            },
             showPaymentsFor: { [weak self] (balanceId) in
                 self?.showPaymentsFor(selectedBalanceId: balanceId)
             }, showSendScene: { [weak self] in
@@ -135,9 +166,12 @@ class DashboardFlowController: BaseSignedInFlowController {
     }
     
     private func showPaymentsFor(selectedBalanceId: String) {
-        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+        let transactionsProvider = TransactionsListScene.HistoryProvider(
             reposController: self.reposController,
             originalAccountId: self.userDataProvider.walletData.accountId
+        )
+        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+            transactionsProvider: transactionsProvider
         )
         
         let actionProvider = TransactionsListScene.ActionProvider(
@@ -151,6 +185,7 @@ class DashboardFlowController: BaseSignedInFlowController {
         let transactionsRouting = TransactionsListScene.Routing (
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
                 self?.showTransactionDetailsScreen(
+                    transactionsProvider: transactionsProvider,
                     navigationController: navigationController,
                     transactionId: identifier,
                     balanceId: balanceId

@@ -251,6 +251,7 @@
 "mm_yy" = "MM / YY";
 "month" = "Month";
 "more_info" = "MORE INFO";
+"movements" = "Movements";
 "network_info_error" = "Network info error: $(message)";
 "network_info_error_replace_message" = "message";
 "never" = "never";
@@ -271,6 +272,7 @@
 "no_fees_to_overview" = "No fees to overview";
 "no_growth" = "No growth";
 "no_investments" = "No investments";
+"no_movements" = "No movements";
 "no_open_sales" = "No open sales";
 "no_opportunities" = "No opportunities";
 "no_payments" = "No payments";

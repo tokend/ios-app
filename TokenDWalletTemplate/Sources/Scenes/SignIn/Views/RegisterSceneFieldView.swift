@@ -99,7 +99,7 @@ extension RegisterScene.View {
                 buttonImage = Assets.showPasswordIcon.image
             }
             self.actionButton.setImage(buttonImage, for: .normal)
-            self.actionButton.tintColor = Theme.Colors.mainColor
+            self.actionButton.tintColor = Theme.Colors.darkAccentColor
             self.actionButton.isHidden = isHidden
         }
         

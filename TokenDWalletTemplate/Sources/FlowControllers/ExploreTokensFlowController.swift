@@ -137,9 +137,12 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
     }
     
     private func showTokenTransactionsHistoryFor(selectedBalanceId: String) {
-        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+        let transactionsProvider = TransactionsListScene.HistoryProvider(
             reposController: self.reposController,
             originalAccountId: self.userDataProvider.walletData.accountId
+        )
+        let transactionsFetcher = TransactionsListScene.PaymentsFetcher(
+            transactionsProvider: transactionsProvider
         )
         let actionProvider = TransactionsListScene.ActionProvider(
             assetsRepo: self.reposController.assetsRepo,
@@ -151,6 +154,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         let transactionsRouting = TransactionsListScene.Routing (
             onDidSelectItemWithIdentifier: { [weak self] (identifier, balanceId) in
                 self?.showTransactionDetailsScreen(
+                    transactionsProvider: transactionsProvider,
                     navigationController: navigationController,
                     transactionId: identifier,
                     balanceId: balanceId

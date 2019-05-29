@@ -14,7 +14,6 @@ public protocol TabBarContainerTabBarProtocol {
 public protocol TabBarContainerContentProtocol {
     var viewController: UIViewController { get }
     
-    func setBottomInset(_ inset: CGFloat)
     func setContentWithIdentifier(_ identifier: TabBarContainer.TabIdentifier)
 }
 
@@ -133,10 +132,6 @@ extension TabBarContainer {
                 viewController.view.snp.remakeConstraints { (make) in
                     make.edges.equalToSuperview()
                 }
-            }
-            
-            if let bottomInset = self.tabBar?.height {
-                self.content?.setBottomInset(bottomInset)
             }
         }
     }

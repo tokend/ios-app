@@ -312,8 +312,4 @@ extension TabsContainer.ViewController: TabBarContainerContentProtocol {
     public var viewController: UIViewController {
         return self
     }
-    
-    public func setBottomInset(_ inset: CGFloat) {
-        self.containerView.contentInset.bottom = inset
-    }
 }
