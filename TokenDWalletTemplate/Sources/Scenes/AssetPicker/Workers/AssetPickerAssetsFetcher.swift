@@ -15,6 +15,7 @@ extension AssetPicker {
         
         private let balancesRepo: BalancesRepo
         private let assetsRepo: AssetsRepo
+        private let imagesUtility: ImagesUtility
         private let targetAssets: [String]
         
         private let assetsRelay: BehaviorRelay<[Model.Asset]> = BehaviorRelay(value: [])
@@ -29,11 +30,13 @@ extension AssetPicker {
         init(
             balancesRepo: BalancesRepo,
             assetsRepo: AssetsRepo,
+            imagesUtility: ImagesUtility,
             targetAssets: [String]
             ) {
             
             self.balancesRepo = balancesRepo
             self.assetsRepo = assetsRepo
+            self.imagesUtility = imagesUtility
             self.targetAssets = targetAssets
         }
         
@@ -79,8 +82,14 @@ extension AssetPicker {
                         amount: balance.balance,
                         balanceId: balance.balanceId
                     )
+                    var iconUrl: URL?
+                    if let key = asset.defaultDetails?.logo?.key {
+                        let imageKey = ImagesUtility.ImageKey.key(key)
+                        iconUrl = self.imagesUtility.getImageURL(imageKey)
+                    }
                     let assetModel = Model.Asset(
                         code: asset.code,
+                        iconUrl: iconUrl,
                         balance: balance
                     )
                     assets.append(assetModel)

@@ -101,7 +101,7 @@ extension SendPaymentAmount {
         }
         
         private func setupAssetButton() {
-            self.assetButton.tintColor = Theme.Colors.mainColor
+            self.assetButton.tintColor = Theme.Colors.darkAccentColor
             self.assetButton
                 .rx
                 .controlEvent(.touchUpInside)

@@ -51,8 +51,13 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
                     let abbreviation = balanceModel.code.first
                     let abbreviationText = abbreviation?.description ?? ""
                     
+                    var imageRepresentation = Model.ImageRepresentation.abbreviation
+                    if let url = balanceModel.iconUrl {
+                        imageRepresentation = .image(url)
+                    }
                     let balanceViewModel = BalancesList.BalanceCell.ViewModel(
                         code: balanceModel.code,
+                        imageRepresentation: imageRepresentation,
                         balance: balance,
                         abbreviationBackgroundColor: abbreviationBackgroundColor,
                         abbreviationText: abbreviationText,

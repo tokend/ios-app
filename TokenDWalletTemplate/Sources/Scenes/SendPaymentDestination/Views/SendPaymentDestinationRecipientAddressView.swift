@@ -65,7 +65,7 @@ extension SendPaymentDestination {
         
         private func setupScanQRButton() {
             self.scanQRButton.setImage(#imageLiteral(resourceName: "Scan QR icon"), for: .normal)
-            self.scanQRButton.tintColor = Theme.Colors.mainColor
+            self.scanQRButton.tintColor = Theme.Colors.darkAccentColor
             self.scanQRButton
                 .rx
                 .controlEvent(.touchUpInside)

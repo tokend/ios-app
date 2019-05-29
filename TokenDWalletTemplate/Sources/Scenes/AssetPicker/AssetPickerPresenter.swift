@@ -49,8 +49,13 @@ extension AssetPicker.Presenter: AssetPicker.PresentationLogic {
                         .available_amount_replace_amount: availableBalanceAmount
                     ]
                 )
+                var imageRepresentation = Model.ImageRepresentation.abbreviation
+                if let url = asset.iconUrl {
+                    imageRepresentation = .image(url)
+                }
                 return AssetPicker.AssetCell.ViewModel(
                     code: asset.code,
+                    imageRepresentation: imageRepresentation,
                     balance: availableBalance,
                     abbreviationBackgroundColor: TokenColoringProvider.shared.coloringForCode(asset.code),
                     abbreviationText: firstLetter,

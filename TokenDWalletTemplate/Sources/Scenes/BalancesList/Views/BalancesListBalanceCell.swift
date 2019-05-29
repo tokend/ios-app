@@ -1,4 +1,5 @@
 import UIKit
+import Nuke
 
 extension BalancesList {
     
@@ -6,6 +7,7 @@ extension BalancesList {
         
         public struct ViewModel: CellViewModel {
             let code: String
+            let imageRepresentation: BalancesList.Model.ImageRepresentation
             let balance: String
             let abbreviationBackgroundColor: UIColor
             let abbreviationText: String
@@ -13,6 +15,7 @@ extension BalancesList {
             
             public func setup(cell: Cell) {
                 cell.code = self.code
+                cell.imageRepresentation = self.imageRepresentation
                 cell.balance = self.balance
                 cell.abbreviationBackgroundColor = self.abbreviationBackgroundColor
                 cell.abbreviationText = self.abbreviationText
@@ -26,6 +29,12 @@ extension BalancesList {
             var code: String? {
                 get { return self.codeLabel.text }
                 set { self.codeLabel.text = newValue }
+            }
+            
+            var imageRepresentation: BalancesList.Model.ImageRepresentation? {
+                didSet {
+                    self.updateImage()
+                }
             }
             
             var balance: String? {
@@ -49,6 +58,7 @@ extension BalancesList {
             private let codeLabel: UILabel = UILabel()
             private let balanceLabel: UILabel = UILabel()
             
+            private let iconView: UIImageView = UIImageView()
             private let abbreviationView: UIView = UIView()
             private let abbreviationLabel: UILabel = UILabel()
             
@@ -66,6 +76,7 @@ extension BalancesList {
                 self.setupView()
                 self.setupNameLabel()
                 self.setupBalanceLabel()
+                self.setupIconView()
                 self.setupAbbreviationView()
                 self.setupAbbreviationLabel()
                 self.setupSeparator()
@@ -77,6 +88,21 @@ extension BalancesList {
             }
             
             // MARK: - Private
+            
+            private func updateImage() {
+                guard let imageRepresentation = self.imageRepresentation else {
+                    return
+                }
+                switch imageRepresentation {
+                    
+                case .abbreviation:
+                    self.iconView.isHidden = true
+                    
+                case .image(let url):
+                    self.iconView.isHidden = false
+                    Nuke.loadImage(with: url, into: self.iconView)
+                }
+            }
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.contentBackgroundColor
@@ -91,6 +117,13 @@ extension BalancesList {
             private func setupBalanceLabel() {
                 self.balanceLabel.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.balanceLabel.font = Theme.Fonts.plainTextFont
+            }
+            
+            private func setupIconView() {
+                self.iconView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.iconView.layer.cornerRadius = self.iconSize / 2
+                self.iconView.layer.masksToBounds = true
+                self.iconView.contentMode = .scaleAspectFit
             }
             
             private func setupAbbreviationView() {
@@ -110,6 +143,7 @@ extension BalancesList {
             private func setupLayout() {
                 self.addSubview(self.abbreviationView)
                 self.abbreviationView.addSubview(self.abbreviationLabel)
+                self.addSubview(self.iconView)
                 self.addSubview(self.codeLabel)
                 self.addSubview(self.balanceLabel)
                 self.addSubview(self.separator)
@@ -122,6 +156,10 @@ extension BalancesList {
                 
                 self.abbreviationLabel.snp.makeConstraints { (make) in
                     make.edges.equalToSuperview()
+                }
+                
+                self.iconView.snp.makeConstraints { (make) in
+                    make.edges.equalTo(self.abbreviationView)
                 }
                 
                 self.codeLabel.snp.makeConstraints { (make) in

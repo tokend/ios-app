@@ -392,9 +392,13 @@ class WithdrawFlowController: BaseSignedInFlowController {
         
         let vc = AssetPicker.ViewController()
         
+        let imageUtility = ImagesUtility(
+            storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
+        )
         let assetsFetcher = AssetPicker.AssetsFetcher(
             balancesRepo: self.reposController.balancesRepo,
             assetsRepo: self.reposController.assetsRepo,
+            imagesUtility: imageUtility,
             targetAssets: targetAssets
         )
         let sceneModel = AssetPicker.Model.SceneModel(

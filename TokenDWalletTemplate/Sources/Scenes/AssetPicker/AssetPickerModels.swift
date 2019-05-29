@@ -23,12 +23,18 @@ extension AssetPicker.Model {
     
     public struct Asset {
         let code: String
+        let iconUrl: URL?
         let balance: Balance
     }
     
     public struct Balance {
         let amount: Decimal
         let balanceId: String
+    }
+    
+    public enum ImageRepresentation {
+        case image(URL)
+        case abbreviation
     }
 }
 
