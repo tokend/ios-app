@@ -29,7 +29,6 @@ class DashboardFlowController: BaseSignedInFlowController {
     }
     
     private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        
         let container = TabBarContainer.ViewController()
         let transactionsProvider = TransactionsListScene.MovementsProvider(
             movementsRepo: self.reposController.movementsRepo

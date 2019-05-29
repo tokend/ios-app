@@ -85,13 +85,15 @@ class MovementsRepo {
                     self?.errors.accept(error)
                     
                 case .success(let document):
-                    if let movements = document.data {
-                        self?.prevLinks = document.links
-                        self?.movementsDidLoad(
-                            movements: movements,
-                            fromLast: fromLast
-                        )
+                    guard let movements = document.data else {
+                        completion()
+                        return
                     }
+                    self?.prevLinks = document.links
+                    self?.movementsDidLoad(
+                        movements: movements,
+                        fromLast: fromLast
+                    )
                 }
                 completion()
         })
@@ -126,13 +128,15 @@ class MovementsRepo {
                     self?.errors.accept(error)
                     
                 case .success(let document):
-                    if let movements = document.data {
-                        self?.prevLinks = document.links
-                        self?.movementsDidLoad(
-                            movements: movements,
-                            fromLast: true
-                        )
+                    guard let movements = document.data else {
+                        completion()
+                        return
                     }
+                    self?.prevLinks = document.links
+                    self?.movementsDidLoad(
+                        movements: movements,
+                        fromLast: true
+                    )
                 }
         })
     }
