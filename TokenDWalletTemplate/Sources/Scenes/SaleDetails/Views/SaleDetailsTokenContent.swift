@@ -30,6 +30,7 @@ extension SaleDetails {
             public let assetName: String?
             public let balanceStateImage: UIImage?
             public let iconUrl: URL?
+            public let assetSummaryTitle: String
             public let sections: [SectionViewModel]
             
             public func setup(_ view: TokenContent.View) {
@@ -37,6 +38,7 @@ extension SaleDetails {
                 view.tokenName = self.assetName
                 view.iconUrl = self.iconUrl
                 view.tokenBalanceStateImage = self.balanceStateImage
+                view.title = self.assetSummaryTitle
                 view.sections = self.sections
             }
         }
@@ -44,6 +46,11 @@ extension SaleDetails {
         public class View: UIView {
             
             // MARK: - Public properties
+            
+            public var title: String? {
+                get { return self.titleLabel.text }
+                set { self.titleLabel.text = newValue }
+            }
             
             public var sections: [SectionViewModel] = [] {
                 didSet {
@@ -95,6 +102,8 @@ extension SaleDetails {
             
             private let tokenBalanceStateIcon: UIImageView = UIImageView()
             
+            private let containerView: UIView = UIView()
+            private let titleLabel: UILabel = UILabel()
             private let tokenDetailsTableView: UITableView = UITableView(frame: .zero, style: .grouped)
             
             private let iconSize: CGFloat = 45
@@ -130,6 +139,8 @@ extension SaleDetails {
                 self.setupTokenCodeLabel()
                 self.setupTokenNameLabel()
                 self.setupTokenBalanceStateIcon()
+                self.setupContainerView()
+                self.setupTitleLabel()
                 self.setupTokenDetailsTableView()
                 self.setupLayout()
             }
@@ -209,6 +220,7 @@ extension SaleDetails {
             
             private func setupTokenInfoView() {
                 self.tokenInfoView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.tokenInfoView.layer.cornerRadius = 10.0
             }
             
             private func setupIconView() {
@@ -253,6 +265,16 @@ extension SaleDetails {
                 self.tokenNameLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
             }
             
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.containerView.layer.cornerRadius = 10.0
+            }
+            
+            private func setupTitleLabel() {
+                self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.titleLabel.font = Theme.Fonts.largeTitleFont
+            }
+            
             private func setupTokenDetailsTableView() {
                 let cellClasses: [CellViewAnyModel.Type] = [
                     TokenCellModel.self
@@ -261,26 +283,44 @@ extension SaleDetails {
                 self.tokenDetailsTableView.dataSource = self
                 self.tokenDetailsTableView.rowHeight = UITableView.automaticDimension
                 self.tokenDetailsTableView.estimatedRowHeight = 35
+                var frame = CGRect.zero
+                frame.size.height = 1.0
+                self.tokenDetailsTableView.tableHeaderView = UIView(frame: frame)
                 self.tokenDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
-                self.tokenDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor
+                self.tokenDetailsTableView.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.tokenDetailsTableView.isUserInteractionEnabled = false
+                self.tokenDetailsTableView.separatorStyle = .none
             }
             
             private func setupLayout() {
                 self.addSubview(self.tokenInfoView)
                 self.setupTokenInfoViewLayout()
                 
-                self.addSubview(self.tokenDetailsTableView)
-                
                 self.tokenInfoView.snp.makeConstraints { (make) in
-                    make.leading.trailing.equalToSuperview()
+                    make.leading.trailing.equalToSuperview().inset(15.0)
                     make.top.equalToSuperview().inset(self.topInset)
                     make.height.equalTo(self.infoViewHeight)
                 }
                 
-                self.tokenDetailsTableView.snp.makeConstraints { (make) in
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.titleLabel)
+                self.containerView.addSubview(self.tokenDetailsTableView)
+                
+                self.containerView.snp.makeConstraints { (make) in
                     make.top.equalTo(self.tokenInfoView.snp.bottom).offset(self.topInset)
-                    make.trailing.leading.bottom.equalToSuperview()
+                    make.trailing.leading.equalToSuperview().inset(15.0)
+                    make.bottom.equalToSuperview()
+                }
+                
+                self.titleLabel.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(15.0)
+                    make.top.equalToSuperview().inset(10.0)
+                }
+                
+                self.tokenDetailsTableView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview()
+                    make.top.equalTo(self.titleLabel.snp.bottom).offset(10.0)
+                    make.bottom.equalToSuperview().inset(10.0)
                 }
             }
             
@@ -337,7 +377,8 @@ extension SaleDetails {
                 self.setupTokenAbbreviationViewLayout()
                 
                 self.tokenIconView.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
+                    make.top.bottom.equalToSuperview()
+                    make.leading.trailing.equalToSuperview()
                 }
                 
                 self.tokenAbbreviationView.snp.makeConstraints { (make) in

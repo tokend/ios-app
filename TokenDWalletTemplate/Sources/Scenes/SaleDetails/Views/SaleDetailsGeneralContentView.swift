@@ -22,9 +22,11 @@ extension SaleDetails {
         
         public struct ViewModel {
             
+            public let title: String
             public let sections: [SectionViewModel]
             
             public func setup(_ view: View) {
+                view.title = self.title
                 view.sections = self.sections
             }
         }
@@ -32,6 +34,11 @@ extension SaleDetails {
         public class View: UIView {
             
             // MARK: - Public properties
+            
+            public var title: String? {
+                get { return self.titleLabel.text }
+                set { self.titleLabel.text = newValue }
+            }
             
             public var sections: [SectionViewModel] = [] {
                 didSet {
@@ -41,6 +48,8 @@ extension SaleDetails {
             
             // MARK: - Private properties
             
+            private let containerView: UIView = UIView()
+            private let titleLabel: UILabel = UILabel()
             private let saleDetailsTableView: UITableView = UITableView(frame: .zero, style: .grouped)
             
             private var disposable: Disposable?
@@ -62,6 +71,8 @@ extension SaleDetails {
             
             private func customInit() {
                 self.setupView()
+                self.setupContainerView()
+                self.setupTitleLabel()
                 self.setupSaleDetailsTableView()
                 self.setupLayout()
             }
@@ -105,7 +116,17 @@ extension SaleDetails {
             // MARK: - Setup
             
             private func setupView() {
-                self.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.backgroundColor = Theme.Colors.containerBackgroundColor
+            }
+            
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.containerView.layer.cornerRadius = 10.0
+            }
+            
+            private func setupTitleLabel() {
+                self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.titleLabel.font = Theme.Fonts.largeTitleFont
             }
             
             private func setupSaleDetailsTableView() {
@@ -116,15 +137,35 @@ extension SaleDetails {
                 self.saleDetailsTableView.dataSource = self
                 self.saleDetailsTableView.rowHeight = UITableView.automaticDimension
                 self.saleDetailsTableView.estimatedRowHeight = 35
+                self.saleDetailsTableView.backgroundColor = Theme.Colors.contentBackgroundColor
+                var frame = CGRect.zer
+                frame.size.height = 1
+                self.saleDetailsTableView.tableHeaderView = UIView(frame: frame)
                 self.saleDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
-                self.saleDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor
                 self.saleDetailsTableView.isUserInteractionEnabled = false
+                self.saleDetailsTableView.separatorStyle = .none
             }
             
             private func setupLayout() {
-                self.addSubview(self.saleDetailsTableView)
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.titleLabel)
+                self.containerView.addSubview(self.saleDetailsTableView)
+                
+                self.containerView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(15.0)
+                    make.top.bottom.equalToSuperview().inset(10.0)
+                }
+                
+                self.titleLabel.snp.makeConstraints { (make) in
+                    make.leading.equalToSuperview().inset(15.0)
+                    make.trailing.equalToSuperview()
+                    make.top.equalToSuperview().inset(10.0)
+                }
+                
                 self.saleDetailsTableView.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
+                    make.leading.trailing.equalToSuperview()
+                    make.top.equalTo(self.titleLabel.snp.bottom).offset(10.0)
+                    make.bottom.equalToSuperview().inset(10.0)
                 }
             }
         }

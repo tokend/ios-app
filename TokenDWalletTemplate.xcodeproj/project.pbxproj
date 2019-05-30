@@ -1758,17 +1758,9 @@
 				7FB4350E2282D47700422746 /* SaleOverviewPresenter.swift */,
 				7FB4350F2282D47700422746 /* SaleOverviewRouting.swift */,
 				7FB435112282D47700422746 /* SaleOverviewViewController.swift */,
-				7FB4350C2282D42000422746 /* Views */,
 				7FB4350D2282D42600422746 /* Workers */,
 			);
 			path = SaleOverview;
-			sourceTree = "<group>";
-		};
-		7FB4350C2282D42000422746 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		7FB4350D2282D42600422746 /* Workers */ = {
