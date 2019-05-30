@@ -132,12 +132,25 @@ extension TransactionsListScene {
         }
         
         private func onAssetDidChange() {
-            self.updateActions()
+            self.updateActions(filter: .asset)
             self.updateSectionTitle(0, animated: false)
         }
         
-        private func updateActions() {
-            let actions = self.actionProvider.getActions(asset: self.sceneModel.asset)
+        private func updateActions(filter: Model.ActionFilter) {
+            var actions: [ActionModel]
+            switch filter {
+                
+            case .asset:
+                actions = self.actionProvider.getActions(asset: self.sceneModel.asset)
+                
+            case .balanceId:
+                if let balanceId = self.sceneModel.balanceId {
+                    actions = self.actionProvider.getActions(balanceId: balanceId)
+                } else {
+                    actions = []
+                }
+            }
+            
             let response = Event.ActionsDidChange.Response(actions: actions)
             self.presenter.presentActionsDidChange(response: response)
         }
@@ -213,6 +226,7 @@ extension TransactionsListScene.Interactor: TransactionsListScene.BusinessLogic 
     
     func onBalanceDidChange(request: TransactionsListScene.Event.BalanceDidChange.Request) {
         self.sceneModel.balanceId = request.balanceId
+        self.updateActions(filter: .balanceId)
         if let balanceId = request.balanceId {
             self.transactionsFetcher.setBalanceId(balanceId)
         }

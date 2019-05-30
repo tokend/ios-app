@@ -105,7 +105,7 @@ extension ConfirmationScene.View {
         
         private func setupIconView() {
             self.iconView.contentMode = .scaleAspectFit
-            self.iconView.tintColor = Theme.Colors.mainColor
+            self.iconView.tintColor = Theme.Colors.darkAccentColor
         }
         
         private func setupTitleLabel() {

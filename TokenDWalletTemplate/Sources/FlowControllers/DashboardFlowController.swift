@@ -221,21 +221,26 @@ class DashboardFlowController: BaseSignedInFlowController {
                 self?.showReceiveScene(navigationController: navigationController)
         })
         
-        let balancesFetcher = BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo
+        let imageUtility = ImagesUtility(
+            storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
-        let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
+        let balanceFetcher = BalanceHeader.BalancesFetcher(
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            imageUtility: imageUtility,
+            balanceId: selectedBalanceId
+        )
+        let headerRateProvider: BalanceHeader.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
         )
-        
-        let container = SharedSceneBuilder.createWalletScene(
+        let container = SharedSceneBuilder.createBalanceDetailsScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
             viewConfig: viewConfig,
             headerRateProvider: headerRateProvider,
-            balancesFetcher: balancesFetcher,
-            selectedBalanceId: selectedBalanceId
+            balanceFetcher: balanceFetcher,
+            balanceId: selectedBalanceId
         )
         self.dashboardScene = container
         self.navigationController.pushViewController(container, animated: true)

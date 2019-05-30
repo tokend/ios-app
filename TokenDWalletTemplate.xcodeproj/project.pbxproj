@@ -310,6 +310,15 @@
 		DB15936B229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15936A229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift */; };
 		DB15936D229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15936C229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift */; };
 		DB15936F229EB617008D4128 /* TransactionDetailsTransactionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15936E229EB617008D4128 /* TransactionDetailsTransactionProvider.swift */; };
+		DB159377229FEE12008D4128 /* BalanceHeaderPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159371229FEE11008D4128 /* BalanceHeaderPresenter.swift */; };
+		DB159378229FEE12008D4128 /* BalanceHeaderRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159372229FEE11008D4128 /* BalanceHeaderRouting.swift */; };
+		DB159379229FEE12008D4128 /* BalanceHeaderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159373229FEE11008D4128 /* BalanceHeaderModels.swift */; };
+		DB15937A229FEE12008D4128 /* BalanceHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159374229FEE11008D4128 /* BalanceHeaderView.swift */; };
+		DB15937B229FEE12008D4128 /* BalanceHeaderInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159375229FEE11008D4128 /* BalanceHeaderInteractor.swift */; };
+		DB15937C229FEE12008D4128 /* BalanceHeaderConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159376229FEE11008D4128 /* BalanceHeaderConfigurator.swift */; };
+		DB15937F229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15937E229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift */; };
+		DB159381229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159380229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift */; };
+		DB159383229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159382229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift */; };
 		DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017C21F5DB0F00CD3DA4 /* Assets.swift */; };
 		DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */; };
 		DB19A7FD215BC4980043CD4A /* SaleInvestConfirmationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */; };
@@ -881,6 +890,15 @@
 		DB15936A229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneMovementsProvider.swift; sourceTree = "<group>"; };
 		DB15936C229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneHistoryProvider.swift; sourceTree = "<group>"; };
 		DB15936E229EB617008D4128 /* TransactionDetailsTransactionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsTransactionProvider.swift; sourceTree = "<group>"; };
+		DB159371229FEE11008D4128 /* BalanceHeaderPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderPresenter.swift; sourceTree = "<group>"; };
+		DB159372229FEE11008D4128 /* BalanceHeaderRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderRouting.swift; sourceTree = "<group>"; };
+		DB159373229FEE11008D4128 /* BalanceHeaderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderModels.swift; sourceTree = "<group>"; };
+		DB159374229FEE11008D4128 /* BalanceHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderView.swift; sourceTree = "<group>"; };
+		DB159375229FEE11008D4128 /* BalanceHeaderInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderInteractor.swift; sourceTree = "<group>"; };
+		DB159376229FEE11008D4128 /* BalanceHeaderConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderConfigurator.swift; sourceTree = "<group>"; };
+		DB15937E229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderBalanceFetcher.swift; sourceTree = "<group>"; };
+		DB159380229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderRateProviderProtocol.swift; sourceTree = "<group>"; };
+		DB159382229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderAmountFormatter.swift; sourceTree = "<group>"; };
 		DB16017C21F5DB0F00CD3DA4 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInvestConfirmationProvider.swift; sourceTree = "<group>"; };
@@ -2002,6 +2020,7 @@
 			children = (
 				DBED5201228C334B0040632E /* AssetPicker */,
 				DB1AFBA321C9334900D87D5D /* AuthenticatorAuth */,
+				DB159370229FEDE8008D4128 /* BalanceHeader */,
 				E9063E9A20F669D300A5B343 /* BalanceHeaderWithPicker */,
 				DB159317229813E7008D4128 /* BalancesList */,
 				7F967FD0212DB624005527EA /* BiometricsAuth */,
@@ -2258,6 +2277,30 @@
 				DB15936C229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift */,
 			);
 			path = TransactionsProviders;
+			sourceTree = "<group>";
+		};
+		DB159370229FEDE8008D4128 /* BalanceHeader */ = {
+			isa = PBXGroup;
+			children = (
+				DB159376229FEE11008D4128 /* BalanceHeaderConfigurator.swift */,
+				DB159375229FEE11008D4128 /* BalanceHeaderInteractor.swift */,
+				DB159373229FEE11008D4128 /* BalanceHeaderModels.swift */,
+				DB159371229FEE11008D4128 /* BalanceHeaderPresenter.swift */,
+				DB159372229FEE11008D4128 /* BalanceHeaderRouting.swift */,
+				DB159374229FEE11008D4128 /* BalanceHeaderView.swift */,
+				DB15937D229FEEA0008D4128 /* Workers */,
+			);
+			path = BalanceHeader;
+			sourceTree = "<group>";
+		};
+		DB15937D229FEEA0008D4128 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				DB15937E229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift */,
+				DB159380229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift */,
+				DB159382229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift */,
+			);
+			path = Workers;
 			sourceTree = "<group>";
 		};
 		DB1AFBA321C9334900D87D5D /* AuthenticatorAuth */ = {
@@ -3147,6 +3190,7 @@
 				71136B152134433F00D83DD3 /* TransactionDetailsPendingOfferSectionsProvider.swift in Sources */,
 				DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */,
 				7FF6761720BDA0910074E9A8 /* RegisterSceneModels.swift in Sources */,
+				DB15937B229FEE12008D4128 /* BalanceHeaderInteractor.swift in Sources */,
 				7FF5AE51215BEA760066A2ED /* ValueValidator.swift in Sources */,
 				DBED51E522899BA80040632E /* SendPaymentAmountFeeOverviewer.swift in Sources */,
 				7F967FAD2125B180005527EA /* UpdatePasswordBaseSubmitWorker.swift in Sources */,
@@ -3226,6 +3270,7 @@
 				E93F075A20D7E8BA000C0991 /* TransactionsListSceneTransactionsFetcherProtocol.swift in Sources */,
 				7FA02BD8215923C3005C1BE4 /* TransactionsListAmountFormatter.swift in Sources */,
 				E911320020C69E5D00A8AC4D /* KeyboardController.swift in Sources */,
+				DB159381229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift in Sources */,
 				DBED5213228C3CB00040632E /* AssetPickerAssetCell.swift in Sources */,
 				DB15934322984B55008D4128 /* TabBarPresenter.swift in Sources */,
 				DB15932122981405008D4128 /* BalancesListViewController.swift in Sources */,
@@ -3235,6 +3280,7 @@
 				7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */,
 				DB1AFBAE21C9338300D87D5D /* AuthenticatorAuthInteractor.swift in Sources */,
 				E9A5CBC22119A594009112CA /* TransactionsListScenePendingOffersFetcher.swift in Sources */,
+				DB15937C229FEE12008D4128 /* BalanceHeaderConfigurator.swift in Sources */,
 				7F7495FC225E01D90065EE8E /* DynamicTableView.swift in Sources */,
 				DB14989C225B896900A9A74C /* SaleInfoTextFormatter.swift in Sources */,
 				E980D85020CFFBC700C53841 /* BalancesRepo.swift in Sources */,
@@ -3288,6 +3334,7 @@
 				DBED5211228C34620040632E /* AssetPickerAssetsFetcher.swift in Sources */,
 				DB1AFBAF21C9338300D87D5D /* AuthenticatorAuthConfigurator.swift in Sources */,
 				E92F1C132139B7F100D4695E /* VerifyEmailWorker.swift in Sources */,
+				DB159379229FEE12008D4128 /* BalanceHeaderModels.swift in Sources */,
 				7FE9FF4E21400E27006ACFEA /* AppInfoUtils.swift in Sources */,
 				E911321A20C7009E00A8AC4D /* TokenDetailsFetcher.swift in Sources */,
 				DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */,
@@ -3302,6 +3349,7 @@
 				7FABEA90210211170005E751 /* SendPaymentFlowController.swift in Sources */,
 				7FF896EF21AEBCA7001A5D48 /* TermsInfoProvider.swift in Sources */,
 				719AAFD32142AEEA00279B9D /* SalesViewController.swift in Sources */,
+				DB159378229FEE12008D4128 /* BalanceHeaderRouting.swift in Sources */,
 				7F967FDF212DB69E005527EA /* BiometricsAuthWorker.swift in Sources */,
 				7FB4352C228316B700422746 /* TabsContainerContentProvider.swift in Sources */,
 				7F6A847D2108F34B00B7FE6B /* PermissionsManager.swift in Sources */,
@@ -3382,6 +3430,7 @@
 				DB593821226DD77500C8997C /* SendPaymentAmountFeeLoader.swift in Sources */,
 				E93F076220D7F730000C0991 /* TransactionsListSceneDateFormatter.swift in Sources */,
 				7F967FD8212DB684005527EA /* BiometricsAuthRouting.swift in Sources */,
+				DB159383229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift in Sources */,
 				7F73396521B14DDD0007B5A1 /* ContactEmailPickerHandler.swift in Sources */,
 				E91131F320C548A700A8AC4D /* ExploreTokensTableViewCell.swift in Sources */,
 				71787399212482210009C5EE /* AmountConverter.swift in Sources */,
@@ -3423,6 +3472,7 @@
 				7FB9E47B20C01455005BFE0E /* UIImage+ButtonImage.swift in Sources */,
 				7F0F36B820E2696500E906D5 /* WalletRecoveryRouting.swift in Sources */,
 				7F0F36B920E2696500E906D5 /* WalletRecoveryModels.swift in Sources */,
+				DB15937F229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift in Sources */,
 				E93F075120D7C87F000C0991 /* TransactionsListModels.swift in Sources */,
 				710E86062105E1AB007204D4 /* ReceiveAddressInteractor.swift in Sources */,
 				DB8C4065222853060018148E /* DepositSceneErrorFormatter.swift in Sources */,
@@ -3596,6 +3646,7 @@
 				7FB43540228586D100422746 /* SaleDetailsDataProvider.swift in Sources */,
 				E9A5CBD8211B338C009112CA /* DashboardPresenter.swift in Sources */,
 				710E86082105E1AB007204D4 /* ReceiveAddressConfigurator.swift in Sources */,
+				DB15937A229FEE12008D4128 /* BalanceHeaderView.swift in Sources */,
 				7FB435182282D47700422746 /* SaleOverviewInteractor.swift in Sources */,
 				E91131E820C532AC00A8AC4D /* ExploreTokensViewController.swift in Sources */,
 				E9BCDD5F2121F64500EB0DF2 /* DashboardPendingOffersPreviewPlugInRouting.swift in Sources */,
@@ -3617,6 +3668,7 @@
 				DBED51F1228AE6B50040632E /* SaleInvestInteractor.swift in Sources */,
 				DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */,
 				DB76E3B122940E0900DA0BA8 /* ChartViewController.swift in Sources */,
+				DB159377229FEE12008D4128 /* BalanceHeaderPresenter.swift in Sources */,
 				E9908EDF2108FA1C00A0EA1C /* NetworkInfoRepo.swift in Sources */,
 				E9908EE12109D6C900A0EA1C /* KeychainDataProvider.swift in Sources */,
 				7FB9E47920BED04F005BFE0E /* SnapKit+Extension.swift in Sources */,

@@ -82,6 +82,11 @@ extension TransactionsListScene.Model {
         case send(balanceId: String)
         case withdraw(balanceId: String)
     }
+    
+    enum ActionFilter {
+        case balanceId
+        case asset
+    }
 }
 
 extension TransactionsListScene.Event {
