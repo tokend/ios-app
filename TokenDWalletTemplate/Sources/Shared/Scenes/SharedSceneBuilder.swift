@@ -93,4 +93,49 @@ enum SharedSceneBuilder {
         
         return container
     }
+    
+    public static func createBalanceDetailsScene(
+        transactionsFetcher: TransactionsListScene.TransactionsFetcherProtocol,
+        actionProvider: TransactionsListScene.ActionProviderProtocol,
+        transactionsRouting: TransactionsListScene.Routing,
+        viewConfig: TransactionsListScene.Model.ViewConfig,
+        headerRateProvider: BalanceHeader.RateProviderProtocol,
+        balanceFetcher: BalanceHeader.BalanceFetcherProtocol,
+        balanceId: String
+        ) -> FlexibleHeaderContainerViewController {
+        
+        let container = FlexibleHeaderContainerViewController()
+        
+        let viewController = SharedSceneBuilder.createTransactionsListScene(
+            transactionsFetcher: transactionsFetcher,
+            actionProvider: actionProvider,
+            emptyTitle: Localized(.no_payments),
+            viewConfig: viewConfig,
+            routing: transactionsRouting
+        )
+        
+        let balancesRouting = BalanceHeader.Routing()
+        
+        let headerView = BalanceHeader.View(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let headerSceneModel = BalanceHeader.Model.SceneModel(
+            balance: nil,
+            balanceId: balanceId
+        )
+        let headerAmountFormatter = BalanceHeader.AmountFormatter()
+        
+        BalanceHeader.Configurator.configure(
+            view: headerView,
+            sceneModel: headerSceneModel,
+            balanceFetcher: balanceFetcher,
+            rateProvider: headerRateProvider,
+            amountFormatter: headerAmountFormatter,
+            routing: balancesRouting
+        )
+        
+        viewController.balanceId = balanceId
+        container.contentViewController = viewController
+        container.headerView = headerView
+        
+        return container
+    }
 }
