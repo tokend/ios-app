@@ -12,6 +12,9 @@ protocol NavigationControllerProtocol: RootContentProtocol {
     var navigationBar: UINavigationBar { get }
     func setNavigationBarHidden(_ hidden: Bool, animated: Bool)
     
+    func showShadow()
+    func hideShadow()
+    
     func showProgress()
     func hideProgress()
     
@@ -105,11 +108,28 @@ class NavigationController: UINavigationController {
         ]
         self.navigationBar.shadowImage = UIImage()
     }
+    
+    private func setupNavigationBar() {
+        self.navigationBar.layer.shadowColor = Theme.Colors.separatorOnMainColor.cgColor
+        self.navigationBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        self.navigationBar.layer.shadowRadius = 4.0
+        self.navigationBar.layer.shadowOpacity = 0.0
+        self.navigationBar.layer.masksToBounds = false
+    }
 }
 
 extension NavigationController: NavigationControllerProtocol {
+    
     func getViewController() -> UIViewController {
         return self
+    }
+    
+    func showShadow() {
+        self.navigationBar.layer.shadowOpacity = 1.0
+    }
+    
+    func hideShadow() {
+        self.navigationBar.layer.shadowOpacity = 0.0
     }
     
     func showProgress() {

@@ -1,4 +1,5 @@
 import UIKit
+import RxSwift
 
 protocol SettingsDisplayLogic: class {
     
@@ -23,6 +24,7 @@ extension Settings {
         private let appVersionLabel: UILabel = UILabel()
         
         private var sections: [Model.SectionViewModel] = []
+        private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: - Injections
         
@@ -53,6 +55,14 @@ extension Settings {
         
         // MARK: - Private
         
+        private func updateContentOffset(offset: CGPoint) {
+            if offset.y > 0 {
+                self.routing?.showShadow()
+            } else {
+                self.routing?.hideShadow()
+            }
+        }
+        
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
         }
@@ -69,6 +79,15 @@ extension Settings {
             self.tableView.delegate = self
             self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
+            self.tableView
+                .rx
+                .contentOffset
+                .asDriver()
+                .throttle(0.25)
+                .drive(onNext: { [weak self] (offset) in
+                    self?.updateContentOffset(offset: offset)
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupAppVersionLabel() {

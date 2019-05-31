@@ -7,5 +7,7 @@ extension TransactionsListScene {
         let showWithdraw: (_ balanceId: String?) -> Void
         let showDeposit: (_ asset: String?) -> Void
         let showReceive: () -> Void
+        let showShadow: () -> Void
+        let hideShadow: () -> Void
     }
 }

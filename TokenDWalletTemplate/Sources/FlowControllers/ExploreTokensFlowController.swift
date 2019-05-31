@@ -12,7 +12,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
     
     // MARK: -
     
-     init(
+    init(
         navigationController: NavigationControllerProtocol,
         appController: AppControllerProtocol,
         flowControllerStack: FlowControllerStack,
@@ -119,6 +119,11 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             },
             onDidSelectDocument: { [weak self] (link) in
                 self?.openLink(link)
+            }, showSeparator: { [weak self] in
+                self?.navigationController.showShadow()
+            },
+               hideSeparator: { [weak self] in
+                self?.navigationController.hideShadow()
         })
         
         TokenDetailsScene.Configurator.configure(
@@ -184,15 +189,21 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             },
             showReceive: { [weak self] in
                 self?.showReceiveScene(navigationController: navigationController)
+            },
+            showShadow: { [weak self] in
+                self?.navigationController.showShadow()
+            },
+            hideShadow: { [weak self] in
+                self?.navigationController.hideShadow()
         })
-
+        
         let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
         )
         let balancesFetcher = BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo
         )
-
+        
         let container = SharedSceneBuilder.createWalletScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
@@ -202,7 +213,7 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             balancesFetcher: balancesFetcher,
             selectedBalanceId: selectedBalanceId
         )
-
+        
         self.walletScene = container
         self.navigationController.pushViewController(container, animated: true)
     }

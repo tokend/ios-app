@@ -103,6 +103,14 @@ extension Sales {
         
         // MARK: - Private
         
+        private func updateContentOffset(offset: CGPoint) {
+            if offset.y > 0 {
+                self.routing?.onShowShadow()
+            } else {
+                self.routing?.onHideShadow()
+            }
+        }
+        
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
         }
@@ -157,6 +165,15 @@ extension Sales {
             self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 380.0
             self.tableView.refreshControl = self.refreshControl
+            self.tableView
+                .rx
+                .contentOffset
+                .asDriver()
+                .throttle(0.25)
+                .drive(onNext: { [weak self] (offset) in
+                    self?.updateContentOffset(offset: offset)
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupLayout() {

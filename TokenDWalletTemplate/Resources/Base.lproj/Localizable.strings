@@ -367,6 +367,7 @@
 "sale_details" = "Sale details";
 "sale_is_not_found" = "Sale is not found";
 "sales" = "Sales";
+"sale_summary" = "Sale summary";
 "save_this_seed_to" = "Save this seed to a safe place and do not show it to anyone.\nIt is used to recover account in case of password loss. If you lose your password and seed, you will $(never) access your account.\n$(we_do_not_know_your_seed) and it will never be shown again\n\n$(seed)";
 "save_this_seed_to_replace_never" = "never";
 "save_this_seed_to_replace_seed"= "seed";

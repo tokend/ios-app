@@ -1,4 +1,5 @@
 import UIKit
+import RxSwift
 
 protocol TokenDetailsDisplayLogic: class {
     func displayTokenDidUpdate(viewModel: TokenDetailsScene.Event.TokenDidUpdate.ViewModel)
@@ -15,6 +16,8 @@ extension TokenDetailsScene {
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         
         private var sections: [Model.TableSection] = []
+        
+        private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: - Injections
         
@@ -43,6 +46,14 @@ extension TokenDetailsScene {
         
         // MARK: - Private
         
+        private func contentOffsetUpdated(point: CGPoint) {
+            if point.y > 0 {
+                self.routing?.showSeparator()
+            } else {
+                self.routing?.hideSeparator()
+            }
+        }
+        
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
         }
@@ -50,14 +61,21 @@ extension TokenDetailsScene {
         private func setupTableView() {
             let cellClasses: [CellViewAnyModel.Type] = [
                 ExploreTokensTableViewCell.Model.self,
-                TokenDetailsTokenSummaryCell.Model.self,
-                TokenDetailsTokenDocumentCell.Model.self
+                CardView.CardViewModel.self
             ]
             self.tableView.register(classes: cellClasses)
             self.tableView.dataSource = self
-            self.tableView.delegate = self
             self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
+            self.tableView.separatorStyle = .none
+            self.tableView.rx
+                .contentOffset
+                .asDriver()
+                .throttle(0.25)
+                .drive(onNext: { [weak self] (offset) in
+                    self?.contentOffsetUpdated(point: offset)
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupLayout() {
@@ -93,15 +111,6 @@ extension TokenDetailsScene.ViewController: TokenDetailsScene.DisplayLogic {
     }
 }
 
-extension TokenDetailsScene.ViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let model = self.sections[indexPath.section].cells[indexPath.row]
-        if let model = model as? TokenDetailsTokenDocumentCell.Model {
-            self.routing?.onDidSelectDocument(model.link)
-        }
-    }
-}
-
 extension TokenDetailsScene.ViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
@@ -121,6 +130,12 @@ extension TokenDetailsScene.ViewController: UITableViewDataSource {
                     let request = TokenDetailsScene.Event.DidSelectAction.Request()
                     businessLogic.onDidSelectAction(request: request)
                 })
+            }
+        } else if let cell = cell as? TokenDetailsScene.CardView.View {
+            cell.didSelectCell = { [weak self] (model) in
+                if let model = model as? TokenDetailsTokenDocumentCell.Model {
+                    self?.routing?.onDidSelectDocument(model.link)
+                }
             }
         }
         return cell

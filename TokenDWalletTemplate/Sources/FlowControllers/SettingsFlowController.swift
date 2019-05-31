@@ -60,6 +60,10 @@ class SettingsFlowController: BaseSignedInFlowController {
             },
             hideProgress: { [weak self] in
                 self?.navigationController.hideProgress()
+            }, showShadow: { [weak self] in
+                self?.navigationController.showShadow()
+            }, hideShadow: { [weak self] in
+                self?.navigationController.hideShadow()
             },
             showErrorMessage: { [weak self] errorMessage in
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)

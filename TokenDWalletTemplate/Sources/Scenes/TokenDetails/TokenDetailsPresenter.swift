@@ -95,9 +95,14 @@ extension TokenDetailsScene.Presenter: TokenDetailsScene.PresentationLogic {
             summaryIssuedModel,
             summaryMaximumModel
         ]
+        
+        let summaryCardCell = TokenDetailsScene.CardView.CardViewModel(
+            title: Localized(.asset_summary),
+            cells: summaryCells
+        )
         let summarySection = TokenDetailsScene.Model.TableSection(
-            title: "Token summary",
-            cells: summaryCells,
+            title: nil,
+            cells: [summaryCardCell],
             description: nil
         )
         sections.append(summarySection)
@@ -109,9 +114,14 @@ extension TokenDetailsScene.Presenter: TokenDetailsScene.PresentationLogic {
             )
         }
         
-        let policiesSection = TokenDetailsScene.Model.TableSection(
+        let policyCardCell = TokenDetailsScene.CardView.CardViewModel(
             title: Localized(.policy),
-            cells: policyCells,
+            cells: policyCells
+        )
+        
+        let policiesSection = TokenDetailsScene.Model.TableSection(
+            title: nil,
+            cells: [policyCardCell],
             description: nil
         )
         sections.append(policiesSection)
@@ -122,9 +132,15 @@ extension TokenDetailsScene.Presenter: TokenDetailsScene.PresentationLogic {
                 name: termsOfUse.name,
                 link: termsOfUse.link
             )
+            
+            let termsOfUseCardCell = TokenDetailsScene.CardView.CardViewModel(
+                title: Localized(.terms_of_use),
+                cells: [termsOfUseModel]
+            )
+            
             let termsOfUseSection = TokenDetailsScene.Model.TableSection(
-                title: "Terms of use",
-                cells: [termsOfUseModel],
+                title: nil,
+                cells: [termsOfUseCardCell],
                 description: nil
             )
             sections.append(termsOfUseSection)

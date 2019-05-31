@@ -8,5 +8,7 @@ extension Sales {
         let onShowInvestments: () -> Void
         let onShowLoading: () -> Void
         let onHideLoading: () -> Void
+        let onShowShadow: () -> Void
+        let onHideShadow: () -> Void
     }
 }

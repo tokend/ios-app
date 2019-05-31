@@ -1,4 +1,5 @@
 import UIKit
+import RxSwift
 
 public protocol BalancesListDisplayLogic: class {
     typealias Event = BalancesList.Event
@@ -21,6 +22,8 @@ extension BalancesList {
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         
         private var sections: [Model.SectionViewModel] = []
+        
+        private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
@@ -62,6 +65,14 @@ extension BalancesList {
         
         // MARK: - Private
         
+        private func updateContentOffset(offset: CGPoint) {
+            if offset.y > 0 {
+                self.routing?.showShadow()
+            } else {
+                self.routing?.hideShadow()
+            }
+        }
+        
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.contentBackgroundColor
         }
@@ -69,14 +80,23 @@ extension BalancesList {
         private func setupTableView() {
             self.tableView.backgroundColor = Theme.Colors.contentBackgroundColor
             self.tableView.register(classes: [
-                    HeaderCell.ViewModel.self,
-                    BalanceCell.ViewModel.self
+                HeaderCell.ViewModel.self,
+                BalanceCell.ViewModel.self
                 ]
             )
             self.tableView.delegate = self
             self.tableView.dataSource = self
             self.tableView.separatorStyle = .none
             self.tableView.sectionFooterHeight = 0.0
+            self.tableView
+                .rx
+                .contentOffset
+                .asDriver()
+                .throttle(0.25)
+                .drive(onNext: { [weak self] (offset) in
+                    self?.updateContentOffset(offset: offset)
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupLayout() {

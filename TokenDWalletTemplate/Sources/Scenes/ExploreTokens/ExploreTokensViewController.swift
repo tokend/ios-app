@@ -115,6 +115,7 @@ extension ExploreTokensScene {
             self.tableView.delegate = self
             self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 125
+            self.tableView.separatorStyle = .none
             
             if #available(iOS 11, *) { } else {
                 self.tableView.tableHeaderView = self.searchController.searchBar

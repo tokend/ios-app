@@ -234,7 +234,12 @@ class TradeFlowController: BaseSignedInFlowController {
             showSendPayment: { _ in },
             showWithdraw: { _ in },
             showDeposit: { _ in },
-            showReceive: { }
+            showReceive: { },
+            showShadow: { [weak self] in
+                self?.navigationController.showShadow()
+            }, hideShadow: { [weak self] in
+                self?.navigationController.hideShadow()
+            }
         )
         
         let viewConfig = TransactionsListScene.Model.ViewConfig(actionButtonIsHidden: true)

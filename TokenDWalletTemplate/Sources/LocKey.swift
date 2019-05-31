@@ -370,6 +370,7 @@ enum LocKey: String {
     case sale_details
     case sale_is_not_found
     case sales
+    case sale_summary
     case save_this_seed_to
     case save_this_seed_to_replace_never
     case save_this_seed_to_replace_seed

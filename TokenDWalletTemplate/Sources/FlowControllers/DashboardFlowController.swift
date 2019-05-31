@@ -78,6 +78,10 @@ class DashboardFlowController: BaseSignedInFlowController {
                 self?.navigationController.showProgress()
             }, hideProgress: { [weak self] in
                 self?.navigationController.hideProgress()
+            }, showShadow: { [weak self] in
+                self?.navigationController.showShadow()
+            }, hideShadow: { [weak self] in
+                self?.navigationController.hideShadow()
         })
         let routing = TabBarContainer.Routing()
         
@@ -219,6 +223,12 @@ class DashboardFlowController: BaseSignedInFlowController {
             },
             showReceive: { [weak self] in
                 self?.showReceiveScene(navigationController: navigationController)
+            },
+            showShadow: { [weak self] in
+                self?.navigationController.showShadow()
+            },
+            hideShadow: { [weak self] in
+                self?.navigationController.hideShadow()
         })
         
         let imageUtility = ImagesUtility(
@@ -269,7 +279,13 @@ class DashboardFlowController: BaseSignedInFlowController {
             showSendPayment: { _ in },
             showWithdraw: { _ in },
             showDeposit: { _ in },
-            showReceive: { }
+            showReceive: { },
+            showShadow: { [weak self] in
+                self?.navigationController.showShadow()
+            },
+            hideShadow: { [weak self] in
+                self?.navigationController.hideShadow()
+            }
         )
         
         let viewController = SharedSceneBuilder.createTransactionsListScene(
