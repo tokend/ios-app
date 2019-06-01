@@ -70,20 +70,23 @@ enum TokenDetailsTokenSummaryCell {
         private func setupValueLabel() {
             self.valueLabel.font = Theme.Fonts.plainTextFont
             self.valueLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.valueLabel.textAlignment = .left
+            self.valueLabel.textAlignment = .right
             self.valueLabel.numberOfLines = 1
         }
         
         private func setupLayout() {
-            self.addSubview(self.titleLabel)
-            self.addSubview(self.valueLabel)
+            self.contentView.addSubview(self.titleLabel)
+            self.contentView.addSubview(self.valueLabel)
             
-            self.valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-            self.valueLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+            self.titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            self.valueLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            
+            self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            self.valueLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
             
             let sideInset: CGFloat = 15
-            let topInset: CGFloat = 11
-            let bottomInset: CGFloat = 12
+            let topInset: CGFloat = 5.0
+            let bottomInset: CGFloat = 5.0
             
             self.titleLabel.snp.makeConstraints { (make) in
                 make.leading.equalToSuperview().inset(sideInset)
@@ -92,9 +95,9 @@ enum TokenDetailsTokenSummaryCell {
             }
             
             self.valueLabel.snp.makeConstraints { (make) in
-                make.trailing.equalToSuperview().inset(sideInset)
                 make.top.equalToSuperview().inset(topInset)
                 make.bottom.equalToSuperview().inset(bottomInset)
+                make.trailing.equalToSuperview().inset(sideInset)
                 make.leading.equalTo(self.titleLabel.snp.trailing).offset(sideInset)
             }
         }

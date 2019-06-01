@@ -91,7 +91,9 @@ extension SaleDetails {
                 description: nil
             )
             sections = [saleDetailsSection]
-            let viewModel = SaleDetails.GeneralContent.ViewModel(sections: sections)
+            let viewModel = SaleDetails.GeneralContent.ViewModel(
+                title: Localized(.sale_summary),
+                sections: sections)
             
             return viewModel
         }
@@ -141,6 +143,7 @@ extension SaleDetails {
                 assetName: model.assetName,
                 balanceStateImage: balanceStateImage,
                 iconUrl: model.imageUrl,
+                title: Localized(.asset_summary),
                 sections: sections
             )
             return viewModel

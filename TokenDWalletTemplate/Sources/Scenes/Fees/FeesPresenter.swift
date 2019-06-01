@@ -39,10 +39,10 @@ extension Fees {
             var sections: [Model.SectionViewModel] = []
             
             for model in models {
-                var viewModels: [Fees.TitleValueViewModel] = []
+                var viewModels: [Fees.FeeCell.Model] = []
                 
                 if let subtype = model.subtype {
-                    let subtypeCell = Fees.TitleValueViewModel(
+                    let subtypeCell = Fees.FeeCell.Model(
                         title: Localized(.subtype),
                         identifier: .subtype,
                         value: self.feeDataFormatter.formatSubtype(subtype: subtype)
@@ -50,28 +50,28 @@ extension Fees {
                     viewModels.append(subtypeCell)
                 }
                 
-                let fixedCell = Fees.TitleValueViewModel(
+                let fixedCell = Fees.FeeCell.Model(
                     title: Localized(.fixed),
                     identifier: .fixed,
                     value: self.feeDataFormatter.format(asset: model.feeAsset, value: model.fixed)
                 )
                 viewModels.append(fixedCell)
                 
-                let percentCell = Fees.TitleValueViewModel(
+                let percentCell = Fees.FeeCell.Model(
                     title: Localized(.percent),
                     identifier: .percent,
                     value: self.feeDataFormatter.formatPercent(value: model.percent)
                 )
                 viewModels.append(percentCell)
                 
-                let lowerBoundCell = Fees.TitleValueViewModel(
+                let lowerBoundCell = Fees.FeeCell.Model(
                     title: Localized(.lower_bound),
                     identifier: .lowerBound,
                     value: self.feeDataFormatter.format(asset: model.asset, value: model.lowerBound)
                 )
                 viewModels.append(lowerBoundCell)
                 
-                let upperBoundCell = Fees.TitleValueViewModel(
+                let upperBoundCell = Fees.FeeCell.Model(
                     title: Localized(.upper_bound),
                     identifier: .upperBound,
                     value: self.feeDataFormatter.format(asset: model.asset, value: model.upperBound)

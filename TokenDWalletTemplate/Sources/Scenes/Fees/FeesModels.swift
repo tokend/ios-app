@@ -70,7 +70,7 @@ extension Fees.Model {
     
     struct SectionViewModel {
         let title: String
-        let cells: [Fees.TitleValueViewModel]
+        let cells: [Fees.FeeCell.Model]
     }
     
     enum LoadingStatus {

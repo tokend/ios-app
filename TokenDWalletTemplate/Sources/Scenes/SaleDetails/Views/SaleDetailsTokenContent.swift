@@ -30,6 +30,7 @@ extension SaleDetails {
             public let assetName: String?
             public let balanceStateImage: UIImage?
             public let iconUrl: URL?
+            public let title: String
             public let sections: [SectionViewModel]
             
             public func setup(_ view: TokenContent.View) {
@@ -37,6 +38,7 @@ extension SaleDetails {
                 view.tokenName = self.assetName
                 view.iconUrl = self.iconUrl
                 view.tokenBalanceStateImage = self.balanceStateImage
+                view.title = self.title
                 view.sections = self.sections
             }
         }
@@ -45,9 +47,20 @@ extension SaleDetails {
             
             // MARK: - Public properties
             
+            public var title: String? {
+                get { return self.titleLabel.text }
+                set { self.titleLabel.text = newValue }
+            }
+            
             public var sections: [SectionViewModel] = [] {
                 didSet {
                     self.tokenDetailsTableView.reloadData()
+                    self.tokenDetailsTableView.snp.remakeConstraints { (make) in
+                        make.leading.trailing.equalToSuperview()
+                        make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset)
+                        make.bottom.equalToSuperview().inset(self.topInset)
+                        make.height.equalTo(self.tableViewHeight)
+                    }
                 }
             }
             
@@ -95,12 +108,18 @@ extension SaleDetails {
             
             private let tokenBalanceStateIcon: UIImageView = UIImageView()
             
+            private let containerView: UIView = UIView()
+            private let titleLabel: UILabel = UILabel()
             private let tokenDetailsTableView: UITableView = UITableView(frame: .zero, style: .grouped)
             
             private let iconSize: CGFloat = 45
             private let topInset: CGFloat = 15
             private let sideInset: CGFloat = 20
             private let infoViewHeight: CGFloat = 100
+            
+            private var tableViewHeight: CGFloat {
+                return self.tokenDetailsTableView.contentSize.height
+            }
             
             private var disposable: Disposable?
             
@@ -130,6 +149,8 @@ extension SaleDetails {
                 self.setupTokenCodeLabel()
                 self.setupTokenNameLabel()
                 self.setupTokenBalanceStateIcon()
+                self.setupContainerView()
+                self.setupTitleLable()
                 self.setupTokenDetailsTableView()
                 self.setupLayout()
             }
@@ -204,7 +225,7 @@ extension SaleDetails {
             // MARK: - Setup
             
             private func setupView() {
-                self.backgroundColor = Theme.Colors.containerBackgroundColor
+                self.backgroundColor = Theme.Colors.clear
             }
             
             private func setupTokenInfoView() {
@@ -253,24 +274,37 @@ extension SaleDetails {
                 self.tokenNameLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
             }
             
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.containerView.layer.cornerRadius = 10.0
+            }
+            
+            private func setupTitleLable() {
+                self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.titleLabel.font = Theme.Fonts.largeTitleFont
+            }
+            
             private func setupTokenDetailsTableView() {
                 let cellClasses: [CellViewAnyModel.Type] = [
                     TokenCellModel.self
                 ]
                 self.tokenDetailsTableView.register(classes: cellClasses)
                 self.tokenDetailsTableView.dataSource = self
+                self.tokenDetailsTableView.delegate = self
                 self.tokenDetailsTableView.rowHeight = UITableView.automaticDimension
-                self.tokenDetailsTableView.estimatedRowHeight = 35
-                self.tokenDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
-                self.tokenDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor
+                self.tokenDetailsTableView.estimatedRowHeight = 15
+                self.tokenDetailsTableView.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.tokenDetailsTableView.isUserInteractionEnabled = false
+                self.tokenDetailsTableView.separatorStyle = .none
             }
             
             private func setupLayout() {
                 self.addSubview(self.tokenInfoView)
                 self.setupTokenInfoViewLayout()
                 
-                self.addSubview(self.tokenDetailsTableView)
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.titleLabel)
+                self.containerView.addSubview(self.tokenDetailsTableView)
                 
                 self.tokenInfoView.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview()
@@ -278,9 +312,21 @@ extension SaleDetails {
                     make.height.equalTo(self.infoViewHeight)
                 }
                 
-                self.tokenDetailsTableView.snp.makeConstraints { (make) in
+                self.containerView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
                     make.top.equalTo(self.tokenInfoView.snp.bottom).offset(self.topInset)
-                    make.trailing.leading.bottom.equalToSuperview()
+                    make.bottom.equalToSuperview()
+                }
+                
+                self.titleLabel.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalToSuperview().inset(self.topInset)
+                }
+                
+                self.tokenDetailsTableView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview()
+                    make.top.equalTo(self.titleLabel.snp.bottom)
+                    make.bottom.equalToSuperview().inset(10.0)
                 }
             }
             
@@ -393,6 +439,29 @@ extension SaleDetails.TokenContent.View: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return self.sections[section].description
+    }
+}
+
+extension SaleDetails.TokenContent.View: UITableViewDelegate {
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView(frame: .zero)
+        header.frame.size.height = 0.0
+        return header
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = UIView(frame: .zero)
+        footer.frame.size.height = 0.0
+        return footer
     }
 }
 

@@ -191,6 +191,15 @@ extension TransactionsListScene {
             self.tableView.estimatedRowHeight = 85
             self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
             self.tableView.refreshControl = self.refreshControl
+            self.tableView
+                .rx
+                .contentOffset
+                .asDriver()
+                .throttle(0.25)
+                .drive(onNext: { [weak self] (offset) in
+                    self?.updateContentOffset(offset: offset)
+                })
+                .disposed(by: self.disposeBag)
         }
         
         private func setupFloatActionButton() {
@@ -274,6 +283,14 @@ extension TransactionsListScene {
                 return nil
             }
             return self.sections[index]
+        }
+        
+        private func updateContentOffset(offset: CGPoint) {
+            if offset.y > 0 {
+                self.routing?.showShadow()
+            } else {
+                self.routing?.hideShadow()
+            }
         }
         
         private func updateSectionTitle() {

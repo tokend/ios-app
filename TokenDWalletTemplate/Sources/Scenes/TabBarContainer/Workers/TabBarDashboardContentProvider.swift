@@ -17,6 +17,8 @@ extension TabBarContainer {
         private let showReceiveScene: (() -> Void)
         private let showProgress: (() -> Void)
         private let hideProgress: (() -> Void)
+        private let showShadow: (() -> Void)
+        private let hideShadow: (() -> Void)
         
         private var content: ContentProtocol?
         
@@ -36,7 +38,9 @@ extension TabBarContainer {
             showSendScene: @escaping (() -> Void),
             showReceiveScene: @escaping (() -> Void),
             showProgress: @escaping (() -> Void),
-            hideProgress: @escaping (() -> Void)
+            hideProgress: @escaping (() -> Void),
+            showShadow: @escaping (() -> Void),
+            hideShadow: @escaping (() -> Void)
             ) {
             
             self.balancesFetcher = balancesFetcher
@@ -50,6 +54,8 @@ extension TabBarContainer {
             self.showReceiveScene = showReceiveScene
             self.showProgress = showProgress
             self.hideProgress = hideProgress
+            self.showShadow = showShadow
+            self.hideShadow = hideShadow
         }
         
         // MARK: - Private
@@ -117,6 +123,10 @@ extension TabBarContainer {
                     self?.showProgress()
                 }, hideProgress: { [weak self] in
                     self?.hideProgress()
+                }, showShadow: { [weak self] in
+                    self?.showShadow()
+                }, hideShadow: { [weak self] in
+                    self?.hideShadow()
             })
             
             let dataProvider = BalancesList.DataProvider(balancesFetcher: self.balancesFetcher)
@@ -147,7 +157,12 @@ extension TabBarContainer {
                 showSendPayment: { _ in },
                 showWithdraw: { _ in },
                 showDeposit: { _ in },
-                showReceive: {}
+                showReceive: {},
+                showShadow: { [weak self] in
+                    self?.showShadow()
+                }, hideShadow: { [weak self] in
+                    self?.hideShadow()
+                }
             )
             
             TransactionsListScene.Configurator.configure(

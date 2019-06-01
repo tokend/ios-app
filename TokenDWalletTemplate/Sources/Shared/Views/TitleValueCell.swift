@@ -88,8 +88,8 @@ public enum TitleValueTableViewCell {
             self.contentView.addSubview(self.valueLabel)
             
             let sideInset: CGFloat = 15
-            let topInset: CGFloat = 14
-            let bottomInset: CGFloat = 14
+            let topInset: CGFloat = 5.0
+            let bottomInset: CGFloat = 5.0
             
             self.titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             self.valueLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -98,14 +98,14 @@ public enum TitleValueTableViewCell {
             self.valueLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
             
             self.titleLabel.snp.makeConstraints { (make) in
+                make.leading.equalToSuperview().inset(sideInset)
                 make.top.equalToSuperview().inset(topInset)
                 make.bottom.equalToSuperview().inset(bottomInset)
-                make.leading.equalToSuperview().inset(sideInset)
             }
             self.valueLabel.snp.makeConstraints { (make) in
                 make.top.equalToSuperview().inset(topInset)
                 make.bottom.equalToSuperview().inset(bottomInset)
-                make.trailing.equalToSuperview().offset(sideInset).inset(sideInset)
+                make.trailing.equalToSuperview().inset(sideInset)
                 make.leading.equalTo(self.titleLabel.snp.trailing).offset(sideInset)
             }
         }

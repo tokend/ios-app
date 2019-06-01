@@ -5,5 +5,7 @@ extension BalancesList {
         let onBalanceSelected: (_ balanceId: String) -> Void
         let showProgress: () -> Void
         let hideProgress: () -> Void
+        let showShadow: () -> Void
+        let hideShadow: () -> Void
     }
 }

@@ -22,9 +22,11 @@ extension SaleDetails {
         
         public struct ViewModel {
             
+            public let title: String
             public let sections: [SectionViewModel]
             
             public func setup(_ view: View) {
+                view.title = self.title
                 view.sections = self.sections
             }
         }
@@ -33,15 +35,35 @@ extension SaleDetails {
             
             // MARK: - Public properties
             
+            public var title: String? {
+                get { return self.titleLabel.text }
+                set { self.titleLabel.text = newValue }
+            }
+            
             public var sections: [SectionViewModel] = [] {
                 didSet {
                     self.saleDetailsTableView.reloadData()
+                    self.saleDetailsTableView.snp.remakeConstraints { (make) in
+                        make.leading.trailing.equalToSuperview()
+                        make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset)
+                        make.bottom.equalToSuperview().inset(self.topInset)
+                        make.height.equalTo(self.saleDetailsHeight)
+                    }
                 }
             }
             
             // MARK: - Private properties
             
             private let saleDetailsTableView: UITableView = UITableView(frame: .zero, style: .grouped)
+            private let containerView: UIView = UIView()
+            private let titleLabel: UILabel = UILabel()
+            
+            private let sideInset: CGFloat = 20.0
+            private let topInset: CGFloat = 15.0
+            
+            private var saleDetailsHeight: CGFloat {
+                return self.saleDetailsTableView.contentSize.height
+            }
             
             private var disposable: Disposable?
             
@@ -62,6 +84,8 @@ extension SaleDetails {
             
             private func customInit() {
                 self.setupView()
+                self.setupContainerView()
+                self.setupTitleLable()
                 self.setupSaleDetailsTableView()
                 self.setupLayout()
             }
@@ -105,7 +129,17 @@ extension SaleDetails {
             // MARK: - Setup
             
             private func setupView() {
-                self.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.backgroundColor = Theme.Colors.clear
+            }
+            
+            private func setupContainerView() {
+                self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.containerView.layer.cornerRadius = 10.0
+            }
+            
+            private func setupTitleLable() {
+                self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.titleLabel.font = Theme.Fonts.largeTitleFont
             }
             
             private func setupSaleDetailsTableView() {
@@ -114,17 +148,43 @@ extension SaleDetails {
                 ]
                 self.saleDetailsTableView.register(classes: cellClasses)
                 self.saleDetailsTableView.dataSource = self
+                self.saleDetailsTableView.delegate = self
                 self.saleDetailsTableView.rowHeight = UITableView.automaticDimension
-                self.saleDetailsTableView.estimatedRowHeight = 35
-                self.saleDetailsTableView.tableFooterView = UIView(frame: CGRect.zero)
-                self.saleDetailsTableView.backgroundColor = Theme.Colors.containerBackgroundColor
+                self.saleDetailsTableView.estimatedRowHeight = 20
+                self.saleDetailsTableView.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.saleDetailsTableView.isUserInteractionEnabled = false
+                self.saleDetailsTableView.separatorStyle = .none
+                
+                self.saleDetailsTableView.setContentHuggingPriority(
+                    .defaultLow,
+                    for: .vertical
+                )
+                self.saleDetailsTableView.setContentCompressionResistancePriority(
+                    .defaultHigh,
+                    for: .vertical
+                )
             }
             
             private func setupLayout() {
-                self.addSubview(self.saleDetailsTableView)
+                self.addSubview(self.containerView)
+                self.containerView.addSubview(self.titleLabel)
+                self.containerView.addSubview(self.saleDetailsTableView)
+                
+                self.containerView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.bottom.equalToSuperview().inset(self.topInset)
+                }
+                
+                self.titleLabel.snp.makeConstraints { (make) in
+                    make.leading.equalToSuperview().inset(self.sideInset)
+                    make.trailing.equalToSuperview()
+                    make.top.equalToSuperview().inset(self.topInset)
+                }
+                
                 self.saleDetailsTableView.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
+                    make.leading.trailing.equalToSuperview()
+                    make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset)
+                    make.bottom.equalToSuperview().inset(self.topInset)
                 }
             }
         }
@@ -153,5 +213,28 @@ extension SaleDetails.GeneralContent.View: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return self.sections[section].description
+    }
+}
+
+extension SaleDetails.GeneralContent.View: UITableViewDelegate {
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView(frame: .zero)
+        header.frame.size.height = 0.0
+        return header
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = UIView(frame: .zero)
+        footer.frame.size.height = 0.0
+        return footer
     }
 }

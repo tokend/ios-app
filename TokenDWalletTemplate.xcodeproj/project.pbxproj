@@ -319,6 +319,7 @@
 		DB15937F229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15937E229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift */; };
 		DB159381229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159380229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift */; };
 		DB159383229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB159382229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift */; };
+		DB15938522A13B0F008D4128 /* TokenDetailsCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15938422A13B0F008D4128 /* TokenDetailsCardCell.swift */; };
 		DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017C21F5DB0F00CD3DA4 /* Assets.swift */; };
 		DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */; };
 		DB19A7FD215BC4980043CD4A /* SaleInvestConfirmationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */; };
@@ -899,6 +900,7 @@
 		DB15937E229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderBalanceFetcher.swift; sourceTree = "<group>"; };
 		DB159380229FF1E5008D4128 /* BalanceHeaderRateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderRateProviderProtocol.swift; sourceTree = "<group>"; };
 		DB159382229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceHeaderAmountFormatter.swift; sourceTree = "<group>"; };
+		DB15938422A13B0F008D4128 /* TokenDetailsCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDetailsCardCell.swift; sourceTree = "<group>"; };
 		DB16017C21F5DB0F00CD3DA4 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInvestConfirmationProvider.swift; sourceTree = "<group>"; };
@@ -2639,6 +2641,7 @@
 			children = (
 				E941677A20C80239008E744B /* TokenDetailsTokenSummaryCell.swift */,
 				E9BA0BF020C80BA300CE5708 /* TokenDetailsTokenDocumentCell.swift */,
+				DB15938422A13B0F008D4128 /* TokenDetailsCardCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3646,6 +3649,7 @@
 				7FB43540228586D100422746 /* SaleDetailsDataProvider.swift in Sources */,
 				E9A5CBD8211B338C009112CA /* DashboardPresenter.swift in Sources */,
 				710E86082105E1AB007204D4 /* ReceiveAddressConfigurator.swift in Sources */,
+				DB15938522A13B0F008D4128 /* TokenDetailsCardCell.swift in Sources */,
 				DB15937A229FEE12008D4128 /* BalanceHeaderView.swift in Sources */,
 				7FB435182282D47700422746 /* SaleOverviewInteractor.swift in Sources */,
 				E91131E820C532AC00A8AC4D /* ExploreTokensViewController.swift in Sources */,

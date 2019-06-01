@@ -75,7 +75,7 @@ extension Fees {
         
         private func setupTableView() {
             self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
-            self.tableView.register(classes: [Fees.TitleValueViewModel.self])
+            self.tableView.register(classes: [Fees.FeeCell.Model.self])
             self.tableView.delegate = self
             self.tableView.dataSource = self
         }

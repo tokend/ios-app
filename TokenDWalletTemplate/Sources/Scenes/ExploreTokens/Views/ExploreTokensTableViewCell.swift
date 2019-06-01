@@ -41,6 +41,8 @@ enum ExploreTokensTableViewCell {
         
         private let iconSize: CGFloat = 45
         
+        private let containerView: UIView = UIView()
+        
         private let topPartContainer: UIView = UIView()
         
         private let iconContainerView: UIView = UIView()
@@ -147,6 +149,7 @@ enum ExploreTokensTableViewCell {
         
         private func commonInit() {
             self.setupView()
+            self.setupContainerView()
             self.setupTopPartContainer()
             self.setupAbbreviationBackgroundView()
             self.setupAbbreviationLabel()
@@ -162,12 +165,18 @@ enum ExploreTokensTableViewCell {
         }
         
         private func setupView() {
-            self.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.backgroundColor = Theme.Colors.clear
             self.selectionStyle = .none
+        }
+        
+        private func setupContainerView() {
+            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.containerView.layer.cornerRadius = 10.0
         }
         
         private func setupTopPartContainer() {
             self.topPartContainer.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.topPartContainer.layer.cornerRadius = 10.0
         }
         
         private func setupAbbreviationBackgroundView() {
@@ -221,6 +230,7 @@ enum ExploreTokensTableViewCell {
         
         private func setupBottomPartContainer() {
             self.bottomPartContainer.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.bottomPartContainer.layer.cornerRadius = 10.0
         }
         
         private func setupActionButton() {
@@ -236,9 +246,10 @@ enum ExploreTokensTableViewCell {
         }
         
         private func setupLayout() {
-            self.addSubview(self.topPartContainer)
-            self.addSubview(self.separatorView)
-            self.addSubview(self.bottomPartContainer)
+            self.addSubview(self.containerView)
+            self.containerView.addSubview(self.topPartContainer)
+            self.containerView.addSubview(self.separatorView)
+            self.containerView.addSubview(self.bottomPartContainer)
             
             self.topPartContainer.addSubview(self.iconContainerView)
             self.iconContainerView.addSubview(self.iconView)
@@ -249,6 +260,11 @@ enum ExploreTokensTableViewCell {
             
             self.labelsStackView.addArrangedSubview(self.titleLabel)
             self.labelsStackView.addArrangedSubview(self.descriptionLabel)
+            
+            self.containerView.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(15)
+                make.top.bottom.equalToSuperview()
+            }
             
             self.topPartContainer.snp.makeConstraints { (make) in
                 make.top.leading.trailing.equalToSuperview()

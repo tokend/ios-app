@@ -93,16 +93,22 @@ extension TabsContainer {
             guard self.view.subviews.contains(self.containerView) else {
                 return
             }
-            if self.viewConfig.isPickerHidden {
-                self.containerView.snp.remakeConstraints { (make) in
-                    make.leading.trailing.top.equalToSuperview()
-                    make.bottom.equalTo(self.view.safeArea.bottom)
-                }
-            } else {
-                self.containerView.snp.remakeConstraints { (make) in
-                    make.leading.trailing.equalToSuperview()
+            self.containerView.snp.remakeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                
+                if self.viewConfig.isPickerHidden {
+                    make.top.equalToSuperview()
+                } else {
                     make.top.equalTo(self.horizontalPicker.snp.bottom)
+                }
+                
+                switch self.viewConfig.actionButtonAppearence {
+                    
+                case .hidden:
                     make.bottom.equalTo(self.view.safeArea.bottom)
+                    
+                case .visible:
+                    make.bottom.equalTo(self.actionButton.snp.top)
                 }
             }
         }
