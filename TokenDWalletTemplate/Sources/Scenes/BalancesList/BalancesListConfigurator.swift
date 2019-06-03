@@ -6,8 +6,10 @@ extension BalancesList {
         
         static func configure(
             viewController: ViewController,
-            dataProvider: DataProviderProtocol,
+            sceneModel: Model.SceneModel,
+            balancesFetcher: BalancesFetcherProtocol,
             amountFormatter: AmountFormatterProtocol,
+            colorsProvider: PieChartColorsProviderProtocol,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
@@ -15,11 +17,13 @@ extension BalancesList {
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
             let presenter = Presenter(
                 presenterDispatch: presenterDispatch,
-                amountFormatter: amountFormatter
+                amountFormatter: amountFormatter,
+                colorsProvider: colorsProvider
             )
             let interactor = Interactor(
                 presenter: presenter,
-                dataProvider: dataProvider
+                sceneModel: sceneModel,
+                balancesFetcher: balancesFetcher
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

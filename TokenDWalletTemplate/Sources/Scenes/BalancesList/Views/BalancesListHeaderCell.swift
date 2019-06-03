@@ -6,6 +6,7 @@ extension BalancesList {
         
         public struct ViewModel: CellViewModel {
             let balance: String
+            let cellIdentifier: Model.CellIdentifier
             
             public func setup(cell: Cell) {
                 cell.balance = self.balance
@@ -20,6 +21,8 @@ extension BalancesList {
                 get { return self.balanceLabel.text }
                 set { self.balanceLabel.text = newValue }
             }
+            
+            var cellIdentifier: Model.CellIdentifier?
             
             // MARK: - Private properties
             

@@ -1,11 +1,14 @@
 import UIKit
 import RxSwift
+import Charts
 
 public protocol BalancesListDisplayLogic: class {
     typealias Event = BalancesList.Event
     
     func displaySectionsUpdated(viewModel: Event.SectionsUpdated.ViewModel)
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
+    func displayPieChartEntriesChanged(viewModel: Event.PieChartEntriesChanged.ViewModel)
+    func displayPieChartBalanceSelected(viewModel: Event.PieChartBalanceSelected.ViewModel)
 }
 
 extension BalancesList {
@@ -73,6 +76,36 @@ extension BalancesList {
             }
         }
         
+        private func findCell<CellViewModelType: CellViewAnyModel, CellType: UITableViewCell>(
+            cellIdentifier: Model.CellIdentifier,
+            cellViewModelType: CellViewModelType.Type,
+            cellType: CellType.Type
+            ) -> (vm: CellViewModelType, ip: IndexPath, cc: CellType?)? {
+            
+            for (sectionIndex, section) in self.sections.enumerated() {
+                for (cellIndex, cell) in section.cells.enumerated() {
+                    guard let chartCellViewModel = cell as? CellViewModelType else {
+                        continue
+                    }
+                    
+                    let indexPath = IndexPath(row: cellIndex, section: sectionIndex)
+                    if let cell = self.tableView.cellForRow(at: indexPath) {
+                        if let chartCell = cell as? CellType {
+                            return (chartCellViewModel, indexPath, chartCell)
+                        } else {
+                            return nil
+                        }
+                    } else {
+                        return (chartCellViewModel, indexPath, nil)
+                    }
+                }
+            }
+            
+            return nil
+        }
+        
+        // MARK: - Setup
+        
         private func setupView() {
             self.view.backgroundColor = Theme.Colors.contentBackgroundColor
         }
@@ -81,7 +114,8 @@ extension BalancesList {
             self.tableView.backgroundColor = Theme.Colors.contentBackgroundColor
             self.tableView.register(classes: [
                 HeaderCell.ViewModel.self,
-                BalanceCell.ViewModel.self
+                BalanceCell.ViewModel.self,
+                PieChartCell.ViewModel.self
                 ]
             )
             self.tableView.delegate = self
@@ -126,19 +160,35 @@ extension BalancesList.ViewController: BalancesList.DisplayLogic {
             self.routing?.showProgress()
         }
     }
+    
+    public func displayPieChartEntriesChanged(viewModel: Event.PieChartEntriesChanged.ViewModel) {
+        
+    }
+    
+    public func displayPieChartBalanceSelected(viewModel: Event.PieChartBalanceSelected.ViewModel) {
+        guard var (chartViewModel, indexPath, cell) = self.findCell(
+            cellIdentifier: .chart,
+            cellViewModelType: BalancesList.PieChartCell.ViewModel.self,
+            cellType: BalancesList.PieChartCell.View.self
+            ) else {
+                return
+        }
+        
+        guard let chartCell = cell else {
+            return
+        }
+        chartViewModel.viewModel = viewModel.model
+        chartViewModel.setup(cell: chartCell)
+        self.sections[indexPath.section].cells[indexPath.row] = chartViewModel
+    }
 }
 
 extension BalancesList.ViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = self.sections[indexPath.section].cells[indexPath.row]
-        switch model {
-            
-        case .header:
-            return
-            
-        case .balance(let model):
-            self.routing?.onBalanceSelected(model.balanceId)
+        if let balancesModel = model as? BalancesList.BalanceCell.ViewModel {
+            self.routing?.onBalanceSelected(balancesModel.balanceId)
         }
     }
 }
@@ -155,13 +205,16 @@ extension BalancesList.ViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = self.sections[indexPath.section].cells[indexPath.row]
-        switch model {
-            
-        case .balance(let balance):
-            return tableView.dequeueReusableCell(with: balance, for: indexPath)
-            
-        case .header(let header):
-            return tableView.dequeueReusableCell(with: header, for: indexPath)
+        let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
+        
+        if let chartCell = cell as? BalancesList.PieChartCell.View {
+            chartCell.onChartBalanceSelected = { [weak self] (value) in
+                let request = Event.PieChartBalanceSelected.Request(value: value)
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onPieChartBalanceSelected(request: request)
+                })
+            }
         }
+        return cell
     }
 }

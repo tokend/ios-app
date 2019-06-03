@@ -72,19 +72,27 @@ extension BalancesList {
         private func updateBalances() {
             let updatedBalances = self.balances.map { (details) -> Model.Balance in
                 var iconUrl: URL?
+                var assetName: String?
                 if let asset = self.assets.first(where: { (asset) -> Bool in
                     return details.asset == asset.code
-                }), let key = asset.defaultDetails?.logo?.key {
-                    let imageKey = ImagesUtility.ImageKey.key(key)
-                    iconUrl = self.imageUtility.getImageURL(imageKey)
+                }) {
+                    if let name = asset.defaultDetails?.name {
+                        assetName = name
+                    }
+                    if let key = asset.defaultDetails?.logo?.key {
+                        let imageKey = ImagesUtility.ImageKey.key(key)
+                        iconUrl = self.imageUtility.getImageURL(imageKey)
+                    }
                 }
                 
                 return Model.Balance(
                     code: details.asset,
+                    assetName: assetName ?? "",
                     iconUrl: iconUrl,
                     balance: details.balance,
                     balanceId: details.balanceId,
-                    convertedBalance: details.convertedBalance
+                    convertedBalance: details.convertedBalance,
+                    cellIdentifier: .balances
                 )}
                 .sorted(by: { (left, right) -> Bool in
                     return left.convertedBalance > right.convertedBalance
