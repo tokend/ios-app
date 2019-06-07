@@ -306,6 +306,7 @@ enum LocKey: String {
     case order_book_cap
     case order_price_cannot_be_less_than_or_equal_to_0
     case orders_cap
+    case other
     case outgoing
     case overview
     case paid

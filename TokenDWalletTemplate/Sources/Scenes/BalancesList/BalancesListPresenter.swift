@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 public protocol BalancesListPresentationLogic {
     typealias Event = BalancesList.Event
@@ -22,6 +22,7 @@ extension BalancesList {
         
         private let presenterDispatch: PresenterDispatch
         private let amountFormatter: AmountFormatterProtocol
+        private let percentFormatter: PercentFormatterProtocol
         private let colorsProvider: PieChartColorsProviderProtocol
         
         // MARK: -
@@ -29,11 +30,13 @@ extension BalancesList {
         init(
             presenterDispatch: PresenterDispatch,
             amountFormatter: AmountFormatterProtocol,
+            percentFormatter: PercentFormatterProtocol,
             colorsProvider: PieChartColorsProviderProtocol
             ) {
             
             self.presenterDispatch = presenterDispatch
             self.amountFormatter = amountFormatter
+            self.percentFormatter = percentFormatter
             self.colorsProvider = colorsProvider
         }
         
@@ -41,12 +44,13 @@ extension BalancesList {
         
         private func getChartViewModel(model: Model.PieChartModel) -> Model.PieChartViewModel {
             var highlightedEntry: Model.HighlightedEntryViewModel?
-            if let highLightedEntryModel = model.highlitedEntry {
-                let value = highLightedEntryModel.value.rounded()
-                let string = "\(Int(value))%"
+            if let highlightedEntryModel = model.highlitedEntry {
+                let percent = self.percentFormatter.formatPercantage(
+                    percent: highlightedEntryModel.value
+                )
                 highlightedEntry = Model.HighlightedEntryViewModel(
-                    index: Double(highLightedEntryModel.index),
-                    value: NSAttributedString(string: string)
+                    index: Double(highlightedEntryModel.index),
+                    value: NSAttributedString(string: percent)
                 )
             }
             let colorsPallete = self.colorsProvider.getDefaultPieChartColors()
@@ -56,6 +60,45 @@ extension BalancesList {
                 highlitedEntry: highlightedEntry,
                 colorsPallete: colorsPallete
             )
+        }
+        
+        private func getLegendCellViewModels(
+            cells: [Model.LegendCellModel],
+            convertedAsset: String
+            ) -> [LegendCell.ViewModel] {
+            
+            let cellViewModels = cells.map { (cell) -> LegendCell.ViewModel in
+                var assetName: String
+                var indicatorColor: UIColor = Theme.Colors.contentBackgroundColor
+                switch cell.balanceType {
+                    
+                case .balance:
+                    assetName = cell.assetName
+                    
+                case .other:
+                    assetName = Localized(.other)
+                    indicatorColor = self.colorsProvider.getPieChartColorForOther()
+                }
+                
+                let balance = self.amountFormatter.formatAmount(
+                    cell.balance,
+                    currency: convertedAsset
+                )
+                
+                if let cellIndex = cells.indexOf(cell) {
+                    let colorsPallete = self.colorsProvider.getDefaultPieChartColors()
+                    indicatorColor = colorsPallete[cellIndex]
+                }
+                
+                return LegendCell.ViewModel(
+                    assetName: assetName,
+                    balance: balance,
+                    isSelected: cell.isSelected,
+                    indicatorColor: indicatorColor,
+                    percentageValue: cell.balancePercentage
+                )
+            }
+            return cellViewModels
         }
     }
 }
@@ -105,8 +148,13 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
                     
                 case .chart(let pieChartModel):
                     let pieChartViewModel = self.getChartViewModel(model: pieChartModel)
+                    let legendCells = self.getLegendCellViewModels(
+                        cells: pieChartModel.legendCells,
+                        convertedAsset: pieChartModel.convertAsset
+                    )
                     let chartViewModel = BalancesList.PieChartCell.ViewModel(
-                        viewModel: pieChartViewModel,
+                        chartViewModel: pieChartViewModel,
+                        legendCells: legendCells,
                         cellIdentifier: .chart
                     )
                     return chartViewModel
@@ -152,8 +200,15 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
     }
     
     public func presentPieChartBalanceSelected(response: Event.PieChartBalanceSelected.Response) {
-        let model = self.getChartViewModel(model: response.model)
-        let viewModel = Event.PieChartBalanceSelected.ViewModel(model: model)
+        let pieChartViewModel = self.getChartViewModel(model: response.pieChartModel)
+        let legendCells = self.getLegendCellViewModels(
+            cells: response.legendCells,
+            convertedAsset: response.pieChartModel.convertAsset
+        )
+        let viewModel = Event.PieChartBalanceSelected.ViewModel(
+            pieChartViewModel: pieChartViewModel,
+            legendCells: legendCells
+        )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayPieChartBalanceSelected(viewModel: viewModel)
         }

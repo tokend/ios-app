@@ -85,77 +85,55 @@ extension BalancesList {
         
         // MARK: - Charts
         
-        private func getChartSectionModel() -> Model.SectionModel {
-            let model = self.getChartModel()
-            let cell = Model.CellModel.chart(model)
-            return Model.SectionModel(cells: [cell])
-        }
-        
-        private func getChartModel() -> Model.PieChartModel {
+        private func updateChartBalances() {
             let balances = self.sceneModel.balances
-            let totalConvertedAmount = balances.reduce(0) { (total, balance) -> Decimal in
-                return total + balance.convertedBalance
-            }
             var chartBalances: [Model.ChartBalance] = []
-            var entries = balances.takeFirst(n: self.displayEntriesCount)
-                .map({ (balance) -> Model.PieChartEntry in
-                    let entry = self.convertToPieChartEntry(
-                        convertedBalance: balance.convertedBalance,
-                        total: totalConvertedAmount
+            balances.takeFirst(n: self.displayEntriesCount)
+                .forEach({ (balance) in
+                    let balancePercentage = self.getBalancePercentage(
+                        convertedBalance: balance.convertedBalance
                     )
                     let chartBalance = Model.ChartBalance(
                         assetName: balance.assetName,
                         balanceId: balance.balanceId,
                         convertedBalance: balance.convertedBalance,
-                        totalPercanatge: entry.value,
+                        balancePercentage: balancePercentage,
                         type: .balance
                     )
                     chartBalances.append(chartBalance)
-                    return entry
                 })
             if balances.count == self.displayEntriesCount + 1 {
                 let lastBalance = balances[self.displayEntriesCount]
-                let lastEntry = self.convertToPieChartEntry(
-                    convertedBalance: lastBalance.convertedBalance,
-                    total: totalConvertedAmount
+                let balancePercentage = self.getBalancePercentage(
+                    convertedBalance: lastBalance.convertedBalance
                 )
                 let chartBalance = Model.ChartBalance(
                     assetName: lastBalance.assetName,
                     balanceId: lastBalance.balanceId,
                     convertedBalance: lastBalance.convertedBalance,
-                    totalPercanatge: lastEntry.value,
+                    balancePercentage: balancePercentage,
                     type: .balance
                 )
-                entries.append(lastEntry)
                 chartBalances.append(chartBalance)
             } else if balances.count > self.displayEntriesCount + 1 {
                 let otherBalancesValue = balances[self.displayEntriesCount...balances.count-1]
                     .reduce(0) { (amount, balance) -> Decimal in
                         return amount + balance.convertedBalance
                 }
-                let otherBalanciesEntry = self.convertToPieChartEntry(
-                    convertedBalance: otherBalancesValue,
-                    total: totalConvertedAmount
+                let balancesPercentage = self.getBalancePercentage(
+                    convertedBalance: otherBalancesValue
                 )
                 let chartBalance = Model.ChartBalance(
                     assetName: "",
                     balanceId: "",
                     convertedBalance: otherBalancesValue,
-                    totalPercanatge: otherBalanciesEntry.value,
+                    balancePercentage: balancesPercentage,
                     type: .other
                 )
-                entries.append(otherBalanciesEntry)
                 chartBalances.append(chartBalance)
             }
             self.sceneModel.chartBalances = chartBalances
             self.updateSelectedBalance()
-            
-            let highlitedEntry = self.getHighLightedEntryModel()
-            let model = Model.PieChartModel(
-                entries: entries,
-                highlitedEntry: highlitedEntry
-            )
-            return model
         }
         
         private func updateSelectedBalance() {
@@ -173,12 +151,52 @@ extension BalancesList {
         
         private func setSelectedChartBalance(totalPercantage: Double) {
             guard let chartBalance = self.sceneModel.chartBalances.first(where: { (balance) -> Bool in
-                return balance.totalPercanatge == totalPercantage
+                return balance.balancePercentage == totalPercantage
             }) else {
                 return
             }
             
             self.sceneModel.selectedChartBalance = chartBalance
+        }
+        
+        private func getChartSectionModel() -> Model.SectionModel {
+            let model = self.getChartModel()
+            let cell = Model.CellModel.chart(model)
+            return Model.SectionModel(cells: [cell])
+        }
+        
+        private func getChartModel() -> Model.PieChartModel {
+            let entries = self.sceneModel.chartBalances.map { (balance) -> Model.PieChartEntry in
+                
+                return Model.PieChartEntry(value: balance.balancePercentage)
+            }
+            let legendCells = self.getLegendCellModels()
+            let highlitedEntry = self.getHighLightedEntryModel()
+            let model = Model.PieChartModel(
+                entries: entries,
+                legendCells: legendCells,
+                highlitedEntry: highlitedEntry,
+                convertAsset: self.sceneModel.convertedAsset
+            )
+            return model
+        }
+        
+        private func getLegendCellModels() -> [Model.LegendCellModel] {
+            let cells = self.sceneModel.chartBalances.map { (balance) -> Model.LegendCellModel in
+                var isSelected = false
+                if let selectedBalance = self.sceneModel.selectedChartBalance {
+                    isSelected = balance == selectedBalance
+                }
+                
+                return Model.LegendCellModel(
+                    assetName: balance.assetName,
+                    balance: balance.convertedBalance,
+                    isSelected: isSelected,
+                    balancePercentage: balance.balancePercentage,
+                    balanceType: balance.type
+                )
+            }
+            return cells
         }
         
         private func getHighLightedEntryModel() -> Model.HighlightedEntryModel? {
@@ -189,14 +207,17 @@ extension BalancesList {
             }
             return Model.HighlightedEntryModel(
                 index: entryIndex,
-                value: self.sceneModel.chartBalances[entryIndex].totalPercanatge
+                value: self.sceneModel.chartBalances[entryIndex].balancePercentage
             )
         }
         
-        private func convertToPieChartEntry(convertedBalance: Decimal, total: Decimal) -> Model.PieChartEntry {
-            let percentageDecimal = (convertedBalance / total) * 100
+        private func getBalancePercentage(convertedBalance: Decimal) -> Double {
+            let totalConvertedAmount = self.sceneModel.balances.reduce(0) { (total, balance) -> Decimal in
+                return total + balance.convertedBalance
+            }
+            let percentageDecimal = (convertedBalance / totalConvertedAmount) * 100
             let percentage = NSDecimalNumber(decimal: percentageDecimal).doubleValue
-            return Model.PieChartEntry(value: percentage)
+            return percentage
         }
     }
 }
@@ -215,6 +236,7 @@ extension BalancesList.Interactor: BalancesList.BusinessLogic {
             .observeBalances()
             .subscribe(onNext: { [weak self] (balances) in
                 self?.sceneModel.balances = balances
+                self?.updateChartBalances()
                 self?.updateSections()
             })
             .disposed(by: self.disposeBag)
@@ -223,7 +245,11 @@ extension BalancesList.Interactor: BalancesList.BusinessLogic {
     public func onPieChartBalanceSelected(request: Event.PieChartBalanceSelected.Request) {
         self.setSelectedChartBalance(totalPercantage: request.value)
         let pieChartModel = self.getChartModel()
-        let response = Event.PieChartBalanceSelected.Response(model: pieChartModel)
+        let legendCells = self.getLegendCellModels()
+        let response = Event.PieChartBalanceSelected.Response(
+            pieChartModel: pieChartModel,
+            legendCells: legendCells
+        )
         self.presenter.presentPieChartBalanceSelected(response: response)
     }
 }

@@ -37,6 +37,14 @@ extension BalancesList.Model {
         case chart(PieChartModel)
     }
     
+    public struct LegendCellModel: Equatable {
+        let assetName: String
+        let balance: Decimal
+        let isSelected: Bool
+        let balancePercentage: Double
+        let balanceType: ChartBalanceType
+    }
+    
     public struct Header {
         let balance: Decimal
         let asset: String
@@ -57,7 +65,7 @@ extension BalancesList.Model {
         let assetName: String
         let balanceId: String
         let convertedBalance: Decimal
-        let totalPercanatge: Double
+        let balancePercentage: Double
         let type: ChartBalanceType
     }
     
@@ -72,7 +80,9 @@ extension BalancesList.Model {
     
     public struct PieChartModel {
         let entries: [PieChartEntry]
+        let legendCells: [LegendCellModel]
         let highlitedEntry: HighlightedEntryModel?
+        let convertAsset: String
     }
     
     public struct PieChartViewModel {
@@ -150,11 +160,13 @@ extension BalancesList.Event {
         }
         
         public struct Response {
-            let model: Model.PieChartModel
+            let pieChartModel: Model.PieChartModel
+            let legendCells: [Model.LegendCellModel]
         }
         
         public struct ViewModel {
-            let model: Model.PieChartViewModel
+            let pieChartViewModel: Model.PieChartViewModel
+            let legendCells: [BalancesList.LegendCell.ViewModel]
         }
     }
 }

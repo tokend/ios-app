@@ -323,6 +323,8 @@
 		DB15938722A52BE1008D4128 /* BalancesListPieChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15938622A52BE0008D4128 /* BalancesListPieChartCell.swift */; };
 		DB15938922A54287008D4128 /* BalancesListPieChartColorsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15938822A54287008D4128 /* BalancesListPieChartColorsProvider.swift */; };
 		DB15938B22A55BA7008D4128 /* Array+Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15938A22A55BA7008D4128 /* Array+Take.swift */; };
+		DB15938D22AA55B9008D4128 /* BalancesListLegendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15938C22AA55B9008D4128 /* BalancesListLegendCell.swift */; };
+		DB15938F22AA7804008D4128 /* BalancesListPercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB15938E22AA7804008D4128 /* BalancesListPercentFormatter.swift */; };
 		DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017C21F5DB0F00CD3DA4 /* Assets.swift */; };
 		DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */; };
 		DB19A7FD215BC4980043CD4A /* SaleInvestConfirmationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */; };
@@ -907,6 +909,8 @@
 		DB15938622A52BE0008D4128 /* BalancesListPieChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancesListPieChartCell.swift; sourceTree = "<group>"; };
 		DB15938822A54287008D4128 /* BalancesListPieChartColorsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancesListPieChartColorsProvider.swift; sourceTree = "<group>"; };
 		DB15938A22A55BA7008D4128 /* Array+Take.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Take.swift"; sourceTree = "<group>"; };
+		DB15938C22AA55B9008D4128 /* BalancesListLegendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancesListLegendCell.swift; sourceTree = "<group>"; };
+		DB15938E22AA7804008D4128 /* BalancesListPercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancesListPercentFormatter.swift; sourceTree = "<group>"; };
 		DB16017C21F5DB0F00CD3DA4 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		DB16017E21F600FB00CD3DA4 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		DB19A7FC215BC4980043CD4A /* SaleInvestConfirmationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInvestConfirmationProvider.swift; sourceTree = "<group>"; };
@@ -2211,6 +2215,7 @@
 				DB159326229814B0008D4128 /* BalancesListBalanceCell.swift */,
 				DB159328229814DF008D4128 /* BalancesListHeaderCell.swift */,
 				DB15938622A52BE0008D4128 /* BalancesListPieChartCell.swift */,
+				DB15938C22AA55B9008D4128 /* BalancesListLegendCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2222,6 +2227,7 @@
 				DB15932C22982103008D4128 /* BalancesListDataProvider.swift */,
 				DB15932E22982BA7008D4128 /* BalancesListAmountFormatter.swift */,
 				DB15938822A54287008D4128 /* BalancesListPieChartColorsProvider.swift */,
+				DB15938E22AA7804008D4128 /* BalancesListPercentFormatter.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -3247,6 +3253,7 @@
 				E9A5CBFB211DD768009112CA /* DashboardPaymentsPlugInBalancesFetcherProtocol.swift in Sources */,
 				DBED520D228C33900040632E /* AssetPickerConfigurator.swift in Sources */,
 				7F71871F2138471D00F5C0BD /* RecoverySeedInteractor.swift in Sources */,
+				DB15938F22AA7804008D4128 /* BalancesListPercentFormatter.swift in Sources */,
 				DB15932D22982103008D4128 /* BalancesListDataProvider.swift in Sources */,
 				E9908EC2210788F600A0EA1C /* BaseSignedInFlowController.swift in Sources */,
 				710E860B2105E1AB007204D4 /* ReceiveAddressInvoiceFormatterProtocol.swift in Sources */,
@@ -3408,6 +3415,7 @@
 				7F74962A2260A1D40065EE8E /* TradeOffersChartsFetcher.swift in Sources */,
 				E92F1C0D2139B77D00D4695E /* OrderBookCard.swift in Sources */,
 				7FABEA6220FD088F0005E751 /* CreateOfferInteractor.swift in Sources */,
+				DB15938D22AA55B9008D4128 /* BalancesListLegendCell.swift in Sources */,
 				7F74964D22672B200065EE8E /* TradesTableViewCell.swift in Sources */,
 				DB1AFBAB21C9338300D87D5D /* AuthenticatorAuthRouting.swift in Sources */,
 				71136B0E2134433F00D83DD3 /* TransactionDetailsRouting.swift in Sources */,

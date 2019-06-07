@@ -133,6 +133,7 @@ extension TabBarContainer {
             })
             
             let amountFormatter = BalancesList.AmountFormatter()
+            let percentFormatter = BalancesList.PercentFormatter()
             let sceneModel = BalancesList.Model.SceneModel(
                 balances: [],
                 chartBalances: [],
@@ -145,6 +146,7 @@ extension TabBarContainer {
                 sceneModel: sceneModel,
                 balancesFetcher: self.balancesFetcher,
                 amountFormatter: amountFormatter,
+                percentFormatter: percentFormatter,
                 colorsProvider: self.colorsProvider,
                 routing: routing
             )

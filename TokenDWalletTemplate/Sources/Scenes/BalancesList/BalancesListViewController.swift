@@ -166,7 +166,7 @@ extension BalancesList.ViewController: BalancesList.DisplayLogic {
     }
     
     public func displayPieChartBalanceSelected(viewModel: Event.PieChartBalanceSelected.ViewModel) {
-        guard var (chartViewModel, indexPath, cell) = self.findCell(
+        guard let (chartViewModel, indexPath, cell) = self.findCell(
             cellIdentifier: .chart,
             cellViewModelType: BalancesList.PieChartCell.ViewModel.self,
             cellType: BalancesList.PieChartCell.View.self
@@ -177,9 +177,11 @@ extension BalancesList.ViewController: BalancesList.DisplayLogic {
         guard let chartCell = cell else {
             return
         }
-        chartViewModel.viewModel = viewModel.model
-        chartViewModel.setup(cell: chartCell)
-        self.sections[indexPath.section].cells[indexPath.row] = chartViewModel
+        var udpdatedChartViewModel = chartViewModel
+        udpdatedChartViewModel.chartViewModel = viewModel.pieChartViewModel
+        udpdatedChartViewModel.legendCells = viewModel.legendCells
+        udpdatedChartViewModel.setup(cell: chartCell)
+        self.sections[indexPath.section].cells[indexPath.row] = udpdatedChartViewModel
     }
 }
 

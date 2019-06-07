@@ -303,6 +303,7 @@
 "order_book_cap" = "ORDER BOOK";
 "order_price_cannot_be_less_than_or_equal_to_0" = "Order price cannot be less than or equal to 0";
 "orders_cap" = "ORDERS";
+"other" = "Other";
 "outgoing" = "Outgoing";
 "overview" = "Overview";
 "paid" = "Paid";

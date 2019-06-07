@@ -9,6 +9,7 @@ extension BalancesList {
             sceneModel: Model.SceneModel,
             balancesFetcher: BalancesFetcherProtocol,
             amountFormatter: AmountFormatterProtocol,
+            percentFormatter: PercentFormatterProtocol,
             colorsProvider: PieChartColorsProviderProtocol,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
@@ -18,6 +19,7 @@ extension BalancesList {
             let presenter = Presenter(
                 presenterDispatch: presenterDispatch,
                 amountFormatter: amountFormatter,
+                percentFormatter: percentFormatter,
                 colorsProvider: colorsProvider
             )
             let interactor = Interactor(

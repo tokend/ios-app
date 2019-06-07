@@ -6,11 +6,13 @@ extension BalancesList {
     public enum PieChartCell {
         
         public struct ViewModel: CellViewModel {
-            var viewModel: Model.PieChartViewModel
+            var chartViewModel: Model.PieChartViewModel
+            var legendCells: [LegendCell.ViewModel]
             let cellIdentifier: Model.CellIdentifier
             
             public func setup(cell: View) {
-                cell.viewModel = self.viewModel
+                cell.chartViewModel = self.chartViewModel
+                cell.legendCells = self.legendCells
                 cell.cellIdentifier = self.cellIdentifier
             }
         }
@@ -20,12 +22,18 @@ extension BalancesList {
             // MARK: - Public properties
             
             public var onChartBalanceSelected: ((Double) -> Void)?
-            public var viewModel: Model.PieChartViewModel? {
+            public var chartViewModel: Model.PieChartViewModel? {
                 didSet {
-                    guard let viewModel = self.viewModel else {
+                    guard let chartViewModel = self.chartViewModel else {
                         return
                     }
-                    self.updatePieEntryData(viewModel: viewModel)
+                    self.updatePieEntryData(viewModel: chartViewModel)
+                }
+            }
+            
+            public var legendCells: [LegendCell.ViewModel] = [] {
+                didSet {
+                    self.legendTableView.reloadData()
                 }
             }
             
@@ -34,7 +42,11 @@ extension BalancesList {
             // MARK: - Private properties
             
             private let pieChart: PieChartView = PieChartView()
+            private let legendTableView: UITableView = UITableView(frame: .zero, style: .grouped)
             private var currentHighlight: Highlight?
+            
+            private let sideInset: CGFloat = 20.0
+            private var chartHasBeenAnimated: Bool = false
             
             // MARK: -
             
@@ -43,11 +55,17 @@ extension BalancesList {
                 
                 self.setupView()
                 self.setupPieChartView()
+                self.setupLegendTableView()
                 self.setupLayout()
             }
             
             required init?(coder aDecoder: NSCoder) {
-                fatalError("init(coder:) has not been implemented")
+                super.init(coder: aDecoder)
+                
+                self.setupView()
+                self.setupPieChartView()
+                self.setupLegendTableView()
+                self.setupLayout()
             }
             
             // MARK: - Public
@@ -73,6 +91,11 @@ extension BalancesList {
                     self.currentHighlight = highlight
                     self.pieChart.highlightValue(self.currentHighlight)
                     self.pieChart.centerAttributedText = highlitedEntry.value
+                    
+                    if !self.chartHasBeenAnimated {
+                        self.chartHasBeenAnimated = true
+                        self.pieChart.animate(xAxisDuration: 0.5, yAxisDuration: 0.5)
+                    }
                 }
             }
             
@@ -90,12 +113,38 @@ extension BalancesList {
                 self.pieChart.delegate = self
             }
             
+            private func setupLegendTableView() {
+                self.legendTableView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.legendTableView.delegate = self
+                self.legendTableView.dataSource = self
+                self.legendTableView.register(classes: [
+                    LegendCell.ViewModel.self
+                    ]
+                )
+                self.legendTableView.separatorStyle = .none
+                self.legendTableView.estimatedRowHeight = 35.0
+                self.legendTableView.isScrollEnabled = false
+                self.legendTableView.contentInset = UIEdgeInsets(
+                    top: 0.0,
+                    left: self.sideInset,
+                    bottom: 0.0,
+                    right: 0.0
+                )
+            }
+            
             private func setupLayout() {
                 self.addSubview(self.pieChart)
+                self.addSubview(self.legendTableView)
                 
                 self.pieChart.snp.makeConstraints { (make) in
-                    make.leading.top.bottom.equalToSuperview().inset(20.0)
-                    make.width.height.equalTo(175.0)
+                    make.leading.top.bottom.equalToSuperview().inset(self.sideInset)
+                    make.width.equalTo(self.frame.width / 2)
+                }
+                
+                self.legendTableView.snp.makeConstraints { (make) in
+                    make.trailing.top.bottom.equalToSuperview().inset(self.sideInset)
+                    make.leading.equalTo(self.pieChart.snp.trailing)
+                    make.height.equalTo(200.0)
                 }
             }
         }
@@ -113,5 +162,42 @@ extension BalancesList.PieChartCell.View: ChartViewDelegate {
     
     public func chartValueNothingSelected(_ chartView: ChartViewBase) {
         self.pieChart.highlightValue(self.currentHighlight)
+    }
+}
+
+extension BalancesList.PieChartCell.View: UITableViewDataSource {
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.legendCells.count
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let model = self.legendCells[indexPath.row]
+        let cell = self.legendTableView.dequeueReusableCell(with: model, for: indexPath)
+        return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+}
+
+extension BalancesList.PieChartCell.View: UITableViewDelegate {
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let model = self.legendCells[indexPath.row]
+        self.onChartBalanceSelected?(model.percentageValue)
     }
 }
