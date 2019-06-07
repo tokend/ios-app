@@ -50,6 +50,7 @@ class DashboardFlowController: BaseSignedInFlowController {
         )
         let amountFormatter = TransactionsListScene.AmountFormatter()
         let dateFormatter = TransactionsListScene.DateFormatter()
+        let colorsProvider = BalancesList.PieChartColorsProvider()
         
         let contentProvider = TabBarContainer.DashboardProvider(
             transactionsFetcher: transactionsFetcher,
@@ -57,6 +58,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             actionProvider: actionProvider,
             amountFormatter: amountFormatter,
             dateFormatter: dateFormatter,
+            colorsProvider: colorsProvider,
             onDidSelectItemWithIdentifier: { [weak self] (transactionId, balanceId) in
                 guard let navigationContrpller = self?.navigationController else {
                     return

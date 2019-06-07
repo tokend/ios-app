@@ -39,7 +39,8 @@ extension BalancesList {
             
             let headerModel = Model.Header(
                 balance: convertedBalance,
-                asset: self.convertedAsset
+                asset: self.convertedAsset,
+                cellIdentifier: .header
             )
             let headerCell = Model.CellModel.header(headerModel)
             let headerSection = Model.SectionModel(cells: [headerCell])

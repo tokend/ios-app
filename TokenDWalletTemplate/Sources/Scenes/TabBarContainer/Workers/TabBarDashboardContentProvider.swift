@@ -11,6 +11,7 @@ extension TabBarContainer {
         private let actionProvider: TransactionsListScene.ActionProvider
         private let amountFormatter: TransactionsListScene.AmountFormatterProtocol
         private let dateFormatter: TransactionsListScene.DateFormatterProtocol
+        private let colorsProvider: BalancesList.PieChartColorsProviderProtocol
         private let onDidSelectItemWithIdentifier: (_ id: UInt64, _ balanceId: String) -> Void
         private let showPaymentsFor: ((String) -> Void)
         private let showSendScene: (() -> Void)
@@ -30,6 +31,7 @@ extension TabBarContainer {
             actionProvider: TransactionsListScene.ActionProvider,
             amountFormatter: TransactionsListScene.AmountFormatterProtocol,
             dateFormatter: TransactionsListScene.DateFormatterProtocol,
+            colorsProvider: BalancesList.PieChartColorsProviderProtocol,
             onDidSelectItemWithIdentifier: @escaping(
             _ id: UInt64,
             _ balanceId: String
@@ -48,6 +50,7 @@ extension TabBarContainer {
             self.actionProvider = actionProvider
             self.amountFormatter = amountFormatter
             self.dateFormatter = dateFormatter
+            self.colorsProvider = colorsProvider
             self.onDidSelectItemWithIdentifier = onDidSelectItemWithIdentifier
             self.showPaymentsFor = showPaymentsFor
             self.showSendScene = showSendScene
@@ -129,13 +132,22 @@ extension TabBarContainer {
                     self?.hideShadow()
             })
             
-            let dataProvider = BalancesList.DataProvider(balancesFetcher: self.balancesFetcher)
             let amountFormatter = BalancesList.AmountFormatter()
+            let percentFormatter = BalancesList.PercentFormatter()
+            let sceneModel = BalancesList.Model.SceneModel(
+                balances: [],
+                chartBalances: [],
+                selectedChartBalance: nil,
+                convertedAsset: "USD"
+            )
             
             BalancesList.Configurator.configure(
                 viewController: vc,
-                dataProvider: dataProvider,
+                sceneModel: sceneModel,
+                balancesFetcher: self.balancesFetcher,
                 amountFormatter: amountFormatter,
+                percentFormatter: percentFormatter,
+                colorsProvider: self.colorsProvider,
                 routing: routing
             )
             

@@ -12,6 +12,7 @@ extension BalancesList {
             let abbreviationBackgroundColor: UIColor
             let abbreviationText: String
             let balanceId: String
+            let cellIdentifier: Model.CellIdentifier
             
             public func setup(cell: Cell) {
                 cell.code = self.code
@@ -19,6 +20,7 @@ extension BalancesList {
                 cell.balance = self.balance
                 cell.abbreviationBackgroundColor = self.abbreviationBackgroundColor
                 cell.abbreviationText = self.abbreviationText
+                cell.cellIdentifier = self.cellIdentifier
             }
         }
         
@@ -51,6 +53,8 @@ extension BalancesList {
                 get { return self.abbreviationLabel.text }
                 set { self.abbreviationLabel.text = newValue }
             }
+            
+            var cellIdentifier: Model.CellIdentifier?
             
             // MARK: - Private properties
             
