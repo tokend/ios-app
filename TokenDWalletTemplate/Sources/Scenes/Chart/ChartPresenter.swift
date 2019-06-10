@@ -284,3 +284,17 @@ extension Chart.Presenter: Chart.PresentationLogic {
         }
     }
 }
+
+extension Chart.Model.Error: LocalizedError {
+    
+    public var errorDescription: String? {
+        switch self {
+            
+        case .empty:
+            return Localized(.there_is_no_progress_history_yet)
+            
+        case .other(let error):
+            return error.localizedDescription
+        }
+    }
+}

@@ -74,9 +74,12 @@ extension SaleOverview {
                 return
             }
             
-            let investmentPercentage: Float
+            var investmentPercentage: Float
             if sale.softCap != 0.0 {
-                investmentPercentage = (Float(truncating: sale.currentCap / sale.softCap as NSNumber) * 100).rounded()
+                investmentPercentage = Float(truncating: sale.currentCap / sale.softCap as NSNumber) * 100
+                if investmentPercentage > 1 {
+                    investmentPercentage.round()
+                }
             } else {
                 investmentPercentage = 100.0
             }

@@ -56,7 +56,7 @@ extension Chart {
             private func setupEmptyContentLabel() {
                 self.emptyContentLabel.font = self.emptyContentLabel.font.withSize(17)
                 self.emptyContentLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
-                self.emptyContentLabel.font = Theme.Fonts.smallTextFont
+                self.emptyContentLabel.font = Theme.Fonts.plainTextFont
                 self.emptyContentLabel.textAlignment = .center
                 self.emptyContentLabel.lineBreakMode = .byWordWrapping
                 self.emptyContentLabel.numberOfLines = 0

@@ -153,6 +153,15 @@ extension Chart.Model {
         case hardCap
         case softCap
     }
+    
+    public enum Error: Swift.Error {
+        case empty
+        case other(Swift.Error)
+    }
+    
+    public enum ErrorStatus: String {
+        case notFound = "404"
+    }
 }
 
 // MARK: - Events

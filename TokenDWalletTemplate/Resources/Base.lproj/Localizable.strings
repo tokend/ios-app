@@ -441,6 +441,7 @@
 "terms_of_service" = "Terms of Service";
 "terms_of_service_not_agreed" = "Terms of Service not agreed";
 "terms_of_use" = "Terms of use";
+"there_is_no_progress_history_yet" = "There is no progress history yet";
 "this_feature_will_be" = "This feature will be available once you have any asset that can be deposited";
 "this_seed_is_the_only_way" = "This seed is the only way to recover your account in case of password loss. You will not be able to get it later.";
 "to" = "To $(address)";

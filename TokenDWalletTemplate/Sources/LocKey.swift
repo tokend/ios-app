@@ -444,6 +444,7 @@ enum LocKey: String {
     case terms_of_service
     case terms_of_service_not_agreed
     case terms_of_use
+    case there_is_no_progress_history_yet
     case this_feature_will_be
     case this_seed_is_the_only_way
     case to
