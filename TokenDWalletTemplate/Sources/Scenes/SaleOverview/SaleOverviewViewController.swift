@@ -2,6 +2,7 @@ import UIKit
 import MarkdownView
 import Nuke
 import RxSwift
+import UICircularProgressRing
 import WebKit
 
 public protocol SaleOverviewDisplayLogic: class {
@@ -65,14 +66,19 @@ extension SaleOverview {
             set { self.investedAmountLabel.attributedText = newValue }
         }
         
-        public var investedPercent: Float {
-            get { return self.progressView.progress }
-            set { self.progressView.progress = newValue }
+        public var investedPercent: CGFloat {
+            get { return self.circleProgress.value }
+            set {
+                self.circleProgress.startProgress(
+                    to: newValue,
+                    duration: 1.0
+                )
+            }
         }
         
-        public var investedPercentageText: NSAttributedString? {
-            get { return self.percentLabel.attributedText }
-            set { self.percentLabel.attributedText = newValue }
+        public var targetAmountText: NSAttributedString? {
+            get { return self.targetAmountLabel.attributedText }
+            set { self.targetAmountLabel.attributedText = newValue }
         }
         
         public var timeText: NSAttributedString? {
@@ -104,9 +110,10 @@ extension SaleOverview {
         // Invested views
         
         private let investedAmountLabel: UILabel = UILabel()
-        private let percentLabel: UILabel = UILabel()
-        private let progressView: UIProgressView = UIProgressView()
+        private let targetAmountLabel: UILabel = UILabel()
+        private let circleProgress: UICircularProgressRing = UICircularProgressRing()
         private let timeLabel: UILabel = UILabel()
+        private let investmentStackView = UIStackView()
         
         private let overviewContentView: MarkdownView = MarkdownView()
         private var overviewContentHeight: CGFloat = 0.0 {
@@ -119,6 +126,8 @@ extension SaleOverview {
                 self.updateOverviewContentHeight(newValue)
             }
         }
+        
+        private let fundedValueFormatter: FundedValueFormatterProtocol = FundedValueFormatter()
         
         private let sideInset: CGFloat = 20.0
         private let markdownSideInset: CGFloat = 4.0
@@ -159,8 +168,9 @@ extension SaleOverview {
             self.setupNameLabel()
             self.setupShortDescriptionLabel()
             self.setupInvestedAmountLabel()
-            self.setupPercentLabel()
-            self.setupProgressView()
+            self.setupTargetAmountLabel()
+            self.setupCircleProgress()
+            self.setupInvestmentStackView()
             self.setupTimeLabel()
             self.setupVideoWebView()
             self.setupOverviewContentView()
@@ -199,7 +209,7 @@ extension SaleOverview {
         private func setupShortDescriptionLabel() {
             self.shortDescriptionLabel.font = Theme.Fonts.plainTextFont
             self.shortDescriptionLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.shortDescriptionLabel.textAlignment = .left
+            self.shortDescriptionLabel.textAlignment = .center
             self.shortDescriptionLabel.numberOfLines = 0
             self.shortDescriptionLabel.lineBreakMode = .byWordWrapping
         }
@@ -207,25 +217,44 @@ extension SaleOverview {
         private func setupInvestedAmountLabel() {
             self.investedAmountLabel.font = Theme.Fonts.smallTextFont
             self.investedAmountLabel.textColor = Theme.Colors.accentColor
-            self.investedAmountLabel.textAlignment = .left
+            self.investedAmountLabel.textAlignment = .center
             self.investedAmountLabel.numberOfLines = 2
+            self.investedAmountLabel.adjustsFontSizeToFitWidth = true
         }
         
-        private func setupPercentLabel() {
-            self.percentLabel.font = Theme.Fonts.smallTextFont
-            self.percentLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.percentLabel.textAlignment = .left
-            self.percentLabel.numberOfLines = 2
+        private func setupTargetAmountLabel() {
+            self.targetAmountLabel.font = Theme.Fonts.smallTextFont
+            self.targetAmountLabel.textColor = Theme.Colors.textOnContentBackgroundColor
+            self.targetAmountLabel.textAlignment = .center
+            self.targetAmountLabel.numberOfLines = 2
         }
         
-        private func setupProgressView() {
-            self.progressView.tintColor = Theme.Colors.accentColor
+        private func setupCircleProgress() {
+            self.circleProgress.animationTimingFunction = .default
+            self.circleProgress.style = .bordered(
+                width: 1.0,
+                color: Theme.Colors.accentColor.withAlphaComponent(0.1)
+            )
+            self.circleProgress.outerRingColor = Theme.Colors.accentColor.withAlphaComponent(0.2)
+            self.circleProgress.innerRingColor = Theme.Colors.accentColor
+            self.circleProgress.valueFormatter = CircleProgressValueFormatter()
+            self.circleProgress.startAngle = 270.0
+            self.circleProgress.delegate = self
+        }
+        
+        private func setupInvestmentStackView() {
+            self.investmentStackView.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.investmentStackView.distribution = .fillEqually
+            self.investmentStackView.isUserInteractionEnabled = false
+            self.investmentStackView.axis = .vertical
+            self.investmentStackView.alignment = .center
+            self.investmentStackView.spacing = 5.0
         }
         
         private func setupTimeLabel() {
             self.timeLabel.font = Theme.Fonts.smallTextFont
             self.timeLabel.textColor = Theme.Colors.accentColor
-            self.timeLabel.textAlignment = .left
+            self.timeLabel.textAlignment = .center
             self.timeLabel.numberOfLines = 2
         }
         
@@ -295,37 +324,26 @@ extension SaleOverview {
         }
         
         private func setupInvestContentViewLayout() {
-            self.investContentView.addSubview(self.investedAmountLabel)
-            self.investContentView.addSubview(self.percentLabel)
-            self.investContentView.addSubview(self.progressView)
-            self.investContentView.addSubview(self.timeLabel)
-            
-            let sideInset: CGFloat = 40
-            let topInset: CGFloat = 10
+            self.investContentView.addSubview(self.circleProgress)
+            self.investContentView.addSubview(self.investmentStackView)
+            self.investmentStackView.addArrangedSubview(self.investedAmountLabel)
+            self.investmentStackView.addArrangedSubview(self.targetAmountLabel)
+            self.investmentStackView.addArrangedSubview(self.timeLabel)
             self.investedAmountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             self.investedAmountLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             
-            self.percentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            self.percentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            self.targetAmountLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            self.targetAmountLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
             
-            self.progressView.snp.makeConstraints { (make) in
-                make.leading.trailing.top.equalToSuperview()
-                make.bottom.equalToSuperview().inset(55.0)
+            self.circleProgress.snp.makeConstraints { (make) in
+                make.leading.top.bottom.equalToSuperview().inset(self.sideInset)
+                make.width.height.equalTo(175.0)
             }
             
-            self.investedAmountLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.progressView.snp.leading)
-                make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-            }
-            
-            self.percentLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.investedAmountLabel.snp.trailing).offset(sideInset)
-                make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
-            }
-            
-            self.timeLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.percentLabel.snp.trailing).offset(sideInset)
-                make.top.equalTo(self.progressView.snp.bottom).offset(topInset)
+            self.investmentStackView.snp.makeConstraints { (make) in
+                make.leading.equalTo(self.circleProgress.snp.trailing).offset(self.sideInset)
+                make.trailing.equalToSuperview().inset(self.sideInset)
+                make.top.bottom.equalTo(self.circleProgress)
             }
         }
         
@@ -385,7 +403,7 @@ extension SaleOverview {
             self.youtubeVideoURL = sale.youtubeVideoUrl
             
             self.investedAmountText = sale.investedAmountText
-            self.investedPercentageText = sale.investedPercentageText
+            self.targetAmountText = sale.targetAmountText
             self.investedPercent = sale.investedPercentage
             
             self.timeText = sale.timeText
@@ -399,5 +417,25 @@ extension SaleOverview.ViewController: SaleOverview.DisplayLogic {
     
     public func displaySaleUpdated(viewModel: Event.SaleUpdated.ViewModel) {
         self.setup(sale: viewModel.model)
+    }
+}
+
+extension SaleOverview.ViewController: UICircularProgressRingDelegate {
+    
+    public func didFinishProgress(for ring: UICircularProgressRing) {}
+    
+    public func didPauseProgress(for ring: UICircularProgressRing) {}
+    
+    public func didContinueProgress(for ring: UICircularProgressRing) {}
+    
+    public func didUpdateProgressValue(for ring: UICircularProgressRing, to newValue: CGFloat) {}
+    
+    public func willDisplayLabel(for ring: UICircularProgressRing, _ label: UILabel) {
+        guard let value = label.text else {
+            return
+        }
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.attributedText = self.fundedValueFormatter.formatFundedValue(value: value)
     }
 }

@@ -99,6 +99,7 @@ PODS:
     - TokenDWallet (>= 3.0.1)
   - TokenDWallet (3.0.1):
     - DLCryptoKit (>= 2.0.1)
+  - UICircularProgressRing (6.1.0)
 
 DEPENDENCIES:
   - ActionsList (~> 0.9.1)
@@ -122,6 +123,7 @@ DEPENDENCIES:
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
   - TokenDSDK/KeyServer
+  - UICircularProgressRing
 
 SPEC REPOS:
   "git@github.com:tokend/ios-specs.git":
@@ -152,6 +154,7 @@ SPEC REPOS:
     - RxSwift
     - SnapKit
     - SwiftKeychainWrapper
+    - UICircularProgressRing
 
 EXTERNAL SOURCES:
   Charts:
@@ -202,7 +205,8 @@ SPEC CHECKSUMS:
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
   TokenDSDK: 523441f10e1079987ef0cac37fbebc0a9ebc388d
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
+  UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
-PODFILE CHECKSUM: 1bfd078377af7c6328c2c727bdf76536ba6b73b7
+PODFILE CHECKSUM: b8770078de4ff8a345ff6ac703b2cc56b23270a2
 
 COCOAPODS: 1.6.1

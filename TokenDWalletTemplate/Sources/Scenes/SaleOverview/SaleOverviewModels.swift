@@ -69,6 +69,7 @@ extension SaleOverview.Model {
         public let asset: String
         public let investmentAsset: String
         public let investmentAmount: Decimal
+        public let targetAmount: Decimal
         public let investmentPercentage: Float
         public let investorsCount: Int
         public let startDate: Date
@@ -83,6 +84,7 @@ extension SaleOverview.Model {
             asset: String,
             investmentAsset: String,
             investmentAmount: Decimal,
+            targetAmount: Decimal,
             investmentPercentage: Float,
             investorsCount: Int,
             startDate: Date,
@@ -97,6 +99,7 @@ extension SaleOverview.Model {
             self.asset = asset
             self.investmentAsset = investmentAsset
             self.investmentAmount = investmentAmount
+            self.targetAmount = targetAmount
             self.investmentPercentage = investmentPercentage
             self.investorsCount = investorsCount
             self.startDate = startDate
@@ -113,8 +116,8 @@ extension SaleOverview.Model {
         public let description: NSAttributedString
         public let youtubeVideoUrl: URL?
         public let investedAmountText: NSAttributedString
-        public let investedPercentage: Float
-        public let investedPercentageText: NSAttributedString
+        public let targetAmountText: NSAttributedString
+        public let investedPercentage: CGFloat
         public let timeText: NSAttributedString
         public let overviewContent: String?
         
@@ -124,8 +127,8 @@ extension SaleOverview.Model {
             description: NSAttributedString,
             youtubeVideoUrl: URL?,
             investedAmountText: NSAttributedString,
-            investedPercentage: Float,
-            investedPercentageText: NSAttributedString,
+            targetAmountText: NSAttributedString,
+            investedPercentage: CGFloat,
             timeText: NSAttributedString,
             overviewContent: String?
             ) {
@@ -135,8 +138,8 @@ extension SaleOverview.Model {
             self.description = description
             self.youtubeVideoUrl = youtubeVideoUrl
             self.investedAmountText = investedAmountText
+            self.targetAmountText = targetAmountText
             self.investedPercentage = investedPercentage
-            self.investedPercentageText = investedPercentageText
             self.timeText = timeText
             self.overviewContent = overviewContent
         }

@@ -74,6 +74,7 @@ enum Theme {
         static let hugeTitleFont: UIFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize + 15)
         
         static let plainTextFont: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+        static let largePlainTextFont: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize + 7)
         static let plainBoldTextFont: UIFont = UIFont.boldSystemFont(ofSize: UIFont.systemFontSize)
         
         static let menuCellTextFont: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize + 1)

@@ -112,6 +112,14 @@ enum LocKey: String {
     case destination_address
     case destination_address_colon
     case details
+    case details_days_to_go
+    case details_days_to_go_replace_days
+    case details_days_to_start
+    case details_days_to_start_replace_days
+    case details_invested
+    case details_invested_replace_amount
+    case details_starts_in_days
+    case details_starts_in_days_replace_days
     case document_max_size
     case document_max_size_replace_file_size
     case done
@@ -198,8 +206,11 @@ enum LocKey: String {
     case formatted_date_replace_date
     case from_account
     case funded
+    case funded_lowercase
     case general
     case get_address
+    case goal
+    case goal_replace_amount
     case go_to_confirmation
     case hard_cap
     case holders_name_colon

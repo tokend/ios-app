@@ -234,6 +234,7 @@ extension SaleDetails {
             
             private func setupIconView() {
                 self.tokenIconView.contentMode = .scaleAspectFit
+                self.tokenInfoView.layer.cornerRadius = 10.0
             }
             
             private func setupTokenAbbreviationView() {
@@ -307,7 +308,7 @@ extension SaleDetails {
                 self.containerView.addSubview(self.tokenDetailsTableView)
                 
                 self.tokenInfoView.snp.makeConstraints { (make) in
-                    make.leading.trailing.equalToSuperview()
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
                     make.top.equalToSuperview().inset(self.topInset)
                     make.height.equalTo(self.infoViewHeight)
                 }

@@ -76,11 +76,11 @@ extension SaleOverview {
             
             let investmentPercentage: Float
             if sale.softCap != 0.0 {
-                investmentPercentage = Float(truncating: sale.currentCap / sale.softCap as NSNumber)
+                investmentPercentage = (Float(truncating: sale.currentCap / sale.softCap as NSNumber) * 100).rounded()
             } else {
-                investmentPercentage = 1.0
+                investmentPercentage = 100.0
             }
-            
+
             let overviewModel = Model.OverviewModel(
                 imageUrl: sale.details.logoUrl,
                 name: sale.details.name,
@@ -88,6 +88,7 @@ extension SaleOverview {
                 asset: sale.baseAsset,
                 investmentAsset: sale.defaultQuoteAsset,
                 investmentAmount: sale.currentCap,
+                targetAmount: sale.softCap,
                 investmentPercentage: investmentPercentage,
                 investorsCount: sale.investorsCount,
                 startDate: sale.startTime,

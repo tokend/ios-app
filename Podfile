@@ -33,6 +33,7 @@ def main_app_pods
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'
   pod 'Floaty', git: 'https://github.com/tokend/Floaty.git'
+  pod 'UICircularProgressRing'
 end
 
 target 'TokenDWalletTemplate' do

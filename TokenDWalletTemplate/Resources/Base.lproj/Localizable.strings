@@ -109,6 +109,14 @@
 "destination_address" = "Destination address";
 "destination_address_colon" = "Destination address:";
 "details" = "Details";
+"details_days_to_go" = "day(s) to go\n$(days)";
+"details_days_to_go_replace_days" = "days";
+"details_days_to_start" = "day(s) to start\n$(days)";
+"details_days_to_start_replace_days" = "days";
+"details_invested" = "invested\n$(amount)";
+"details_invested_replace_amount" = "amount";
+"details_starts_in_days" = "Starts in\n$(days) day(s)";
+"details_starts_in_days_replace_days" = "days";
 "document_max_size" = "image (Max $(file_size))";
 "document_max_size_replace_file_size" = "file_size";
 "done" = "Done";
@@ -195,8 +203,11 @@
 "formatted_date_replace_date" = "date";
 "from_account" = "From account";
 "funded" = "Funded";
+"funded_lowercase" = "funded";
 "general" = "General";
 "get_address" = "Get address";
+"goal" = "goal\n$(amount)";
+"goal_replace_amount" = "amount";
 "go_to_confirmation" = "Go to confirmation";
 "hard_cap" = "Hard Cap";
 "holders_name_colon" = "Holder's name:";
