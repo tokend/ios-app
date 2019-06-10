@@ -5,6 +5,10 @@ extension SaleInvest {
         let onShowProgress: () -> Void
         let onHideProgress: () -> Void
         let onShowError: (_ erroMessage: String) -> Void
+        let onShowMessage: (
+        _ title: String,
+        _ message: String
+        ) -> Void
         let onPresentPicker: (
         _ title: String,
         _ options: [String],

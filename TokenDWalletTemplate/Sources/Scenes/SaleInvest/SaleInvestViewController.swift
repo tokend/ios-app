@@ -33,6 +33,13 @@ extension SaleInvest {
         private let investButton: UIButton = UIButton()
         private let cancelButton: UIButton = UIButton()
         
+        private let helpButton: UIBarButtonItem = UIBarButtonItem(
+            image: Assets.help.image,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        
         // Invest content views
         private var amountEditingContext: TextEditingContext<Decimal>?
         private let valueValidator = DecimalMaxValueValidator(maxValue: nil)
@@ -91,6 +98,7 @@ extension SaleInvest {
             self.setupInvestButton()
             self.setupCancelButton()
             self.setupSelectAssetButton()
+            self.setupHelpButton()
             
             self.setupLayout()
         }
@@ -202,6 +210,21 @@ extension SaleInvest {
                     })
                 })
                 .disposed(by: self.disposeBag)
+        }
+        
+        private func setupHelpButton() {
+            self.helpButton
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    self?.routing?.onShowMessage(
+                        Localized(.invest_help),
+                        Localized(.invest_help_message)
+                    )
+                })
+                .disposed(by: self.disposeBag)
+            self.navigationItem.rightBarButtonItem = self.helpButton
         }
         
         private func setupSelectAssetButton() {

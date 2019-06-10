@@ -235,6 +235,8 @@ enum LocKey: String {
     case invalid_account_id_or_email
     case invest
     case invest_cap
+    case invest_help
+    case invest_help_message
     case invested
     case invested_replace_amount
     case investing

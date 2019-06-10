@@ -339,6 +339,17 @@ class SalesFlowController: BaseSignedInFlowController {
             onShowError: { [weak self] (message) in
                 self?.navigationController.showErrorMessage(message, completion: nil)
             },
+            onShowMessage: { [weak self] (title, message) in
+                guard let presenter = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showSuccessMessage(
+                    title: title,
+                    message: message,
+                    completion: nil,
+                    presentViewController: presenter
+                )
+            },
             onPresentPicker: { [weak self] (title, options, onSelected) in
                 guard let presenter = self?.navigationController.getPresentViewControllerClosure() else {
                     return

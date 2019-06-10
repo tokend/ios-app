@@ -232,6 +232,8 @@
 "invalid_account_id_or_email" = "Invalid account id or email";
 "invest" = "Invest";
 "invest_cap" = "INVEST";
+"invest_help" = "Investment help";
+"invest_help_message" = "• You can make investments in this sale using proposed assets\n\n• You can have one investment per asset\n\n• While the sale is active, you can change the amount of your investment or cancel them\n\n• If you cancel your investment, the paid amount and fee will be returned\n\n• If the sale has reached it\s soft cap by it\s end date, you will receive the amount of the sale asset according to your investments; otherwise, your investments will be returned.";
 "invested" = "$(amount)\ninvested";
 "invested_replace_amount" = "amount";
 "investing" = "Investing";
