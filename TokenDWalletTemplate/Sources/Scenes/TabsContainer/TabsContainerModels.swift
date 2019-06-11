@@ -58,6 +58,7 @@ extension TabsContainer.Model {
         let isPickerHidden: Bool
         let isTabBarHidden: Bool
         let actionButtonAppearence: ActionButtonAppearence
+        let isScrollEnabled: Bool
     }
     
     public enum ActionButtonAppearence {

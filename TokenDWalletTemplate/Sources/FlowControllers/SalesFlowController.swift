@@ -173,7 +173,8 @@ class SalesFlowController: BaseSignedInFlowController {
         let viewConfig = TabsContainer.Model.ViewConfig(
             isPickerHidden: false,
             isTabBarHidden: true,
-            actionButtonAppearence: .visible(title: Localized(.invest))
+            actionButtonAppearence: .visible(title: Localized(.invest)),
+            isScrollEnabled: true
         )
         
         let routing = TabsContainer.Routing(onAction: { [weak self] in

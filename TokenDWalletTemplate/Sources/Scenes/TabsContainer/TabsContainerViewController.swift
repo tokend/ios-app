@@ -49,7 +49,8 @@ extension TabsContainer {
         private var viewConfig: Model.ViewConfig = Model.ViewConfig(
             isPickerHidden: false,
             isTabBarHidden: true,
-            actionButtonAppearence: .hidden
+            actionButtonAppearence: .hidden,
+            isScrollEnabled: true
             ) {
             didSet {
                 self.updateContainerLayout()
@@ -142,6 +143,7 @@ extension TabsContainer {
             self.containerView.isDirectionalLockEnabled = true
             self.containerView.canCancelContentTouches = false
             self.containerView.delaysContentTouches = false
+            self.containerView.isScrollEnabled = self.viewConfig.isScrollEnabled
             
             let scheduler = MainScheduler.instance
             self.containerView.rx

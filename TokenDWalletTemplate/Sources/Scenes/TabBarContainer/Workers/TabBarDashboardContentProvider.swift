@@ -77,7 +77,8 @@ extension TabBarContainer {
             let viewConfig = TabsContainer.Model.ViewConfig(
                 isPickerHidden: true,
                 isTabBarHidden: false,
-                actionButtonAppearence: .hidden
+                actionButtonAppearence: .hidden,
+                isScrollEnabled: false
             )
             
             let routing = TabsContainer.Routing(onAction: {
