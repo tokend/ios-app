@@ -482,7 +482,8 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
     
     public func onInvestAction(request: Event.InvestAction.Request) {
         let investAmount = self.sceneModel.inputAmount
-        
+        self.presenter.presentInvestAction(response: .loading)
+
         guard let sale = self.sale else {
             let response = Event.InvestAction.Response.failed(.saleIsNotFound)
             self.presenter.presentInvestAction(response: response)
