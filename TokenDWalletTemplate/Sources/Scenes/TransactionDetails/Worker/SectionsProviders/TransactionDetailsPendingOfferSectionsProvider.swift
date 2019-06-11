@@ -57,7 +57,8 @@ extension TransactionDetails {
             let dateCell = TransactionDetails.Model.CellModel(
                 title: dateFormatter.dateToString(date: offer.createdAt),
                 hint: Localized(.date),
-                identifier: .date
+                identifier: .date,
+                isSeparatorHidden: true
             )
             let infoSection = Model.SectionModel(
                 title: "",
