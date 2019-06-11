@@ -9,7 +9,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     private let selectedBalanceId: String?
     private let disposeBag: DisposeBag = DisposeBag()
     
-    private var onShowWalletScreen: ((_ selectedBalanceId: String?) -> Void)?
+    private var onShowMovements: (() -> Void)?
     
     // MARK: -
     
@@ -43,10 +43,10 @@ class SendPaymentFlowController: BaseSignedInFlowController {
     
     func run(
         showRootScreen: ((_ vc: UIViewController) -> Void)?,
-        onShowWalletScreen: @escaping (_ selectedBalanceId: String?) -> Void
+        onShowMovements: (() -> Void)?
         ) {
-        self.onShowWalletScreen = onShowWalletScreen
         
+        self.onShowMovements = onShowMovements
         self.startFromDestinationScreen(showRootScreen: showRootScreen)
     }
     
@@ -271,7 +271,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)
             },
             onConfirmationSucceeded: { [weak self] in
-                self?.onShowWalletScreen?(sendPaymentModel.senderBalanceId)
+                self?.onShowMovements?()
         })
         
         ConfirmationScene.Configurator.configure(

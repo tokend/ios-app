@@ -20,6 +20,7 @@ extension TabBarContainer {
         private let hideProgress: (() -> Void)
         private let showShadow: (() -> Void)
         private let hideShadow: (() -> Void)
+        private let selectedTabIdentifier: TabsContainer.Model.TabIdentifier?
         
         private var content: ContentProtocol?
         
@@ -42,7 +43,8 @@ extension TabBarContainer {
             showProgress: @escaping (() -> Void),
             hideProgress: @escaping (() -> Void),
             showShadow: @escaping (() -> Void),
-            hideShadow: @escaping (() -> Void)
+            hideShadow: @escaping (() -> Void),
+            selectedTabIdentifier: TabsContainer.Model.TabIdentifier?
             ) {
             
             self.balancesFetcher = balancesFetcher
@@ -59,6 +61,7 @@ extension TabBarContainer {
             self.hideProgress = hideProgress
             self.showShadow = showShadow
             self.hideShadow = hideShadow
+            self.selectedTabIdentifier = selectedTabIdentifier
         }
         
         // MARK: - Private
@@ -74,6 +77,9 @@ extension TabBarContainer {
             ]
             
             let contentProvider = TabsContainer.InfoContentProvider(tabs: tabs)
+            let sceneModel = TabsContainer.Model.SceneModel(
+                selectedTabId: self.selectedTabIdentifier
+            )
             let viewConfig = TabsContainer.Model.ViewConfig(
                 isPickerHidden: true,
                 isTabBarHidden: false,
@@ -88,6 +94,7 @@ extension TabBarContainer {
             TabsContainer.Configurator.configure(
                 viewController: vc,
                 contentProvider: contentProvider,
+                sceneModel: sceneModel,
                 viewConfig: viewConfig,
                 routing: routing
             )
@@ -100,7 +107,8 @@ extension TabBarContainer {
             let tabBar = TabBar.View()
             let sceneModel = TabBar.Model.SceneModel(
                 tabs: [],
-                selectedTab: nil
+                selectedTab: nil,
+                selectedTabIdentifier: self.selectedTabIdentifier
             )
             let tabProvider = TabBar.DashboardTabProvider()
             let routing = TabBar.Routing(

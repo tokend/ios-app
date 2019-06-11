@@ -49,9 +49,17 @@ extension TabBar.Interactor: TabBar.BusinessLogic {
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         let tabs = self.tabProvider.getTabs()
         self.sceneModel.tabs = tabs
+    
+        let selectedTab: Model.TabItem?
         
-        let selectedTab = self.sceneModel.tabs.first { (tab) -> Bool in
-            return tab.isSelectable
+        if let seletcedTabIdentifier = self.sceneModel.selectedTabIdentifier {
+            selectedTab = self.sceneModel.tabs.first(where: { (tab) -> Bool in
+                tab.identifier == seletcedTabIdentifier && tab.isSelectable
+            })
+        } else {
+            selectedTab = self.sceneModel.tabs.first { (tab) -> Bool in
+                return tab.isSelectable
+            }
         }
         self.sceneModel.selectedTab = selectedTab
         
@@ -69,6 +77,7 @@ extension TabBar.Interactor: TabBar.BusinessLogic {
             return
         }
         
+        self.sceneModel.selectedTabIdentifier = request.identifier
         self.sendAction(identifier: tab.identifier)
         if let currentSelectedTab = self.sceneModel.selectedTab,
             tab.identifier == currentSelectedTab.identifier {

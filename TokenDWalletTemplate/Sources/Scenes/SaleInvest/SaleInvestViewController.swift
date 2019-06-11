@@ -344,6 +344,7 @@ extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
             self.routing?.onHideProgress()
             
         case .failed(let message):
+            self.routing?.onHideProgress()
             self.routing?.onShowError(message)
             
         case .succeeded(let saleInvestModel):

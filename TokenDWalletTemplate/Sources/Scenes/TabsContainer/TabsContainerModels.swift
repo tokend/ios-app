@@ -23,9 +23,9 @@ extension TabsContainer.Model {
         public var tabs: [TabModel]
         public var selectedTabId: TabIdentifier?
         
-        public init() {
+        public init(selectedTabId: TabIdentifier? = nil) {
             self.tabs = []
-            self.selectedTabId = nil
+            self.selectedTabId = selectedTabId
         }
     }
     

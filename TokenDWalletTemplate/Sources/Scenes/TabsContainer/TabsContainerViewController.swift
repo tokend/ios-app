@@ -31,6 +31,7 @@ extension TabsContainer {
         private var currentContentIndex: Int? {
             return nil
         }
+        private var currentContentOffset: CGPoint?
         private let buttonHeight: CGFloat = 45.0
         
         private let disposeBag = DisposeBag()
@@ -86,6 +87,19 @@ extension TabsContainer {
             self.interactorDispatch?.sendRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
             }
+        }
+        
+        public override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                if let contentOffset = self.currentContentOffset {
+                    self.containerView.setContentOffset(
+                        contentOffset,
+                        animated: false
+                    )
+                }
+            })
         }
         
         // MARK: - Private
@@ -245,6 +259,7 @@ extension TabsContainer {
         
         private func showContent(_ index: Int?, animated: Bool) {
             let contentOffset = self.contentOffsetForTabIndex(index)
+            self.currentContentOffset = CGPoint(x: contentOffset, y: 0.0)
             self.containerView.setContentOffset(
                 CGPoint(x: contentOffset, y: 0.0),
                 animated: animated

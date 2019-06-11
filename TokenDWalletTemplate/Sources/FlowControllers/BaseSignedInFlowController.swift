@@ -76,7 +76,7 @@ class BaseSignedInFlowController: BaseFlowController {
             showRootScreen: { (vc) in
                 navigationController.pushViewController(vc, animated: true)
         },
-            onShowWalletScreen: { [weak self] _ in
+            onShowMovements: { [weak self] in
                 self?.currentFlowController = nil
                 completion()
         })
@@ -104,7 +104,7 @@ class BaseSignedInFlowController: BaseFlowController {
             showRootScreen: { (vc) in
                 navigationController.pushViewController(vc, animated: true)
         },
-            onShowWalletScreen: { [weak self] _ in
+            onShowMovements: { [weak self] in
                 self?.currentFlowController = nil
                 completion()
         })
