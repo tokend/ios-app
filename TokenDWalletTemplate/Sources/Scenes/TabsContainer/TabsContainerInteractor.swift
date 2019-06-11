@@ -25,8 +25,7 @@ extension TabsContainer {
         
         private let presenter: PresentationLogic
         private let contentProvider: ContentProvider
-        
-        private let sceneModel: Model.SceneModel = Model.SceneModel()
+        private let sceneModel: Model.SceneModel
         
         private let disposeBag: DisposeBag = DisposeBag()
         
@@ -34,11 +33,13 @@ extension TabsContainer {
         
         public init(
             presenter: PresentationLogic,
-            contentProvider: ContentProvider
+            contentProvider: ContentProvider,
+            sceneModel: Model.SceneModel
             ) {
             
             self.presenter = presenter
             self.contentProvider = contentProvider
+            self.sceneModel = sceneModel
         }
         
         // MARK: - Private

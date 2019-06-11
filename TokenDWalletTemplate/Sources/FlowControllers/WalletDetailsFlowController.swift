@@ -14,7 +14,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     
     public func run(
         showRootScreen: ((_ vc: UIViewController) -> Void)?,
-        selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
+        selectedBalanceId: BalanceHeaderWithPicker.Identifier
         ) {
         
         self.showWalletScreen(
@@ -34,7 +34,7 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
     
     private func showWalletScreen(
         showRootScreen: ((_ vc: UIViewController) -> Void)?,
-        selectedBalanceId: BalanceHeaderWithPicker.Identifier? = nil
+        selectedBalanceId: BalanceHeaderWithPicker.Identifier
         ) {
         
         let transactionsProvider = TransactionsListScene.HistoryProvider(
@@ -89,21 +89,27 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
                 self?.navigationController.hideShadow()
         })
         
-        let balancesFetcher = BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo
+        let imageUtility = ImagesUtility(
+            storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
+        )
+        let balancesFetcher = BalanceHeader.BalancesFetcher(
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            imageUtility: imageUtility,
+            balanceId: selectedBalanceId
         )
         let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
         )
         
-        let container = SharedSceneBuilder.createWalletScene(
+        let container = SharedSceneBuilder.createBalanceDetailsScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
             viewConfig: viewConfig,
             headerRateProvider: headerRateProvider,
-            balancesFetcher: balancesFetcher,
-            selectedBalanceId: selectedBalanceId
+            balanceFetcher: balancesFetcher,
+            balanceId: selectedBalanceId
         )
         
         self.walletScene = container

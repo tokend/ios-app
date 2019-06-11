@@ -141,12 +141,6 @@ class SignedInFlowController: BaseSignedInFlowController {
                         self?.runDashboardFlow()
                 }),
                 SideMenu.Model.MenuItem(
-                    iconImage: Assets.walletIcon.image,
-                    title: Localized(.wallet),
-                    onSelected: { [weak self] in
-                        self?.runWalletFlow()
-                }),
-                SideMenu.Model.MenuItem(
                     iconImage: Assets.depositIcon.image,
                     title: Localized(.deposit),
                     onSelected: { [weak self] in
@@ -157,12 +151,6 @@ class SignedInFlowController: BaseSignedInFlowController {
                     title: Localized(.withdraw),
                     onSelected: { [weak self] in
                         self?.runWithdrawFlow()
-                }),
-                SideMenu.Model.MenuItem(
-                    iconImage: Assets.sendIcon.image,
-                    title: Localized(.send),
-                    onSelected: { [weak self] in
-                        self?.runSendPaymentFlow()
                 }),
                 SideMenu.Model.MenuItem(
                     iconImage: Assets.exploreFundsIcon.image,
@@ -208,7 +196,7 @@ class SignedInFlowController: BaseSignedInFlowController {
         _ = self.reposController.balancesRepo.observeBalancesDetails()
     }
     
-    private func runWalletFlow(selectedBalanceId: String? = nil) {
+    private func runWalletFlow(selectedBalanceId: String) {
         let walletDetailsFlowController = WalletDetailsFlowController(
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
@@ -227,7 +215,10 @@ class SignedInFlowController: BaseSignedInFlowController {
         )
     }
     
-    private func runDashboardFlow() {
+    private func runDashboardFlow(
+        selectedTabIndetifier: TabsContainer.Model.TabIdentifier? = nil
+        ) {
+        
         let dashboardFlowController = DashboardFlowController(
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
@@ -238,9 +229,12 @@ class SignedInFlowController: BaseSignedInFlowController {
             rootNavigation: self.rootNavigation
         )
         self.currentFlowController = dashboardFlowController
-        dashboardFlowController.run { [weak self] (vc) in
-            self?.sideNavigationController.embed(centerViewController: vc)
-        }
+        dashboardFlowController.run(
+            showRootScreen: { [weak self] (vc) in
+                self?.sideNavigationController.embed(centerViewController: vc)
+            },
+            selectedTabIdentifier: selectedTabIndetifier
+        )
     }
     
     private func runDepositFlow() {
@@ -264,8 +258,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.sideNavigationController.embed(centerViewController: vc)
             },
-            onShowWalletScreen: { [weak self] (balanceId) in
-                self?.runWalletFlow(selectedBalanceId: balanceId)
+            onShowMovements: { [weak self]  in
+                self?.runDashboardFlow(selectedTabIndetifier: Localized(.movements))
         })
     }
     
@@ -304,8 +298,8 @@ class SignedInFlowController: BaseSignedInFlowController {
                 navigationController.setViewControllers([vc], animated: false)
                 self?.sideNavigationController.embed(centerViewController: navigationController)
             },
-            onShowWalletScreen: { [weak self] (balanceId) in
-                self?.runWalletFlow(selectedBalanceId: balanceId)
+            onShowMovements: { [weak self] in
+                self?.runDashboardFlow(selectedTabIndetifier: Localized(.movements))
         })
     }
     
@@ -325,8 +319,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.sideNavigationController.embed(centerViewController: vc)
             },
-            onShowWalletScreen: { [weak self] (balanceId) in
-                self?.runWalletFlow(selectedBalanceId: balanceId)
+            onShowMovements: { [weak self] in
+                self?.runDashboardFlow(selectedTabIndetifier: Localized(.movements))
         })
     }
     
@@ -362,8 +356,8 @@ class SignedInFlowController: BaseSignedInFlowController {
             showRootScreen: { [weak self] (vc) in
                 self?.sideNavigationController.embed(centerViewController: vc)
             },
-            onShowWalletScreen: { [weak self] (balanceId) in
-                self?.runWalletFlow(selectedBalanceId: balanceId)
+            onShowMovements: { [weak self] in
+                self?.runDashboardFlow()
         })
     }
     

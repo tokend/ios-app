@@ -7,6 +7,7 @@ extension TabsContainer {
         public static func configure(
             viewController: ViewController,
             contentProvider: ContentProvider,
+            sceneModel: Model.SceneModel,
             viewConfig: Model.ViewConfig,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
@@ -16,7 +17,8 @@ extension TabsContainer {
             let presenter = Presenter(presenterDispatch: presenterDispatch)
             let interactor = Interactor(
                 presenter: presenter,
-                contentProvider: contentProvider
+                contentProvider: contentProvider,
+                sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

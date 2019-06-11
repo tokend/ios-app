@@ -67,6 +67,10 @@ extension BalancesList.Model {
         let convertedBalance: Decimal
         let balancePercentage: Double
         let type: ChartBalanceType
+        
+        public static func == (lhs: ChartBalance, rhs: ChartBalance) -> Bool {
+            return lhs.balanceId == rhs.balanceId
+        }
     }
     
     public enum ChartBalanceType {
