@@ -102,8 +102,8 @@ class TradeChartCard: UIView {
     }
     
     private func setupPeriodPicker() {
-        self.periodPicker.backgroundColor = Theme.Colors.darkAccentColor
-        self.periodPicker.tintColor = Theme.Colors.mainColor
+        self.periodPicker.backgroundColor = Theme.Colors.textOnAccentColor
+        self.periodPicker.tintColor = Theme.Colors.darkAccentColor
     }
     
     private func setupTitleStackView() {
