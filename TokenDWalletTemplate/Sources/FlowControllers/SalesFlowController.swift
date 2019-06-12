@@ -7,16 +7,16 @@ class SalesFlowController: BaseSignedInFlowController {
     
     private let navigationController: NavigationControllerProtocol = NavigationController()
     
-    private var onShowWalletScreen: ((_ selectedBalanceId: String?) -> Void)?
+    private var onShowMovements: (() -> Void)?
     
     // MARK: - Public
     
     public func run(
         showRootScreen: ((_ vc: UIViewController) -> Void)?,
-        onShowWalletScreen: @escaping (_ selectedBalanceId: String?) -> Void
+        onShowMovements: (() -> Void)?
         ) {
         
-        self.onShowWalletScreen = onShowWalletScreen
+        self.onShowMovements = onShowMovements
         self.showSalesScreen(showRootScreen: showRootScreen)
     }
     
@@ -170,10 +170,12 @@ class SalesFlowController: BaseSignedInFlowController {
         ]
         
         let contentProvider = TabsContainer.InfoContentProvider(tabs: tabs)
+        let sceneModel = TabsContainer.Model.SceneModel()
         let viewConfig = TabsContainer.Model.ViewConfig(
             isPickerHidden: false,
             isTabBarHidden: true,
-            actionButtonAppearence: .visible(title: Localized(.invest))
+            actionButtonAppearence: .visible(title: Localized(.invest)),
+            isScrollEnabled: true
         )
         
         let routing = TabsContainer.Routing(onAction: { [weak self] in
@@ -183,6 +185,7 @@ class SalesFlowController: BaseSignedInFlowController {
         TabsContainer.Configurator.configure(
             viewController: vc,
             contentProvider: contentProvider,
+            sceneModel: sceneModel,
             viewConfig: viewConfig,
             routing: routing
         )
@@ -451,7 +454,7 @@ class SalesFlowController: BaseSignedInFlowController {
                 self?.navigationController.showErrorMessage(errorMessage, completion: nil)
             },
             onConfirmationSucceeded: { [weak self] in
-                self?.onShowWalletScreen?(saleInvestModel.quoteBalance)
+                self?.onShowMovements?()
         })
         
         ConfirmationScene.Configurator.configure(

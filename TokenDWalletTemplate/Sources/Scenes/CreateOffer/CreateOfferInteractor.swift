@@ -80,6 +80,7 @@ extension CreateOffer {
                 let price = self.sceneModel.price,
                 price > 0
                 else {
+                    completion(.error(Localized(.seems_like_some_fields_are_empty)))
                     return
             }
             

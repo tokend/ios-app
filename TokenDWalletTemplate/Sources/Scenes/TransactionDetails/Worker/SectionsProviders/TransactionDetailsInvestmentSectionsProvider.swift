@@ -48,7 +48,8 @@ extension TransactionDetails {
             let dateCell = TransactionDetails.Model.CellModel(
                 title: dateFormatter.dateToString(date: offer.createdAt),
                 hint: Localized(.date),
-                identifier: .date
+                identifier: .date,
+                isSeparatorHidden: true
             )
             let infoSection = Model.SectionModel(
                 title: "",
@@ -65,12 +66,13 @@ extension TransactionDetails {
             let toPayCell = Model.CellModel(
                 title: quoteAmountTitle,
                 hint: Localized(.amount),
-                identifier: .amount
+                identifier: .amount,
+                isSeparatorHidden: true
             )
             toPayCells.append(toPayCell)
             if offer.fee > 0 {
                 if let index = toPayCells.indexOf(toPayCell) {
-                    toPayCells[index].isSeparatorHidden = true
+                    toPayCells[index].isSeparatorHidden = false
                 }
                 let formattedAmount = amountFormatter.assetAmountToString(offer.fee)
                 let feeCellText = formattedAmount + " " + offer.quoteAssetCode
@@ -81,6 +83,15 @@ extension TransactionDetails {
                     identifier: .fee
                 )
                 toPayCells.append(feeCell)
+                
+                let formattedTotalFeeAmount = amountFormatter.assetAmountToString(offer.fee + offer.quoteAmount)
+                let totalFeeCell = Model.CellModel(
+                    title: formattedTotalFeeAmount,
+                    hint: Localized(.total),
+                    identifier: .total,
+                    isSeparatorHidden: true
+                )
+                toPayCells.append(totalFeeCell)
             }
             let toPaySection = Model.SectionModel(
                 title: Localized(.to_pay),

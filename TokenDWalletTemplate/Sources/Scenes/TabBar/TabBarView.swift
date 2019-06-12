@@ -104,6 +104,14 @@ extension TabBar.View: UITabBarDelegate {
 }
 
 extension TabBar.View: TabBarContainerTabBarProtocol {
+    
+    public func setSelectedTabWithIdentifier(_ identifier: TabBarContainer.TabIdentifier) {
+        let request = Event.TabWasSelected.Request(identifier: identifier)
+        self.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+            businessLogic.onTabWasSelected(request: request)
+        })
+    }
+    
     public var view: UIView {
         return self
     }

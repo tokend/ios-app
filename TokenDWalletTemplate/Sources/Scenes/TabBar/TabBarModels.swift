@@ -21,6 +21,7 @@ extension TabBar.Model {
     public struct SceneModel {
         var tabs: [TabItem]
         var selectedTab: TabItem?
+        var selectedTabIdentifier: TabIdentifier?
     }
     
     public struct TabItem {

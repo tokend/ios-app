@@ -23,9 +23,9 @@ extension TabsContainer.Model {
         public var tabs: [TabModel]
         public var selectedTabId: TabIdentifier?
         
-        public init() {
+        public init(selectedTabId: TabIdentifier? = nil) {
             self.tabs = []
-            self.selectedTabId = nil
+            self.selectedTabId = selectedTabId
         }
     }
     
@@ -58,6 +58,7 @@ extension TabsContainer.Model {
         let isPickerHidden: Bool
         let isTabBarHidden: Bool
         let actionButtonAppearence: ActionButtonAppearence
+        let isScrollEnabled: Bool
     }
     
     public enum ActionButtonAppearence {

@@ -7,7 +7,7 @@ class DashboardFlowController: BaseSignedInFlowController {
     
     private let navigationController: NavigationControllerProtocol =
         NavigationController()
-    private weak var dashboardScene: UIViewController?
+    private weak var dashboardScene: TabBarContainer.ViewController?
     private var operationCompletionScene: UIViewController {
         return self.dashboardScene ?? UIViewController()
     }
@@ -15,20 +15,34 @@ class DashboardFlowController: BaseSignedInFlowController {
     
     // MARK: - Public
     
-    public func run(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
-        self.showDashboardScreen(showRootScreen: showRootScreen)
+    public func run(
+        showRootScreen: ((_ vc: UIViewController) -> Void)?,
+        selectedTabIdentifier: TabsContainer.Model.TabIdentifier?
+        ) {
+        
+        self.showDashboardScreen(
+            showRootScreen: showRootScreen,
+            selectedTabIdentifier: selectedTabIdentifier
+        )
     }
     
     // MARK: - Private
     
-    private func goBackToWalletScene() {
+    private func showMovements() {
         _ = self.navigationController.popToViewController(
             self.operationCompletionScene,
             animated: true
         )
+        self.dashboardScene?.setSelectedContentWithIdentifier(
+            idetifier: Localized(.movements)
+        )
     }
     
-    private func showDashboardScreen(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+    private func showDashboardScreen(
+        showRootScreen: ((_ vc: UIViewController) -> Void)?,
+        selectedTabIdentifier: TabsContainer.Model.TabIdentifier?
+        ) {
+        
         let container = TabBarContainer.ViewController()
         let transactionsProvider = TransactionsListScene.MovementsProvider(
             movementsRepo: self.reposController.movementsRepo
@@ -84,7 +98,9 @@ class DashboardFlowController: BaseSignedInFlowController {
                 self?.navigationController.showShadow()
             }, hideShadow: { [weak self] in
                 self?.navigationController.hideShadow()
-        })
+            },
+               selectedTabIdentifier: selectedTabIdentifier
+        )
         let routing = TabBarContainer.Routing()
         
         self.dashboardScene = container
@@ -124,7 +140,7 @@ class DashboardFlowController: BaseSignedInFlowController {
             navigationController: self.navigationController,
             balanceId: nil,
             completion: { [weak self] in
-                self?.goBackToWalletScene()
+                self?.showMovements()
         })
     }
     
@@ -206,7 +222,7 @@ class DashboardFlowController: BaseSignedInFlowController {
                     navigationController: navigationController,
                     balanceId: balanceId,
                     completion: { [weak self] in
-                        self?.goBackToWalletScene()
+                        self?.showMovements()
                 })
             },
             showWithdraw: { [weak self] (balanceId) in
@@ -214,7 +230,7 @@ class DashboardFlowController: BaseSignedInFlowController {
                     navigationController: navigationController,
                     balanceId: balanceId,
                     completion: { [weak self] in
-                        self?.goBackToWalletScene()
+                        self?.showMovements()
                 })
             },
             showDeposit: { [weak self] (asset) in
@@ -254,7 +270,6 @@ class DashboardFlowController: BaseSignedInFlowController {
             balanceFetcher: balanceFetcher,
             balanceId: selectedBalanceId
         )
-        self.dashboardScene = container
         self.navigationController.pushViewController(container, animated: true)
     }
     

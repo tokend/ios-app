@@ -9,6 +9,8 @@ public protocol TabBarContainerDisplayLogic: class {
 public protocol TabBarContainerTabBarProtocol {
     var view: UIView { get }
     var height: CGFloat { get }
+    
+    func setSelectedTabWithIdentifier(_ identifier: TabBarContainer.TabIdentifier)
 }
 
 public protocol TabBarContainerContentProtocol {
@@ -81,6 +83,13 @@ extension TabBarContainer {
             self.interactorDispatch?.sendSyncRequest { businessLogic in
                 businessLogic.onViewDidLoad(request: request)
             }
+        }
+        
+        // MARK: - Public
+        
+        public func setSelectedContentWithIdentifier(idetifier: TabIdentifier) {
+            self.tabBar?.setSelectedTabWithIdentifier(idetifier)
+            self.content?.setContentWithIdentifier(idetifier)
         }
         
         // MARK: - Private
