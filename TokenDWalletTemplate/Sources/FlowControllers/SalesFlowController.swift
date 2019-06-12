@@ -129,7 +129,8 @@ class SalesFlowController: BaseSignedInFlowController {
     
     private func showInvestmentDetailsScreen(
         offerId: UInt64,
-        navigationController: NavigationControllerProtocol
+        navigationController: NavigationControllerProtocol,
+        completion: (() -> Void)? = nil
         ) {
         
         let sectionsProvider = TransactionDetails.InvestmentSectionsProvider(
@@ -144,7 +145,8 @@ class SalesFlowController: BaseSignedInFlowController {
         let vc = self.setupTransactionDetailsScreen(
             navigationController: navigationController,
             sectionsProvider: sectionsProvider,
-            title: Localized(.investment_details)
+            title: Localized(.investment_details),
+            completion: completion
         )
         
         navigationController.pushViewController(vc, animated: true)
@@ -383,8 +385,14 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onSaleInvestAction: { [weak self] (saleInvestModel) in
                 self?.showSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
-            }
-        )
+            }, onInvestHistory: { [weak self] (offerId, onCanceled) in
+                guard let navigationController = self?.navigationController else { return }
+                self?.showInvestmentDetailsScreen(
+                    offerId: offerId,
+                    navigationController: navigationController,
+                    completion: onCanceled
+                )
+            })
         
         SaleInvest.Configurator.configure(
             viewController: vc,

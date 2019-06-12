@@ -5,6 +5,11 @@ extension SendPaymentAmount {
         
         // MARK: - Public properties
         
+        public var title: String? {
+            get { return self.titleLabel.text }
+            set { self.titleLabel.text = newValue }
+        }
+        
         // MARK: - Private properties
         
         private let containerView: UIView = UIView()
@@ -40,8 +45,11 @@ extension SendPaymentAmount {
                 self.amountLabel.text = nil
                 return
             }
-            
             self.amountLabel.text = "\(amount) \(asset)"
+            
+            if let title = title {
+                self.titleLabel.text = title
+            }
         }
         
         func set(balanceHighlighted: Bool) {

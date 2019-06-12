@@ -7,8 +7,9 @@ public protocol SaleInvestPresentationLogic {
     func presentSelectBalance(response: Event.SelectBalance.Response)
     func presentBalanceSelected(response: Event.BalanceSelected.Response)
     func presentInvestAction(response: Event.InvestAction.Response)
-    func presentCancelInvestAction(response: Event.CancelInvestAction.Response)
     func presentError(response: Event.Error.Response)
+    func presentEditAmount(response: Event.EditAmount.Response)
+    func presentShowPreviousInvest(response: Event.ShowPreviousInvest.Response)
 }
 
 extension SaleInvest {
@@ -23,14 +24,14 @@ extension SaleInvest {
         // MARK: - Private properties
         
         private let presenterDispatch: PresenterDispatch
-        private let investedAmountFormatter: InvestedAmountFormatter
+        private let investedAmountFormatter: InvestedAmountFormatterProtocol
         private let amountFormatter: AmountFormatterProtocol
         
         // MARK: -
         
         init(
             presenterDispatch: PresenterDispatch,
-            investedAmountFormatter: InvestedAmountFormatter,
+            investedAmountFormatter: InvestedAmountFormatterProtocol,
             amountFormatter: AmountFormatterProtocol
             ) {
             
@@ -45,29 +46,17 @@ extension SaleInvest {
             investingModel: Model.InvestingModel
             ) -> Model.InvestingViewModel {
             
-            let availableAmount: String
-            if let selectedAsset = investingModel.selectedBalance {
-                let formatted = self.investedAmountFormatter.formatAmount(
-                    investingModel.availableAmount,
-                    currency: selectedAsset.asset
-                )
-                availableAmount = Localized(
-                    .available_date,
-                    replace: [
-                        .available_date_replace_formatted: formatted
-                    ]
-                )
-            } else {
-                availableAmount = ""
-            }
+            let availableAmount = self.investedAmountFormatter
+                .assetAmountToString(investingModel.availableAmount)
             
+            let isHighlighted = investingModel.amount > investingModel.availableAmount
             return Model.InvestingViewModel(
                 availableAmount: availableAmount,
                 inputAmount: investingModel.amount,
-                maxInputAmount: investingModel.availableAmount,
                 selectedAsset: investingModel.selectedBalance?.asset,
                 isCancellable: investingModel.isCancellable,
-                actionTitle: investingModel.actionTitle
+                actionTitle: investingModel.actionTitle,
+                isHighlighted: isHighlighted
             )
         }
         
@@ -147,29 +136,24 @@ extension SaleInvest.Presenter: SaleInvest.PresentationLogic {
         }
     }
     
-    public func presentCancelInvestAction(response: Event.CancelInvestAction.Response) {
-        let viewModel: Event.CancelInvestAction.ViewModel
-        switch response {
-            
-        case .failed(let error):
-            viewModel = .failed(errorMessage: error.localizedDescription)
-            
-        case .succeeded:
-            viewModel = .succeeded
-            
-        case .loading:
-            viewModel = .loading
-        }
-        
-        self.presenterDispatch.display { displayLogic in
-            displayLogic.displayCancelInvestAction(viewModel: viewModel)
-        }
-    }
-    
     public func presentError(response: Event.Error.Response) {
         let viewModel = Event.Error.ViewModel(message: response.error.localizedDescription)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayError(viewModel: viewModel)
+        }
+    }
+    
+    public func presentEditAmount(response: Event.EditAmount.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayEditAmount(viewModel: viewModel)
+        }
+    }
+    
+    public func presentShowPreviousInvest(response: Event.ShowPreviousInvest.Response) {
+        let viewModel = response
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayShowPreviousInvest(viewModel: viewModel)
         }
     }
 }

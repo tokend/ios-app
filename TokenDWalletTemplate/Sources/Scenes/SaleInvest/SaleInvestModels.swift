@@ -84,10 +84,10 @@ extension SaleInvest.Model {
     struct InvestingViewModel {
         let availableAmount: String
         let inputAmount: Decimal
-        let maxInputAmount: Decimal
         let selectedAsset: String?
         let isCancellable: Bool
         let actionTitle: String
+        let isHighlighted: Bool
     }
     
     public struct BalanceDetailsViewModel {
@@ -96,7 +96,7 @@ extension SaleInvest.Model {
         let balanceId: String
     }
     
-    public struct InvestmentOffer {
+    public struct InvestmentOffer: Equatable {
         let amount: Decimal
         let asset: String
         let id: UInt64
@@ -161,6 +161,10 @@ extension SaleInvest.Event {
         public struct Request {
             let amount: Decimal?
         }
+        public struct Response {
+            let isAmountValid: Bool
+        }
+        public typealias ViewModel = Response
     }
     
     public enum InvestAction {
@@ -181,20 +185,13 @@ extension SaleInvest.Event {
         }
     }
     
-    public enum CancelInvestAction {
+    public enum ShowPreviousInvest {
         public struct Request {}
         
-        public enum Response {
-            case loading
-            case succeeded
-            case failed(Model.CancellationError)
+        public struct Response {
+            let prefOfferId: UInt64
         }
-        
-        public enum ViewModel {
-            case loading
-            case succeeded
-            case failed(errorMessage: String)
-        }
+        public typealias ViewModel = Response
     }
     
     public enum Error {
@@ -205,6 +202,10 @@ extension SaleInvest.Event {
         public struct ViewModel {
             let message: String
         }
+    }
+    
+    public enum PrevOfferCancelled {
+        public struct Request {}
     }
 }
 

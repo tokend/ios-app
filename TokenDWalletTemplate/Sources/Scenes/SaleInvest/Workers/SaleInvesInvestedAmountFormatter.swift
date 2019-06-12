@@ -1,15 +1,15 @@
 import Foundation
 
 protocol SaleInvestInvestedAmountFormatterProtocol {
-    func formatAmount(_ amount: Decimal, currency: String) -> String
+    func assetAmountToString(_ amount: Decimal) -> String
 }
 
 extension SaleInvest {
-    typealias InvestedAmountFormatter = SalesInvestedAmountFormatterProtocol
+    typealias InvestedAmountFormatterProtocol = SaleInvestInvestedAmountFormatterProtocol
     
     class InvestAmountFormatter: SharedAmountFormatter { }
 }
 
-extension SaleInvest.InvestAmountFormatter: SaleInvest.InvestedAmountFormatter {
+extension SaleInvest.InvestAmountFormatter: SaleInvest.InvestedAmountFormatterProtocol {
     
 }

@@ -21,5 +21,9 @@ extension SaleInvest {
         _ onSelect: @escaping (_ index: Int) -> Void
         ) -> Void
         let onSaleInvestAction: (_ sendInvestModel: Model.SaleInvestModel) -> Void
+        let onInvestHistory: (
+        _ offerId: UInt64,
+        _ onCanceled: @escaping (() -> Void)
+        ) -> Void
     }
 }

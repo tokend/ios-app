@@ -9,8 +9,9 @@ public protocol SaleInvestDisplayLogic: class {
     func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel)
     func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel)
     func displayInvestAction(viewModel: Event.InvestAction.ViewModel)
-    func displayCancelInvestAction(viewModel: Event.CancelInvestAction.ViewModel)
     func displayError(viewModel: Event.Error.ViewModel)
+    func displayEditAmount(viewModel: Event.EditAmount.ViewModel)
+    func displayShowPreviousInvest(viewModel: Event.ShowPreviousInvest.ViewModel)
 }
 
 extension SaleInvest {
@@ -27,11 +28,16 @@ extension SaleInvest {
         private let disposeBag = DisposeBag()
         
         private let containerView: UIView = UIView()
+        private let investConatinerView: UIView = UIView()
         
-        private let titleLabel: UILabel = UILabel()
-        private let investContenView: UIView = UIView()
         private let investButton: UIButton = UIButton()
-        private let cancelButton: UIButton = UIButton()
+        
+        private let historyButton: UIBarButtonItem = UIBarButtonItem(
+            image: Assets.history.image,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         
         private let helpButton: UIBarButtonItem = UIBarButtonItem(
             image: Assets.help.image,
@@ -41,15 +47,16 @@ extension SaleInvest {
         )
         
         // Invest content views
-        private var amountEditingContext: TextEditingContext<Decimal>?
-        private let valueValidator = DecimalMaxValueValidator(maxValue: nil)
-        private let amountField: TextFieldView = SharedViewsBuilder.createTextFieldView()
-        private let selectAssetButton: UIButton = UIButton()
-        private let availableAssetAmountLabel: UILabel = UILabel()
         
+        private let enterInvestAmountView: EnterInvestAmountView = EnterInvestAmountView()
+        private let availableBalanceView: AvalableBalanceView = AvalableBalanceView()
+        
+        private let buttonHeight: CGFloat = 45.0
         private let sideInset: CGFloat = 20
         private let topInset: CGFloat = 15
         private let bottomInset: CGFloat = 15
+        
+        private var viewDidAppear: Bool = false
         
         // MARK: -
         
@@ -86,21 +93,65 @@ extension SaleInvest {
             }
         }
         
+        public override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            self.viewDidAppear = true
+        }
+        
         // MARK: - Private
         
         private func commonInit() {
             self.setupView()
             self.setupContainerView()
-            self.setupTitleLabel()
-            self.setupInvestContenView()
-            self.setupAvailableAssetAmountLabel()
-            self.setupAmountTextField()
+            self.setupInvestContainerView()
             self.setupInvestButton()
-            self.setupCancelButton()
-            self.setupSelectAssetButton()
-            self.setupHelpButton()
-            
+            self.setupAvailableBalanceView()
+            self.setupEnterInvestAmountView()
+            self.setupNavBarButtons()
             self.setupLayout()
+            
+            self.observeKeyboard()
+        }
+        
+        private func observeKeyboard() {
+            let keyboardObserver = KeyboardObserver(
+                self,
+                keyboardWillChange: { (attributes) in
+                    let keyboardHeight = attributes.heightIn(view: self.view)
+                    if attributes.showingIn(view: self.view) {
+                        self.investButton.snp.remakeConstraints { (make) in
+                            make.leading.trailing.equalToSuperview()
+                            make.bottom.equalToSuperview().inset(keyboardHeight)
+                            make.height.equalTo(self.buttonHeight)
+                        }
+                    } else {
+                        self.investButton.snp.remakeConstraints { (make) in
+                            make.leading.trailing.equalToSuperview()
+                            make.bottom.equalTo(self.view.safeArea.bottom)
+                            make.height.equalTo(self.buttonHeight)
+                        }
+                    }
+                    
+                    if self.viewDidAppear {
+                        UIView.animate(withKeyboardAttributes: attributes, animations: {
+                            self.view.layoutIfNeeded()
+                        })
+                    }
+            })
+            KeyboardController.shared.add(observer: keyboardObserver)
+        }
+        
+        private func updateNavBarButtons(isCancellable: Bool) {
+            if isCancellable {
+                self.navigationItem.rightBarButtonItems = [
+                    self.helpButton,
+                    self.historyButton
+                ]
+            } else {
+                self.navigationItem.rightBarButtonItems = [
+                    self.helpButton
+                ]
+            }
         }
         
         private func setupView() {
@@ -111,87 +162,13 @@ extension SaleInvest {
             self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
+        private func setupInvestContainerView() {
+            self.investConatinerView.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
         private func setupSeparatorView(separator: UIView) {
             separator.backgroundColor = Theme.Colors.separatorOnContentBackgroundColor
             separator.isUserInteractionEnabled = false
-        }
-        
-        private func setupTitleLabel() {
-            self.titleLabel.font = Theme.Fonts.largeTitleFont
-            self.titleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.titleLabel.textAlignment = .left
-            self.titleLabel.numberOfLines = 1
-            self.titleLabel.text = Localized(.investing)
-        }
-        
-        private func setupInvestContenView() {
-            self.investContenView.backgroundColor = UIColor.clear
-        }
-        
-        private func setupAvailableAssetAmountLabel() {
-            self.availableAssetAmountLabel.font = Theme.Fonts.smallTextFont
-            self.availableAssetAmountLabel.textColor = Theme.Colors.sideTextOnContainerBackgroundColor
-            self.availableAssetAmountLabel.textAlignment = .left
-            self.availableAssetAmountLabel.numberOfLines = 1
-        }
-        
-        private func setupAmountTextField() {
-            self.amountField.placeholder = Localized(.amount)
-            self.amountField.textColor = Theme.Colors.textOnContentBackgroundColor
-            self.amountField.invalidTextColor = Theme.Colors.negativeAmountColor
-            self.amountField.onShouldReturn = { fieldView in
-                _ = fieldView.resignFirstResponder()
-                return false
-            }
-            
-            let valueFormatter = PrecisedFormatter()
-            valueFormatter.emptyZeroValue = true
-            
-            self.amountEditingContext = TextEditingContext(
-                textInputView: self.amountField,
-                valueFormatter: valueFormatter,
-                valueValidator: self.valueValidator,
-                callbacks: TextEditingContext.Callbacks(
-                    onInputValue: { [weak self] (value) in
-                        let requset = Event.EditAmount.Request(amount: value)
-                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                            businessLogic.onEditAmount(request: requset)
-                        })
-                })
-            )
-        }
-        
-        private func setupCancelButton() {
-            self.cancelButton.backgroundColor = Theme.Colors.contentBackgroundColor
-            self.cancelButton.titleLabel?.font = Theme.Fonts.plainTextFont
-            self.cancelButton.setTitle(
-                Localized(.cancel_investment),
-                for: .normal
-            )
-            self.cancelButton.setTitleColor(
-                Theme.Colors.accentColor,
-                for: .normal
-            )
-            
-            self.cancelButton
-                .rx
-                .controlEvent(.touchUpInside)
-                .asDriver()
-                .drive(onNext: { [weak self] in
-                    let onSelected: ((Int) -> Void) = { _ in
-                        let request = Event.CancelInvestAction.Request()
-                        self?.interactorDispatch?.sendRequest { businessLogic in
-                            businessLogic.onCancelInvestAction(request: request)
-                        }
-                    }
-                    self?.routing?.showDialog(
-                        Localized(.cancel_investment),
-                        Localized(.are_you_sure_you_want_to_cancel_investment),
-                        [Localized(.yes)],
-                        onSelected
-                    )
-                })
-                .disposed(by: self.disposeBag)
         }
         
         private func setupInvestButton() {
@@ -212,7 +189,19 @@ extension SaleInvest {
                 .disposed(by: self.disposeBag)
         }
         
-        private func setupHelpButton() {
+        private func setupNavBarButtons() {
+            self.historyButton
+                .rx
+                .tap
+                .asDriver()
+                .drive(onNext: { [weak self] in
+                    let request = Event.ShowPreviousInvest.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onShowPreviousInvest(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
+            
             self.helpButton
                 .rx
                 .tap
@@ -224,103 +213,66 @@ extension SaleInvest {
                     )
                 })
                 .disposed(by: self.disposeBag)
-            self.navigationItem.rightBarButtonItem = self.helpButton
         }
         
-        private func setupSelectAssetButton() {
-            self.selectAssetButton.setTitleColor(Theme.Colors.darkAccentColor, for: .normal)
-            self.selectAssetButton.titleLabel?.font = Theme.Fonts.actionButtonFont
-            self.selectAssetButton.contentEdgeInsets = UIEdgeInsets(
-                top: 0.0, left: self.sideInset, bottom: 0.0, right: 0.0
-            )
-            self.selectAssetButton
-                .rx
-                .controlEvent(.touchUpInside)
-                .asDriver()
-                .drive(onNext: { [weak self] in
-                    let requset = Event.SelectBalance.Request()
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        businessLogic.onSelectBalance(request: requset)
-                    })
+        private func setupAvailableBalanceView() {
+            self.availableBalanceView.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.availableBalanceView.title = Localized(.available_colon)
+        }
+        
+        private func setupEnterInvestAmountView() {
+            self.enterInvestAmountView.onEnterAmount = { [weak self] (amount) in
+                let request = Event.EditAmount.Request(amount: amount ?? 0.0)
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onEditAmount(request: request)
                 })
-                .disposed(by: self.disposeBag)
+            }
+            
+            self.enterInvestAmountView.onSelectAsset = { [weak self] in
+                let request = Event.SelectBalance.Request()
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onSelectBalance(request: request)
+                })
+            }
         }
         
         private func setupLayout() {
             self.view.addSubview(self.containerView)
-            self.containerView.addSubview(self.titleLabel)
-            self.containerView.addSubview(self.investContenView)
-            self.containerView.addSubview(self.investButton)
-            self.containerView.addSubview(self.cancelButton)
+            self.view.addSubview(self.investButton)
+            
+            self.containerView.addSubview(self.investConatinerView)
             
             self.containerView.snp.makeConstraints { (make) in
-                make.leading.trailing.equalToSuperview()
-                make.top.equalToSuperview().inset(self.topInset)
-                make.bottom.lessThanOrEqualToSuperview()
+                make.leading.trailing.top.equalToSuperview()
+                make.bottom.equalTo(self.investButton.snp.top)
             }
-            
-            self.titleLabel.snp.makeConstraints { (make) in
-                make.leading.trailing.equalToSuperview().inset(self.sideInset)
-                make.top.equalToSuperview().inset(self.topInset)
-            }
-            
-            self.investContenView.snp.makeConstraints { (make) in
-                make.leading.trailing.equalToSuperview().inset(self.sideInset)
-                make.top.equalTo(self.titleLabel.snp.bottom)
-            }
-            
-            self.layoutInvestContenViews()
             
             self.investButton.snp.makeConstraints { (make) in
-                make.trailing.equalToSuperview().inset(self.sideInset)
-                make.top.equalTo(self.investContenView.snp.bottom)
-                make.bottom.equalToSuperview().inset(self.bottomInset)
-                make.height.equalTo(44.0)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(self.view.safeArea.bottom)
             }
             
-            self.cancelButton.snp.makeConstraints { (make) in
-                make.leading.equalToSuperview().inset(self.sideInset)
-                make.top.equalTo(self.investContenView.snp.bottom)
-                make.bottom.equalToSuperview().inset(self.bottomInset)
-                make.height.equalTo(44.0)
+            self.investConatinerView.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                make.centerY.equalToSuperview()
             }
+            
+            self.layoutInvestContainerViews()
         }
         
-        private func layoutInvestContenViews() {
-            let separator: UIView = UIView()
-            self.setupSeparatorView(separator: separator)
+        private func layoutInvestContainerViews() {
+            self.investConatinerView.addSubview(self.availableBalanceView)
+            self.investConatinerView.addSubview(self.enterInvestAmountView)
             
-            self.investContenView.addSubview(self.amountField)
-            self.investContenView.addSubview(separator)
-            self.investContenView.addSubview(self.availableAssetAmountLabel)
-            self.investContenView.addSubview(self.selectAssetButton)
-            
-            self.amountField.snp.makeConstraints { (make) in
-                make.leading.equalToSuperview()
-                make.top.equalToSuperview().inset(self.topInset)
-                make.height.equalTo(44.0)
+            self.availableBalanceView.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.top.equalToSuperview()
             }
             
-            separator.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.amountField.snp.leading)
-                make.trailing.equalTo(self.amountField.snp.trailing)
-                make.top.equalTo(self.amountField.snp.bottom).offset(4.0)
-                make.height.equalTo(1)
-            }
-            
-            self.availableAssetAmountLabel.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.amountField.snp.leading)
-                make.trailing.equalTo(self.amountField.snp.trailing)
-                make.top.equalTo(separator.snp.bottom).offset(4.0)
-                make.bottom.equalToSuperview().inset(self.bottomInset)
-            }
-            
-            self.selectAssetButton.snp.makeConstraints { (make) in
-                make.leading.equalTo(self.amountField.snp.trailing).offset(self.sideInset)
-                make.trailing.equalToSuperview()
-                make.centerY.equalTo(self.amountField)
-                make.width.equalTo(60)
-                make.height.equalTo(44.0)
+            self.enterInvestAmountView.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.availableBalanceView.snp.bottom).offset(self.topInset)
+                make.bottom.equalToSuperview()
             }
         }
     }
@@ -329,12 +281,19 @@ extension SaleInvest {
 extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
     
     public func displaySceneUpdated(viewModel: Event.SceneUpdated.ViewModel) {
-        self.valueValidator.maxValue = viewModel.viewModel.maxInputAmount
-        self.amountEditingContext?.setValue(viewModel.viewModel.inputAmount)
-        self.availableAssetAmountLabel.text = viewModel.viewModel.availableAmount
-        self.selectAssetButton.setTitle(viewModel.viewModel.selectedAsset, for: .normal)
-        self.cancelButton.isHidden = !viewModel.viewModel.isCancellable
+        self.availableBalanceView.set(
+            amount: viewModel.viewModel.availableAmount,
+            asset: viewModel.viewModel.selectedAsset
+        )
+        self.enterInvestAmountView.set(
+            amount: viewModel.viewModel.inputAmount,
+            asset: viewModel.viewModel.selectedAsset
+        )
+        self.enterInvestAmountView.set(
+            amountHighlighted: viewModel.viewModel.isHighlighted
+        )
         self.investButton.setTitle(viewModel.viewModel.actionTitle, for: .normal)
+        self.updateNavBarButtons(isCancellable: viewModel.viewModel.isCancellable)
     }
     
     public func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel) {
@@ -349,12 +308,19 @@ extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
     }
     
     public func displayBalanceSelected(viewModel: Event.BalanceSelected.ViewModel) {
-        self.valueValidator.maxValue = viewModel.viewModel.maxInputAmount
-        self.amountEditingContext?.setValue(viewModel.viewModel.inputAmount)
-        self.availableAssetAmountLabel.text = viewModel.viewModel.availableAmount
-        self.selectAssetButton.setTitle(viewModel.viewModel.selectedAsset, for: .normal)
-        self.cancelButton.isHidden = !viewModel.viewModel.isCancellable
-        self.investButton.setTitle(viewModel.viewModel.actionTitle, for: .normal)
+
+        self.availableBalanceView.set(
+            amount: viewModel.viewModel.availableAmount,
+            asset: viewModel.viewModel.selectedAsset
+        )
+        self.enterInvestAmountView.set(
+            amount: viewModel.viewModel.inputAmount,
+            asset: viewModel.viewModel.selectedAsset
+        )
+        self.enterInvestAmountView.set(
+            amountHighlighted: viewModel.viewModel.isHighlighted
+        )
+        self.updateNavBarButtons(isCancellable: viewModel.viewModel.isCancellable)
     }
     
     public func displayInvestAction(viewModel: Event.InvestAction.ViewModel) {
@@ -376,22 +342,23 @@ extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
         }
     }
     
-    public func displayCancelInvestAction(viewModel: Event.CancelInvestAction.ViewModel) {
-        switch viewModel {
-            
-        case .loading:
-            self.routing?.onShowProgress()
-            
-        case .succeeded:
-            self.routing?.onHideProgress()
-            
-        case .failed(let message):
-            self.routing?.onHideProgress()
-            self.routing?.onShowError(message)
-        }
-    }
-    
     public func displayError(viewModel: Event.Error.ViewModel) {
         self.routing?.onShowError(viewModel.message)
+    }
+    
+    public func displayEditAmount(viewModel: Event.EditAmount.ViewModel) {
+        self.enterInvestAmountView.set(
+            amountHighlighted: !viewModel.isAmountValid
+        )
+    }
+    
+    public func displayShowPreviousInvest(viewModel: Event.ShowPreviousInvest.ViewModel) {
+        let onCanceled: (() -> Void) = { [weak self] in
+            let request = Event.PrevOfferCancelled.Request()
+            self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                businessLogic.onPrevOfferCanceled(request: request)
+            })
+        }
+        self.routing?.onInvestHistory(viewModel.prefOfferId, onCanceled)
     }
 }

@@ -32,6 +32,7 @@
 "available" = "Available";
 "available_amount" = "Available: $(amount)";
 "available_amount_replace_amount" = "amount";
+"available_colon" = "Available:";
 "available_assets_for_this_operations" = "Available assets for this operations were not found";
 "available_date" = "Available: $(formatted)";
 "available_date_replace_formatted" = "formatted";
@@ -488,7 +489,7 @@
 "unsupported_version" = "$(function) - Unsupported version";
 "unsupported_version_replace_function" = "function";
 "unverified_account" = "Unverified account";
-"update" = "UPDATE";
+"update" = "Update";
 "upper_bound" = "Upper bound";
 "userdataprovider_should_always_provide_walletdata" = "UserDataProvider should always provide walletData";
 "verification" = "Verification";

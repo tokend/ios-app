@@ -6,7 +6,7 @@ extension SaleInvest {
         
         static func configure(
             viewController: ViewController,
-            investedAmountFormatter: SalesInvestedAmountFormatterProtocol,
+            investedAmountFormatter: InvestedAmountFormatterProtocol,
             amountFormatter: AmountFormatterProtocol,
             dataProvider: DataProvider,
             cancelInvestWorker: CancelInvestWorkerProtocol,
