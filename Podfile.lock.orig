@@ -207,6 +207,10 @@ SPEC CHECKSUMS:
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
+<<<<<<< HEAD
 PODFILE CHECKSUM: b8770078de4ff8a345ff6ac703b2cc56b23270a2
+=======
+PODFILE CHECKSUM: 7c69af16384279d6768d2cd665e285d14435dbb4
+>>>>>>> origin/improvement/error-improvement
 
 COCOAPODS: 1.6.1
