@@ -93,8 +93,17 @@ extension RegisterScene {
             self.flowControllerStack.api.generalApi.requestNetworkInfo { [weak self] (result) in
                 switch result {
                     
-                case .failed:
-                    completion(.failed(.failedToSaveNetwork))
+                case .failed(let error):
+                    
+                    switch error {
+                        
+                    case .failedToDecode,
+                         .requestError:
+                        completion(.failed(.failedToSaveNetwork))
+                        
+                    case .transportSecurity:
+                        completion(.failed(.otherError(error)))
+                    }
                     
                 case .succeeded(let network):
                     self?.signIn(
@@ -120,8 +129,16 @@ extension RegisterScene {
             self.flowControllerStack.api.generalApi.requestNetworkInfo { [weak self] (result) in
                 switch result {
                     
-                case .failed:
-                    completion(.failed(.failedToSaveNetwork))
+                case .failed(let error):
+                    switch error {
+                        
+                    case .failedToDecode,
+                         .requestError:
+                        completion(.failed(.failedToSaveNetwork))
+                        
+                    case .transportSecurity:
+                        completion(.failed(.otherError(error)))
+                    }
                     
                 case .succeeded(let network):
                     self?.buildSignUpRequest(
