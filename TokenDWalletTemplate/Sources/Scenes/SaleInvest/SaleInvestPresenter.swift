@@ -49,6 +49,17 @@ extension SaleInvest {
             let availableAmount = self.investedAmountFormatter
                 .assetAmountToString(investingModel.availableAmount)
             
+            let existingInvestments = investingModel.existingInvestment
+                .map { (investment) -> SaleInvest.ExistingInvestmentCell.ViewModel in
+                    let amount = self.amountFormatter.formatAmount(
+                        investment.amount,
+                        currency: investment.asset
+                    )
+                    return SaleInvest.ExistingInvestmentCell.ViewModel(
+                        investmentAmount: amount
+                    )
+            }
+            
             let isHighlighted = investingModel.amount > investingModel.availableAmount
             return Model.InvestingViewModel(
                 availableAmount: availableAmount,
@@ -56,7 +67,8 @@ extension SaleInvest {
                 selectedAsset: investingModel.selectedBalance?.asset,
                 isCancellable: investingModel.isCancellable,
                 actionTitle: investingModel.actionTitle,
-                isHighlighted: isHighlighted
+                isHighlighted: isHighlighted,
+                existingInvestment: existingInvestments
             )
         }
         

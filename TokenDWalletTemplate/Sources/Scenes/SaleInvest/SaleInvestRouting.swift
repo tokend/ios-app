@@ -22,7 +22,7 @@ extension SaleInvest {
         ) -> Void
         let onSaleInvestAction: (_ sendInvestModel: Model.SaleInvestModel) -> Void
         let onInvestHistory: (
-        _ offerId: UInt64,
+        _ baseAsset: String,
         _ onCanceled: @escaping (() -> Void)
         ) -> Void
     }

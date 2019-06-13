@@ -516,6 +516,7 @@
 "yesterday_at" = "yesterday at $(hours)";
 "yesterday_at_replace_hours" = "hours";
 "you_can_grant_permissions" = "You can grant permissions from app Settings in System Preferences. Would you like to open Settings?";
+"you_have_already_invested" = "You have already invested:";
 "you_have_no_depositable_assets" = "You have no depositable assets";
 "your_account_is_approved" = "Your account is approved. All actions that requires verification are now available";
 "your_verification_request_is_submitted" = "Your verification request is submitted. Please wait until we review the information. You will be able to update details once the request is reviewed.";

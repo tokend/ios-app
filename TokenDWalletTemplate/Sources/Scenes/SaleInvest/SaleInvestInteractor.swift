@@ -171,7 +171,8 @@ extension SaleInvest {
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
                 isCancellable: isCancellable,
-                actionTitle: actionTitle
+                actionTitle: actionTitle,
+                existingInvestment: self.offers
             )
             
             return investingModel
@@ -477,11 +478,10 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
     }
     
     public func onShowPreviousInvest(request: Event.ShowPreviousInvest.Request) {
-        guard let selectedBalance = self.sceneModel.selectedBalance,
-            let prevOfferId = self.getPrevOfferId(selectedBalance: selectedBalance) else {
-                return
+        guard let baseAsset = self.sale?.baseAsset else {
+            return
         }
-        let response = Event.ShowPreviousInvest.Response(prefOfferId: prevOfferId)
+        let response = Event.ShowPreviousInvest.Response(baseAsset: baseAsset)
         self.presenter.presentShowPreviousInvest(response: response)
     }
     

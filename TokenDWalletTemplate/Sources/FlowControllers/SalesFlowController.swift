@@ -78,7 +78,11 @@ class SalesFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showInvestments() {
+    private func showInvestments(
+        targetBaseAsset: String? = nil,
+        completion: (() -> Void)? = nil
+        ) {
+        
         let transactionsListRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
         )
@@ -86,7 +90,8 @@ class SalesFlowController: BaseSignedInFlowController {
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             balancesRepo: self.reposController.balancesRepo,
             rateProvider: transactionsListRateProvider,
-            originalAccountId: self.userDataProvider.walletData.accountId
+            originalAccountId: self.userDataProvider.walletData.accountId,
+            targetBaseAsset: targetBaseAsset
         )
         
         let actionProvider = TransactionsListScene.ActionProvider(
@@ -99,7 +104,8 @@ class SalesFlowController: BaseSignedInFlowController {
                 guard let navigationController = self?.navigationController else { return }
                 self?.showInvestmentDetailsScreen(
                     offerId: identifier,
-                    navigationController: navigationController
+                    navigationController: navigationController,
+                    completion: completion
                 )
             },
             showSendPayment: { _ in },
@@ -385,11 +391,9 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onSaleInvestAction: { [weak self] (saleInvestModel) in
                 self?.showSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
-            }, onInvestHistory: { [weak self] (offerId, onCanceled) in
-                guard let navigationController = self?.navigationController else { return }
-                self?.showInvestmentDetailsScreen(
-                    offerId: offerId,
-                    navigationController: navigationController,
+            }, onInvestHistory: { [weak self] (targetBaseAsset, onCanceled) in
+                self?.showInvestments(
+                    targetBaseAsset: targetBaseAsset,
                     completion: onCanceled
                 )
             })

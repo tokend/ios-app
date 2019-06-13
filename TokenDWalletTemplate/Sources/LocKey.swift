@@ -519,6 +519,7 @@ enum LocKey: String {
     case yesterday_at
     case yesterday_at_replace_hours
     case you_can_grant_permissions
+    case you_have_already_invested
     case you_have_no_depositable_assets
     case your_account_is_approved
     case your_verification_request_is_submitted

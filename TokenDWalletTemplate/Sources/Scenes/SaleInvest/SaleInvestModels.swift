@@ -79,6 +79,7 @@ extension SaleInvest.Model {
         let availableAmount: Decimal
         let isCancellable: Bool
         let actionTitle: String
+        let existingInvestment: [InvestmentOffer]
     }
     
     struct InvestingViewModel {
@@ -88,6 +89,7 @@ extension SaleInvest.Model {
         let isCancellable: Bool
         let actionTitle: String
         let isHighlighted: Bool
+        let existingInvestment: [SaleInvest.ExistingInvestmentCell.ViewModel]
     }
     
     public struct BalanceDetailsViewModel {
@@ -189,7 +191,7 @@ extension SaleInvest.Event {
         public struct Request {}
         
         public struct Response {
-            let prefOfferId: UInt64
+            let baseAsset: String
         }
         public typealias ViewModel = Response
     }

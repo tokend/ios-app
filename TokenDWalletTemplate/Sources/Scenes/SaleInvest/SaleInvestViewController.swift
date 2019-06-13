@@ -50,6 +50,18 @@ extension SaleInvest {
         
         private let enterInvestAmountView: EnterInvestAmountView = EnterInvestAmountView()
         private let availableBalanceView: AvalableBalanceView = AvalableBalanceView()
+        private let existingInvestmentsLabel: UILabel = UILabel()
+        private let existingInvestmentsTableView: UITableView = UITableView(
+            frame: .zero,
+            style: .grouped
+        )
+        
+        private var existingInvestments: [SaleInvest.ExistingInvestmentCell.ViewModel] = [] {
+            didSet {
+                self.existingInvestmentsTableView.reloadData()
+                self.updateExistingInvestments()
+            }
+        }
         
         private let buttonHeight: CGFloat = 45.0
         private let sideInset: CGFloat = 20
@@ -107,6 +119,8 @@ extension SaleInvest {
             self.setupInvestButton()
             self.setupAvailableBalanceView()
             self.setupEnterInvestAmountView()
+            self.setupExistingInvestmentsLabel()
+            self.setupExistingInvestmentsTableView()
             self.setupNavBarButtons()
             self.setupLayout()
             
@@ -152,6 +166,19 @@ extension SaleInvest {
                     self.helpButton
                 ]
             }
+        }
+        
+        private func updateExistingInvestments() {
+            let cellsCount = CGFloat(self.existingInvestments.count)
+            let cellHeight = self.existingInvestmentsTableView.estimatedRowHeight
+            let estimatedHeight = cellsCount * cellHeight
+            self.existingInvestmentsTableView.snp.remakeConstraints { (make) in
+                make.leading.trailing.equalTo(self.existingInvestmentsLabel)
+                make.top.equalTo(self.existingInvestmentsLabel.snp.bottom)
+                make.bottom.equalToSuperview()
+                make.height.equalTo(estimatedHeight)
+            }
+            self.existingInvestmentsLabel.isHidden = cellsCount == 0
         }
         
         private func setupView() {
@@ -236,6 +263,28 @@ extension SaleInvest {
             }
         }
         
+        private func setupExistingInvestmentsLabel() {
+            self.existingInvestmentsLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.existingInvestmentsLabel.text = Localized(.you_have_already_invested)
+            self.existingInvestmentsLabel.textColor = Theme.Colors.separatorOnMainColor
+            self.existingInvestmentsLabel.font = Theme.Fonts.smallTextFont
+            self.existingInvestmentsLabel.textAlignment = .center
+        }
+        
+        private func setupExistingInvestmentsTableView() {
+            self.existingInvestmentsTableView.backgroundColor = Theme.Colors.contentBackgroundColor
+            self.existingInvestmentsTableView.register(classes: [
+                    SaleInvest.ExistingInvestmentCell.ViewModel.self
+                ]
+            )
+            self.existingInvestmentsTableView.dataSource = self
+            self.existingInvestmentsTableView.delegate = self
+            self.existingInvestmentsTableView.estimatedRowHeight = 25.0
+            self.existingInvestmentsTableView.rowHeight = UITableView.automaticDimension
+            self.existingInvestmentsTableView.isUserInteractionEnabled = false
+            self.existingInvestmentsTableView.separatorStyle = .none
+        }
+        
         private func setupLayout() {
             self.view.addSubview(self.containerView)
             self.view.addSubview(self.investButton)
@@ -263,6 +312,8 @@ extension SaleInvest {
         private func layoutInvestContainerViews() {
             self.investConatinerView.addSubview(self.availableBalanceView)
             self.investConatinerView.addSubview(self.enterInvestAmountView)
+            self.investConatinerView.addSubview(self.existingInvestmentsLabel)
+            self.investConatinerView.addSubview(self.existingInvestmentsTableView)
             
             self.availableBalanceView.snp.makeConstraints { (make) in
                 make.centerX.equalToSuperview()
@@ -272,6 +323,16 @@ extension SaleInvest {
             self.enterInvestAmountView.snp.makeConstraints { (make) in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(self.availableBalanceView.snp.bottom).offset(self.topInset)
+            }
+            
+            self.existingInvestmentsLabel.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.enterInvestAmountView.snp.bottom).offset(self.topInset)
+            }
+            
+            self.existingInvestmentsTableView.snp.makeConstraints { (make) in
+                make.leading.trailing.equalTo(self.existingInvestmentsLabel)
+                make.top.equalTo(self.existingInvestmentsLabel.snp.bottom)
                 make.bottom.equalToSuperview()
             }
         }
@@ -293,6 +354,7 @@ extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
             amountHighlighted: viewModel.viewModel.isHighlighted
         )
         self.investButton.setTitle(viewModel.viewModel.actionTitle, for: .normal)
+        self.existingInvestments = viewModel.viewModel.existingInvestment
         self.updateNavBarButtons(isCancellable: viewModel.viewModel.isCancellable)
     }
     
@@ -320,6 +382,8 @@ extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
         self.enterInvestAmountView.set(
             amountHighlighted: viewModel.viewModel.isHighlighted
         )
+        self.investButton.setTitle(viewModel.viewModel.actionTitle, for: .normal)
+        self.existingInvestments = viewModel.viewModel.existingInvestment
         self.updateNavBarButtons(isCancellable: viewModel.viewModel.isCancellable)
     }
     
@@ -359,6 +423,42 @@ extension SaleInvest.ViewController: SaleInvest.DisplayLogic {
                 businessLogic.onPrevOfferCanceled(request: request)
             })
         }
-        self.routing?.onInvestHistory(viewModel.prefOfferId, onCanceled)
+        self.routing?.onInvestHistory(viewModel.baseAsset, onCanceled)
+    }
+}
+
+extension SaleInvest.ViewController: UITableViewDataSource {
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return self.existingInvestments.isEmpty ? 0 : 1
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.existingInvestments.count
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let model = self.existingInvestments[indexPath.row]
+        let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
+        return cell
+    }
+}
+
+extension SaleInvest.ViewController: UITableViewDelegate {
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.0
     }
 }
