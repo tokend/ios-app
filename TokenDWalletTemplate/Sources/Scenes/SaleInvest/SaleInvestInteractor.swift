@@ -29,6 +29,7 @@ extension SaleInvest {
         private let presenter: PresentationLogic
         private let dataProvider: DataProvider
         private let cancelInvestWorker: CancelInvestWorkerProtocol
+        private let balanceCreator: InvestBalanceCreatorProtocol
         private let feeLoader: FeeLoader
         private var sceneModel: Model.SceneModel
         
@@ -94,6 +95,7 @@ extension SaleInvest {
             presenter: PresentationLogic,
             dataProvider: DataProvider,
             cancelInvestWorker: CancelInvestWorkerProtocol,
+            balanceCreator: InvestBalanceCreatorProtocol,
             feeLoader: FeeLoader,
             sceneModel: Model.SceneModel
             ) {
@@ -101,6 +103,7 @@ extension SaleInvest {
             self.presenter = presenter
             self.dataProvider = dataProvider
             self.cancelInvestWorker = cancelInvestWorker
+            self.balanceCreator = balanceCreator
             self.feeLoader = feeLoader
             self.sceneModel = sceneModel
         }
@@ -309,6 +312,51 @@ extension SaleInvest {
                     }
             }
         }
+        
+        private func finishInvestAction(
+            sale: Model.SaleModel,
+            quoteAsset: Model.SaleModel.QuoteAsset,
+            baseBalance: Model.BalanceDetails,
+            selectedBalance: Model.BalanceDetails,
+            quoteAmount: Decimal,
+            orderBookId: UInt64
+            ) {
+            
+            self.loadFee(
+                quoteAsset: quoteAsset.asset,
+                investAmount: quoteAmount) { [weak self] (result) in
+                    
+                    switch result {
+                        
+                    case .failed(let error):
+                        let response = Event.InvestAction.Response.failed(.feeError(error))
+                        self?.presenter.presentInvestAction(response: response)
+                        
+                    case .success(let fee):
+                        let prevOfferId = self?.getPrevOfferId(selectedBalance: selectedBalance)
+                        let baseAmount = quoteAmount/quoteAsset.price
+                        
+                        let saleInvestModel = Model.SaleInvestModel(
+                            baseAsset: sale.baseAsset,
+                            quoteAsset: quoteAsset.asset,
+                            baseBalance: baseBalance.balanceId,
+                            quoteBalance: selectedBalance.balanceId,
+                            isBuy: true,
+                            baseAmount: baseAmount,
+                            quoteAmount: quoteAmount,
+                            baseAssetName: sale.baseAssetName,
+                            price: quoteAsset.price,
+                            fee: fee.percent,
+                            type: sale.type,
+                            offerId: 0,
+                            prevOfferId: prevOfferId,
+                            orderBookId: orderBookId
+                        )
+                        let response = Event.InvestAction.Response.succeeded(saleInvestModel)
+                        self?.presenter.presentInvestAction(response: response)
+                    }
+            }
+        }
     }
 }
 
@@ -420,51 +468,45 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
             return
         }
         
-        guard let baseBalance = self.saleBalance else {
-            let response = Event.InvestAction.Response.failed(.baseBalanceIsNotFound(asset: sale.baseAsset))
-            self.presenter.presentInvestAction(response: response)
-            return
-        }
-        
         guard let orderBookId = UInt64(sale.id) else {
             let response = Event.InvestAction.Response.failed(.formatError)
             self.presenter.presentInvestAction(response: response)
             return
         }
         
-        self.loadFee(
-            quoteAsset: quoteAsset.asset,
-            investAmount: investAmount) { [weak self] (result) in
-                
-                switch result {
-                    
-                case .failed(let error):
-                    let response = Event.InvestAction.Response.failed(.feeError(error))
-                    self?.presenter.presentInvestAction(response: response)
-                    
-                case .success(let fee):
-                    let prevOfferId = self?.getPrevOfferId(selectedBalance: selectedBalance)
-                    let baseAmount = investAmount/quoteAsset.price
-                    
-                    let saleInvestModel = Model.SaleInvestModel(
-                        baseAsset: sale.baseAsset,
-                        quoteAsset: quoteAsset.asset,
-                        baseBalance: baseBalance.balanceId,
-                        quoteBalance: selectedBalance.balanceId,
-                        isBuy: true,
-                        baseAmount: baseAmount,
-                        quoteAmount: investAmount,
-                        baseAssetName: sale.baseAssetName,
-                        price: quoteAsset.price,
-                        fee: fee.percent,
-                        type: sale.type,
-                        offerId: 0,
-                        prevOfferId: prevOfferId,
-                        orderBookId: orderBookId
-                    )
-                    let response = Event.InvestAction.Response.succeeded(saleInvestModel)
-                    self?.presenter.presentInvestAction(response: response)
-                }
+        if let baseBalance = self.saleBalance {
+            self.finishInvestAction(
+                sale: sale,
+                quoteAsset: quoteAsset,
+                baseBalance: baseBalance,
+                selectedBalance: selectedBalance,
+                quoteAmount: investAmount,
+                orderBookId: orderBookId
+            )
+        } else {
+            self.balanceCreator.createBalance(
+                asset: sale.baseAsset,
+                completion: { (result) in
+                    switch result {
+                        
+                    case .failure:
+                        let response = Event.InvestAction.Response.failed(
+                            .failedToCreateBaseBalance(asset: sale.baseAsset)
+                        )
+                        self.presenter.presentInvestAction(response: response)
+                        return
+                        
+                    case .success(let baseBalance):
+                        self.finishInvestAction(
+                            sale: sale,
+                            quoteAsset: quoteAsset,
+                            baseBalance: baseBalance,
+                            selectedBalance: selectedBalance,
+                            quoteAmount: investAmount,
+                            orderBookId: orderBookId
+                        )
+                    }
+            })
         }
     }
     

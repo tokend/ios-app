@@ -215,6 +215,7 @@ extension SaleInvest.Event.InvestAction.Response {
     
     public enum InvestError: Swift.Error, LocalizedError {
         case baseBalanceIsNotFound(asset: String)
+        case failedToCreateBaseBalance(asset: String)
         case feeError(Error)
         case formatError
         case inputIsEmpty
@@ -245,6 +246,13 @@ extension SaleInvest.Event.InvestAction.Response {
                     .balance_is_not_created,
                     replace: [
                         .balance_is_not_created_replace_asset: asset
+                    ]
+                )
+            case .failedToCreateBaseBalance(let asset):
+                return Localized(
+                    .failed_to_create_balance_for,
+                    replace: [
+                        .failed_to_create_balance_for_replace_asset: asset
                     ]
                 )
             case .formatError:

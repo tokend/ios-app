@@ -333,6 +333,11 @@ class SalesFlowController: BaseSignedInFlowController {
             networkInfoFetcher: self.reposController.networkInfoRepo,
             userDataProvider: self.userDataProvider
         )
+        let balanceCreator = BalanceCreator(balancesRepo: self.reposController.balancesRepo)
+        let investBalanceCreator = SaleInvest.BalanceCreator(
+            balanceCreator: balanceCreator,
+            balancesRepo: self.reposController.balancesRepo
+        )
         let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
         let sceneModel = SaleInvest.Model.SceneModel(
             investorAccountId: self.userDataProvider.walletData.accountId,
@@ -404,6 +409,7 @@ class SalesFlowController: BaseSignedInFlowController {
             amountFormatter: amountFormatter,
             dataProvider: dataProvider,
             cancelInvestWorker: cancelInvestWorker,
+            balanceCreator: investBalanceCreator,
             feeLoader: feeLoader,
             sceneModel: sceneModel,
             routing: routing

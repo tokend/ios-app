@@ -10,6 +10,7 @@ extension SaleInvest {
             amountFormatter: AmountFormatterProtocol,
             dataProvider: DataProvider,
             cancelInvestWorker: CancelInvestWorkerProtocol,
+            balanceCreator: InvestBalanceCreatorProtocol,
             feeLoader: FeeLoader,
             sceneModel: Model.SceneModel,
             routing: Routing?,
@@ -26,6 +27,7 @@ extension SaleInvest {
                 presenter: presenter,
                 dataProvider: dataProvider,
                 cancelInvestWorker: cancelInvestWorker,
+                balanceCreator: balanceCreator,
                 feeLoader: feeLoader,
                 sceneModel: sceneModel
             )
