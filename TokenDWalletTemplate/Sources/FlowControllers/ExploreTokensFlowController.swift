@@ -200,18 +200,23 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
         let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
         )
-        let balancesFetcher = BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo
+        let imageUtility = ImagesUtility(
+            storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
-        
-        let container = SharedSceneBuilder.createWalletScene(
+        let balanceFetcher = BalanceHeader.BalancesFetcher(
+            balancesRepo: self.reposController.balancesRepo,
+            assetsRepo: self.reposController.assetsRepo,
+            imageUtility: imageUtility,
+            balanceId: selectedBalanceId
+        )
+        let container = SharedSceneBuilder.createBalanceDetailsScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
             viewConfig: viewConfig,
             headerRateProvider: headerRateProvider,
-            balancesFetcher: balancesFetcher,
-            selectedBalanceId: selectedBalanceId
+            balanceFetcher: balanceFetcher,
+            balanceId: selectedBalanceId
         )
         
         self.walletScene = container
