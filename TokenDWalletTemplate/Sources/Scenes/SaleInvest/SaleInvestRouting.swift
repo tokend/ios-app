@@ -6,9 +6,8 @@ extension SaleInvest {
         let onHideProgress: () -> Void
         let onShowError: (_ erroMessage: String) -> Void
         let onPresentPicker: (
-        _ title: String,
         _ options: [String],
-        _ onSelect: @escaping (_ index: Int) -> Void
+        _ onSelect: @escaping (_ balanceId: String) -> Void
         ) -> Void
         let showDialog: (
         _ title: String,
