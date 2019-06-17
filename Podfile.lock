@@ -77,25 +77,25 @@ PODS:
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (3.1.0-rc.4):
-    - TokenDSDK/API (= 3.1.0-rc.4)
-    - TokenDSDK/JSONAPI (= 3.1.0-rc.4)
-    - TokenDSDK/KeyServer (= 3.1.0-rc.4)
+  - TokenDSDK (3.1.0-rc.5):
+    - TokenDSDK/API (= 3.1.0-rc.5)
+    - TokenDSDK/JSONAPI (= 3.1.0-rc.5)
+    - TokenDSDK/KeyServer (= 3.1.0-rc.5)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetwork (3.1.0-rc.4):
+  - TokenDSDK/AlamofireNetwork (3.1.0-rc.5):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-rc.4):
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-rc.5):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/API (3.1.0-rc.4):
+  - TokenDSDK/API (3.1.0-rc.5):
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/JSONAPI (3.1.0-rc.4):
+  - TokenDSDK/JSONAPI (3.1.0-rc.5):
     - DLJSONAPI (>= 1.0.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/KeyServer (3.1.0-rc.4):
+  - TokenDSDK/KeyServer (3.1.0-rc.5):
     - TokenDWallet (>= 3.0.1)
   - TokenDWallet (3.0.1):
     - DLCryptoKit (>= 2.0.1)
@@ -118,7 +118,7 @@ DEPENDENCIES:
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (= 3.1.0-rc.4)
+  - TokenDSDK (= 3.1.0-rc.5)
   - TokenDSDK/AlamofireNetwork
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
@@ -203,10 +203,10 @@ SPEC CHECKSUMS:
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: 39ec00a4f428d3041517abab9e2ad1e08585a7e4
+  TokenDSDK: a9137835f9d6584f220b437696a1d3db777d72fb
   TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
-PODFILE CHECKSUM: cb094c81bfc69970ccd030826d0c4f85ae1192e5
+PODFILE CHECKSUM: 35c905b1807132d498c60fa1264a017466130136
 
 COCOAPODS: 1.6.1

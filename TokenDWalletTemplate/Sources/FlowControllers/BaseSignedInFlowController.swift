@@ -239,14 +239,26 @@ class BaseSignedInFlowController: BaseFlowController {
                 navigationController.showErrorMessage(error, completion: nil)
         },
             showMessage: { [weak self] (message) in
-            let present = navigationController.getPresentViewControllerClosure()
-            self?.showSuccessMessage(
-                title: message,
-                message: nil,
-                completion: nil,
-                presentViewController: present
-            )
-        })
+                let present = navigationController.getPresentViewControllerClosure()
+                self?.showSuccessMessage(
+                    title: message,
+                    message: nil,
+                    completion: nil,
+                    presentViewController: present
+                )
+            },
+            showDialog: { [weak self] (title, message, options, onSelected) in
+                let present = navigationController.getPresentViewControllerClosure()
+                self?.showDialog(
+                    title: title,
+                    message: message,
+                    style: .alert,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )}
+        )
         
         let vc = SharedSceneBuilder.createTransactionDetailsScene(
             sectionsProvider: sectionsProvider,

@@ -17,6 +17,7 @@
 "annual_return" = "Annual return";
 "app_name" = "TokenD Real Estate";
 "are_you_sure_you_want_to_cancel_investment" = "Are you sure you want to cancel investment?";
+"are_you_sure_you_want_to_cancel_pending_offer" = "Are you sure you want to cancel pending offer?";
 "are_you_sure_you_want_to_sign_out" = "Are you sure you want to Sign Out and Erase All Data from device?";
 "ask_base" = "Ask ($(base))";
 "ask_base_replace_base" = "base";
@@ -60,6 +61,7 @@
 "can_be_withdrawn" = " - Can be withdrawn";
 "cancel" = "Cancel";
 "cancel_investment" = "Cancel investment";
+"cancel_pending_offer" = "Cancel pending offer";
 "cancel_tfa" = "Cancel TFA";
 "canceled" = "Canceled";
 "cannot_be_traded_on_secondary_market" = " - Can't be traded on secondary market";

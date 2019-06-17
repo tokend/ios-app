@@ -356,14 +356,24 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onShowError: { [weak self] (message) in
                 self?.navigationController.showErrorMessage(message, completion: nil)
+            }, onShowMessage: { [weak self] (title, message) in
+                guard let presenter = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showSuccessMessage(
+                    title: title,
+                    message: message,
+                    completion: nil,
+                    presentViewController: presenter
+                )
             },
-            onPresentPicker: { [weak self] (assets, onSelected) in
+               onPresentPicker: { [weak self] (assets, onSelected) in
                 self?.showAssetPicker(
                     targetAssets: assets,
                     onSelected: onSelected
                 )
             },
-            showDialog: { [weak self] (title, message, options, onSelected) in
+               showDialog: { [weak self] (title, message, options, onSelected) in
                 guard let presenter = self?.navigationController.getPresentViewControllerClosure() else {
                     return
                 }
@@ -377,14 +387,14 @@ class SalesFlowController: BaseSignedInFlowController {
                     presentViewController: presenter
                 )
             },
-            onSaleInvestAction: { [weak self] (saleInvestModel) in
+               onSaleInvestAction: { [weak self] (saleInvestModel) in
                 self?.showSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
             }, onInvestHistory: { [weak self] (targetBaseAsset, onCanceled) in
                 self?.showInvestments(
                     targetBaseAsset: targetBaseAsset,
                     completion: onCanceled
                 )
-            })
+        })
         
         SaleInvest.Configurator.configure(
             viewController: vc,

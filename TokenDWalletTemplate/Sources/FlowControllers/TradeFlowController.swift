@@ -296,6 +296,17 @@ class TradeFlowController: BaseSignedInFlowController {
                     completion: nil,
                     presentViewController: present
                 )
+            }, showDialog: { [weak self] (title, message, options, onSelected) in
+                let present = navigationController.getPresentViewControllerClosure()
+                self?.showDialog(
+                    title: title,
+                    message: message,
+                    style: .alert,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )
         })
         let sectionsProvider = TransactionDetails.PendingOfferSectionsProvider(
             pendingOffersRepo: self.reposController.pendingOffersRepo,

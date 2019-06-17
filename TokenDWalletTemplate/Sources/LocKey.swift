@@ -20,6 +20,7 @@ enum LocKey: String {
     case annual_return
     case app_name
     case are_you_sure_you_want_to_cancel_investment
+    case are_you_sure_you_want_to_cancel_pending_offer
     case are_you_sure_you_want_to_sign_out
     case ask_base
     case ask_base_replace_base
@@ -63,6 +64,7 @@ enum LocKey: String {
     case can_be_withdrawn
     case cancel
     case cancel_investment
+    case cancel_pending_offer
     case cancel_tfa
     case canceled
     case cannot_be_traded_on_secondary_market

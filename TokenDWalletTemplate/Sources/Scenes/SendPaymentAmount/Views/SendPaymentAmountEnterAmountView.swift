@@ -110,6 +110,11 @@ extension SendPaymentAmount {
                     self?.onSelectAsset?()
                 })
                 .disposed(by: self.disposeBag)
+            self.assetButton.setImage(
+                Assets.drop.image,
+                for: .normal
+            )
+            self.assetButton.semanticContentAttribute = .forceRightToLeft
         }
         
         private func setupLayout() {

@@ -164,6 +164,19 @@ class WalletDetailsFlowController: BaseSignedInFlowController {
                     completion: nil,
                     presentViewController: present
                 )
+            }, showDialog: { [weak self] (title, message, options, onSelected) in
+                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showDialog(
+                    title: title,
+                    message: message,
+                    style: .alert,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )
         })
         
         let emailFetcher = TransactionDetails.EmailFetcher(

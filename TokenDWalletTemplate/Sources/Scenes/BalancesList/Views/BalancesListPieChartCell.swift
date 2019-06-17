@@ -126,9 +126,9 @@ extension BalancesList {
                 self.legendTableView.isScrollEnabled = false
                 self.legendTableView.contentInset = UIEdgeInsets(
                     top: 0.0,
-                    left: self.sideInset,
+                    left: self.sideInset / 2,
                     bottom: 0.0,
-                    right: 0.0
+                    right: self.sideInset / 2
                 )
             }
             

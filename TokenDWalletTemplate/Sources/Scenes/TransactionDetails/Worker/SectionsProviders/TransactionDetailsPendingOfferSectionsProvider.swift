@@ -165,6 +165,20 @@ extension TransactionDetails.PendingOfferSectionsProvider: TransactionDetails.Se
                 return Assets.delete.image
             }
         }
+        
+        var title: String {
+            switch self {
+            case .cancel:
+                return Localized(.cancel_pending_offer)
+            }
+        }
+        
+        var message: String {
+            switch self {
+            case .cancel:
+                return Localized(.are_you_sure_you_want_to_cancel_pending_offer)
+            }
+        }
     }
     
     func getActions() -> [TransactionDetailsProviderProtocol.Action] {
@@ -173,7 +187,9 @@ extension TransactionDetails.PendingOfferSectionsProvider: TransactionDetails.Se
         return actions.map({ (action) -> TransactionDetailsProviderProtocol.Action in
             return TransactionDetailsProviderProtocol.Action(
                 id: action.rawValue,
-                icon: action.icon
+                icon: action.icon,
+                title: action.title,
+                message: action.message
             )
         })
     }

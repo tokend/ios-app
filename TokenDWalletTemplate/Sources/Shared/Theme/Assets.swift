@@ -16,6 +16,7 @@ enum Assets: String {
     case depositIcon = "Deposit icon"
     case destination = "Destination"
     case documentIcon = "Document icon"
+    case drop = "Drop icon"
     case email = "Email"
     case exploreFundsIcon = "Explore funds icon"
     case exploreTokensIcon = "Explore tokens icon"
