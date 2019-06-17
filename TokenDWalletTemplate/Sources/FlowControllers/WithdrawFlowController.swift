@@ -111,19 +111,10 @@ class WithdrawFlowController: BaseSignedInFlowController {
             onShowError: { [weak self] (errorMessage) in
                 self?.navigationController?.showErrorMessage(errorMessage, completion: nil)
             },
-            onPresentPicker: { [weak self] (title, options, onSelected) in
-                guard let present = self?.navigationController?.getPresentViewControllerClosure() else {
-                    return
-                }
-                
-                self?.showDialog(
-                    title: title,
-                    message: nil,
-                    style: .actionSheet,
-                    options: options,
-                    onSelected: onSelected,
-                    onCanceled: nil,
-                    presentViewController: present
+            onPresentPicker: { [weak self] (assets, onSelected) in
+                self?.showAssetPicker(
+                    targetAssets: assets,
+                    onSelected: onSelected
                 )
             },
             onSendAction: nil,
