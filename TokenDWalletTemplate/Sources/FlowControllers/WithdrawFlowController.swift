@@ -286,7 +286,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
         )
         
         var target: Fees.Model.Target?
-        if let systemFeeType = Fees.Model.FeeType(rawValue: feeType) {
+        if let systemFeeType = Fees.Model.OperationType(rawValue: feeType) {
             target = Fees.Model.Target(asset: asset, feeType: systemFeeType)
         }
         

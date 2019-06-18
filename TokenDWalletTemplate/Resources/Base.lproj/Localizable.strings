@@ -104,6 +104,7 @@
 "days_to_go_replace_days" = "days";
 "days_to_start" = "$(days)\nday(s) to start";
 "days_to_start_replace_days" = "days";
+"default_capitalized" = "Default";
 "deployed" = "deployed";
 "deposit" = "Deposit";
 "deposit_to" = "Deposit to";
@@ -205,6 +206,9 @@
 "formatted_date" = " $(date)";
 "formatted_date_replace_date" = "date";
 "from_account" = "From account";
+"from_to" = "From $(lower) to $(upper)";
+"from_to_replace_lower" = "lower";
+"from_to_replace_upper" = "upper";
 "funded" = "Funded";
 "funded_lowercase" = "funded";
 "general" = "General";

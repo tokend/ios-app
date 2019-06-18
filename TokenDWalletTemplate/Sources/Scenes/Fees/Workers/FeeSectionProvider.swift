@@ -41,12 +41,12 @@ extension Fees {
                         response.accountId.isEmpty || response.accountId == self.accountId
                     })
                     .map({ (response) -> Model.FeeModel in
-                        let feeType = Model.FeeType(rawValue: response.feeType)
+                        let feeType = Model.OperationType(rawValue: response.feeType)
                         let subtype = Model.Subtype(rawValue: response.subtype)
                         return Model.FeeModel(
                             asset: response.asset,
                             feeAsset: response.feeAsset,
-                            feeType: feeType,
+                            operationType: feeType,
                             subtype: subtype,
                             fixed: response.fixed,
                             percent: response.percent,
@@ -68,7 +68,7 @@ extension Fees {
                     return asset == target.asset
                 }) {
                 let targetFees = assetFees.value.filter { (fee) -> Bool in
-                    guard let feeType = fee.feeType else {
+                    guard let feeType = fee.operationType else {
                         return false
                     }
                     return target.feeType == feeType

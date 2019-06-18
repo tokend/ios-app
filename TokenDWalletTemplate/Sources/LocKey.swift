@@ -107,6 +107,7 @@ enum LocKey: String {
     case days_to_go_replace_days
     case days_to_start
     case days_to_start_replace_days
+    case default_capitalized
     case deployed
     case deposit
     case deposit_to
@@ -208,6 +209,9 @@ enum LocKey: String {
     case formatted_date
     case formatted_date_replace_date
     case from_account
+    case from_to
+    case from_to_replace_lower
+    case from_to_replace_upper
     case funded
     case funded_lowercase
     case general

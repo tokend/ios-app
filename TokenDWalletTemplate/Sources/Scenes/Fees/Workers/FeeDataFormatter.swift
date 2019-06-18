@@ -3,7 +3,7 @@ import Foundation
 protocol FeeDataFormatterProtocol {
     func format(asset: String, value: Decimal) -> String
     func formatPercent(value: Decimal) -> String
-    func formatFeeType(feeType: Fees.Model.FeeType) -> String
+    func formatFeeType(feeType: Fees.Model.OperationType) -> String
     func formatSubtype(subtype: Fees.Model.Subtype) -> String
 }
 
@@ -14,7 +14,7 @@ extension Fees {
         // MARK: - Private properties
         
         // (2^63 - 1) / 10^6
-        private static let maxValue: Decimal = 9223372036854.775807
+        private static let maxValue: Decimal = Decimal(string: "9223372036854.775807") ?? 0
     }
 }
 
@@ -30,7 +30,7 @@ extension Fees.FeeDataFormatter: FeeDataFormatterProtocol {
         return "\(value)%"
     }
     
-    func formatFeeType(feeType: Fees.Model.FeeType) -> String {
+    func formatFeeType(feeType: Fees.Model.OperationType) -> String {
         switch feeType {
             
         case .offerFee:
