@@ -17,6 +17,7 @@ extension SendPaymentAmount {
         private var amountEditingContext: TextEditingContext<Decimal>?
         private let assetButton: UIButton = UIButton(type: .system)
         
+        private let spacing: CGFloat = 30.0
         private let disposeBag = DisposeBag()
         
         // MARK: -
@@ -115,6 +116,8 @@ extension SendPaymentAmount {
                 for: .normal
             )
             self.assetButton.semanticContentAttribute = .forceRightToLeft
+            self.assetButton.contentEdgeInsets.right = -self.spacing
+            self.assetButton.imageEdgeInsets.right = -self.spacing
         }
         
         private func setupLayout() {
