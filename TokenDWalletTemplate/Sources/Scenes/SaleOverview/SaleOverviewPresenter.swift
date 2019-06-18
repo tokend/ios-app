@@ -61,43 +61,50 @@ extension SaleOverview {
             let investedAmountFormattedAttributed = NSAttributedString(
                 string: investedAmountFormatted,
                 attributes: [
-                    .foregroundColor: Theme.Colors.accentColor
+                    .foregroundColor: Theme.Colors.accentColor,
+                    .font: Theme.Fonts.largePlainTextFont
                 ]
             )
             
             let attributedInvetsedAmount = LocalizedAtrributed(
-                .invested,
+                .details_invested,
                 attributes: [
-                    .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                    .foregroundColor: Theme.Colors.textOnContentBackgroundColor,
+                    .font: Theme.Fonts.plainTextFont
                 ],
                 replace: [
-                    .invested_replace_amount: investedAmountFormattedAttributed
+                    .details_invested_replace_amount: investedAmountFormattedAttributed
                 ]
             )
             
-            let investedPercentage = sale.investmentPercentage
-            let investedPercentageRounded = Int(roundf(investedPercentage * 100))
-            let investedPercentageText = "\(investedPercentageRounded)%"
-            let attributedInvestedPercentageText = NSAttributedString(
-                string: investedPercentageText,
+            let targetAmountFormatted = self.investedAmountFormatter.formatAmount(
+                sale.targetAmount,
+                currency: sale.investmentAsset
+            )
+            let targetAmountFormattedAttributed = NSAttributedString(
+                string: targetAmountFormatted,
                 attributes: [
-                    .foregroundColor: Theme.Colors.accentColor
+                    .foregroundColor: Theme.Colors.accentColor,
+                    .font: Theme.Fonts.largePlainTextFont
                 ]
             )
             
-            let attributedInvestedPercentage = LocalizedAtrributed(
-                .percent_funded,
+            let attributedTargetAmount = LocalizedAtrributed(
+                .goal,
                 attributes: [
-                    .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                    .foregroundColor: Theme.Colors.textOnContentBackgroundColor,
+                    .font: Theme.Fonts.plainTextFont
                 ],
                 replace: [
-                    .percent_funded_replace_percent: attributedInvestedPercentageText
+                    .goal_replace_amount: targetAmountFormattedAttributed
                 ]
             )
             
             let timeText = self.getTimeText(sale: sale)
             
             let overviewContent = self.clearEscapedCharacters(sale.overviewContent)
+            let percantage = sale.investmentPercentage
+            let investedPercentage = CGFloat(percantage)
             
             return Model.OverviewViewModel(
                 imageUrl: sale.imageUrl,
@@ -105,8 +112,8 @@ extension SaleOverview {
                 description: attributedDescription,
                 youtubeVideoUrl: sale.youtubeVideoUrl,
                 investedAmountText: attributedInvetsedAmount,
-                investedPercentage: sale.investmentPercentage,
-                investedPercentageText: attributedInvestedPercentage,
+                targetAmountText: attributedTargetAmount,
+                investedPercentage: investedPercentage,
                 timeText: timeText.timeText,
                 overviewContent: overviewContent
             )
@@ -132,17 +139,19 @@ extension SaleOverview {
                 let daysAttributed = NSAttributedString(
                     string: days,
                     attributes: [
-                        .foregroundColor: Theme.Colors.accentColor
+                        .foregroundColor: Theme.Colors.accentColor,
+                        .font: Theme.Fonts.largePlainTextFont
                     ]
                 )
                 
                 attributedDaysRemaining = LocalizedAtrributed(
-                    .days_to_start,
+                    .details_days_to_start,
                     attributes: [
-                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                        .foregroundColor: Theme.Colors.textOnContentBackgroundColor,
+                        .font: Theme.Fonts.plainTextFont
                     ],
                     replace: [
-                        .days_to_start_replace_days: daysAttributed
+                        .details_days_to_start_replace_days: daysAttributed
                     ]
                 )
             } else {
@@ -161,17 +170,19 @@ extension SaleOverview {
                     let daysAttributed = NSAttributedString(
                         string: daysFormatted,
                         attributes: [
-                            .foregroundColor: Theme.Colors.accentColor
+                            .foregroundColor: Theme.Colors.accentColor,
+                            .font: Theme.Fonts.largePlainTextFont
                         ]
                     )
                     
                     attributedDaysRemaining = LocalizedAtrributed(
-                        .days_to_go,
+                        .details_days_to_go,
                         attributes: [
-                            .foregroundColor: Theme.Colors.textOnContentBackgroundColor
+                            .foregroundColor: Theme.Colors.textOnContentBackgroundColor,
+                            .font: Theme.Fonts.plainTextFont
                         ],
                         replace: [
-                            .days_to_go_replace_days: daysAttributed
+                            .details_days_to_go_replace_days: daysAttributed
                         ]
                     )
                 } else {

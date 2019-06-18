@@ -104,6 +104,7 @@ extension SaleInvest {
         }
         
         func observeOffers() -> Observable<[Model.InvestmentOffer]> {
+            self.offersRepo.reloadOffers()
             self.loadPendingOffers(saleId: self.saleIdentifier)
             
             return self.pendingOffers.map({ (offers) -> [Model.InvestmentOffer] in

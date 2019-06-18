@@ -106,10 +106,18 @@ extension TransactionDetails.ViewController: TransactionDetails.DisplayLogic {
                 .tap
                 .asDriver()
                 .drive(onNext: { [weak self] in
-                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                        let request = TransactionDetails.Event.TransactionAction.Request(id: item.id)
-                        businessLogic.onTransactionAction(request: request)
-                    })
+                    let onSelect: ((Int) -> Void) = { [weak self] _ in
+                        self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                            let request = TransactionDetails.Event.TransactionAction.Request(id: item.id)
+                            businessLogic.onTransactionAction(request: request)
+                        })
+                    }
+                    self?.routing?.showDialog(
+                        item.title,
+                        item.message,
+                        [Localized(.ok)],
+                        onSelect
+                    )
                 })
                 .disposed(by: self.disposeBag)
             return barItem

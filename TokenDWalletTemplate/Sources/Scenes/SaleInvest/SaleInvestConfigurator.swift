@@ -6,10 +6,11 @@ extension SaleInvest {
         
         static func configure(
             viewController: ViewController,
-            investedAmountFormatter: SalesInvestedAmountFormatterProtocol,
+            investedAmountFormatter: InvestedAmountFormatterProtocol,
             amountFormatter: AmountFormatterProtocol,
             dataProvider: DataProvider,
             cancelInvestWorker: CancelInvestWorkerProtocol,
+            balanceCreator: InvestBalanceCreatorProtocol,
             feeLoader: FeeLoader,
             sceneModel: Model.SceneModel,
             routing: Routing?,
@@ -26,6 +27,7 @@ extension SaleInvest {
                 presenter: presenter,
                 dataProvider: dataProvider,
                 cancelInvestWorker: cancelInvestWorker,
+                balanceCreator: balanceCreator,
                 feeLoader: feeLoader,
                 sceneModel: sceneModel
             )

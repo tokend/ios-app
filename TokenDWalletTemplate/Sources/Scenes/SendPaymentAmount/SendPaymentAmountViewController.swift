@@ -26,7 +26,8 @@ extension SendPaymentAmount {
         
         // MARK: - Private properties
         
-        private let stackView: ScrollableStackView = ScrollableStackView()
+        private let containerView: UIView = UIView()
+        private let inputAmountContainer: UIView = UIView()
         
         private let recipientLabel: UILabel = UILabel()
         private let balanceView: BalanceView = BalanceView()
@@ -70,7 +71,8 @@ extension SendPaymentAmount {
             
             self.setupView()
             self.setupRecipientLabel()
-            self.setupStackView()
+            self.setupContainerView()
+            self.setupInputAmountContainer()
             self.setupBalanceView()
             self.setupEnterAmountView()
             self.setupDescriptionTextView()
@@ -127,9 +129,12 @@ extension SendPaymentAmount {
             self.recipientLabel.lineBreakMode = .byTruncatingMiddle
         }
         
-        private func setupStackView() {
-            self.stackView.backgroundColor = Theme.Colors.contentBackgroundColor
-            self.stackView.stackViewsSpacing = 10.0
+        private func setupContainerView() {
+            self.containerView.backgroundColor = Theme.Colors.contentBackgroundColor
+        }
+        
+        private func setupInputAmountContainer() {
+            self.inputAmountContainer.backgroundColor = Theme.Colors.contentBackgroundColor
         }
         
         private func setupBalanceView() {
@@ -230,27 +235,37 @@ extension SendPaymentAmount {
         }
         
         private func setupLayout() {
-            self.view.addSubview(self.stackView)
-            self.view.addSubview(self.recipientLabel)
+            self.view.addSubview(self.containerView)
+            self.containerView.addSubview(self.inputAmountContainer)
+            self.containerView.addSubview(self.recipientLabel)
+            self.inputAmountContainer.addSubview(self.balanceView)
+            self.inputAmountContainer.addSubview(self.enterAmountView)
             self.view.addSubview(self.descritionTextView)
             self.view.addSubview(self.actionButton)
+            
+            self.containerView.snp.makeConstraints { (make) in
+                make.leading.trailing.top.equalToSuperview()
+                make.bottom.equalTo(self.descritionTextView.snp.top)
+            }
             
             self.recipientLabel.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview().inset(20.0)
                 make.top.equalToSuperview().inset(15.0)
             }
             
-            self.stackView.snp.makeConstraints { (make) in
+            self.inputAmountContainer.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
-                make.centerY.equalTo(self.view.safeArea.centerY)
-                make.height.equalTo(300)
+                make.centerY.equalToSuperview()
             }
             
-            self.stackView.insert(views: [
-                self.balanceView,
-                self.enterAmountView
-                ]
-            )
+            self.balanceView.snp.makeConstraints { (make) in
+                make.leading.trailing.top.equalToSuperview()
+            }
+            
+            self.enterAmountView.snp.makeConstraints { (make) in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.top.equalTo(self.balanceView.snp.bottom).offset(15.0)
+            }
             
             self.descritionTextView.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()

@@ -54,7 +54,9 @@ extension TransactionDetails {
             let rightItems = actions.map { (action) -> Event.TransactionActionsDidUpdate.Action.Item in
                 return Event.TransactionActionsDidUpdate.Action.Item(
                     id: action.id,
-                    icon: action.icon
+                    icon: action.icon,
+                    title: action.title,
+                    message: action.message
                 )
             }
             let response = Event.TransactionActionsDidUpdate.Response(

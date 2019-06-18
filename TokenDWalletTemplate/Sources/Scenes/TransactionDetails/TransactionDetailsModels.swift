@@ -147,6 +147,8 @@ extension TransactionDetails.Event {
             struct Item {
                 let id: String
                 let icon: UIImage
+                let title: String
+                let message: String
             }
             
             let rightItems: [Item]

@@ -20,6 +20,7 @@ enum LocKey: String {
     case annual_return
     case app_name
     case are_you_sure_you_want_to_cancel_investment
+    case are_you_sure_you_want_to_cancel_pending_offer
     case are_you_sure_you_want_to_sign_out
     case ask_base
     case ask_base_replace_base
@@ -35,6 +36,7 @@ enum LocKey: String {
     case available
     case available_amount
     case available_amount_replace_amount
+    case available_colon
     case available_assets_for_this_operations
     case available_date
     case available_date_replace_formatted
@@ -62,6 +64,7 @@ enum LocKey: String {
     case can_be_withdrawn
     case cancel
     case cancel_investment
+    case cancel_pending_offer
     case cancel_tfa
     case canceled
     case cannot_be_traded_on_secondary_market
@@ -112,6 +115,14 @@ enum LocKey: String {
     case destination_address
     case destination_address_colon
     case details
+    case details_days_to_go
+    case details_days_to_go_replace_days
+    case details_days_to_start
+    case details_days_to_start_replace_days
+    case details_invested
+    case details_invested_replace_amount
+    case details_starts_in_days
+    case details_starts_in_days_replace_days
     case document_max_size
     case document_max_size_replace_file_size
     case done
@@ -198,8 +209,11 @@ enum LocKey: String {
     case formatted_date_replace_date
     case from_account
     case funded
+    case funded_lowercase
     case general
     case get_address
+    case goal
+    case goal_replace_amount
     case go_to_confirmation
     case hard_cap
     case holders_name_colon
@@ -224,6 +238,8 @@ enum LocKey: String {
     case invalid_account_id_or_email
     case invest
     case invest_cap
+    case invest_help
+    case invest_help_message
     case invested
     case invested_replace_amount
     case investing
@@ -433,6 +449,7 @@ enum LocKey: String {
     case terms_of_service
     case terms_of_service_not_agreed
     case terms_of_use
+    case there_is_no_progress_history_yet
     case this_feature_will_be
     case this_seed_is_the_only_way
     case to
@@ -504,6 +521,7 @@ enum LocKey: String {
     case yesterday_at
     case yesterday_at_replace_hours
     case you_can_grant_permissions
+    case you_have_already_invested
     case you_have_no_depositable_assets
     case your_account_is_approved
     case your_verification_request_is_submitted

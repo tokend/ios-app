@@ -76,7 +76,9 @@ extension AssetPicker {
             
             self.balances.forEach { (balance) in
                 if let asset = self.assets.first(where: { (asset) -> Bool in
-                    return asset.code == balance.asset && self.targetAssets.contains(asset.code)
+                    return asset.code == balance.asset
+                        && self.targetAssets.contains(asset.code)
+                        && balance.balance > 0
                 }) {
                     let balance = Model.Balance(
                         amount: balance.balance,

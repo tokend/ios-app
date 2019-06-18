@@ -80,7 +80,11 @@ class SalesFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showInvestments() {
+    private func showInvestments(
+        targetBaseAsset: String? = nil,
+        completion: (() -> Void)? = nil
+        ) {
+        
         let transactionsListRateProvider: TransactionsListScene.RateProviderProtocol = RateProvider(
             assetPairsRepo: self.reposController.assetPairsRepo
         )
@@ -88,7 +92,8 @@ class SalesFlowController: BaseSignedInFlowController {
             pendingOffersRepo: self.reposController.pendingOffersRepo,
             balancesRepo: self.reposController.balancesRepo,
             rateProvider: transactionsListRateProvider,
-            originalAccountId: self.userDataProvider.walletData.accountId
+            originalAccountId: self.userDataProvider.walletData.accountId,
+            targetBaseAsset: targetBaseAsset
         )
         
         let actionProvider = TransactionsListScene.ActionProvider(
@@ -101,7 +106,8 @@ class SalesFlowController: BaseSignedInFlowController {
                 guard let navigationController = self?.navigationController else { return }
                 self?.showInvestmentDetailsScreen(
                     offerId: identifier,
-                    navigationController: navigationController
+                    navigationController: navigationController,
+                    completion: completion
                 )
             },
             showSendPayment: { _ in },
@@ -131,7 +137,8 @@ class SalesFlowController: BaseSignedInFlowController {
     
     private func showInvestmentDetailsScreen(
         offerId: UInt64,
-        navigationController: NavigationControllerProtocol
+        navigationController: NavigationControllerProtocol,
+        completion: (() -> Void)? = nil
         ) {
         
         let sectionsProvider = TransactionDetails.InvestmentSectionsProvider(
@@ -146,7 +153,8 @@ class SalesFlowController: BaseSignedInFlowController {
         let vc = self.setupTransactionDetailsScreen(
             navigationController: navigationController,
             sectionsProvider: sectionsProvider,
-            title: Localized(.investment_details)
+            title: Localized(.investment_details),
+            completion: completion
         )
         
         navigationController.pushViewController(vc, animated: true)
@@ -327,6 +335,11 @@ class SalesFlowController: BaseSignedInFlowController {
             networkInfoFetcher: self.reposController.networkInfoRepo,
             userDataProvider: self.userDataProvider
         )
+        let balanceCreator = BalanceCreator(balancesRepo: self.reposController.balancesRepo)
+        let investBalanceCreator = SaleInvest.BalanceCreator(
+            balanceCreator: balanceCreator,
+            balancesRepo: self.reposController.balancesRepo
+        )
         let feeLoader = FeeLoader(generalApi: self.flowControllerStack.api.generalApi)
         let sceneModel = SaleInvest.Model.SceneModel(
             investorAccountId: self.userDataProvider.walletData.accountId,
@@ -343,14 +356,24 @@ class SalesFlowController: BaseSignedInFlowController {
             },
             onShowError: { [weak self] (message) in
                 self?.navigationController.showErrorMessage(message, completion: nil)
+            }, onShowMessage: { [weak self] (title, message) in
+                guard let presenter = self?.navigationController.getPresentViewControllerClosure() else {
+                    return
+                }
+                self?.showSuccessMessage(
+                    title: title,
+                    message: message,
+                    completion: nil,
+                    presentViewController: presenter
+                )
             },
-            onPresentPicker: { [weak self] (assets, onSelected) in
+               onPresentPicker: { [weak self] (assets, onSelected) in
                 self?.showAssetPicker(
                     targetAssets: assets,
                     onSelected: onSelected
                 )
             },
-            showDialog: { [weak self] (title, message, options, onSelected) in
+               showDialog: { [weak self] (title, message, options, onSelected) in
                 guard let presenter = self?.navigationController.getPresentViewControllerClosure() else {
                     return
                 }
@@ -364,10 +387,14 @@ class SalesFlowController: BaseSignedInFlowController {
                     presentViewController: presenter
                 )
             },
-            onSaleInvestAction: { [weak self] (saleInvestModel) in
+               onSaleInvestAction: { [weak self] (saleInvestModel) in
                 self?.showSaleInvestConfirmationScreen(saleInvestModel: saleInvestModel)
-            }
-        )
+            }, onInvestHistory: { [weak self] (targetBaseAsset, onCanceled) in
+                self?.showInvestments(
+                    targetBaseAsset: targetBaseAsset,
+                    completion: onCanceled
+                )
+        })
         
         SaleInvest.Configurator.configure(
             viewController: vc,
@@ -375,6 +402,7 @@ class SalesFlowController: BaseSignedInFlowController {
             amountFormatter: amountFormatter,
             dataProvider: dataProvider,
             cancelInvestWorker: cancelInvestWorker,
+            balanceCreator: investBalanceCreator,
             feeLoader: feeLoader,
             sceneModel: sceneModel,
             routing: routing

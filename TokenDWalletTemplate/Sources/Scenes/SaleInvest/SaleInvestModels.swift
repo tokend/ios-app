@@ -79,15 +79,17 @@ extension SaleInvest.Model {
         let availableAmount: Decimal
         let isCancellable: Bool
         let actionTitle: String
+        let existingInvestment: [InvestmentOffer]
     }
     
     struct InvestingViewModel {
         let availableAmount: String
         let inputAmount: Decimal
-        let maxInputAmount: Decimal
         let selectedAsset: String?
         let isCancellable: Bool
         let actionTitle: String
+        let isHighlighted: Bool
+        let existingInvestment: [SaleInvest.ExistingInvestmentCell.ViewModel]
     }
     
     public struct BalanceDetailsViewModel {
@@ -96,7 +98,7 @@ extension SaleInvest.Model {
         let balanceId: String
     }
     
-    public struct InvestmentOffer {
+    public struct InvestmentOffer: Equatable {
         let amount: Decimal
         let asset: String
         let id: UInt64
@@ -161,6 +163,10 @@ extension SaleInvest.Event {
         public struct Request {
             let amount: Decimal?
         }
+        public struct Response {
+            let isAmountValid: Bool
+        }
+        public typealias ViewModel = Response
     }
     
     public enum InvestAction {
@@ -181,20 +187,13 @@ extension SaleInvest.Event {
         }
     }
     
-    public enum CancelInvestAction {
+    public enum ShowPreviousInvest {
         public struct Request {}
         
-        public enum Response {
-            case loading
-            case succeeded
-            case failed(Model.CancellationError)
+        public struct Response {
+            let baseAsset: String
         }
-        
-        public enum ViewModel {
-            case loading
-            case succeeded
-            case failed(errorMessage: String)
-        }
+        public typealias ViewModel = Response
     }
     
     public enum Error {
@@ -206,12 +205,17 @@ extension SaleInvest.Event {
             let message: String
         }
     }
+    
+    public enum PrevOfferCancelled {
+        public struct Request {}
+    }
 }
 
 extension SaleInvest.Event.InvestAction.Response {
     
     public enum InvestError: Swift.Error, LocalizedError {
         case baseBalanceIsNotFound(asset: String)
+        case failedToCreateBaseBalance(asset: String)
         case feeError(Error)
         case formatError
         case inputIsEmpty
@@ -242,6 +246,13 @@ extension SaleInvest.Event.InvestAction.Response {
                     .balance_is_not_created,
                     replace: [
                         .balance_is_not_created_replace_asset: asset
+                    ]
+                )
+            case .failedToCreateBaseBalance(let asset):
+                return Localized(
+                    .failed_to_create_balance_for,
+                    replace: [
+                        .failed_to_create_balance_for_replace_asset: asset
                     ]
                 )
             case .formatError:

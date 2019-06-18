@@ -10,8 +10,9 @@ public protocol SaleInvestBusinessLogic {
     func onSelectBalance(request: Event.SelectBalance.Request)
     func onBalanceSelected(request: Event.BalanceSelected.Request)
     func onInvestAction(request: Event.InvestAction.Request)
-    func onCancelInvestAction(request: Event.CancelInvestAction.Request)
     func onEditAmount(request: Event.EditAmount.Request)
+    func onShowPreviousInvest(request: Event.ShowPreviousInvest.Request)
+    func onPrevOfferCanceled(request: Event.PrevOfferCancelled.Request)
 }
 
 extension SaleInvest {
@@ -28,6 +29,7 @@ extension SaleInvest {
         private let presenter: PresentationLogic
         private let dataProvider: DataProvider
         private let cancelInvestWorker: CancelInvestWorkerProtocol
+        private let balanceCreator: InvestBalanceCreatorProtocol
         private let feeLoader: FeeLoader
         private var sceneModel: Model.SceneModel
         
@@ -93,6 +95,7 @@ extension SaleInvest {
             presenter: PresentationLogic,
             dataProvider: DataProvider,
             cancelInvestWorker: CancelInvestWorkerProtocol,
+            balanceCreator: InvestBalanceCreatorProtocol,
             feeLoader: FeeLoader,
             sceneModel: Model.SceneModel
             ) {
@@ -100,6 +103,7 @@ extension SaleInvest {
             self.presenter = presenter
             self.dataProvider = dataProvider
             self.cancelInvestWorker = cancelInvestWorker
+            self.balanceCreator = balanceCreator
             self.feeLoader = feeLoader
             self.sceneModel = sceneModel
         }
@@ -170,7 +174,8 @@ extension SaleInvest {
                 amount: self.sceneModel.inputAmount,
                 availableAmount: availableAmount,
                 isCancellable: isCancellable,
-                actionTitle: actionTitle
+                actionTitle: actionTitle,
+                existingInvestment: self.offers
             )
             
             return investingModel
@@ -286,70 +291,6 @@ extension SaleInvest {
             return sorted
         }
         
-        private func handleCancelInvestAction() {
-            let response = Event.CancelInvestAction.Response.loading
-            self.presenter.presentCancelInvestAction(response: response)
-            
-            guard let sale = self.sale else {
-                let response = Event.CancelInvestAction.Response.failed(.saleIsNotFound)
-                self.presenter.presentCancelInvestAction(response: response)
-                return
-            }
-            guard let selectedBalance = self.sceneModel.selectedBalance else {
-                let response = Event.CancelInvestAction.Response.failed(.quoteBalanceIsNotFound)
-                self.presenter.presentCancelInvestAction(response: response)
-                return
-            }
-            
-            guard let prevOfferId = self.sceneModel.selectedBalance?.prevOfferId else {
-                let response = Event.CancelInvestAction.Response.failed(.previousOfferIsNotFound)
-                self.presenter.presentCancelInvestAction(response: response)
-                return
-            }
-            
-            guard let quoteAsset = sale.quoteAssets.first(where: { (quoteAsset) -> Bool in
-                return quoteAsset.asset == selectedBalance.asset
-            }) else {
-                let response = Event.CancelInvestAction.Response.failed(.quoteAssetIsNotFound)
-                self.presenter.presentCancelInvestAction(response: response)
-                return
-            }
-            
-            guard let baseBalance = self.saleBalance else {
-                let response = Event.CancelInvestAction.Response.failed(.baseBalanceIsNotFound(asset: sale.baseAsset))
-                self.presenter.presentCancelInvestAction(response: response)
-                return
-            }
-            
-            guard let orderBookId = UInt64(sale.id) else {
-                let response = Event.CancelInvestAction.Response.failed(.formatError)
-                self.presenter.presentCancelInvestAction(response: response)
-                return
-            }
-            
-            self.loadFee(
-                quoteAsset: quoteAsset.asset,
-                investAmount: 0
-            ) { [weak self] (result) in
-                switch result {
-                    
-                case .failed(let error):
-                    let response = Event.CancelInvestAction.Response.failed(.feeError(error))
-                    self?.presenter.presentCancelInvestAction(response: response)
-                    
-                case .success(let fee):
-                    self?.performCancellation(
-                        baseBalance: baseBalance.balanceId,
-                        quoteBalance: quoteAsset.quoteBalanceId,
-                        price: quoteAsset.price,
-                        fee: fee.percent,
-                        prevOfferId: prevOfferId,
-                        orderBookId: orderBookId
-                    )
-                }
-            }
-        }
-        
         private func loadFee(
             quoteAsset: String,
             investAmount: Decimal,
@@ -372,42 +313,49 @@ extension SaleInvest {
             }
         }
         
-        private func performCancellation(
-            baseBalance: String,
-            quoteBalance: String,
-            price: Decimal,
-            fee: Decimal,
-            prevOfferId: UInt64,
+        private func finishInvestAction(
+            sale: Model.SaleModel,
+            quoteAsset: Model.SaleModel.QuoteAsset,
+            baseBalance: Model.BalanceDetails,
+            selectedBalance: Model.BalanceDetails,
+            quoteAmount: Decimal,
             orderBookId: UInt64
             ) {
             
-            let cancelModel = Model.CancelInvestModel(
-                baseBalance: baseBalance,
-                quoteBalance: quoteBalance,
-                price: price,
-                fee: fee,
-                prevOfferId: prevOfferId,
-                orderBookId: orderBookId
-            )
-            
-            self.cancelInvestWorker.cancelInvest(
-                model: cancelModel,
-                completion: { [weak self] (result) in
+            self.loadFee(
+                quoteAsset: quoteAsset.asset,
+                investAmount: quoteAmount) { [weak self] (result) in
                     
-                    let response: Event.CancelInvestAction.Response
                     switch result {
                         
-                    case .failure:
-                        response = .failed(.failedToCancelInvestment)
+                    case .failed(let error):
+                        let response = Event.InvestAction.Response.failed(.feeError(error))
+                        self?.presenter.presentInvestAction(response: response)
                         
-                    case .success:
-                        response = .succeeded
-                        self?.dataProvider.refreshBalances()
-                        self?.observeOffers()
+                    case .success(let fee):
+                        let prevOfferId = self?.getPrevOfferId(selectedBalance: selectedBalance)
+                        let baseAmount = quoteAmount/quoteAsset.price
+                        
+                        let saleInvestModel = Model.SaleInvestModel(
+                            baseAsset: sale.baseAsset,
+                            quoteAsset: quoteAsset.asset,
+                            baseBalance: baseBalance.balanceId,
+                            quoteBalance: selectedBalance.balanceId,
+                            isBuy: true,
+                            baseAmount: baseAmount,
+                            quoteAmount: quoteAmount,
+                            baseAssetName: sale.baseAssetName,
+                            price: quoteAsset.price,
+                            fee: fee.percent,
+                            type: sale.type,
+                            offerId: 0,
+                            prevOfferId: prevOfferId,
+                            orderBookId: orderBookId
+                        )
+                        let response = Event.InvestAction.Response.succeeded(saleInvestModel)
+                        self?.presenter.presentInvestAction(response: response)
                     }
-                    self?.presenter.presentCancelInvestAction(response: response)
-                }
-            )
+            }
         }
     }
 }
@@ -483,7 +431,7 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
     public func onInvestAction(request: Event.InvestAction.Request) {
         let investAmount = self.sceneModel.inputAmount
         self.presenter.presentInvestAction(response: .loading)
-
+        
         guard let sale = self.sale else {
             let response = Event.InvestAction.Response.failed(.saleIsNotFound)
             self.presenter.presentInvestAction(response: response)
@@ -520,60 +468,68 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
             return
         }
         
-        guard let baseBalance = self.saleBalance else {
-            let response = Event.InvestAction.Response.failed(.baseBalanceIsNotFound(asset: sale.baseAsset))
-            self.presenter.presentInvestAction(response: response)
-            return
-        }
-        
         guard let orderBookId = UInt64(sale.id) else {
             let response = Event.InvestAction.Response.failed(.formatError)
             self.presenter.presentInvestAction(response: response)
             return
         }
         
-        self.loadFee(
-            quoteAsset: quoteAsset.asset,
-            investAmount: investAmount) { [weak self] (result) in
-                
-                switch result {
-                    
-                case .failed(let error):
-                    let response = Event.InvestAction.Response.failed(.feeError(error))
-                    self?.presenter.presentInvestAction(response: response)
-                    
-                case .success(let fee):
-                    let prevOfferId = self?.getPrevOfferId(selectedBalance: selectedBalance)
-                    let baseAmount = investAmount/quoteAsset.price
-                    
-                    let saleInvestModel = Model.SaleInvestModel(
-                        baseAsset: sale.baseAsset,
-                        quoteAsset: quoteAsset.asset,
-                        baseBalance: baseBalance.balanceId,
-                        quoteBalance: selectedBalance.balanceId,
-                        isBuy: true,
-                        baseAmount: baseAmount,
-                        quoteAmount: investAmount,
-                        baseAssetName: sale.baseAssetName,
-                        price: quoteAsset.price,
-                        fee: fee.percent,
-                        type: sale.type,
-                        offerId: 0,
-                        prevOfferId: prevOfferId,
-                        orderBookId: orderBookId
-                    )
-                    let response = Event.InvestAction.Response.succeeded(saleInvestModel)
-                    self?.presenter.presentInvestAction(response: response)
-                }
+        if let baseBalance = self.saleBalance {
+            self.finishInvestAction(
+                sale: sale,
+                quoteAsset: quoteAsset,
+                baseBalance: baseBalance,
+                selectedBalance: selectedBalance,
+                quoteAmount: investAmount,
+                orderBookId: orderBookId
+            )
+        } else {
+            self.balanceCreator.createBalance(
+                asset: sale.baseAsset,
+                completion: { (result) in
+                    switch result {
+                        
+                    case .failure:
+                        let response = Event.InvestAction.Response.failed(
+                            .failedToCreateBaseBalance(asset: sale.baseAsset)
+                        )
+                        self.presenter.presentInvestAction(response: response)
+                        return
+                        
+                    case .success(let baseBalance):
+                        self.finishInvestAction(
+                            sale: sale,
+                            quoteAsset: quoteAsset,
+                            baseBalance: baseBalance,
+                            selectedBalance: selectedBalance,
+                            quoteAmount: investAmount,
+                            orderBookId: orderBookId
+                        )
+                    }
+            })
         }
-    }
-    
-    public func onCancelInvestAction(request: Event.CancelInvestAction.Request) {
-        self.handleCancelInvestAction()
     }
     
     public func onEditAmount(request: Event.EditAmount.Request) {
         self.sceneModel.inputAmount = request.amount ?? 0.0
+        
+        let availableInputAmount = self.getAvailableInputAmount()
+        let isAmountValid = availableInputAmount >= (request.amount ?? 0.0)
+        let response = Event.EditAmount.Response(isAmountValid: isAmountValid)
+        self.presenter.presentEditAmount(response: response)
+    }
+    
+    public func onShowPreviousInvest(request: Event.ShowPreviousInvest.Request) {
+        guard let baseAsset = self.sale?.baseAsset else {
+            return
+        }
+        let response = Event.ShowPreviousInvest.Response(baseAsset: baseAsset)
+        self.presenter.presentShowPreviousInvest(response: response)
+    }
+    
+    public func onPrevOfferCanceled(request: Event.PrevOfferCancelled.Request) {
+        self.offersDisposable?.dispose()
+        self.observeOffers()
     }
 }
 

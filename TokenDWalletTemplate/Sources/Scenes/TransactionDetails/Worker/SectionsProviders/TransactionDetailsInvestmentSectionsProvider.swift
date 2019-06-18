@@ -134,6 +134,20 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
                 return Assets.delete.image
             }
         }
+        
+        var title: String {
+            switch self {
+            case .cancel:
+                return Localized(.cancel_investment)
+            }
+        }
+        
+        var message: String {
+            switch self {
+            case .cancel:
+                return Localized(.are_you_sure_you_want_to_cancel_investment)
+            }
+        }
     }
     
     func getActions() -> [TransactionDetailsProviderProtocol.Action] {
@@ -142,7 +156,9 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
         return actions.map({ (action) -> TransactionDetailsProviderProtocol.Action in
             return TransactionDetailsProviderProtocol.Action(
                 id: action.rawValue,
-                icon: action.icon
+                icon: action.icon,
+                title: action.title,
+                message: action.message
             )
         })
     }

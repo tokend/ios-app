@@ -7,7 +7,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 source 'git@github.com:tokend/ios-specs.git'
 
 def main_app_pods
-  pod 'TokenDSDK', '3.1.0-rc.4'
+  pod 'TokenDSDK', '3.1.0-rc.5'
   pod 'TokenDSDK/AlamofireNetwork'
   pod 'TokenDSDK/JSONAPI'
   pod 'TokenDSDK/AlamofireNetworkJSONAPI'
@@ -33,6 +33,7 @@ def main_app_pods
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'
   pod 'Floaty', git: 'https://github.com/tokend/Floaty.git'
+  pod 'UICircularProgressRing'
 end
 
 target 'TokenDWalletTemplate' do

@@ -34,7 +34,8 @@ class BaseSignedInFlowController: BaseFlowController {
         transactionsProvider: TransactionDetails.TransactionsProviderProtocol,
         navigationController: NavigationControllerProtocol,
         transactionId: UInt64,
-        balanceId: String
+        balanceId: String,
+        completion: (() -> Void)? = nil
         ) {
         
         let emailFetcher = TransactionDetails.EmailFetcher(
@@ -49,7 +50,8 @@ class BaseSignedInFlowController: BaseFlowController {
         let vc = self.setupTransactionDetailsScreen(
             navigationController: navigationController,
             sectionsProvider: sectionsProvider,
-            title: Localized(.transaction_details)
+            title: Localized(.transaction_details),
+            completion: completion
         )
         navigationController.pushViewController(vc, animated: true)
     }
@@ -218,11 +220,13 @@ class BaseSignedInFlowController: BaseFlowController {
     func setupTransactionDetailsScreen(
         navigationController: NavigationControllerProtocol,
         sectionsProvider: TransactionDetails.SectionsProviderProtocol,
-        title: String
+        title: String,
+        completion: (() -> Void)? = nil
         ) -> TransactionDetails.ViewController {
         
         let routing = TransactionDetails.Routing(
             successAction: {
+                completion?()
                 navigationController.popViewController(true)
         },
             showProgress: {
@@ -235,14 +239,26 @@ class BaseSignedInFlowController: BaseFlowController {
                 navigationController.showErrorMessage(error, completion: nil)
         },
             showMessage: { [weak self] (message) in
-            let present = navigationController.getPresentViewControllerClosure()
-            self?.showSuccessMessage(
-                title: message,
-                message: nil,
-                completion: nil,
-                presentViewController: present
-            )
-        })
+                let present = navigationController.getPresentViewControllerClosure()
+                self?.showSuccessMessage(
+                    title: message,
+                    message: nil,
+                    completion: nil,
+                    presentViewController: present
+                )
+            },
+            showDialog: { [weak self] (title, message, options, onSelected) in
+                let present = navigationController.getPresentViewControllerClosure()
+                self?.showDialog(
+                    title: title,
+                    message: message,
+                    style: .alert,
+                    options: options,
+                    onSelected: onSelected,
+                    onCanceled: nil,
+                    presentViewController: present
+                )}
+        )
         
         let vc = SharedSceneBuilder.createTransactionDetailsScene(
             sectionsProvider: sectionsProvider,

@@ -276,13 +276,13 @@ extension Chart {
         private func setupLayout() {
             self.view.addSubview(self.scrollView)
             self.scrollView.addSubview(self.containerView)
-            self.view.addSubview(self.emptyView)
             self.containerView.addSubview(self.titleLabel)
             self.containerView.addSubview(self.subTitleLabel)
             self.containerView.addSubview(self.datePicker)
             self.containerView.addSubview(self.growthLabel)
             self.containerView.addSubview(self.growthSinceDateLabel)
             self.containerView.addSubview(self.chartView)
+            self.containerView.addSubview(self.emptyView)
             
             self.scrollView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()

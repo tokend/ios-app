@@ -17,6 +17,7 @@
 "annual_return" = "Annual return";
 "app_name" = "TokenD Real Estate";
 "are_you_sure_you_want_to_cancel_investment" = "Are you sure you want to cancel investment?";
+"are_you_sure_you_want_to_cancel_pending_offer" = "Are you sure you want to cancel pending offer?";
 "are_you_sure_you_want_to_sign_out" = "Are you sure you want to Sign Out and Erase All Data from device?";
 "ask_base" = "Ask ($(base))";
 "ask_base_replace_base" = "base";
@@ -32,6 +33,7 @@
 "available" = "Available";
 "available_amount" = "Available: $(amount)";
 "available_amount_replace_amount" = "amount";
+"available_colon" = "Available:";
 "available_assets_for_this_operations" = "Available assets for this operations were not found";
 "available_date" = "Available: $(formatted)";
 "available_date_replace_formatted" = "formatted";
@@ -59,6 +61,7 @@
 "can_be_withdrawn" = " - Can be withdrawn";
 "cancel" = "Cancel";
 "cancel_investment" = "Cancel investment";
+"cancel_pending_offer" = "Cancel pending offer";
 "cancel_tfa" = "Cancel TFA";
 "canceled" = "Canceled";
 "cannot_be_traded_on_secondary_market" = " - Can't be traded on secondary market";
@@ -109,6 +112,14 @@
 "destination_address" = "Destination address";
 "destination_address_colon" = "Destination address:";
 "details" = "Details";
+"details_days_to_go" = "day(s) to go\n$(days)";
+"details_days_to_go_replace_days" = "days";
+"details_days_to_start" = "day(s) to start\n$(days)";
+"details_days_to_start_replace_days" = "days";
+"details_invested" = "invested\n$(amount)";
+"details_invested_replace_amount" = "amount";
+"details_starts_in_days" = "Starts in\n$(days) day(s)";
+"details_starts_in_days_replace_days" = "days";
 "document_max_size" = "image (Max $(file_size))";
 "document_max_size_replace_file_size" = "file_size";
 "done" = "Done";
@@ -195,8 +206,11 @@
 "formatted_date_replace_date" = "date";
 "from_account" = "From account";
 "funded" = "Funded";
+"funded_lowercase" = "funded";
 "general" = "General";
 "get_address" = "Get address";
+"goal" = "goal\n$(amount)";
+"goal_replace_amount" = "amount";
 "go_to_confirmation" = "Go to confirmation";
 "hard_cap" = "Hard Cap";
 "holders_name_colon" = "Holder's name:";
@@ -221,6 +235,8 @@
 "invalid_account_id_or_email" = "Invalid account id or email";
 "invest" = "Invest";
 "invest_cap" = "INVEST";
+"invest_help" = "Investment help";
+"invest_help_message" = "• You can make investments in this sale using proposed assets\n\n• You can have one investment per asset\n\n• While the sale is active, you can change the amount of your investment or cancel them\n\n• If you cancel your investment, the paid amount and fee will be returned\n\n• If the sale has reached it\s soft cap by it\s end date, you will receive the amount of the sale asset according to your investments; otherwise, your investments will be returned.";
 "invested" = "$(amount)\ninvested";
 "invested_replace_amount" = "amount";
 "investing" = "Investing";
@@ -430,6 +446,7 @@
 "terms_of_service" = "Terms of Service";
 "terms_of_service_not_agreed" = "Terms of Service not agreed";
 "terms_of_use" = "Terms of use";
+"there_is_no_progress_history_yet" = "There is no progress history yet";
 "this_feature_will_be" = "This feature will be available once you have any asset that can be deposited";
 "this_seed_is_the_only_way" = "This seed is the only way to recover your account in case of password loss. You will not be able to get it later.";
 "to" = "To $(address)";
@@ -474,7 +491,7 @@
 "unsupported_version" = "$(function) - Unsupported version";
 "unsupported_version_replace_function" = "function";
 "unverified_account" = "Unverified account";
-"update" = "UPDATE";
+"update" = "Update";
 "upper_bound" = "Upper bound";
 "userdataprovider_should_always_provide_walletdata" = "UserDataProvider should always provide walletData";
 "verification" = "Verification";
@@ -501,6 +518,7 @@
 "yesterday_at" = "yesterday at $(hours)";
 "yesterday_at_replace_hours" = "hours";
 "you_can_grant_permissions" = "You can grant permissions from app Settings in System Preferences. Would you like to open Settings?";
+"you_have_already_invested" = "You have already invested:";
 "you_have_no_depositable_assets" = "You have no depositable assets";
 "your_account_is_approved" = "Your account is approved. All actions that requires verification are now available";
 "your_verification_request_is_submitted" = "Your verification request is submitted. Please wait until we review the information. You will be able to update details once the request is reviewed.";

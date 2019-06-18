@@ -27,6 +27,7 @@ extension TransactionsListScene {
         
         private var balanceId: String?
         private let originalAccountId: String
+        private var targetBaseAsset: String?
         private var balancesIds: [String] {
             return self.balancesRepo.balancesDetailsValue.compactMap({ (balance) -> String? in
                 switch balance {
@@ -58,13 +59,15 @@ extension TransactionsListScene {
             pendingOffersRepo: PendingOffersRepo,
             balancesRepo: BalancesRepo,
             rateProvider: RateProviderProtocol,
-            originalAccountId: String
+            originalAccountId: String,
+            targetBaseAsset: String? = nil
             ) {
             
             self.pendingOffersRepo = pendingOffersRepo
             self.balancesRepo = balancesRepo
             self.rateProvider = rateProvider
             self.originalAccountId = originalAccountId
+            self.targetBaseAsset = targetBaseAsset
             
             self.observeBalancesDetails()
             self.observeRateChanges()
@@ -174,7 +177,12 @@ extension TransactionsListScene {
         // MARK: Helpers
         
         private func transactionsDidChange() {
-            let transactions = self.pendingOffersRepo.offersValue
+            var transactions = self.pendingOffersRepo.offersValue
+            if let targetBaseAsset = self.targetBaseAsset {
+                transactions = transactions.filter({ (offer) -> Bool in
+                    return offer.baseAssetCode == targetBaseAsset
+                })
+            }
             let parsedTransactions = self.parseOffers(transactions)
             self.transactions.accept(parsedTransactions)
         }

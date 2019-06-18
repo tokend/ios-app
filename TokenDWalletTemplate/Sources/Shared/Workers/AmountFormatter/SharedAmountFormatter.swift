@@ -12,7 +12,7 @@ public class SharedAmountFormatter: NSObject {
     }()
     
     private lazy var fiatNumberFormatter: NumberFormatter = {
-        return self.createNumberFormatter()
+        return self.createNumberFormatter(maxFractionDigits: 2)
     }()
     
     private let fiatCurrencies: [String] = ["USD", "EUR"]
@@ -46,7 +46,6 @@ public class SharedAmountFormatter: NSObject {
         } else {
             numberFormatter = self.assetNumberFormatter
         }
-        numberFormatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
         
         if abs(decimal) < 1000 {
             let formatted = numberFormatter.string(from: decimal)
@@ -66,14 +65,15 @@ public class SharedAmountFormatter: NSObject {
         return (formatted ?? "\(decimalRoundedNumber)") + "\(units[exp-1])"
     }
     
-    private func createNumberFormatter() -> NumberFormatter {
+    private func createNumberFormatter(maxFractionDigits: Int? = nil) -> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = true
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ","
         formatter.numberStyle = .decimal
         formatter.maximumIntegerDigits = 30
-        formatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
+        formatter.maximumFractionDigits =
+            maxFractionDigits ?? SharedAmountFormatter.maxFractionDigits
         formatter.roundingMode = .halfDown
         formatter.minimumIntegerDigits = 1
         

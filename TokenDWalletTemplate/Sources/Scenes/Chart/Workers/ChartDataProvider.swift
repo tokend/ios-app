@@ -88,7 +88,13 @@ extension Chart {
                 completion: { [weak self] (result) in
                     switch result {
                         
-                    case .failure(let error):
+                    case .failure(let apiError):
+                        let error: Model.Error
+                        if apiError.contains(status: Model.ErrorStatus.notFound.rawValue) {
+                            error = .empty
+                        } else {
+                            error = .other(apiError)
+                        }
                         self?.errors.accept(error)
                         
                     case .success(let charts):
