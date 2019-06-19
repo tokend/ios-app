@@ -96,7 +96,11 @@ extension Fees {
                     groups[feeType] = [fee]
                 }
             }
-            let groupedModels = groups.map { (feeType, fees) -> Model.GroupedFeesModel in
+            let sortedKeys = groups.keys.sorted()
+            let groupedModels = sortedKeys.compactMap { (feeType) -> Model.GroupedFeesModel? in
+                guard let fees = groups[feeType] else {
+                    return nil
+                }
                 return Model.GroupedFeesModel(
                     feeType: feeType,
                     feeModels: fees

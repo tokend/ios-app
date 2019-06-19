@@ -41,7 +41,22 @@ extension Fees {
             for model in models {
                 var viewModels: [Fees.FeeCell.ViewModel] = []
                 model.feeModels.forEach { (fee) in
-                    self.feeDataFormatter.format(asset: fee.asset, value: fee.fixed)
+                    let bounds = self.feeDataFormatter.formatBounds(
+                        lower: fee.lowerBound,
+                        upper: fee.upperBound,
+                        asset: fee.asset
+                    )
+                    let fixed = self.feeDataFormatter.format(
+                        asset: fee.asset,
+                        value: fee.fixed
+                    )
+                    let percent = self.feeDataFormatter.formatPercent(value: fee.percent)
+                    let viewModel = Fees.FeeCell.ViewModel(
+                        boundsValue: bounds,
+                        fixed: fixed,
+                        percent: percent
+                    )
+                    viewModels.append(viewModel)
                 }
                 
                 let title: String

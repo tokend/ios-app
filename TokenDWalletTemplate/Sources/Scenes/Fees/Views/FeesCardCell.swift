@@ -11,6 +11,7 @@ extension Fees {
             
             func setup(cell: View) {
                 cell.title = self.title
+                cell.subTitle = self.subTitle
                 cell.cells = self.cells
             }
         }
@@ -24,15 +25,17 @@ extension Fees {
                 set { self.titleLabel.text = newValue }
             }
             
+            public var subTitle: String? {
+                get { return self.subTitleLabel.text }
+                set { self.subTitleLabel.text = newValue }
+            }
+            
             public var cells: [CellViewAnyModel] = [] {
                 didSet {
                     self.tableView.reloadData()
-                    self.tableView.snp.remakeConstraints { (make) in
-                        make.leading.trailing.equalToSuperview()
-                        make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset)
-                        make.bottom.equalToSuperview().inset(self.topInset)
+                    self.tableView.snp.updateConstraints({ (make) in
                         make.height.equalTo(self.tableViewHeight)
-                    }
+                    })
                 }
             }
             
@@ -40,14 +43,16 @@ extension Fees {
             
             private let container: UIView = UIView()
             private let titleLabel: UILabel = UILabel()
+            private let subTitleLabel: UILabel = UILabel()
             private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
             
             private let sideInset: CGFloat = 15.0
             private let topInset: CGFloat = 10.0
+            private let sectionHeaderHeight: CGFloat = 10.0
             
             private var tableViewHeight: CGFloat {
                 let cellsCount = self.cells.count
-                let rowHeight = self.tableView.estimatedRowHeight
+                let rowHeight = self.tableView.estimatedRowHeight + self.sectionHeaderHeight
                 return CGFloat(cellsCount) * rowHeight
             }
             
@@ -59,6 +64,7 @@ extension Fees {
                 self.setupView()
                 self.setupContainerView()
                 self.setupTitleLabel()
+                self.setupSubTitleLabel()
                 self.setupTableView()
                 self.setupLayout()
             }
@@ -84,6 +90,11 @@ extension Fees {
                 self.titleLabel.font = Theme.Fonts.largeTitleFont
             }
             
+            private func setupSubTitleLabel() {
+                self.subTitleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.subTitleLabel.font = Theme.Fonts.plainTextFont
+            }
+            
             private func setupTableView() {
                 self.tableView.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.tableView.register(classes: [
@@ -94,13 +105,15 @@ extension Fees {
                 self.tableView.delegate = self
                 self.tableView.separatorStyle = .none
                 self.tableView.isScrollEnabled = false
-                self.tableView.estimatedRowHeight = 22.5
+                self.tableView.estimatedRowHeight = 85.0
+                self.tableView.rowHeight = UITableView.automaticDimension
             }
             
             private func setupLayout() {
                 self.contentView.addSubview(self.container)
                 
                 self.container.addSubview(self.titleLabel)
+                self.container.addSubview(self.subTitleLabel)
                 self.container.addSubview(self.tableView)
                 
                 self.container.snp.makeConstraints { (make) in
@@ -113,10 +126,20 @@ extension Fees {
                     make.top.equalToSuperview().inset(self.topInset)
                 }
                 
+                self.subTitleLabel.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset)
+                    make.bottom.equalTo(self.tableView.snp.top)
+                }
+                
+                self.tableView.setContentCompressionResistancePriority(.fittingSizeLevel, for: .vertical)
+                self.tableView.setContentHuggingPriority(.fittingSizeLevel, for: .vertical)
+                
                 self.tableView.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview()
-                    make.top.equalTo(self.titleLabel.snp.bottom).offset(self.topInset)
-                    make.bottom.lessThanOrEqualToSuperview().inset(self.topInset)
+                    make.top.equalTo(self.subTitleLabel.snp.bottom)
+                    make.bottom.equalToSuperview().inset(self.topInset)
+                    make.height.equalTo(0)
                 }
             }
         }
@@ -126,15 +149,15 @@ extension Fees {
 extension Fees.CardView.View: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.cells.isEmpty ? 0 : 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.cells.count
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = self.cells[indexPath.row]
+        let model = self.cells[indexPath.section]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         return cell
     }
@@ -143,7 +166,7 @@ extension Fees.CardView.View: UITableViewDataSource {
 extension Fees.CardView.View: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.0
+        return 15.0
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

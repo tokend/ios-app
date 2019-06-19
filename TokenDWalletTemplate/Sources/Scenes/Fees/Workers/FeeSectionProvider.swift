@@ -38,7 +38,7 @@ extension Fees {
             var fees = response.fees.mapValues { (feesResponse) -> [Model.FeeModel] in
                 return feesResponse
                     .filter({ (response) -> Bool in
-                        response.accountId.isEmpty || response.accountId == self.accountId
+                        (response.accountId.isEmpty || response.accountId == self.accountId) && response.upperBound != 0
                     })
                     .map({ (response) -> Model.FeeModel in
                         let feeType = Model.OperationType(rawValue: response.feeType)

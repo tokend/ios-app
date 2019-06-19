@@ -28,6 +28,10 @@ public class SharedAmountFormatter: NSObject {
         return self.assetNumberFormatter.string(from: amount) ?? "\(amount)"
     }
     
+    public func assetAmountToString(_ amount: Decimal, currency: String) -> String {
+        return self.suffixDecimal(amount, currency: currency)
+    }
+    
     public func percentToString(value: Decimal) -> String {
         self.assetNumberFormatter.maximumFractionDigits = SharedAmountFormatter.maxFractionDigits
         return self.assetNumberFormatter.string(from: value) ?? "\(value)"

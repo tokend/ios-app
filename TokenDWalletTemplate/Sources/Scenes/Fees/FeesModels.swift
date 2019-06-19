@@ -27,7 +27,7 @@ enum Fees {
             let lowerBound: Decimal
             let upperBound: Decimal
         }
-        struct GroupedFeesModel {
+        struct GroupedFeesModel: Equatable {
             let feeType: FeeType
             let feeModels: [FeeModel]
         }
@@ -172,5 +172,26 @@ extension Fees.Model.FeeModel: Comparable {
         }
         
         return left.lowerBound < right.lowerBound
+    }
+}
+
+extension Fees.Model.FeeType: Comparable {
+    
+    static func < (left: Fees.Model.FeeType, right: Fees.Model.FeeType) -> Bool {
+        guard let leftOperationType = left.operationType,
+            let leftSubType = left.subType else {
+                return false
+        }
+        
+        guard let rightOperationType = right.operationType,
+            let rightSubType = right.subType else {
+                return true
+        }
+        
+        if leftOperationType == rightOperationType {
+            return leftSubType.rawValue < rightSubType.rawValue
+        } else {
+            return leftOperationType.rawValue < rightOperationType.rawValue
+        }
     }
 }

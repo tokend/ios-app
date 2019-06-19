@@ -202,12 +202,15 @@ enum LocKey: String {
     case fees
     case first_name
     case fixed
+    case fixed_colon
     case fixed_fee
     case for_code
     case for_code_replace_code
     case forgot_your_password
     case formatted_date
     case formatted_date_replace_date
+    case from
+    case from_replace_amount
     case from_account
     case from_to
     case from_to_replace_lower
@@ -346,6 +349,7 @@ enum LocKey: String {
     case pending_order_details
     case pending_orders
     case percent
+    case percent_colon
     case percent_fee
     case percent_funded
     case percent_funded_replace_percent
@@ -500,6 +504,8 @@ enum LocKey: String {
     case unverified_account
     case update
     case upper_bound
+    case up_to
+    case up_to_replace_amount
     case userdataprovider_should_always_provide_walletdata
     case verification
     case verification_link_is_sent

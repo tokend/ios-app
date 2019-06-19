@@ -301,7 +301,8 @@ class SendPaymentFlowController: BaseSignedInFlowController {
             target: target
         )
         
-        let feeDataFormatter = Fees.FeeDataFormatter()
+        let amountFormatter = Fees.AmountFormatter()
+        let feeDataFormatter = Fees.FeeDataFormatter(amountFormatter: amountFormatter)
         
         let routing = Fees.Routing(
             showProgress: { [weak self] in

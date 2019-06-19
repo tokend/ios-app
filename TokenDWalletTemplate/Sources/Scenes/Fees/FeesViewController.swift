@@ -82,6 +82,8 @@ extension Fees {
             self.tableView.delegate = self
             self.tableView.dataSource = self
             self.tableView.separatorStyle = .none
+            self.tableView.estimatedRowHeight = 150.0
+            self.tableView.rowHeight = UITableView.automaticDimension
         }
         
         private func setupLayout() {

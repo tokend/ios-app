@@ -82,7 +82,7 @@ extension Fees {
             }
             
             private func setupFixedTitleLabel() {
-                self.fixedTitleLabel.text = Localized(.fixed)
+                self.fixedTitleLabel.text = Localized(.fixed_colon)
                 self.fixedTitleLabel.font = Theme.Fonts.plainTextFont
                 self.fixedTitleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
                 self.fixedTitleLabel.textAlignment = .left
@@ -99,6 +99,7 @@ extension Fees {
             }
             
             private func setupPercentTitleLabel() {
+                self.percentTitleLabel.text = Localized(.percent_colon)
                 self.percentTitleLabel.font = Theme.Fonts.plainTextFont
                 self.percentTitleLabel.textColor = Theme.Colors.textOnContentBackgroundColor
                 self.percentTitleLabel.textAlignment = .left
@@ -121,6 +122,24 @@ extension Fees {
                 let topInset: CGFloat = 10
                 let bottomInset: CGFloat = 5
                 
+                self.percentTitleLabel.setContentHuggingPriority(
+                    .defaultHigh,
+                    for: .horizontal
+                )
+                self.percentValueLabel.setContentHuggingPriority(
+                    .defaultLow,
+                    for: .horizontal
+                )
+                
+                self.percentTitleLabel.setContentCompressionResistancePriority(
+                    .defaultLow,
+                    for: .horizontal
+                )
+                self.percentValueLabel.setContentCompressionResistancePriority(
+                    .defaultHigh,
+                    for: .horizontal
+                )
+                
                 self.boundsLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(sideInset)
                     make.top.equalToSuperview().inset(topInset)
@@ -132,7 +151,7 @@ extension Fees {
                 self.fixedValueLabel.snp.makeConstraints { (make) in
                     make.leading.equalTo(self.percentValueLabel)
                     make.trailing.equalToSuperview().inset(sideInset)
-                    make.top.equalTo(self.boundsLabel.snp.bottom).offset(topInset)
+                    make.centerY.equalTo(self.fixedTitleLabel)
                 }
                 self.percentTitleLabel.snp.makeConstraints { (make) in
                     make.leading.equalToSuperview().inset(sideInset)
@@ -140,9 +159,9 @@ extension Fees {
                     make.bottom.equalToSuperview()
                 }
                 self.percentValueLabel.snp.makeConstraints { (make) in
-                    make.leading.equalTo(self.percentTitleLabel).offset(sideInset)
+                    make.leading.equalTo(self.percentTitleLabel.snp.trailing).offset(sideInset)
                     make.trailing.equalToSuperview().inset(sideInset)
-                    make.top.equalTo(self.fixedValueLabel.snp.bottom).offset(bottomInset)
+                    make.centerY.equalTo(self.percentTitleLabel)
                     make.bottom.equalToSuperview()
                 }
             }

@@ -382,6 +382,7 @@
 		DB71308721CAA23200234C12 /* AuthRequestKeyFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308621CAA23200234C12 /* AuthRequestKeyFetcher.swift */; };
 		DB71308921CAA71E00234C12 /* AuthRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */; };
 		DB7208CD22B9141500ED116A /* FeesCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208CC22B9141500ED116A /* FeesCardCell.swift */; };
+		DB7208CF22BA480E00ED116A /* FeeAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -975,6 +976,7 @@
 		DB71308621CAA23200234C12 /* AuthRequestKeyFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestKeyFetcher.swift; sourceTree = "<group>"; };
 		DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestBuilder.swift; sourceTree = "<group>"; };
 		DB7208CC22B9141500ED116A /* FeesCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesCardCell.swift; sourceTree = "<group>"; };
+		DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeAmountFormatter.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2462,6 +2464,7 @@
 		DB5A3BC721C158FE00520604 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */,
 				DB27961521C2B98600106B0C /* FeeDataFormatter.swift */,
 				DB5A3BC821C1593800520604 /* FeeSectionProvider.swift */,
 			);
@@ -3258,6 +3261,7 @@
 				7FEA09C021357EEA0037F25F /* QRCodeReaderFlowController.swift in Sources */,
 				7F7495F5225CF9C00065EE8E /* TradesListRouting.swift in Sources */,
 				71EE11972126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift in Sources */,
+				DB7208CF22BA480E00ED116A /* FeeAmountFormatter.swift in Sources */,
 				DB59381E226DD77500C8997C /* SendPaymentAmountRouting.swift in Sources */,
 				719AAFD12142AEEA00279B9D /* SalesRouting.swift in Sources */,
 				7F2A7E2020F627C9007F8CF8 /* SideMenuController+RootContent.swift in Sources */,
