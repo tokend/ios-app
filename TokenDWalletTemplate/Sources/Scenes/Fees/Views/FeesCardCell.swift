@@ -139,7 +139,7 @@ extension Fees {
                     make.leading.trailing.equalToSuperview()
                     make.top.equalTo(self.subTitleLabel.snp.bottom)
                     make.bottom.equalToSuperview().inset(self.topInset)
-                    make.height.equalTo(0)
+                    make.height.equalTo(self.tableViewHeight)
                 }
             }
         }
