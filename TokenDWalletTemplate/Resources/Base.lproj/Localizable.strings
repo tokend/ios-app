@@ -104,6 +104,7 @@
 "days_to_go_replace_days" = "days";
 "days_to_start" = "$(days)\nday(s) to start";
 "days_to_start_replace_days" = "days";
+"default_capitalized" = "Default";
 "deployed" = "deployed";
 "deposit" = "Deposit";
 "deposit_to" = "Deposit to";
@@ -198,13 +199,19 @@
 "fees" = "Fees";
 "first_name" = "First name";
 "fixed" = "Fixed";
+"fixed_colon" = "Fixed:";
 "fixed_fee" = "Fixed Fee";
 "for_code" = "For $(code)";
 "for_code_replace_code" = "code";
 "forgot_your_password" = "Forgot your password? ";
 "formatted_date" = " $(date)";
 "formatted_date_replace_date" = "date";
+"from" = "From $(amount)";
+"from_replace_amount" = "amount";
 "from_account" = "From account";
+"from_to" = "From $(lower) to $(upper)";
+"from_to_replace_lower" = "lower";
+"from_to_replace_upper" = "upper";
 "funded" = "Funded";
 "funded_lowercase" = "funded";
 "general" = "General";
@@ -339,6 +346,7 @@
 "pending_order_details" = "Pending order details";
 "pending_orders" = "Pending orders";
 "percent" = "Percent";
+"percent_colon" = "Percent:";
 "percent_fee" = "Percent Fee";
 "percent_funded" = "$(percent)\nfunded";
 "percent_funded_replace_percent" = "percent";
@@ -493,6 +501,8 @@
 "unverified_account" = "Unverified account";
 "update" = "Update";
 "upper_bound" = "Upper bound";
+"up_to" = "Up to $(amount)";
+"up_to_replace_amount" = "amount";
 "userdataprovider_should_always_provide_walletdata" = "UserDataProvider should always provide walletData";
 "verification" = "Verification";
 "verification_link_is_sent" = "Verification link is sent to your email\n\nIn case email is not received press resend email button";

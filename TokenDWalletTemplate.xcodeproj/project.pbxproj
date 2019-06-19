@@ -374,13 +374,15 @@
 		DB5A3BC321C1554600520604 /* FeesConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BBD21C1554600520604 /* FeesConfigurator.swift */; };
 		DB5A3BC921C1593800520604 /* FeeSectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3BC821C1593800520604 /* FeeSectionProvider.swift */; };
 		DB5FE4CF22B29B9B00AE3E8A /* SaleInvestBalanceCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5FE4CE22B29B9B00AE3E8A /* SaleInvestBalanceCreator.swift */; };
-		DB6CFC6B21C410CD00160448 /* TitleValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6CFC6A21C410CD00160448 /* TitleValueView.swift */; };
+		DB6CFC6B21C410CD00160448 /* FeesFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6CFC6A21C410CD00160448 /* FeesFeeCell.swift */; };
 		DB6FB15021C8212600AA779E /* ExportSeedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6FB14F21C8212600AA779E /* ExportSeedManager.swift */; };
 		DB71306321CA510700234C12 /* AuthenticatorAuthFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71306221CA510700234C12 /* AuthenticatorAuthFlowController.swift */; };
 		DB71308321CA7FEA00234C12 /* AuthAppAvailibilityChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308221CA7FEA00234C12 /* AuthAppAvailibilityChecker.swift */; };
 		DB71308521CA84D500234C12 /* AuthenticatorAuthActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308421CA84D500234C12 /* AuthenticatorAuthActionCell.swift */; };
 		DB71308721CAA23200234C12 /* AuthRequestKeyFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308621CAA23200234C12 /* AuthRequestKeyFetcher.swift */; };
 		DB71308921CAA71E00234C12 /* AuthRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */; };
+		DB7208CD22B9141500ED116A /* FeesCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208CC22B9141500ED116A /* FeesCardCell.swift */; };
+		DB7208CF22BA480E00ED116A /* FeeAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -966,13 +968,15 @@
 		DB5A3BBD21C1554600520604 /* FeesConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesConfigurator.swift; sourceTree = "<group>"; };
 		DB5A3BC821C1593800520604 /* FeeSectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSectionProvider.swift; sourceTree = "<group>"; };
 		DB5FE4CE22B29B9B00AE3E8A /* SaleInvestBalanceCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleInvestBalanceCreator.swift; sourceTree = "<group>"; };
-		DB6CFC6A21C410CD00160448 /* TitleValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueView.swift; sourceTree = "<group>"; };
+		DB6CFC6A21C410CD00160448 /* FeesFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesFeeCell.swift; sourceTree = "<group>"; };
 		DB6FB14F21C8212600AA779E /* ExportSeedManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSeedManager.swift; sourceTree = "<group>"; };
 		DB71306221CA510700234C12 /* AuthenticatorAuthFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorAuthFlowController.swift; sourceTree = "<group>"; };
 		DB71308221CA7FEA00234C12 /* AuthAppAvailibilityChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAppAvailibilityChecker.swift; sourceTree = "<group>"; };
 		DB71308421CA84D500234C12 /* AuthenticatorAuthActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorAuthActionCell.swift; sourceTree = "<group>"; };
 		DB71308621CAA23200234C12 /* AuthRequestKeyFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestKeyFetcher.swift; sourceTree = "<group>"; };
 		DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestBuilder.swift; sourceTree = "<group>"; };
+		DB7208CC22B9141500ED116A /* FeesCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesCardCell.swift; sourceTree = "<group>"; };
+		DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeAmountFormatter.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2460,6 +2464,7 @@
 		DB5A3BC721C158FE00520604 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */,
 				DB27961521C2B98600106B0C /* FeeDataFormatter.swift */,
 				DB5A3BC821C1593800520604 /* FeeSectionProvider.swift */,
 			);
@@ -2469,7 +2474,8 @@
 		DB6CFC6921C4106E00160448 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DB6CFC6A21C410CD00160448 /* TitleValueView.swift */,
+				DB6CFC6A21C410CD00160448 /* FeesFeeCell.swift */,
+				DB7208CC22B9141500ED116A /* FeesCardCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3255,6 +3261,7 @@
 				7FEA09C021357EEA0037F25F /* QRCodeReaderFlowController.swift in Sources */,
 				7F7495F5225CF9C00065EE8E /* TradesListRouting.swift in Sources */,
 				71EE11972126DA1F0085E57D /* SendPaymentConfirmationSectionsProvider.swift in Sources */,
+				DB7208CF22BA480E00ED116A /* FeeAmountFormatter.swift in Sources */,
 				DB59381E226DD77500C8997C /* SendPaymentAmountRouting.swift in Sources */,
 				719AAFD12142AEEA00279B9D /* SalesRouting.swift in Sources */,
 				7F2A7E2020F627C9007F8CF8 /* SideMenuController+RootContent.swift in Sources */,
@@ -3633,6 +3640,7 @@
 				E9A5CBDF211B34A6009112CA /* DashboardFlowController.swift in Sources */,
 				DB76E3BA22942E2400DA0BA8 /* ChartAmountFormatter.swift in Sources */,
 				E92F1C042139B77D00D4695E /* SharedAmountFormatter.swift in Sources */,
+				DB7208CD22B9141500ED116A /* FeesCardCell.swift in Sources */,
 				E9A5CBF5211DBCCB009112CA /* DashboardPaymentsPlugInInteractor.swift in Sources */,
 				7FB432B92279CED700422746 /* UITableView+LastCell.swift in Sources */,
 				E9063E9D20F7679600A5B343 /* BalanceHeaderWithPickerBalancesFetcherProtocol.swift in Sources */,
@@ -3703,7 +3711,7 @@
 				7FB435252283168C00422746 /* TabsContainerRouting.swift in Sources */,
 				DB97A42522B0F37300BD2E9A /* SaleInvestBalancesView.swift in Sources */,
 				7FB435192282D47700422746 /* SaleOverviewConfigurator.swift in Sources */,
-				DB6CFC6B21C410CD00160448 /* TitleValueView.swift in Sources */,
+				DB6CFC6B21C410CD00160448 /* FeesFeeCell.swift in Sources */,
 				E9A5CBE8211C8D36009112CA /* DashboardPlugInsProvider.swift in Sources */,
 				7F74961F2260A0BB0065EE8E /* TradeOffersAmountFormatterProtocol.swift in Sources */,
 				7FF6761A20BDA0910074E9A8 /* RegisterSceneConfigurator.swift in Sources */,

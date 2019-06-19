@@ -116,7 +116,7 @@ extension SendPaymentAmount {
                 for: .normal
             )
             self.assetButton.semanticContentAttribute = .forceRightToLeft
-            self.assetButton.contentEdgeInsets.right = -self.spacing
+            self.assetButton.contentEdgeInsets.right = self.spacing
             self.assetButton.imageEdgeInsets.right = -self.spacing
         }
         

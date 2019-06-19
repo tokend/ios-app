@@ -35,65 +35,53 @@ extension Fees {
         
         // MARK: - Private
         
-        private func transformToViewModels(models: [Model.FeeModel]) -> [Model.SectionViewModel] {
-            var sections: [Model.SectionViewModel] = []
+        private func transformToViewModels(models: [Model.GroupedFeesModel]) -> [Fees.CardView.CardViewModel] {
+            var cards: [Fees.CardView.CardViewModel] = []
             
             for model in models {
-                var viewModels: [Fees.FeeCell.Model] = []
-                
-                if let subtype = model.subtype {
-                    let subtypeCell = Fees.FeeCell.Model(
-                        title: Localized(.subtype),
-                        identifier: .subtype,
-                        value: self.feeDataFormatter.formatSubtype(subtype: subtype)
+                var viewModels: [Fees.FeeCell.ViewModel] = []
+                model.feeModels.forEach { (fee) in
+                    let bounds = self.feeDataFormatter.formatBounds(
+                        lower: fee.lowerBound,
+                        upper: fee.upperBound,
+                        asset: fee.asset
                     )
-                    viewModels.append(subtypeCell)
+                    let fixed = self.feeDataFormatter.format(
+                        asset: fee.asset,
+                        value: fee.fixed
+                    )
+                    let percent = self.feeDataFormatter.formatPercent(value: fee.percent)
+                    let viewModel = Fees.FeeCell.ViewModel(
+                        boundsValue: bounds,
+                        fixed: fixed,
+                        percent: percent
+                    )
+                    viewModels.append(viewModel)
                 }
-                
-                let fixedCell = Fees.FeeCell.Model(
-                    title: Localized(.fixed),
-                    identifier: .fixed,
-                    value: self.feeDataFormatter.format(asset: model.feeAsset, value: model.fixed)
-                )
-                viewModels.append(fixedCell)
-                
-                let percentCell = Fees.FeeCell.Model(
-                    title: Localized(.percent),
-                    identifier: .percent,
-                    value: self.feeDataFormatter.formatPercent(value: model.percent)
-                )
-                viewModels.append(percentCell)
-                
-                let lowerBoundCell = Fees.FeeCell.Model(
-                    title: Localized(.lower_bound),
-                    identifier: .lowerBound,
-                    value: self.feeDataFormatter.format(asset: model.asset, value: model.lowerBound)
-                )
-                viewModels.append(lowerBoundCell)
-                
-                let upperBoundCell = Fees.FeeCell.Model(
-                    title: Localized(.upper_bound),
-                    identifier: .upperBound,
-                    value: self.feeDataFormatter.format(asset: model.asset, value: model.upperBound)
-                )
-                viewModels.append(upperBoundCell)
                 
                 let title: String
                 
-                if let feeType = model.feeType {
+                if let feeType = model.feeType.operationType {
                     title = self.feeDataFormatter.formatFeeType(feeType: feeType)
                 } else {
                     title = Localized(.undefined)
                 }
                 
-                let section = Model.SectionViewModel(
+                let subTitle: String
+                if let subtype = model.feeType.subType {
+                    subTitle = self.feeDataFormatter.formatSubtype(subtype: subtype)
+                } else {
+                    subTitle = Localized(.undefined)
+                }
+                
+                let card = Fees.CardView.CardViewModel(
                     title: title,
+                    subTitle: subTitle,
                     cells: viewModels
                 )
-                sections.append(section)
+                cards.append(card)
             }
-            
-            return sections
+            return cards
         }
     }
 }
@@ -115,10 +103,10 @@ extension Fees.Presenter: Fees.PresentationLogic {
     }
     
     func presentTabsDidUpdate(response: Event.TabsDidUpdate.Response) {
-        let sections = self.transformToViewModels(models: response.fees)
+        let cards = self.transformToViewModels(models: response.fees)
         let viewModel = Event.TabsDidUpdate.ViewModel(
             titles: response.titles,
-            sections: sections,
+            cards: cards,
             selectedTabIndex: response.selectedTabIndex
         )
         self.presenterDispatch.display { (displayLogic) in
@@ -127,9 +115,9 @@ extension Fees.Presenter: Fees.PresentationLogic {
     }
     
     func presentTabWasSelected(response: Event.TabWasSelected.Response) {
-        let sections: [Model.SectionViewModel] = self.transformToViewModels(models: response.models)
+        let cards: [Fees.CardView.CardViewModel] = self.transformToViewModels(models: response.models)
         
-        let viewModel = Event.TabWasSelected.ViewModel(sections: sections)
+        let viewModel = Event.TabWasSelected.ViewModel(cards: cards)
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayTabWasSelected(viewModel: viewModel)
         }

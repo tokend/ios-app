@@ -72,12 +72,41 @@ extension Fees {
                 fees = []
             }
             
+            let groupedFees = self.getGropuedFeesModels(fees: fees)
             let response = Event.TabsDidUpdate.Response(
                 titles: titles,
-                fees: fees,
+                fees: groupedFees,
                 selectedTabIndex: selectedTabIndex
             )
             self.presenter.presentTabsDidUpdate(response: response)
+        }
+        
+        private func getGropuedFeesModels(fees: [Model.FeeModel]) -> [Model.GroupedFeesModel] {
+            var groups: [Model.FeeType: [Model.FeeModel]] = [:]
+            
+            fees.forEach { (fee) in
+                let feeType = Model.FeeType(
+                    operationType: fee.operationType,
+                    subType: fee.subtype
+                )
+                if var fees = groups[feeType] {
+                    fees.append(fee)
+                    groups[feeType] = fees
+                } else {
+                    groups[feeType] = [fee]
+                }
+            }
+            let sortedKeys = groups.keys.sorted()
+            let groupedModels = sortedKeys.compactMap { (feeType) -> Model.GroupedFeesModel? in
+                guard let fees = groups[feeType] else {
+                    return nil
+                }
+                return Model.GroupedFeesModel(
+                    feeType: feeType,
+                    feeModels: fees
+                )
+            }
+            return groupedModels
         }
         
         private func getSelectedFeeIndex() -> Int? {
@@ -93,17 +122,18 @@ extension Fees {
         }
         
         private func updateSelectedTab(asset: String) {
-            let feeModels: [Fees.Model.FeeModel]
+            let fees: [Fees.Model.FeeModel]
             if let fee = self.sceneModel.fees.first(where: { (pair) -> Bool in
                 return pair.asset == asset
             }) {
-                feeModels = fee.fees
+                fees = fee.fees
             } else {
-                feeModels = []
+                fees = []
             }
             
             self.sceneModel.selectedAsset = asset
-            let response = Event.TabWasSelected.Response(models: feeModels)
+            let groupedFees = self.getGropuedFeesModels(fees: fees)
+            let response = Event.TabWasSelected.Response(models: groupedFees)
             self.presenter.presentTabWasSelected(response: response)
         }
         

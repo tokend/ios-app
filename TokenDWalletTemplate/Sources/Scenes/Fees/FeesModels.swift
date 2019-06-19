@@ -20,12 +20,16 @@ enum Fees {
         struct FeeModel: Equatable {
             let asset: String
             let feeAsset: String
-            let feeType: FeeType?
+            let operationType: OperationType?
             let subtype: Subtype?
             let fixed: Decimal
             let percent: Decimal
             let lowerBound: Decimal
             let upperBound: Decimal
+        }
+        struct GroupedFeesModel: Equatable {
+            let feeType: FeeType
+            let feeModels: [FeeModel]
         }
     }
     enum Event {}
@@ -43,10 +47,15 @@ extension Fees.Model {
     
     struct Target {
         let asset: String
-        let feeType: FeeType
+        let feeType: OperationType
     }
     
-    enum FeeType: Int32 {
+    struct FeeType: Hashable {
+        let operationType: OperationType?
+        let subType: Subtype?
+    }
+    
+    enum OperationType: Int32 {
         case paymentFee = 0
         case offerFee = 1
         case withdrawalFee = 2
@@ -70,7 +79,7 @@ extension Fees.Model {
     
     struct SectionViewModel {
         let title: String
-        let cells: [Fees.FeeCell.Model]
+        let cells: [Fees.FeeCell.ViewModel]
     }
     
     enum LoadingStatus {
@@ -109,13 +118,13 @@ extension Fees.Event {
     enum TabsDidUpdate {
         struct Response {
             let titles: [String]
-            let fees: [Model.FeeModel]
+            let fees: [Model.GroupedFeesModel]
             let selectedTabIndex: Int?
         }
         
         struct ViewModel {
             let titles: [String]
-            let sections: [Model.SectionViewModel]
+            let cards: [Fees.CardView.CardViewModel]
             let selectedTabIndex: Int?
         }
     }
@@ -126,11 +135,11 @@ extension Fees.Event {
         }
         
         struct Response {
-            let models: [Model.FeeModel]
+            let models: [Model.GroupedFeesModel]
         }
         
         struct ViewModel {
-            let sections: [Model.SectionViewModel]
+            let cards: [Fees.CardView.CardViewModel]
         }
     }
 }
@@ -138,11 +147,11 @@ extension Fees.Event {
 extension Fees.Model.FeeModel: Comparable {
     
     static func < (left: Fees.Model.FeeModel, right: Fees.Model.FeeModel) -> Bool {
-        guard let leftFeeType = left.feeType else {
-            return right.feeType != nil
+        guard let leftFeeType = left.operationType else {
+            return right.operationType != nil
         }
         
-        guard let rightFeeType = right.feeType else {
+        guard let rightFeeType = right.operationType else {
             return true
         }
         
@@ -163,5 +172,26 @@ extension Fees.Model.FeeModel: Comparable {
         }
         
         return left.lowerBound < right.lowerBound
+    }
+}
+
+extension Fees.Model.FeeType: Comparable {
+    
+    static func < (left: Fees.Model.FeeType, right: Fees.Model.FeeType) -> Bool {
+        guard let leftOperationType = left.operationType,
+            let leftSubType = left.subType else {
+                return false
+        }
+        
+        guard let rightOperationType = right.operationType,
+            let rightSubType = right.subType else {
+                return true
+        }
+        
+        if leftOperationType == rightOperationType {
+            return leftSubType.rawValue < rightSubType.rawValue
+        } else {
+            return leftOperationType.rawValue < rightOperationType.rawValue
+        }
     }
 }

@@ -286,7 +286,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
         )
         
         var target: Fees.Model.Target?
-        if let systemFeeType = Fees.Model.FeeType(rawValue: feeType) {
+        if let systemFeeType = Fees.Model.OperationType(rawValue: feeType) {
             target = Fees.Model.Target(asset: asset, feeType: systemFeeType)
         }
         
@@ -296,7 +296,10 @@ class WithdrawFlowController: BaseSignedInFlowController {
             target: target
         )
         
-        let feeDataFormatter = Fees.FeeDataFormatter()
+        let amountFormatter = Fees.AmountFormatter()
+        let feeDataFormatter = Fees.FeeDataFormatter(
+            amountFormatter: amountFormatter
+        )
         
         let routing = Fees.Routing(
             showProgress: { [weak self] in

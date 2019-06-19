@@ -21,7 +21,7 @@ extension Fees {
         
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         private let horisontalPicker: HorizontalPicker = HorizontalPicker()
-        private var sections: [Model.SectionViewModel] = []
+        private var cards: [Fees.CardView.CardViewModel] = []
         
         // MARK: -
         
@@ -75,9 +75,15 @@ extension Fees {
         
         private func setupTableView() {
             self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
-            self.tableView.register(classes: [Fees.FeeCell.Model.self])
+            self.tableView.register(classes: [
+                Fees.CardView.CardViewModel.self
+                ]
+            )
             self.tableView.delegate = self
             self.tableView.dataSource = self
+            self.tableView.separatorStyle = .none
+            self.tableView.estimatedRowHeight = 150.0
+            self.tableView.rowHeight = UITableView.automaticDimension
         }
         
         private func setupLayout() {
@@ -147,37 +153,35 @@ extension Fees.ViewController: Fees.DisplayLogic {
         
         self.horisontalPicker.items = items
         self.updateSelectedTabIfNeeded(index: viewModel.selectedTabIndex)
-        self.sections = viewModel.sections
+        self.cards = viewModel.cards
         self.tableView.reloadData()
     }
     
     func displayTabWasSelected(viewModel: Event.TabWasSelected.ViewModel) {
-        self.sections = viewModel.sections
+        self.cards = viewModel.cards
         self.tableView.reloadData()
     }
 }
 
 extension Fees.ViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sections[section].cells.count
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = self.sections[indexPath.section].cells[indexPath.row]
+        let model = self.cards[indexPath.section]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         
         model.setupAny(cell: cell)
         
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.sections[section].title
-    }
 }
 
 extension Fees.ViewController: UITableViewDelegate {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sections.count
+        return self.cards.count
     }
 }
