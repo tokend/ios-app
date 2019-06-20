@@ -383,6 +383,17 @@
 		DB71308921CAA71E00234C12 /* AuthRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */; };
 		DB7208CD22B9141500ED116A /* FeesCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208CC22B9141500ED116A /* FeesCardCell.swift */; };
 		DB7208CF22BA480E00ED116A /* FeeAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */; };
+		DB7208D722BB766700ED116A /* PollsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208D122BB766700ED116A /* PollsPresenter.swift */; };
+		DB7208D822BB766700ED116A /* PollsRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208D222BB766700ED116A /* PollsRouting.swift */; };
+		DB7208D922BB766700ED116A /* PollsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208D322BB766700ED116A /* PollsModels.swift */; };
+		DB7208DA22BB766700ED116A /* PollsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208D422BB766700ED116A /* PollsViewController.swift */; };
+		DB7208DB22BB766700ED116A /* PollsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208D522BB766700ED116A /* PollsInteractor.swift */; };
+		DB7208DC22BB766700ED116A /* PollsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208D622BB766700ED116A /* PollsConfigurator.swift */; };
+		DB7208DF22BB784600ED116A /* PollsBalancesFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208DE22BB784600ED116A /* PollsBalancesFetcher.swift */; };
+		DB7208E122BB7A5200ED116A /* PollsPollsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E022BB7A5200ED116A /* PollsPollsFetcher.swift */; };
+		DB7208E422BB844700ED116A /* PollsPollCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E322BB844700ED116A /* PollsPollCell.swift */; };
+		DB7208E622BB86F200ED116A /* PollsNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */; };
+		DB7208E822BBA1EA00ED116A /* PollsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E722BBA1EA00ED116A /* PollsFlowController.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -977,6 +988,17 @@
 		DB71308821CAA71E00234C12 /* AuthRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequestBuilder.swift; sourceTree = "<group>"; };
 		DB7208CC22B9141500ED116A /* FeesCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesCardCell.swift; sourceTree = "<group>"; };
 		DB7208CE22BA480E00ED116A /* FeeAmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeAmountFormatter.swift; sourceTree = "<group>"; };
+		DB7208D122BB766700ED116A /* PollsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPresenter.swift; sourceTree = "<group>"; };
+		DB7208D222BB766700ED116A /* PollsRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsRouting.swift; sourceTree = "<group>"; };
+		DB7208D322BB766700ED116A /* PollsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsModels.swift; sourceTree = "<group>"; };
+		DB7208D422BB766700ED116A /* PollsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsViewController.swift; sourceTree = "<group>"; };
+		DB7208D522BB766700ED116A /* PollsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsInteractor.swift; sourceTree = "<group>"; };
+		DB7208D622BB766700ED116A /* PollsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsConfigurator.swift; sourceTree = "<group>"; };
+		DB7208DE22BB784600ED116A /* PollsBalancesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsBalancesFetcher.swift; sourceTree = "<group>"; };
+		DB7208E022BB7A5200ED116A /* PollsPollsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPollsFetcher.swift; sourceTree = "<group>"; };
+		DB7208E322BB844700ED116A /* PollsPollCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPollCell.swift; sourceTree = "<group>"; };
+		DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsNavigationTitleView.swift; sourceTree = "<group>"; };
+		DB7208E722BBA1EA00ED116A /* PollsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsFlowController.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -1879,6 +1901,7 @@
 				7FB9E47020BEB6D2005BFE0E /* LaunchFlowController.swift */,
 				7F967FC2212C3FF8005527EA /* LocalAuthFlowController.swift */,
 				7FEA09BD21357A470037F25F /* PermissionRequestFlowController.swift */,
+				DB7208E722BBA1EA00ED116A /* PollsFlowController.swift */,
 				7FEA09BF21357EEA0037F25F /* QRCodeReaderFlowController.swift */,
 				7187EBE32146994E0035D6D3 /* SalesFlowController.swift */,
 				7FABEA8F210211170005E751 /* SendPaymentFlowController.swift */,
@@ -2054,6 +2077,7 @@
 				E91131DE20C5329E00A8AC4D /* ExploreTokens */,
 				DB5A3BB721C1551D00520604 /* Fees */,
 				7FA0114621C964F900CA5586 /* MarkdownViewer */,
+				DB7208D022BB763100ED116A /* Polls */,
 				710E85F32105E1AA007204D4 /* ReceiveAddress */,
 				7F7187142138470100F5C0BD /* RecoverySeed */,
 				7FB4352D228586D000422746 /* SaleDetails */,
@@ -2476,6 +2500,39 @@
 			children = (
 				DB6CFC6A21C410CD00160448 /* FeesFeeCell.swift */,
 				DB7208CC22B9141500ED116A /* FeesCardCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DB7208D022BB763100ED116A /* Polls */ = {
+			isa = PBXGroup;
+			children = (
+				DB7208D622BB766700ED116A /* PollsConfigurator.swift */,
+				DB7208D522BB766700ED116A /* PollsInteractor.swift */,
+				DB7208D322BB766700ED116A /* PollsModels.swift */,
+				DB7208D122BB766700ED116A /* PollsPresenter.swift */,
+				DB7208D222BB766700ED116A /* PollsRouting.swift */,
+				DB7208D422BB766700ED116A /* PollsViewController.swift */,
+				DB7208E222BB83C800ED116A /* Views */,
+				DB7208DD22BB783000ED116A /* Workers */,
+			);
+			path = Polls;
+			sourceTree = "<group>";
+		};
+		DB7208DD22BB783000ED116A /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				DB7208DE22BB784600ED116A /* PollsBalancesFetcher.swift */,
+				DB7208E022BB7A5200ED116A /* PollsPollsFetcher.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		DB7208E222BB83C800ED116A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DB7208E322BB844700ED116A /* PollsPollCell.swift */,
+				DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3293,17 +3350,20 @@
 				7FB9E47120BEB6D2005BFE0E /* LaunchFlowController.swift in Sources */,
 				E9063E9720F669D000A5B343 /* BalanceHeaderWithPickerInteractor.swift in Sources */,
 				E9063EA120F771CA00A5B343 /* BalanceHeaderWithPickerAmountFormatterProtocol.swift in Sources */,
+				DB7208E822BBA1EA00ED116A /* PollsFlowController.swift in Sources */,
 				7F6A848B210A00D700B7FE6B /* ConfirmationSceneViewController.swift in Sources */,
 				DB97A41F22AE69D300BD2E9A /* SaleOverviewProgressValueFormatter.swift in Sources */,
 				E91131E620C532AC00A8AC4D /* ExploreTokensRouting.swift in Sources */,
 				7FABEA5E20FD088F0005E751 /* CreateOfferViewController.swift in Sources */,
 				DB76E3B022940E0900DA0BA8 /* ChartModels.swift in Sources */,
+				DB7208D722BB766700ED116A /* PollsPresenter.swift in Sources */,
 				7F7495F4225CF9C00065EE8E /* TradesListPresenter.swift in Sources */,
 				7FEB45C420DD430A001CA31C /* SharedViewsBuilder.swift in Sources */,
 				E911320F20C6D0D800A8AC4D /* TokenDetailsModels.swift in Sources */,
 				DB76E3AE22940E0900DA0BA8 /* ChartPresenter.swift in Sources */,
 				DB159329229814DF008D4128 /* BalancesListHeaderCell.swift in Sources */,
 				7F7495F8225CF9C00065EE8E /* TradesListInteractor.swift in Sources */,
+				DB7208E122BB7A5200ED116A /* PollsPollsFetcher.swift in Sources */,
 				7F2A7E2820F62B7D007F8CF8 /* SideMenuPresenter.swift in Sources */,
 				E92F1BC521381F3500D4695E /* UserDataManager.swift in Sources */,
 				DB16017F21F600FB00CD3DA4 /* LocalizationManager.swift in Sources */,
@@ -3322,6 +3382,7 @@
 				710E86342105FA95007204D4 /* BXFGroupedHeaderFooterLabel.swift in Sources */,
 				E9A5CBC42119A64C009112CA /* PendingOffersRepo.swift in Sources */,
 				7FB43541228586D100422746 /* SaleDetailsRouting.swift in Sources */,
+				DB7208D822BB766700ED116A /* PollsRouting.swift in Sources */,
 				7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */,
 				DB1AFBAE21C9338300D87D5D /* AuthenticatorAuthInteractor.swift in Sources */,
 				E9A5CBC22119A594009112CA /* TransactionsListScenePendingOffersFetcher.swift in Sources */,
@@ -3385,6 +3446,7 @@
 				DB835F77220D8A25006672C7 /* TransactionsHistoryRepo.swift in Sources */,
 				DB15936F229EB617008D4128 /* TransactionDetailsTransactionProvider.swift in Sources */,
 				DB15936D229E92E3008D4128 /* TransactionsListSceneHistoryProvider.swift in Sources */,
+				DB7208DA22BB766700ED116A /* PollsViewController.swift in Sources */,
 				7F749619226081E80065EE8E /* TradeOffersViewController.swift in Sources */,
 				71136B172134433F00D83DD3 /* TransactionDetailsSectionsProviderProtocol.swift in Sources */,
 				E9908EEB210F220200A0EA1C /* ManagersController.swift in Sources */,
@@ -3398,6 +3460,7 @@
 				7F967FDF212DB69E005527EA /* BiometricsAuthWorker.swift in Sources */,
 				7FB4352C228316B700422746 /* TabsContainerContentProvider.swift in Sources */,
 				7F6A847D2108F34B00B7FE6B /* PermissionsManager.swift in Sources */,
+				DB7208DB22BB766700ED116A /* PollsInteractor.swift in Sources */,
 				7FF6761E20BDA10C0074E9A8 /* String+QueueLabel.swift in Sources */,
 				713D684920FF9552009FEBA3 /* SettingsInteractor.swift in Sources */,
 				7F74960A225F56EA0065EE8E /* TradesListAmountFormatterProtocol.swift in Sources */,
@@ -3553,10 +3616,12 @@
 				E9908EF1211079F300A0EA1C /* BalanceBinder.swift in Sources */,
 				DB159366229E8332008D4128 /* MovementsRepo.swift in Sources */,
 				DB15936B229E87C7008D4128 /* TransactionsListSceneMovementsProvider.swift in Sources */,
+				DB7208E622BB86F200ED116A /* PollsNavigationTitleView.swift in Sources */,
 				DB76E3B222940E0900DA0BA8 /* ChartInteractor.swift in Sources */,
 				E93F075320D7C87F000C0991 /* TransactionsListInteractor.swift in Sources */,
 				E980D85C20D1267900C53841 /* DepositSceneInteractor.swift in Sources */,
 				DB76E3BC22942E5700DA0BA8 /* ChartDateFormatter.swift in Sources */,
+				DB7208E422BB844700ED116A /* PollsPollCell.swift in Sources */,
 				E9A5CBF2211DBCCB009112CA /* DashboardPaymentsPlugInRouting.swift in Sources */,
 				E911320D20C6D0D800A8AC4D /* TokenDetailsPresenter.swift in Sources */,
 				7F71871D2138471D00F5C0BD /* RecoverySeedModels.swift in Sources */,
@@ -3587,6 +3652,7 @@
 				7F71871B2138471D00F5C0BD /* RecoverySeedPresenter.swift in Sources */,
 				7FF6762520BDBBF40074E9A8 /* RootNavigationViewController.swift in Sources */,
 				DB5A3BC921C1593800520604 /* FeeSectionProvider.swift in Sources */,
+				DB7208DC22BB766700ED116A /* PollsConfigurator.swift in Sources */,
 				71136B162134433F00D83DD3 /* TransactionDetailsOperationSectionsProvider.swift in Sources */,
 				7F74960C225F91440065EE8E /* TradesListAssetColoringProvider.swift in Sources */,
 				E9908ECC2108879B00A0EA1C /* TokenDetailsDocumentURLBuilderProtocol.swift in Sources */,
@@ -3769,6 +3835,7 @@
 				DB593823226DD77500C8997C /* SendPaymentAmountAmountFormatter.swift in Sources */,
 				7FB435142282D47700422746 /* SaleOverviewPresenter.swift in Sources */,
 				7F967FA12125985A005527EA /* UpdatePasswordInteractor.swift in Sources */,
+				DB7208DF22BB784600ED116A /* PollsBalancesFetcher.swift in Sources */,
 				DB5FE4CF22B29B9B00AE3E8A /* SaleInvestBalanceCreator.swift in Sources */,
 				DB5A3BC221C1554600520604 /* FeesInteractor.swift in Sources */,
 				7F967FC3212C3FF8005527EA /* LocalAuthFlowController.swift in Sources */,
@@ -3790,6 +3857,7 @@
 				E980D84E20CFF64400C53841 /* BehaviorRelay+EmitValue.swift in Sources */,
 				DB593837226E0A0600C8997C /* SendPaymentDestinationInteractor.swift in Sources */,
 				E93F075420D7C87F000C0991 /* TransactionsListConfigurator.swift in Sources */,
+				DB7208D922BB766700ED116A /* PollsModels.swift in Sources */,
 				719AAFD42142AEEA00279B9D /* SalesInteractor.swift in Sources */,
 				DBED51CF2280360D0040632E /* Array+IndexOf.swift in Sources */,
 				DB593827226DD77500C8997C /* SendPaymentAmountBalanceView.swift in Sources */,

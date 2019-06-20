@@ -26,6 +26,8 @@ enum LocKey: String {
     case ask_base_replace_base
     case asset
     case asset_balance_is_not_found
+    case asset_colon
+    case asset_colon_replace_code
     case asset_details
     case asset_pair
     case asset_summary
@@ -360,6 +362,7 @@ enum LocKey: String {
     case physical_price
     case please_validate_this_seed
     case policy
+    case polls
     case price
     case price_colon
     case price_newline

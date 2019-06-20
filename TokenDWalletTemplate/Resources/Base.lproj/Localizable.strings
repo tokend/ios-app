@@ -23,6 +23,8 @@
 "ask_base_replace_base" = "base";
 "asset" = "Asset";
 "asset_balance_is_not_found" = "Asset balance is not found";
+"asset_colon" = "Asset: $(code)";
+"asset_colon_replace_code" = "code";
 "asset_details" = "Asset details";
 "asset_pair" = "Asset pair";
 "asset_summary" = "Asset Summary";
@@ -357,6 +359,7 @@
 "physical_price" = "Physical price";
 "please_validate_this_seed" = "Please validate this seed in the field below to ensure that you copied it properly:";
 "policy" = "Policy";
+"polls" = "Polls";
 "price" = "Price";
 "price_colon" = "Price:";
 "price_newline" = "Price\n$(quote)";
