@@ -394,6 +394,9 @@
 		DB7208E422BB844700ED116A /* PollsPollCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E322BB844700ED116A /* PollsPollCell.swift */; };
 		DB7208E622BB86F200ED116A /* PollsNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */; };
 		DB7208E822BBA1EA00ED116A /* PollsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208E722BBA1EA00ED116A /* PollsFlowController.swift */; };
+		DB7208F322BCE88600ED116A /* PollsRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208F222BCE88600ED116A /* PollsRepo.swift */; };
+		DB7208F622BD02FD00ED116A /* PollResource+Details.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208F522BD02FD00ED116A /* PollResource+Details.swift */; };
+		DB7208F822BD127D00ED116A /* PollsChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7208F722BD127D00ED116A /* PollsChoiceCell.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -999,6 +1002,9 @@
 		DB7208E322BB844700ED116A /* PollsPollCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPollCell.swift; sourceTree = "<group>"; };
 		DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsNavigationTitleView.swift; sourceTree = "<group>"; };
 		DB7208E722BBA1EA00ED116A /* PollsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsFlowController.swift; sourceTree = "<group>"; };
+		DB7208F222BCE88600ED116A /* PollsRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsRepo.swift; sourceTree = "<group>"; };
+		DB7208F522BD02FD00ED116A /* PollResource+Details.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PollResource+Details.swift"; sourceTree = "<group>"; };
+		DB7208F722BD127D00ED116A /* PollsChoiceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsChoiceCell.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2531,10 +2537,20 @@
 		DB7208E222BB83C800ED116A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DB7208E322BB844700ED116A /* PollsPollCell.swift */,
+				DB7208F722BD127D00ED116A /* PollsChoiceCell.swift */,
 				DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */,
+				DB7208E322BB844700ED116A /* PollsPollCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		DB7208F422BD02D400ED116A /* PollsRepo */ = {
+			isa = PBXGroup;
+			children = (
+				DB7208F222BCE88600ED116A /* PollsRepo.swift */,
+				DB7208F522BD02FD00ED116A /* PollResource+Details.swift */,
+			);
+			path = PollsRepo;
 			sourceTree = "<group>";
 		};
 		DB76E3A722940DEB00DA0BA8 /* Chart */ = {
@@ -2959,12 +2975,13 @@
 				E9BCDD642123586800EB0DF2 /* AssetPairsRepo.swift */,
 				E99D213620CB144E005023D7 /* AssetsRepo.swift */,
 				E980D84F20CFFBC700C53841 /* BalancesRepo.swift */,
+				DB159365229E8332008D4128 /* MovementsRepo.swift */,
 				E9908EDE2108FA1C00A0EA1C /* NetworkInfoRepo.swift */,
 				E9A5CBC32119A64C009112CA /* PendingOffersRepo.swift */,
 				7FA02BD22158F855005C1BE4 /* SalesRepo.swift */,
 				DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */,
 				7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */,
-				DB159365229E8332008D4128 /* MovementsRepo.swift */,
+				DB7208F422BD02D400ED116A /* PollsRepo */,
 			);
 			path = Repos;
 			sourceTree = "<group>";
@@ -3493,6 +3510,7 @@
 				E9063EA320F771E800A5B343 /* BalanceHeaderWithPickerAmountFormatter.swift in Sources */,
 				E9BCDD652123586800EB0DF2 /* AssetPairsRepo.swift in Sources */,
 				E980D88920D28FC500C53841 /* AccountRepo.swift in Sources */,
+				DB7208F322BCE88600ED116A /* PollsRepo.swift in Sources */,
 				7F2A7E2920F62B7D007F8CF8 /* SideMenuRouting.swift in Sources */,
 				DB59386C2273616B00C8997C /* PrecisedFormatter.swift in Sources */,
 				7FB435152282D47700422746 /* SaleOverviewRouting.swift in Sources */,
@@ -3539,6 +3557,7 @@
 				E91131FC20C5804E00A8AC4D /* ExploreTokensSceneBalanceCreatorProtocol.swift in Sources */,
 				DB80461C21D3744500C60939 /* AuthKeychainManager.swift in Sources */,
 				DB593821226DD77500C8997C /* SendPaymentAmountFeeLoader.swift in Sources */,
+				DB7208F622BD02FD00ED116A /* PollResource+Details.swift in Sources */,
 				E93F076220D7F730000C0991 /* TransactionsListSceneDateFormatter.swift in Sources */,
 				7F967FD8212DB684005527EA /* BiometricsAuthRouting.swift in Sources */,
 				DB159383229FFF48008D4128 /* BalanceHeaderAmountFormatter.swift in Sources */,
@@ -3612,6 +3631,7 @@
 				DB1AFBAD21C9338300D87D5D /* AuthenticatorAuthViewController.swift in Sources */,
 				710E86112105E1AB007204D4 /* ReceiveAddressPresenter.swift in Sources */,
 				7F0F36B720E2696500E906D5 /* WalletRecoveryPresenter.swift in Sources */,
+				DB7208F822BD127D00ED116A /* PollsChoiceCell.swift in Sources */,
 				E911321020C6D0D800A8AC4D /* TokenDetailsViewController.swift in Sources */,
 				E9908EF1211079F300A0EA1C /* BalanceBinder.swift in Sources */,
 				DB159366229E8332008D4128 /* MovementsRepo.swift in Sources */,

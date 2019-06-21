@@ -7,7 +7,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 source 'git@github.com:tokend/ios-specs.git'
 
 def main_app_pods
-  pod 'TokenDSDK', '3.1.0-rc.5'
+  pod 'TokenDSDK', '3.1.0-rc.7'
   pod 'TokenDSDK/AlamofireNetwork'
   pod 'TokenDSDK/JSONAPI'
   pod 'TokenDSDK/AlamofireNetworkJSONAPI'

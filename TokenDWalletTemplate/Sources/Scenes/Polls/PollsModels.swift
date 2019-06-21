@@ -28,7 +28,31 @@ extension Polls.Model {
     }
     
     public struct Poll {
-        let topic: String
+        let id: String
+        let ownerAccountId: String
+        let subject: String
+        let choices: [Choice]
+        let currentChoice: Int?
+        
+        public struct Choice {
+            let name: String
+            let result: Result?
+            
+            public struct Result {
+                let voteCounts: Int
+                let totalVotes: Int
+            }
+        }
+    }
+    
+    public struct Vote {
+        let id: String
+        let choice: Int
+    }
+    
+    public enum ButtonType {
+        case submit
+        case remove
     }
     
     public enum LoadingStatus {

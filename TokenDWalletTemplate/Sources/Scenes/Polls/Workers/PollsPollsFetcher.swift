@@ -1,4 +1,5 @@
 import Foundation
+import TokenDSDK
 import RxSwift
 import RxCocoa
 
@@ -15,10 +16,13 @@ extension Polls {
         
         // MARK: - Private properties
         
+        private var pollsRepo: PollsRepo?
         private let polls: BehaviorRelay<[Model.Poll]> = BehaviorRelay(value: [])
         
-        private var balanceId: String?
+        private var ownerAccountId: String?
         private let reposController: ReposController
+        
+        private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
@@ -29,15 +33,65 @@ extension Polls {
         // MARK: - Private
         
         private func observeRepoPolls() {
-            let macPoll = Model.Poll(topic: "McDonalds")
-            let pizzaPoll = Model.Poll(topic: "Pizza")
-            let buhloPoll = Model.Poll(topic: "Buhlo")
-            self.polls.accept([
-                macPoll,
-                pizzaPoll,
-                buhloPoll
-                ]
-            )
+            guard let pollsRepo = self.pollsRepo else {
+                return
+            }
+            let pollsObservable = pollsRepo.observePolls()
+            let votesObservable = self.getVotesObservable()
+            
+            Observable.zip(pollsObservable,votesObservable)
+                .subscribe(onNext: { [weak self] (pollResources, votes) in
+                    let polls = pollResources.compactMap({ (poll) -> Model.Poll? in
+                        guard let id = poll.id,
+                        let ownerAccountId = self?.ownerAccountId,
+                            let subject = poll.subject,
+                            let pollChoices = poll.choices else {
+                                return nil
+                        }
+                        
+                        let choices = pollChoices.choices.map({ (choice) -> Model.Poll.Choice in
+                            
+                            return Model.Poll.Choice(
+                                name: choice.description,
+                                result: nil
+                            )
+                        })
+                        let currentChoice = votes.first(where: { (vote) -> Bool in
+                            return vote.id == id
+                        })?.choice
+                        
+                        return Model.Poll(
+                            id: id,
+                            ownerAccountId: ownerAccountId,
+                            subject: subject.question,
+                            choices: choices,
+                            currentChoice: currentChoice
+                        )
+                    })
+                    self?.polls.accept(polls)
+                })
+            .disposed(by: self.disposeBag)
+                    
+        }
+        
+        private func getVotesObservable() -> Observable<[Model.Vote]> {
+            guard let pollsRepo = self.pollsRepo else {
+                return Observable.just([])
+            }
+            return pollsRepo.observeVotes()
+                .map { (votesResources) -> [Model.Vote] in
+                    return votesResources
+                        .compactMap({ (vote) -> Model.Vote? in
+                            guard let id = vote.poll?.id else {
+                                return nil
+                            }
+                            let choice = Int((vote.voteData?.singleChoice ?? 0) - 1)
+                            return Model.Vote(id: id, choice: choice)
+                        })
+                        .filter({ (vote) -> Bool in
+                            vote.choice > 0
+                        })
+            }
         }
     }
 }
@@ -50,13 +104,6 @@ extension Polls.PollsFetcher: Polls.PollsFetcherProtocol {
     }
     
     public func setBalanceId(balanceId: String) {
-        self.balanceId = balanceId
-        let pizzaPoll = Model.Poll(topic: "Pizza")
-        let buhloPoll = Model.Poll(topic: "Buhlo")
-        self.polls.accept([
-            pizzaPoll,
-            buhloPoll
-            ]
-        )
+        
     }
 }
