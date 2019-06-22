@@ -35,7 +35,7 @@ extension BalancePicker {
 
 extension BalancePicker {
     
-    @objc(AssetPickerInteractorDispatch)
+    @objc(BalancePickerInteractorDispatch)
     public class InteractorDispatch: NSObject {
         
         private let queue: DispatchQueue = DispatchQueue(
@@ -62,7 +62,7 @@ extension BalancePicker {
         }
     }
     
-    @objc(AssetPickerPresenterDispatch)
+    @objc(BalancePickerPresenterDispatch)
     public class PresenterDispatch: NSObject {
         
         private weak var displayLogic: DisplayLogic?

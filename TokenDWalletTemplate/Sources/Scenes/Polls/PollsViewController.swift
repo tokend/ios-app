@@ -124,6 +124,27 @@ extension Polls.ViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = self.polls[indexPath.section]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
+        
+        if let pollCell = cell as? Polls.PollCell.View {
+            pollCell.onActionButtonClicked = { [weak self] in
+                let request = Event.ActionButtonClicked.Request(
+                    pollId: model.pollId,
+                    actionType: model.actionType
+                )
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onActionButtonClicked(request: request)
+                })
+            }
+            pollCell.onChoiceSelected = { [weak self] (choice) in
+                let request = Event.ChoiceChanged.Request(
+                    pollId: model.pollId,
+                    choice: choice
+                )
+                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                    businessLogic.onChoiceChanged(request: request)
+                })
+            }
+        }
         return cell
     }
 }

@@ -8,16 +8,22 @@ extension Polls {
             viewController: ViewController,
             assetsFetcher: AssetsFetcherProtocol,
             pollsFetcher: PollsFetcherProtocol,
+            percentFormatter: PercentFormatterProtocol,
+            voteWorker: VoteWorkerProtocol,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
-            let presenter = Presenter(presenterDispatch: presenterDispatch)
+            let presenter = Presenter(
+                presenterDispatch: presenterDispatch,
+                percentFormatter: percentFormatter
+            )
             let interactor = Interactor(
                 presenter: presenter,
                 assetsFetcher: assetsFetcher,
-                pollsFetcher: pollsFetcher
+                pollsFetcher: pollsFetcher,
+                voteWorker: voteWorker
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

@@ -169,7 +169,3 @@ extension PollsRepo {
         case loading
     }
 }
-
-extension PollsRepo {
-    
-}

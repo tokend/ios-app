@@ -7,7 +7,7 @@ extension Polls {
         public struct ViewModel: CellViewModel {
             let name: String
             let choiceValue: Int
-            let isSelected: Bool
+            var isSelected: Bool
             let result: Result?
             
             public struct Result {

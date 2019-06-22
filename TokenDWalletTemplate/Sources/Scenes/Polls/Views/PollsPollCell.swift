@@ -11,7 +11,7 @@ extension Polls {
             let choicesViewModels: [Polls.PollsChoiceCell.ViewModel]
             let isVotable: Bool
             let actionTitle: String
-            let buttonType: Model.ButtonType
+            let actionType: Model.ActionType
             
             // MARK: - Public
             
@@ -20,7 +20,6 @@ extension Polls {
                 cell.choices = self.choicesViewModels
                 cell.isVotable = self.isVotable
                 cell.actionTitle = self.actionTitle
-                cell.buttonType = self.buttonType
             }
         }
         
@@ -28,7 +27,8 @@ extension Polls {
             
             // MARK: - Public properties
             
-            var onActionButtonClicked: ((Model.ButtonType) -> Void)?
+            var onActionButtonClicked: (() -> Void)?
+            var onChoiceSelected: ((_ choiceValue: Int) -> Void)?
             
             var question: String? {
                 get { return self.questionLabel.text }
@@ -52,8 +52,6 @@ extension Polls {
                 set { self.actionButton.setTitle(newValue, for: .normal) }
             }
             
-            var buttonType: Model.ButtonType?
-            
             // MARK: - Private properties
             
             private let container: UIView = UIView()
@@ -68,6 +66,8 @@ extension Polls {
             private let topInset: CGFloat = 10.0
             
             private let disposeBag: DisposeBag = DisposeBag()
+            
+            private var selectedChoiceIndex: Int?
             
             // MARK: -
             
@@ -91,6 +91,21 @@ extension Polls {
                 self.setupActionButton()
                 self.setupLayout()
             }
+            
+            private func setSeletctedChoice(index: Int) {
+                if let currentSelectedChoice = self.selectedChoiceIndex {
+                    var unSelectedChoice = self.choices[currentSelectedChoice]
+                    unSelectedChoice.isSelected = false
+                    self.choices[currentSelectedChoice] = unSelectedChoice
+                }
+                self.selectedChoiceIndex = index
+                var selectedChoice = self.choices[index]
+                selectedChoice.isSelected = true
+                self.choices[index] = selectedChoice
+                self.choicesTableView.reloadData()
+            }
+            
+            // MARK: - Setup
             
             private func setupView() {
                 self.backgroundColor = Theme.Colors.containerBackgroundColor
@@ -130,10 +145,7 @@ extension Polls {
                     .tap
                     .asDriver()
                     .drive(onNext: { [weak self] _ in
-                        guard let buttonType = self?.buttonType else {
-                            return
-                        }
-                        self?.onActionButtonClicked?(buttonType)
+                        self?.onActionButtonClicked?()
                     })
                     .disposed(by: self.disposeBag)
             }
@@ -158,6 +170,11 @@ extension Polls {
 
 extension Polls.PollCell.View: UITableViewDelegate {
     
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let model = self.choices[indexPath.section]
+        self.onChoiceSelected?(model.choiceValue)
+        self.setSeletctedChoice(index: indexPath.section)
+    }
 }
 
 extension Polls.PollCell.View: UITableViewDataSource {
@@ -170,7 +187,6 @@ extension Polls.PollCell.View: UITableViewDataSource {
         return 1
     }
     
-    // TODO Think about select choice notification
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = self.choices[indexPath.section]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)

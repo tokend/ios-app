@@ -40,6 +40,10 @@ class PollsFlowController: BaseSignedInFlowController {
             assetsRepo: self.reposController.assetsRepo
         )
         let pollsFetcher = Polls.PollsFetcher(reposController: reposController)
+        let percentFormatter = Polls.PercentFormatter()
+        let voterWorker = Polls.VoteWorker(
+            transactionSender: self.managersController.transactionSender
+        )
         
         let routing = Polls.Routing(
             onPresentPicker: { [weak self] (onSelected) in
@@ -50,6 +54,8 @@ class PollsFlowController: BaseSignedInFlowController {
             viewController: vc,
             assetsFetcher: assetsFetcher,
             pollsFetcher: pollsFetcher,
+            percentFormatter: percentFormatter,
+            voteWorker: voterWorker,
             routing: routing
         )
         

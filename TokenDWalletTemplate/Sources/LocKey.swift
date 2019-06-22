@@ -389,6 +389,7 @@ enum LocKey: String {
     case register_now
     case rejected
     case reload
+    case remove_vote
     case renew
     case repeat_title
     case request_error
@@ -452,6 +453,7 @@ enum LocKey: String {
     case state
     case subject
     case submit
+    case submit_vote
     case subtype
     case success
     case success_parameter_is_missing_or_invalid

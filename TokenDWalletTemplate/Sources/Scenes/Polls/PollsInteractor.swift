@@ -6,6 +6,8 @@ public protocol PollsBusinessLogic {
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onAssetSelected(request: Event.AssetSelected.Request)
+    func onActionButtonClicked(request: Event.ActionButtonClicked.Request)
+    func onChoiceChanged(request: Event.ChoiceChanged.Request)
 }
 
 extension Polls {
@@ -23,6 +25,7 @@ extension Polls {
         private var sceneModel: Model.SceneModel
         private let assetsFetcher: AssetsFetcherProtocol
         private let pollsFetcher: PollsFetcherProtocol
+        private let voteWorker: VoteWorkerProtocol
         
         private let disposeBag: DisposeBag = DisposeBag()
         
@@ -31,12 +34,14 @@ extension Polls {
         public init(
             presenter: PresentationLogic,
             assetsFetcher: AssetsFetcherProtocol,
-            pollsFetcher: PollsFetcherProtocol
+            pollsFetcher: PollsFetcherProtocol,
+            voteWorker: VoteWorkerProtocol
             ) {
             
             self.presenter = presenter
             self.assetsFetcher = assetsFetcher
             self.pollsFetcher = pollsFetcher
+            self.voteWorker = voteWorker
             self.sceneModel = Model.SceneModel(
                 assets: [],
                 selectedAsset: nil,
@@ -101,6 +106,31 @@ extension Polls {
         private func selectFirstAsset() {
             self.sceneModel.selectedAsset = self.sceneModel.assets.first
         }
+        
+        // MARK: - Action handling
+        
+        private func handleAddVote(pollId: String) {
+            guard let poll = self.sceneModel.polls.first(where: { (poll) -> Bool in
+                return poll.id == pollId
+            }), let currentChoice = poll.currentChoice else {
+                return
+            }
+            
+            self.voteWorker.addVote(
+                pollId: pollId,
+                choice: currentChoice,
+                completion: { (result) in
+                    
+            })
+        }
+        
+        private func handleRemoveVote(pollId: String) {
+            self.voteWorker.removeVote(
+                pollId: pollId,
+                completion: { (result) in
+                    
+            })
+        }
     }
 }
 
@@ -118,5 +148,29 @@ extension Polls.Interactor: Polls.BusinessLogic {
         
         self.sceneModel.selectedAsset = asset
         self.updatePolls()
+    }
+    
+    public func onActionButtonClicked(request: Event.ActionButtonClicked.Request) {
+        switch request.actionType {
+            
+        case .remove:
+            self.handleRemoveVote(pollId: request.pollId)
+            
+        case .submit:
+            self.handleAddVote(pollId: request.pollId)
+        }
+    }
+    
+    public func onChoiceChanged(request: Event.ChoiceChanged.Request) {
+        guard var poll = self.sceneModel.polls.first(where: { (poll) -> Bool in
+            return poll.id == request.pollId
+        }),
+            let pollIndex = self.sceneModel.polls.indexOf(poll),
+            poll.choices.contains(where: { (choice) -> Bool in
+                return choice.value == request.choice
+            }) else { return }
+        
+        poll.currentChoice = request.choice
+        self.sceneModel.polls[pollIndex] = poll
     }
 }

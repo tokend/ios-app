@@ -39,7 +39,7 @@ extension Polls {
             let pollsObservable = pollsRepo.observePolls()
             let votesObservable = self.getVotesObservable()
             
-            Observable.zip(pollsObservable,votesObservable)
+            Observable.zip(pollsObservable, votesObservable)
                 .subscribe(onNext: { [weak self] (pollResources, votes) in
                     let polls = pollResources.compactMap({ (poll) -> Model.Poll? in
                         guard let id = poll.id,
@@ -53,6 +53,7 @@ extension Polls {
                             
                             return Model.Poll.Choice(
                                 name: choice.description,
+                                value: choice.number,
                                 result: nil
                             )
                         })

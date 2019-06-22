@@ -386,6 +386,7 @@
 "register_now" = "Register now";
 "rejected" = "Rejected";
 "reload" = "Reload";
+"remove_vote" = "REMOVE VOTE";
 "renew" = "Renew";
 "repeat_title" = "Repeat";
 "request_error" = "Request error: $(message)";
@@ -449,6 +450,7 @@
 "state" = "State";
 "subject" = "Subject";
 "submit" = "Submit";
+"submit_vote" = "SUBMIT VOTE";
 "subtype" = "Subtype";
 "success" = "Success";
 "success_parameter_is_missing_or_invalid" = "'success' parameter is missing or invalid";

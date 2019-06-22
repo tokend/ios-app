@@ -417,6 +417,8 @@
 		DB72092422BE4A9800ED116A /* AssetPickerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091922BE4A9800ED116A /* AssetPickerConfigurator.swift */; };
 		DB72092522BE4A9800ED116A /* AssetPickerEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091B22BE4A9800ED116A /* AssetPickerEmptyView.swift */; };
 		DB72092622BE4A9800ED116A /* AssetPickerAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */; };
+		DB72092822BE57A700ED116A /* PollsPercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */; };
+		DB72092A22BE642800ED116A /* PollsVoteWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092922BE642700ED116A /* PollsVoteWorker.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -1035,6 +1037,8 @@
 		DB72091922BE4A9800ED116A /* AssetPickerConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerConfigurator.swift; sourceTree = "<group>"; };
 		DB72091B22BE4A9800ED116A /* AssetPickerEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerEmptyView.swift; sourceTree = "<group>"; };
 		DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerAssetCell.swift; sourceTree = "<group>"; };
+		DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPercentFormatter.swift; sourceTree = "<group>"; };
+		DB72092922BE642700ED116A /* PollsVoteWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsVoteWorker.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2550,7 +2554,9 @@
 			isa = PBXGroup;
 			children = (
 				DB7208DE22BB784600ED116A /* PollsBalancesFetcher.swift */,
+				DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */,
 				DB7208E022BB7A5200ED116A /* PollsPollsFetcher.swift */,
+				DB72092922BE642700ED116A /* PollsVoteWorker.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -3632,6 +3638,7 @@
 				713E665B2143D021009A36A3 /* SalesSectionsProvider.swift in Sources */,
 				E9A5CBDD211B338C009112CA /* DashboardConfigurator.swift in Sources */,
 				7FB4353F228586D100422746 /* SaleDetailsInteractor.swift in Sources */,
+				DB72092A22BE642800ED116A /* PollsVoteWorker.swift in Sources */,
 				7FB435282283168C00422746 /* TabsContainerInteractor.swift in Sources */,
 				7FEB45BF20DD4143001CA31C /* VerifyEmailViewController.swift in Sources */,
 				DB1AFBB721C9577200D87D5D /* AuthRequestQRCodeGenerator.swift in Sources */,
@@ -3660,6 +3667,7 @@
 				7FEB45C120DD4143001CA31C /* VerifyEmailConfigurator.swift in Sources */,
 				71A9B74C2136ABBF003CCC34 /* QRCodeReaderView.swift in Sources */,
 				7FB4353D228586D000422746 /* SaleDetailsViewController.swift in Sources */,
+				DB72092822BE57A700ED116A /* PollsPercentFormatter.swift in Sources */,
 				710E86272105ECAD007204D4 /* BXFStaticTableView.swift in Sources */,
 				7FABEA6820FD08B30005E751 /* TextEditingContext.swift in Sources */,
 				7FB9E47B20C01455005BFE0E /* UIImage+ButtonImage.swift in Sources */,

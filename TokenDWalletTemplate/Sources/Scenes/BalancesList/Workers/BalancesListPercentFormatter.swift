@@ -1,6 +1,6 @@
 import Foundation
 
-protocol BalancesListPercentFormatterProtocol {
+public protocol BalancesListPercentFormatterProtocol {
     func formatPercantage(percent: Double) -> String
 }
 
