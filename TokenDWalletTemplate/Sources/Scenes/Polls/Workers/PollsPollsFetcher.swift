@@ -5,7 +5,7 @@ import RxCocoa
 
 public protocol PollsPollsFetcherProtocol {
     func observePolls() -> Observable<[Polls.Model.Poll]>
-    func setBalanceId(balanceId: String)
+    func setOwnerAccountId(ownerAccountId: String)
 }
 
 extension Polls {
@@ -103,7 +103,7 @@ extension Polls.PollsFetcher: Polls.PollsFetcherProtocol {
         return self.polls.asObservable()
     }
     
-    public func setBalanceId(balanceId: String) {
+    public func setOwnerAccountId(ownerAccountId: String) {
         
     }
 }

@@ -36,22 +36,19 @@ class PollsFlowController: BaseSignedInFlowController {
     
     private func setupPollsScene() -> UIViewController {
         let vc = Polls.ViewController()
-        let balancesFetcher = Polls.BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo
+        let assetsFetcher = Polls.AssetsFetcher(
+            assetsRepo: self.reposController.assetsRepo
         )
         let pollsFetcher = Polls.PollsFetcher(reposController: reposController)
         
         let routing = Polls.Routing(
-            onPresentPicker: { [weak self] (assets, onSelected) in
-                self?.showBalancePicker(targetAssets: assets, onSelected: onSelected)
-            },
-            onPollSelected: {
-                
-        })
+            onPresentPicker: { [weak self] (onSelected) in
+                self?.showAssetPicker(onSelected: onSelected)
+            })
         
         Polls.Configurator.configure(
             viewController: vc,
-            balancesFetcher: balancesFetcher,
+            assetsFetcher: assetsFetcher,
             pollsFetcher: pollsFetcher,
             routing: routing
         )
@@ -59,17 +56,10 @@ class PollsFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showBalancePicker(
-        targetAssets: [String],
-        onSelected: @escaping ((String) -> Void)
-        ) {
-        
+    private func showAssetPicker(onSelected: @escaping ((String) -> Void)) {
         let navController = NavigationController()
         
-        let vc = self.setupBalancePicker(
-            targetAssets: targetAssets,
-            onSelected: onSelected
-        )
+        let vc = self.setupAssetPicker(onSelected: onSelected)
         vc.navigationItem.title = Localized(.choose_asset)
         let closeBarItem = UIBarButtonItem(
             title: Localized(.back),
@@ -98,34 +88,31 @@ class PollsFlowController: BaseSignedInFlowController {
         )
     }
     
-    private func setupBalancePicker(
-        targetAssets: [String],
+    private func setupAssetPicker(
         onSelected: @escaping ((String) -> Void)
         ) -> UIViewController {
         
-        let vc = BalancePicker.ViewController()
+        let vc = AssetPicker.ViewController()
         let imageUtility = ImagesUtility(
             storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
-        let balancesFetcher = BalancePicker.BalancesFetcher(
-            balancesRepo: self.reposController.balancesRepo,
+        let assetsFetcher = AssetPicker.AssetsFetcher(
             assetsRepo: self.reposController.assetsRepo,
-            imagesUtility: imageUtility,
-            targetAssets: targetAssets
+            imagesUtility: imageUtility
         )
-        let sceneModel = BalancePicker.Model.SceneModel(
-            balances: [],
+        let sceneModel = AssetPicker.Model.SceneModel(
+            assets: [],
             filter: nil
         )
-        let amountFormatter = BalancePicker.AmountFormatter()
-        let routing = BalancePicker.Routing(
-            onBalancePicked: { (balanceId) in
-                onSelected(balanceId)
+        let amountFormatter = AssetPicker.AmountFormatter()
+        let routing = AssetPicker.Routing(
+            onAssetPicked: { (ownerAccountId) in
+                onSelected(ownerAccountId)
         })
         
-        BalancePicker.Configurator.configure(
+        AssetPicker.Configurator.configure(
             viewController: vc,
-            balancesFetcher: balancesFetcher,
+            assetsFetcher: assetsFetcher,
             sceneModel: sceneModel,
             amountFormatter: amountFormatter,
             routing: routing

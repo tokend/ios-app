@@ -1,23 +1,27 @@
 import Foundation
 
-extension Polls {
+extension AssetPicker {
     
     public enum Configurator {
         
-        public static func configure(
+        static func configure(
             viewController: ViewController,
             assetsFetcher: AssetsFetcherProtocol,
-            pollsFetcher: PollsFetcherProtocol,
+            sceneModel: Model.SceneModel,
+            amountFormatter: AmountFormatterProtocol,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
-            let presenter = Presenter(presenterDispatch: presenterDispatch)
+            let presenter = Presenter(
+                presenterDispatch: presenterDispatch,
+                amountFormatter: amountFormatter
+            )
             let interactor = Interactor(
                 presenter: presenter,
                 assetsFetcher: assetsFetcher,
-                pollsFetcher: pollsFetcher
+                sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(
@@ -29,9 +33,9 @@ extension Polls {
     }
 }
 
-extension Polls {
+extension AssetPicker {
     
-    @objc(PollsInteractorDispatch)
+    @objc(AssetPickerInteractorDispatch)
     public class InteractorDispatch: NSObject {
         
         private let queue: DispatchQueue = DispatchQueue(
@@ -58,7 +62,7 @@ extension Polls {
         }
     }
     
-    @objc(PollsPresenterDispatch)
+    @objc(AssetPickerPresenterDispatch)
     public class PresenterDispatch: NSObject {
         
         private weak var displayLogic: DisplayLogic?

@@ -4,7 +4,6 @@ public protocol PollsDisplayLogic: class {
     typealias Event = Polls.Event
     
     func displaySceneUpdated(viewModel: Event.SceneUpdated.ViewModel)
-    func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel)
 }
 
 extension Polls {
@@ -74,10 +73,13 @@ extension Polls {
         
         private func setupNavigationTitleView() {
             self.navigationTitleView.onPickerSelected = { [weak self] in
-                let request = Event.SelectBalance.Request()
-                self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                    businessLogic.onSelectBalance(request: request)
-                })
+                let onSelected: (String) -> Void = { [weak self] (ownerAccountId) in
+                    let request = Event.AssetSelected.Request(ownerAccountId: ownerAccountId)
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onAssetSelected(request: request)
+                    })
+                }
+                self?.routing?.onPresentPicker(onSelected)
             }
             self.navigationItem.titleView = self.navigationTitleView
         }
@@ -88,7 +90,6 @@ extension Polls {
                 PollCell.ViewModel.self
                 ]
             )
-            self.tableView.delegate = self
             self.tableView.dataSource = self
             self.tableView.separatorStyle = .none
         }
@@ -107,27 +108,6 @@ extension Polls.ViewController: Polls.DisplayLogic {
     public func displaySceneUpdated(viewModel: Event.SceneUpdated.ViewModel) {
         self.polls = viewModel.polls
         self.navigationTitleView.setAsset(asset: viewModel.asset)
-    }
-    
-    public func displaySelectBalance(viewModel: Event.SelectBalance.ViewModel) {
-        let onSelected: (String) -> Void = { [weak self] (balanceId) in
-            let request = Event.BalanceSelected.Request(balanceId: balanceId)
-            self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
-                businessLogic.onBalanceSelected(request: request)
-            })
-        }
-        self.routing?.onPresentPicker(
-            viewModel.assets,
-            onSelected
-        )
-    }
-}
-
-extension Polls.ViewController: UITableViewDelegate {
-    
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let model = self.polls[indexPath.row]
-        self.routing?.onPollSelected()
     }
 }
 

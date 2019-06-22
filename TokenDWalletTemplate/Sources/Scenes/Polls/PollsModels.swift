@@ -17,14 +17,9 @@ public enum Polls {
 extension Polls.Model {
     
     public struct SceneModel {
-        var balances: [Balance]
-        var selectedBalance: Balance?
+        var assets: [Asset]
+        var selectedAsset: Asset?
         var polls: [Poll]
-    }
-    
-    public struct Balance: Equatable {
-        let asset: String
-        let balanceId: String
     }
     
     public struct Poll {
@@ -55,6 +50,11 @@ extension Polls.Model {
         case remove
     }
     
+    public struct Asset: Equatable {
+        let code: String
+        let ownerAccountId: String
+    }
+    
     public enum LoadingStatus {
         case loaded
         case loading
@@ -75,7 +75,7 @@ extension Polls.Event {
     public enum SceneUpdated {
         public struct Response {
             let polls: [Model.Poll]
-            let selectedBalance: Model.Balance
+            let selectedAsset: Model.Asset
         }
         
         public struct ViewModel {
@@ -84,21 +84,9 @@ extension Polls.Event {
         }
     }
     
-    public enum SelectBalance {
-        public struct Request {}
-        
-        public struct Response {
-            let balances: [Model.Balance]
-        }
-        
-        public struct ViewModel {
-            let assets: [String]
-        }
-    }
-    
-    public enum BalanceSelected {
+    public enum AssetSelected {
         public struct Request {
-            let balanceId: String
+            let ownerAccountId: String
         }
     }
 }

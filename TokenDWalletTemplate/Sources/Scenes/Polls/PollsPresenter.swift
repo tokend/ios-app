@@ -4,7 +4,6 @@ public protocol PollsPresentationLogic {
     typealias Event = Polls.Event
     
     func presentSceneUpdated(response: Event.SceneUpdated.Response)
-    func presentSelectBalance(response: Event.SelectBalance.Response)
 }
 
 extension Polls {
@@ -37,7 +36,7 @@ extension Polls.Presenter: Polls.PresentationLogic {
         let asset = Localized(
             .asset_colon,
             replace: [
-                .asset_colon_replace_code: response.selectedBalance.asset
+                .asset_colon_replace_code: response.selectedAsset.code
             ]
         )
         let viewModel = Event.SceneUpdated.ViewModel(
@@ -46,16 +45,6 @@ extension Polls.Presenter: Polls.PresentationLogic {
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displaySceneUpdated(viewModel: viewModel)
-        }
-    }
-    
-    public func presentSelectBalance(response: Event.SelectBalance.Response) {
-        let assets = response.balances.map { (balance) -> String in
-            return balance.asset
-        }
-        let viewModel = Event.SelectBalance.ViewModel(assets: assets)
-        self.presenterDispatch.display { (displayLogic) in
-            displayLogic.displaySelectBalance(viewModel: viewModel)
         }
     }
 }

@@ -5,8 +5,7 @@ public protocol PollsBusinessLogic {
     typealias Event = Polls.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
-    func onSelectBalance(request: Event.SelectBalance.Request)
-    func onBalanceSelected(request: Event.BalanceSelected.Request)
+    func onAssetSelected(request: Event.AssetSelected.Request)
 }
 
 extension Polls {
@@ -22,7 +21,7 @@ extension Polls {
         
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
-        private let balancesFetcher: BalancesFetcherProtocol
+        private let assetsFetcher: AssetsFetcherProtocol
         private let pollsFetcher: PollsFetcherProtocol
         
         private let disposeBag: DisposeBag = DisposeBag()
@@ -31,16 +30,16 @@ extension Polls {
         
         public init(
             presenter: PresentationLogic,
-            balancesFetcher: BalancesFetcherProtocol,
+            assetsFetcher: AssetsFetcherProtocol,
             pollsFetcher: PollsFetcherProtocol
             ) {
             
             self.presenter = presenter
-            self.balancesFetcher = balancesFetcher
+            self.assetsFetcher = assetsFetcher
             self.pollsFetcher = pollsFetcher
             self.sceneModel = Model.SceneModel(
-                balances: [],
-                selectedBalance: nil,
+                assets: [],
+                selectedAsset: nil,
                 polls: []
             )
         }
@@ -48,24 +47,24 @@ extension Polls {
         // MARK: - Private
         
         private func updateScene() {
-            guard let selectedBalance = self.sceneModel.selectedBalance else {
+            guard let selectedAsset = self.sceneModel.selectedAsset else {
                 return
             }
             let response = Event.SceneUpdated.Response(
                 polls: self.sceneModel.polls,
-                selectedBalance: selectedBalance
+                selectedAsset: selectedAsset
             )
             self.presenter.presentSceneUpdated(response: response)
         }
         
         // MARK: - Observe
         
-        private func observeBalances() {
-            self.balancesFetcher
-                .observeBalances()
-                .subscribe(onNext: { (balances) in
-                    self.sceneModel.balances = balances
-                    self.updateSelectedBalance()
+        private func observeAssets() {
+            self.assetsFetcher
+                .observeAssets()
+                .subscribe(onNext: { (assets) in
+                    self.sceneModel.assets = assets
+                    self.updateSelectedAsset()
                     self.updatePolls()
                 })
                 .disposed(by: self.disposeBag)
@@ -82,25 +81,25 @@ extension Polls {
         }
         
         private func updatePolls() {
-            guard let selectedBalance = self.sceneModel.selectedBalance else {
+            guard let selectedAsset = self.sceneModel.selectedAsset else {
                 return
             }
-            self.pollsFetcher.setBalanceId(balanceId: selectedBalance.balanceId)
+            self.pollsFetcher.setOwnerAccountId(ownerAccountId: selectedAsset.ownerAccountId)
         }
         
-        private func updateSelectedBalance() {
-            if let selectedBalance = self.sceneModel.selectedBalance {
-                guard !self.sceneModel.balances.contains(selectedBalance) else {
+        private func updateSelectedAsset() {
+            if let selectedAsset = self.sceneModel.selectedAsset {
+                guard !self.sceneModel.assets.contains(selectedAsset) else {
                     return
                 }
-                self.selectFirstBalance()
+                self.selectFirstAsset()
             } else {
-                self.selectFirstBalance()
+                self.selectFirstAsset()
             }
         }
         
-        private func selectFirstBalance() {
-            self.sceneModel.selectedBalance = self.sceneModel.balances.first
+        private func selectFirstAsset() {
+            self.sceneModel.selectedAsset = self.sceneModel.assets.first
         }
     }
 }
@@ -108,21 +107,16 @@ extension Polls {
 extension Polls.Interactor: Polls.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
-        self.observeBalances()
+        self.observeAssets()
         self.observePolls()
     }
     
-    public func onSelectBalance(request: Event.SelectBalance.Request) {
-        let response = Event.SelectBalance.Response(balances: self.sceneModel.balances)
-        self.presenter.presentSelectBalance(response: response)
-    }
-    
-    public func onBalanceSelected(request: Event.BalanceSelected.Request) {
-        guard let balance = self.sceneModel.balances.first(where: { (balance) -> Bool in
-            return balance.balanceId == request.balanceId
+    public func onAssetSelected(request: Event.AssetSelected.Request) {
+        guard let asset = self.sceneModel.assets.first(where: { (asset) -> Bool in
+            return asset.ownerAccountId == request.ownerAccountId
         }) else { return }
         
-        self.sceneModel.selectedBalance = balance
+        self.sceneModel.selectedAsset = asset
         self.updatePolls()
     }
 }

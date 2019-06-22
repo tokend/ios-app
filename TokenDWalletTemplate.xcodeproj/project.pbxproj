@@ -407,6 +407,16 @@
 		DB72090D22BE3EB300ED116A /* BalancePickerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72090222BE3EB200ED116A /* BalancePickerInteractor.swift */; };
 		DB72090E22BE3EB300ED116A /* BalancePickerEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72090422BE3EB200ED116A /* BalancePickerEmptyView.swift */; };
 		DB72090F22BE3EB300ED116A /* BalancePickerBalanceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72090522BE3EB200ED116A /* BalancePickerBalanceCell.swift */; };
+		DB72091D22BE4A9800ED116A /* AssetPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091122BE4A9800ED116A /* AssetPickerViewController.swift */; };
+		DB72091E22BE4A9800ED116A /* AssetPickerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091222BE4A9800ED116A /* AssetPickerModels.swift */; };
+		DB72091F22BE4A9800ED116A /* AssetPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091322BE4A9800ED116A /* AssetPickerPresenter.swift */; };
+		DB72092022BE4A9800ED116A /* AssetPickerRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091422BE4A9800ED116A /* AssetPickerRouting.swift */; };
+		DB72092122BE4A9800ED116A /* AssetPickerAssetsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091622BE4A9800ED116A /* AssetPickerAssetsFetcher.swift */; };
+		DB72092222BE4A9800ED116A /* AssetPickerAmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091722BE4A9800ED116A /* AssetPickerAmountFormatter.swift */; };
+		DB72092322BE4A9800ED116A /* AssetPickerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091822BE4A9800ED116A /* AssetPickerInteractor.swift */; };
+		DB72092422BE4A9800ED116A /* AssetPickerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091922BE4A9800ED116A /* AssetPickerConfigurator.swift */; };
+		DB72092522BE4A9800ED116A /* AssetPickerEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091B22BE4A9800ED116A /* AssetPickerEmptyView.swift */; };
+		DB72092622BE4A9800ED116A /* AssetPickerAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -1015,6 +1025,16 @@
 		DB72090222BE3EB200ED116A /* BalancePickerInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalancePickerInteractor.swift; sourceTree = "<group>"; };
 		DB72090422BE3EB200ED116A /* BalancePickerEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalancePickerEmptyView.swift; sourceTree = "<group>"; };
 		DB72090522BE3EB200ED116A /* BalancePickerBalanceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalancePickerBalanceCell.swift; sourceTree = "<group>"; };
+		DB72091122BE4A9800ED116A /* AssetPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerViewController.swift; sourceTree = "<group>"; };
+		DB72091222BE4A9800ED116A /* AssetPickerModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerModels.swift; sourceTree = "<group>"; };
+		DB72091322BE4A9800ED116A /* AssetPickerPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerPresenter.swift; sourceTree = "<group>"; };
+		DB72091422BE4A9800ED116A /* AssetPickerRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerRouting.swift; sourceTree = "<group>"; };
+		DB72091622BE4A9800ED116A /* AssetPickerAssetsFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerAssetsFetcher.swift; sourceTree = "<group>"; };
+		DB72091722BE4A9800ED116A /* AssetPickerAmountFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerAmountFormatter.swift; sourceTree = "<group>"; };
+		DB72091822BE4A9800ED116A /* AssetPickerInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerInteractor.swift; sourceTree = "<group>"; };
+		DB72091922BE4A9800ED116A /* AssetPickerConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerConfigurator.swift; sourceTree = "<group>"; };
+		DB72091B22BE4A9800ED116A /* AssetPickerEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerEmptyView.swift; sourceTree = "<group>"; };
+		DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerAssetCell.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2069,6 +2089,7 @@
 		7FF675FB20BD98630074E9A8 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				DB72091022BE4A9800ED116A /* AssetPicker */,
 				DB1AFBA321C9334900D87D5D /* AuthenticatorAuth */,
 				DB159370229FEDE8008D4128 /* BalanceHeader */,
 				E9063E9A20F669D300A5B343 /* BalanceHeaderWithPicker */,
@@ -2582,6 +2603,39 @@
 			children = (
 				DB72090422BE3EB200ED116A /* BalancePickerEmptyView.swift */,
 				DB72090522BE3EB200ED116A /* BalancePickerBalanceCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DB72091022BE4A9800ED116A /* AssetPicker */ = {
+			isa = PBXGroup;
+			children = (
+				DB72091922BE4A9800ED116A /* AssetPickerConfigurator.swift */,
+				DB72091822BE4A9800ED116A /* AssetPickerInteractor.swift */,
+				DB72091222BE4A9800ED116A /* AssetPickerModels.swift */,
+				DB72091322BE4A9800ED116A /* AssetPickerPresenter.swift */,
+				DB72091422BE4A9800ED116A /* AssetPickerRouting.swift */,
+				DB72091122BE4A9800ED116A /* AssetPickerViewController.swift */,
+				DB72091A22BE4A9800ED116A /* Views */,
+				DB72091522BE4A9800ED116A /* Workers */,
+			);
+			path = AssetPicker;
+			sourceTree = "<group>";
+		};
+		DB72091522BE4A9800ED116A /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				DB72091622BE4A9800ED116A /* AssetPickerAssetsFetcher.swift */,
+				DB72091722BE4A9800ED116A /* AssetPickerAmountFormatter.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		DB72091A22BE4A9800ED116A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DB72091B22BE4A9800ED116A /* AssetPickerEmptyView.swift */,
+				DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3319,6 +3373,7 @@
 				71C74EBD2121BF8400088908 /* ConfirmationSectionsProviderProtocol.swift in Sources */,
 				713363262122F98000B000C9 /* WithdrawConfirmationSectionsProvider.swift in Sources */,
 				E9A5CBA921188004009112CA /* TokenDWallet.PublicKey+base32EncodedString.swift in Sources */,
+				DB72092622BE4A9800ED116A /* AssetPickerAssetCell.swift in Sources */,
 				7F74962D2260A1D40065EE8E /* TradeOffersOffersFetcherProtocol.swift in Sources */,
 				7FB4353E228586D000422746 /* SaleDetailsConfigurator.swift in Sources */,
 				DB1AFBAC21C9338300D87D5D /* AuthenticatorAuthModels.swift in Sources */,
@@ -3399,6 +3454,7 @@
 				DB15932122981405008D4128 /* BalancesListViewController.swift in Sources */,
 				710E86342105FA95007204D4 /* BXFGroupedHeaderFooterLabel.swift in Sources */,
 				E9A5CBC42119A64C009112CA /* PendingOffersRepo.swift in Sources */,
+				DB72092322BE4A9800ED116A /* AssetPickerInteractor.swift in Sources */,
 				7FB43541228586D100422746 /* SaleDetailsRouting.swift in Sources */,
 				DB7208D822BB766700ED116A /* PollsRouting.swift in Sources */,
 				7F7496292260A1D40065EE8E /* TradeOffersDateFormatterProtocol.swift in Sources */,
@@ -3416,6 +3472,7 @@
 				E9908EC92107A02300A0EA1C /* APIConfigurationFetcher.swift in Sources */,
 				DB15934722984B55008D4128 /* TabBarInteractor.swift in Sources */,
 				710E86042105E1AB007204D4 /* ReceiveAddressModels.swift in Sources */,
+				DB72091D22BE4A9800ED116A /* AssetPickerViewController.swift in Sources */,
 				7FA02BD32158F855005C1BE4 /* SalesRepo.swift in Sources */,
 				E92F1BD12138564700D4695E /* CreateOfferConfirmationSectionsProvider.swift in Sources */,
 				E92F1C002139B77D00D4695E /* ChartCardValueFormatter.swift in Sources */,
@@ -3456,6 +3513,7 @@
 				7F7495F6225CF9C00065EE8E /* TradesListModels.swift in Sources */,
 				DB593826226DD77500C8997C /* SendPaymentAmountEnterAmountView.swift in Sources */,
 				DB1AFBAF21C9338300D87D5D /* AuthenticatorAuthConfigurator.swift in Sources */,
+				DB72092022BE4A9800ED116A /* AssetPickerRouting.swift in Sources */,
 				E92F1C132139B7F100D4695E /* VerifyEmailWorker.swift in Sources */,
 				DB159379229FEE12008D4128 /* BalanceHeaderModels.swift in Sources */,
 				7FE9FF4E21400E27006ACFEA /* AppInfoUtils.swift in Sources */,
@@ -3487,6 +3545,7 @@
 				71136B0B2134433F00D83DD3 /* TransactionDetailsInteractor.swift in Sources */,
 				7F749617226081E80065EE8E /* TradeOffersRouting.swift in Sources */,
 				E980D86C20D1323000C53841 /* UISegmentedControl+FillWithSegments.swift in Sources */,
+				DB72091E22BE4A9800ED116A /* AssetPickerModels.swift in Sources */,
 				E9063E8A20F63FEC00A5B343 /* UIColor+Interpolation.swift in Sources */,
 				E9BA0BF720C8189000CE5708 /* NumberFormatter+Decimal.swift in Sources */,
 				E92F1BCB2138385200D4695E /* CreateOfferTotalView.swift in Sources */,
@@ -3515,6 +3574,7 @@
 				E980D88920D28FC500C53841 /* AccountRepo.swift in Sources */,
 				DB7208F322BCE88600ED116A /* PollsRepo.swift in Sources */,
 				7F2A7E2920F62B7D007F8CF8 /* SideMenuRouting.swift in Sources */,
+				DB72092222BE4A9800ED116A /* AssetPickerAmountFormatter.swift in Sources */,
 				DB59386C2273616B00C8997C /* PrecisedFormatter.swift in Sources */,
 				7FB435152282D47700422746 /* SaleOverviewRouting.swift in Sources */,
 				710E86052105E1AB007204D4 /* ReceiveAddressViewController.swift in Sources */,
@@ -3594,6 +3654,7 @@
 				E9A5CBDC211B338C009112CA /* DashboardInteractor.swift in Sources */,
 				7FABEA5F20FD088F0005E751 /* CreateOfferRouting.swift in Sources */,
 				DB19A7FD215BC4980043CD4A /* SaleInvestConfirmationProvider.swift in Sources */,
+				DB72091F22BE4A9800ED116A /* AssetPickerPresenter.swift in Sources */,
 				710E86232105ECAD007204D4 /* BXFStaticTableViewInputCell.swift in Sources */,
 				710E862B2105ECAD007204D4 /* BXFStaticTableViewSectionHeaderFooterView.swift in Sources */,
 				7FEB45C120DD4143001CA31C /* VerifyEmailConfigurator.swift in Sources */,
@@ -3606,14 +3667,17 @@
 				7F0F36B920E2696500E906D5 /* WalletRecoveryModels.swift in Sources */,
 				DB15937F229FEED9008D4128 /* BalanceHeaderBalanceFetcher.swift in Sources */,
 				E93F075120D7C87F000C0991 /* TransactionsListModels.swift in Sources */,
+				DB72092522BE4A9800ED116A /* AssetPickerEmptyView.swift in Sources */,
 				710E86062105E1AB007204D4 /* ReceiveAddressInteractor.swift in Sources */,
 				DB15938922A54287008D4128 /* BalancesListPieChartColorsProvider.swift in Sources */,
 				DB8C4065222853060018148E /* DepositSceneErrorFormatter.swift in Sources */,
 				DB1AFBAA21C9338300D87D5D /* AuthenticatorAuthPresenter.swift in Sources */,
+				DB72092122BE4A9800ED116A /* AssetPickerAssetsFetcher.swift in Sources */,
 				DB1AFBB321C9357900D87D5D /* AuthRequestWorker.swift in Sources */,
 				7FF5AE55215BEC5A0066A2ED /* DecimalMaxValueValidator.swift in Sources */,
 				DBED51F0228AE6B50040632E /* SaleInvestViewController.swift in Sources */,
 				E9BCDD7621243C8800EB0DF2 /* RateProvider.swift in Sources */,
+				DB72092422BE4A9800ED116A /* AssetPickerConfigurator.swift in Sources */,
 				DB15935F229C23E3008D4128 /* TabBarContainerConfigurator.swift in Sources */,
 				DB71308521CA84D500234C12 /* AuthenticatorAuthActionCell.swift in Sources */,
 				E911320220C6A12100A8AC4D /* ApplicationEventsController.swift in Sources */,
