@@ -2,14 +2,14 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-protocol AssetPickerAssetsFetcherProtocol {
-    func observeAssets() -> Observable<[AssetPicker.Model.Asset]>
+protocol BalancePickerBalancesFetcherProtocol {
+    func observeBalances() -> Observable<[BalancePicker.Model.Balance]>
 }
 
-extension AssetPicker {
-    typealias AssetsFetcherProtocol = AssetPickerAssetsFetcherProtocol
+extension BalancePicker {
+    typealias BalancesFetcherProtocol = BalancePickerBalancesFetcherProtocol
     
-    class AssetsFetcher {
+    class BalancesFetcher {
         
         // MARK: - Private properties
         
@@ -18,7 +18,7 @@ extension AssetPicker {
         private let imagesUtility: ImagesUtility
         private let targetAssets: [String]
         
-        private let assetsRelay: BehaviorRelay<[Model.Asset]> = BehaviorRelay(value: [])
+        private let balancesRelay: BehaviorRelay<[Model.Balance]> = BehaviorRelay(value: [])
         
         private var balances: [BalancesRepo.BalanceDetails] = []
         private var assets: [AssetsRepo.Asset] = []
@@ -56,7 +56,7 @@ extension AssetPicker {
                             return nil
                         }
                     })
-                    self?.updateAssets()
+                    self?.updateBalances()
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -66,13 +66,13 @@ extension AssetPicker {
                 .observeAssets()
                 .subscribe(onNext: { [weak self] (assets) in
                     self?.assets = assets
-                    self?.updateAssets()
+                    self?.updateBalances()
                 })
                 .disposed(by: self.disposeBag)
         }
         
-        private func updateAssets() {
-            var assets: [Model.Asset] = []
+        private func updateBalances() {
+            var balances: [Model.Balance] = []
             
             self.balances.forEach { (balance) in
                 if let asset = self.assets.first(where: { (asset) -> Bool in
@@ -80,7 +80,7 @@ extension AssetPicker {
                         && self.targetAssets.contains(asset.code)
                         && balance.balance > 0
                 }) {
-                    let balance = Model.Balance(
+                    let balance = Model.BalanceDetails(
                         amount: balance.balance,
                         balanceId: balance.balanceId
                     )
@@ -89,24 +89,24 @@ extension AssetPicker {
                         let imageKey = ImagesUtility.ImageKey.key(key)
                         iconUrl = self.imagesUtility.getImageURL(imageKey)
                     }
-                    let assetModel = Model.Asset(
-                        code: asset.code,
+                    let balanceModel = Model.Balance(
+                        assetCode: asset.code,
                         iconUrl: iconUrl,
-                        balance: balance
+                        details: balance
                     )
-                    assets.append(assetModel)
+                    balances.append(balanceModel)
                 }
             }
-            self.assetsRelay.accept(assets)
+            self.balancesRelay.accept(balances)
         }
     }
 }
 
-extension AssetPicker.AssetsFetcher: AssetPicker.AssetsFetcherProtocol {
+extension BalancePicker.BalancesFetcher: BalancePicker.BalancesFetcherProtocol {
     
-    func observeAssets() -> Observable<[AssetPicker.Model.Asset]> {
+    func observeBalances() -> Observable<[BalancePicker.Model.Balance]> {
         self.observeBalancesRepo()
         self.observeAssetsRepo()
-        return self.assetsRelay.asObservable()
+        return self.balancesRelay.asObservable()
     }
 }

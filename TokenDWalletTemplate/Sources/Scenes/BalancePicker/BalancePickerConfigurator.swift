@@ -1,12 +1,12 @@
 import Foundation
 
-extension AssetPicker {
+extension BalancePicker {
     
     public enum Configurator {
         
         static func configure(
             viewController: ViewController,
-            assetsFetcher: AssetsFetcherProtocol,
+            balancesFetcher: BalancesFetcherProtocol,
             sceneModel: Model.SceneModel,
             amountFormatter: AmountFormatterProtocol,
             routing: Routing?,
@@ -20,7 +20,7 @@ extension AssetPicker {
             )
             let interactor = Interactor(
                 presenter: presenter,
-                assetsFetcher: assetsFetcher,
+                balancesFetcher: balancesFetcher,
                 sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
@@ -33,7 +33,7 @@ extension AssetPicker {
     }
 }
 
-extension AssetPicker {
+extension BalancePicker {
     
     @objc(AssetPickerInteractorDispatch)
     public class InteractorDispatch: NSObject {

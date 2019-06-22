@@ -523,29 +523,29 @@ class SalesFlowController: BaseSignedInFlowController {
         onSelected: @escaping ((String) -> Void)
         ) -> UIViewController {
         
-        let vc = AssetPicker.ViewController()
+        let vc = BalancePicker.ViewController()
         let imageUtility = ImagesUtility(
             storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
-        let assetsFetcher = AssetPicker.AssetsFetcher(
+        let balancesFetcher = BalancePicker.BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo,
             assetsRepo: self.reposController.assetsRepo,
             imagesUtility: imageUtility,
             targetAssets: targetAssets
         )
-        let sceneModel = AssetPicker.Model.SceneModel(
-            assets: [],
+        let sceneModel = BalancePicker.Model.SceneModel(
+            balances: [],
             filter: nil
         )
-        let amountFormatter = AssetPicker.AmountFormatter()
-        let routing = AssetPicker.Routing(
-            onAssetPicked: { (balanceId) in
+        let amountFormatter = BalancePicker.AmountFormatter()
+        let routing = BalancePicker.Routing(
+            onBalancePicked: { (balanceId) in
                 onSelected(balanceId)
         })
         
-        AssetPicker.Configurator.configure(
+        BalancePicker.Configurator.configure(
             viewController: vc,
-            assetsFetcher: assetsFetcher,
+            balancesFetcher: balancesFetcher,
             sceneModel: sceneModel,
             amountFormatter: amountFormatter,
             routing: routing

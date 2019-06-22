@@ -1,6 +1,6 @@
 import UIKit
 
-extension AssetPicker {
+extension BalancePicker {
     
     class EmptyView: UIView {
         

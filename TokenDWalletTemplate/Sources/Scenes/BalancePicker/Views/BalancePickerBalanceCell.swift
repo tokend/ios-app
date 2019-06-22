@@ -1,13 +1,13 @@
 import UIKit
 import Nuke
 
-extension AssetPicker {
+extension BalancePicker {
     
-    public enum AssetCell {
+    public enum BalanceCell {
         
         public struct ViewModel: CellViewModel {
             let code: String
-            let imageRepresentation: AssetPicker.Model.ImageRepresentation
+            let imageRepresentation: BalancePicker.Model.ImageRepresentation
             let balance: String
             let abbreviationBackgroundColor: UIColor
             let abbreviationText: String
@@ -31,7 +31,7 @@ extension AssetPicker {
                 set { self.codeLabel.text = newValue }
             }
             
-            var imageRepresentation: AssetPicker.Model.ImageRepresentation? {
+            var imageRepresentation: BalancePicker.Model.ImageRepresentation? {
                 didSet {
                     self.updateImage()
                 }

@@ -1,26 +1,26 @@
 import UIKit
 
-public protocol AssetPickerDisplayLogic: class {
-    typealias Event = AssetPicker.Event
+public protocol BalancePickerDisplayLogic: class {
+    typealias Event = BalancePicker.Event
     
-    func displayAssetsUpdated(viewModel: Event.AssetsUpdated.ViewModel)
+    func displayBalancesUpdated(viewModel: Event.BalancesUpdated.ViewModel)
 }
 
-extension AssetPicker {
-    public typealias DisplayLogic = AssetPickerDisplayLogic
+extension BalancePicker {
+    public typealias DisplayLogic = BalancePickerDisplayLogic
     
-    @objc(AssetPickerViewController)
+    @objc(BalancesPickerViewController)
     public class ViewController: UIViewController {
         
-        public typealias Event = AssetPicker.Event
-        public typealias Model = AssetPicker.Model
+        public typealias Event = BalancePicker.Event
+        public typealias Model = BalancePicker.Model
         
         // MARK: - Private properties
         
         private let searchController: UISearchController = UISearchController(searchResultsController: nil)
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         private let emptyView: EmptyView = EmptyView()
-        private var assets: [AssetCell.ViewModel] = []
+        private var balances: [BalanceCell.ViewModel] = []
         
         private let bottomInset: CGFloat = 32.0
         
@@ -129,7 +129,7 @@ extension AssetPicker {
         private func setupTableView() {
             self.tableView.backgroundColor = Theme.Colors.containerBackgroundColor
             self.tableView.register(classes: [
-                AssetCell.ViewModel.self
+                BalanceCell.ViewModel.self
                 ]
             )
             self.tableView.delegate = self
@@ -160,41 +160,41 @@ extension AssetPicker {
     }
 }
 
-extension AssetPicker.ViewController: AssetPicker.DisplayLogic {
- 
-    public func displayAssetsUpdated(viewModel: Event.AssetsUpdated.ViewModel) {
+extension BalancePicker.ViewController: BalancePicker.DisplayLogic {
+    
+    public func displayBalancesUpdated(viewModel: Event.BalancesUpdated.ViewModel) {
         switch viewModel {
             
         case .empty:
             self.emptyView.isHidden = false
             
-        case .assets(let assets):
+        case .balances(let balances):
             self.emptyView.isHidden = true
-            self.assets = assets
+            self.balances = balances
             self.tableView.reloadData()
         }
     }
 }
 
-extension AssetPicker.ViewController: UITableViewDelegate {
+extension BalancePicker.ViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let asset = self.assets[indexPath.row]
+        let balance = self.balances[indexPath.row]
         if self.searchController.isActive {
             self.searchController.dismiss(animated: true, completion: nil)
         }
         self.dismiss(
             animated: true,
             completion: { [weak self] in
-                self?.routing?.onAssetPicked(asset.balanceId)
+                self?.routing?.onBalancePicked(balance.balanceId)
             })
     }
 }
 
-extension AssetPicker.ViewController: UITableViewDataSource {
+extension BalancePicker.ViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.assets.count
+        return self.balances.count
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
@@ -202,14 +202,14 @@ extension AssetPicker.ViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = self.assets[indexPath.row]
+        let model = self.balances[indexPath.row]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         
         return cell
     }
 }
 
-extension AssetPicker.ViewController: UISearchResultsUpdating {
+extension BalancePicker.ViewController: UISearchResultsUpdating {
     
     public func updateSearchResults(for searchController: UISearchController) {
         let filter = searchController.searchBar.text
