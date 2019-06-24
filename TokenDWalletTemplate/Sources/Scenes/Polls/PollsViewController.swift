@@ -4,6 +4,8 @@ public protocol PollsDisplayLogic: class {
     typealias Event = Polls.Event
     
     func displaySceneUpdated(viewModel: Event.SceneUpdated.ViewModel)
+    func displayError(viewModel: Event.Error.ViewModel)
+    func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
 }
 
 extension Polls {
@@ -19,6 +21,7 @@ extension Polls {
         
         private let navigationTitleView: NavigationTitleView = NavigationTitleView()
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
+        private let emptyView: EmptyView.View = EmptyView.View()
         
         private var polls: [PollCell.ViewModel] = [] {
             didSet {
@@ -56,6 +59,7 @@ extension Polls {
             
             self.setupView()
             self.setupNavigationTitleView()
+            self.setupEmptyView()
             self.setupTableView()
             self.setupLayout()
             
@@ -71,10 +75,17 @@ extension Polls {
             self.view.backgroundColor = Theme.Colors.containerBackgroundColor
         }
         
+        private func setupEmptyView() {
+            self.emptyView.isHidden = true
+        }
+        
         private func setupNavigationTitleView() {
             self.navigationTitleView.onPickerSelected = { [weak self] in
-                let onSelected: (String) -> Void = { [weak self] (ownerAccountId) in
-                    let request = Event.AssetSelected.Request(ownerAccountId: ownerAccountId)
+                let onSelected: (String, String) -> Void = { [weak self] (ownerAccountId, assetCode) in
+                    let request = Event.AssetSelected.Request(
+                        assetCode: assetCode,
+                        ownerAccountId: ownerAccountId
+                    )
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         businessLogic.onAssetSelected(request: request)
                     })
@@ -96,7 +107,11 @@ extension Polls {
         
         private func setupLayout() {
             self.view.addSubview(self.tableView)
+            self.view.addSubview(self.emptyView)
             self.tableView.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+            }
+            self.emptyView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
         }
@@ -106,8 +121,32 @@ extension Polls {
 extension Polls.ViewController: Polls.DisplayLogic {
     
     public func displaySceneUpdated(viewModel: Event.SceneUpdated.ViewModel) {
-        self.polls = viewModel.polls
+        switch viewModel.content {
+            
+        case .empty(let message):
+            self.emptyView.message = message
+            self.emptyView.isHidden = false
+            
+        case .polls(let polls):
+            self.emptyView.isHidden = true
+            self.polls = polls
+        }
         self.navigationTitleView.setAsset(asset: viewModel.asset)
+    }
+    
+    public func displayError(viewModel: Event.Error.ViewModel) {
+        self.routing?.showError(viewModel.message)
+    }
+    
+    public func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
+        switch viewModel {
+            
+        case .loaded:
+            self.routing?.hideLoading()
+            
+        case .loading:
+            self.routing?.showLoading()
+        }
     }
 }
 

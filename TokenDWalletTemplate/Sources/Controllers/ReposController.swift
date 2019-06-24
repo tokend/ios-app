@@ -35,6 +35,7 @@ class ReposController {
     // MARK: - Private properties
     
     private var transactionsHistoryRepos: [String: TransactionsHistoryRepo] = [:]
+    private var pollsRepos: [String: PollsRepo] = [:]
     private let reposControllerStack: ReposControllerStack
     private let userDataProvider: UserDataProviderProtocol
     private let keychainDataProvider: KeychainDataProviderProtocol
@@ -79,6 +80,23 @@ class ReposController {
             
             self.transactionsHistoryRepos[balanceId] = transactionsHistoryRepo 
             return transactionsHistoryRepo
+        }
+    }
+    
+    public func getPollsRepo(for ownerAccountId: String) -> PollsRepo {
+        if let pollRepo = self.pollsRepos.first(where: { (key, _) -> Bool in
+            return key == ownerAccountId
+        }) {
+            return pollRepo.value
+        } else {
+            let pollRepo = PollsRepo(
+                pollsApi: self.reposControllerStack.apiV3.pollsApi,
+                ownerAccountId: ownerAccountId,
+                voterAccountId: self.userDataProvider.walletData.accountId
+            )
+            
+            self.pollsRepos[ownerAccountId] = pollRepo
+            return pollRepo
         }
     }
     

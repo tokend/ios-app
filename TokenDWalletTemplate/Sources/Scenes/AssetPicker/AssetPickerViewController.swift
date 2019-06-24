@@ -186,7 +186,7 @@ extension AssetPicker.ViewController: UITableViewDelegate {
         self.dismiss(
             animated: true,
             completion: { [weak self] in
-                self?.routing?.onAssetPicked(asset.ownerAccountId)
+                self?.routing?.onAssetPicked(asset.ownerAccountId, asset.code)
             })
     }
 }

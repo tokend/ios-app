@@ -1,5 +1,6 @@
 import Foundation
 import RxSwift
+import RxCocoa
 
 public protocol PollsBusinessLogic {
     typealias Event = Polls.Event
@@ -26,6 +27,8 @@ extension Polls {
         private let assetsFetcher: AssetsFetcherProtocol
         private let pollsFetcher: PollsFetcherProtocol
         private let voteWorker: VoteWorkerProtocol
+        
+        private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
         
         private let disposeBag: DisposeBag = DisposeBag()
         
@@ -56,7 +59,7 @@ extension Polls {
                 return
             }
             let response = Event.SceneUpdated.Response(
-                polls: self.sceneModel.polls,
+                content: .polls(self.sceneModel.polls),
                 selectedAsset: selectedAsset
             )
             self.presenter.presentSceneUpdated(response: response)
@@ -83,6 +86,22 @@ extension Polls {
                     self?.updateScene()
                 })
                 .disposed(by: self.disposeBag)
+        }
+        
+        private func observeFetcherLoadingStatus() {
+            self.pollsFetcher
+                .observeLoadingStatus()
+                .subscribe(onNext: { [weak self] (status) in
+                    self?.loadingStatus.accept(status)
+                })
+            .disposed(by: self.disposeBag)
+        }
+        
+        private func observeLoadingStatus() {
+            self.loadingStatus.subscribe(onNext: { [weak self] (status) in
+                self?.presenter.presentLoadingStatusDidChange(response: status)
+            })
+            .disposed(by: self.disposeBag)
         }
         
         private func updatePolls() {
@@ -115,20 +134,38 @@ extension Polls {
             }), let currentChoice = poll.currentChoice else {
                 return
             }
-            
+            self.loadingStatus.accept(.loading)
             self.voteWorker.addVote(
                 pollId: pollId,
                 choice: currentChoice,
-                completion: { (result) in
-                    
+                completion: { [weak self] (result) in
+                    self?.loadingStatus.accept(.loaded)
+                    switch result {
+                    case .failure(let error):
+                        let response = Event.Error.Response(error: error)
+                        self?.presenter.presentError(response: response)
+                        
+                    case .success:
+                        self?.pollsFetcher.reloadPolls()
+                    }
             })
         }
         
         private func handleRemoveVote(pollId: String) {
+            self.loadingStatus.accept(.loading)
             self.voteWorker.removeVote(
                 pollId: pollId,
-                completion: { (result) in
-                    
+                completion: { [weak self] (result) in
+                    self?.loadingStatus.accept(.loaded)
+                    switch result {
+                        
+                    case .failure(let error):
+                        let response = Event.Error.Response(error: error)
+                        self?.presenter.presentError(response: response)
+                        
+                    case .success:
+                        self?.pollsFetcher.reloadPolls()
+                    }
             })
         }
     }
@@ -137,13 +174,16 @@ extension Polls {
 extension Polls.Interactor: Polls.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        self.observeLoadingStatus()
         self.observeAssets()
         self.observePolls()
+        self.observeFetcherLoadingStatus()
     }
     
     public func onAssetSelected(request: Event.AssetSelected.Request) {
         guard let asset = self.sceneModel.assets.first(where: { (asset) -> Bool in
-            return asset.ownerAccountId == request.ownerAccountId
+            return asset.ownerAccountId == request.ownerAccountId &&
+                asset.code == request.assetCode
         }) else { return }
         
         self.sceneModel.selectedAsset = asset

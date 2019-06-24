@@ -41,13 +41,24 @@ class PollsFlowController: BaseSignedInFlowController {
         )
         let pollsFetcher = Polls.PollsFetcher(reposController: reposController)
         let percentFormatter = Polls.PercentFormatter()
+        
         let voterWorker = Polls.VoteWorker(
-            transactionSender: self.managersController.transactionSender
+            transactionSender: self.managersController.transactionSender,
+            keychainDataProvider: self.keychainDataProvider,
+            userDataProvider: self.userDataProvider,
+            networkInfoFetcher: self.reposController.networkInfoRepo
         )
         
         let routing = Polls.Routing(
             onPresentPicker: { [weak self] (onSelected) in
                 self?.showAssetPicker(onSelected: onSelected)
+            },
+            showError: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(message, completion: nil)
+            }, showLoading: { [weak self] in
+                self?.navigationController.showProgress()
+            }, hideLoading: { [weak self] in
+                self?.navigationController.hideProgress()
             })
         
         Polls.Configurator.configure(
@@ -62,7 +73,7 @@ class PollsFlowController: BaseSignedInFlowController {
         return vc
     }
     
-    private func showAssetPicker(onSelected: @escaping ((String) -> Void)) {
+    private func showAssetPicker(onSelected: @escaping ((String, String) -> Void)) {
         let navController = NavigationController()
         
         let vc = self.setupAssetPicker(onSelected: onSelected)
@@ -95,7 +106,7 @@ class PollsFlowController: BaseSignedInFlowController {
     }
     
     private func setupAssetPicker(
-        onSelected: @escaping ((String) -> Void)
+        onSelected: @escaping ((String, String) -> Void)
         ) -> UIViewController {
         
         let vc = AssetPicker.ViewController()
@@ -112,8 +123,8 @@ class PollsFlowController: BaseSignedInFlowController {
         )
         let amountFormatter = AssetPicker.AmountFormatter()
         let routing = AssetPicker.Routing(
-            onAssetPicked: { (ownerAccountId) in
-                onSelected(ownerAccountId)
+            onAssetPicked: { (ownerAccountId, assetCode) in
+                onSelected(ownerAccountId, assetCode)
         })
         
         AssetPicker.Configurator.configure(

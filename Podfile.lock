@@ -97,7 +97,7 @@ PODS:
     - TokenDWallet (>= 3.0.1)
   - TokenDSDK/KeyServer (3.1.0-rc.7):
     - TokenDWallet (>= 3.0.1)
-  - TokenDWallet (3.0.1):
+  - TokenDWallet (3.0.2):
     - DLCryptoKit (>= 2.0.1)
   - UICircularProgressRing (6.1.0)
 
@@ -204,7 +204,7 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
   TokenDSDK: 0b8baa505beb493e05fa575e7f4febc30a00fc00
-  TokenDWallet: 3904ec3d99691d6e1c98f58e03d657804e7d08b3
+  TokenDWallet: 4e97425fd46607d70bbafccc471e1af991998cc8
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
 PODFILE CHECKSUM: c1ae253cada90ce11a4520854c945178c42394aa

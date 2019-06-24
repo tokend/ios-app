@@ -54,6 +54,15 @@ public class PollsRepo {
         return self.votes.asObservable()
     }
     
+    func reloadPolls() {
+        self.loadPolls()
+        self.loadVotes()
+    }
+    
+    func observeLoadingStatus() -> Observable<LoadingStatus> {
+        return self.loadingStatus.asObservable()
+    }
+    
     func observeErrorStatus() -> Observable<Swift.Error> {
         return self.errorStatus.asObservable()
     }

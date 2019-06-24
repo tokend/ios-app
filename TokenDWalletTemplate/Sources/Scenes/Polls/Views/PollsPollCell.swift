@@ -3,7 +3,7 @@ import RxSwift
 
 extension Polls {
     
-    enum PollCell {
+    public enum PollCell {
         
         public struct ViewModel: CellViewModel {
             let pollId: String
@@ -37,13 +37,18 @@ extension Polls {
             
             var choices: [Polls.PollsChoiceCell.ViewModel] = [] {
                 didSet {
+                    self.indexPathes.removeAll()
                     self.choicesTableView.reloadData()
+                    self.choicesTableView.snp.updateConstraints { (make) in
+                        make.height.equalTo(self.tableViewHeight)
+                    }
                 }
             }
             
             var isVotable: Bool = false {
                 didSet {
                     self.choicesTableView.isUserInteractionEnabled = self.isVotable
+                    self.updateButtonVisibility()
                 }
             }
             
@@ -64,6 +69,16 @@ extension Polls {
             
             private let sideInset: CGFloat = 20.0
             private let topInset: CGFloat = 10.0
+            private let buttonHeight: CGFloat = 44.0
+            
+            private var indexPathes: [IndexPath] = []
+            private var tableViewHeight: CGFloat {
+                let height = self.indexPathes.reduce(0.0, { (total, indexPath) -> CGFloat in
+                    let height = self.choicesTableView.cellForRow(at: indexPath)?.frame.size.height ?? 0
+                    return total + height
+                })
+                return height
+            }
             
             private let disposeBag: DisposeBag = DisposeBag()
             
@@ -103,6 +118,24 @@ extension Polls {
                 selectedChoice.isSelected = true
                 self.choices[index] = selectedChoice
                 self.choicesTableView.reloadData()
+                self.updateButtonVisibility()
+            }
+            
+            private func updateButtonVisibility() {
+                let isActionButtonEnabled: Bool
+                if self.isVotable {
+                    isActionButtonEnabled = !self.choices.allSatisfy({ (poll) -> Bool in
+                        poll.isSelected == false
+                    })
+                } else {
+                    isActionButtonEnabled = true
+                }
+                let titleColorAlpha: CGFloat = isActionButtonEnabled ? 1.0 : 0.25
+                self.actionButton.setTitleColor(
+                    Theme.Colors.accentColor.withAlphaComponent(titleColorAlpha),
+                    for: .normal
+                )
+                self.actionButton.isEnabled = isActionButtonEnabled
             }
             
             // MARK: - Setup
@@ -119,11 +152,12 @@ extension Polls {
             
             private func setupQuestionLabel() {
                 self.questionLabel.backgroundColor = Theme.Colors.contentBackgroundColor
-                self.questionLabel.font = Theme.Fonts.largePlainTextFont
+                self.questionLabel.font = Theme.Fonts.largeTitleFont
+                self.questionLabel.numberOfLines = 0
             }
             
             private func setupChoicesTableView() {
-                self.choicesTableView.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.choicesTableView.backgroundColor = Theme.Colors.clear
                 self.choicesTableView.register(classes: [
                     Polls.PollsChoiceCell.ViewModel.self
                     ]
@@ -131,7 +165,9 @@ extension Polls {
                 self.choicesTableView.delegate = self
                 self.choicesTableView.dataSource = self
                 self.choicesTableView.separatorStyle = .none
-                
+                self.choicesTableView.sectionHeaderHeight = 0.0
+                self.choicesTableView.sectionFooterHeight = 0.0
+                self.choicesTableView.isScrollEnabled = false
             }
             
             private func setupActionButton() {
@@ -140,6 +176,7 @@ extension Polls {
                     Theme.Colors.accentColor,
                     for: .normal
                 )
+                self.actionButton.titleLabel?.font = Theme.Fonts.actionButtonFont
                 self.actionButton
                     .rx
                     .tap
@@ -153,6 +190,8 @@ extension Polls {
             private func setupLayout() {
                 self.contentView.addSubview(self.container)
                 self.container.addSubview(self.questionLabel)
+                self.container.addSubview(self.choicesTableView)
+                self.container.addSubview(self.actionButton)
                 
                 self.container.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
@@ -161,7 +200,20 @@ extension Polls {
                 
                 self.questionLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
-                    make.top.bottom.equalToSuperview().inset(self.topInset)
+                    make.top.equalToSuperview().inset(self.topInset)
+                }
+                
+                self.choicesTableView.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalTo(self.questionLabel)
+                    make.top.equalTo(self.questionLabel.snp.bottom).offset(-self.topInset)
+                    make.height.equalTo(self.tableViewHeight)
+                }
+                
+                self.actionButton.snp.makeConstraints { (make) in
+                    make.top.equalTo(self.choicesTableView.snp.bottom).offset(self.topInset)
+                    make.leading.equalToSuperview().inset(self.sideInset)
+                    make.bottom.equalToSuperview().inset(self.topInset)
+                    make.height.equalTo(self.buttonHeight)
                 }
             }
         }
@@ -174,6 +226,22 @@ extension Polls.PollCell.View: UITableViewDelegate {
         let model = self.choices[indexPath.section]
         self.onChoiceSelected?(model.choiceValue)
         self.setSeletctedChoice(index: indexPath.section)
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
     }
 }
 
@@ -188,6 +256,7 @@ extension Polls.PollCell.View: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        self.indexPathes.appendUnique(indexPath)
         let model = self.choices[indexPath.section]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         return cell

@@ -47,7 +47,7 @@ extension Polls {
             
             private let choiceView: UIView = UIView()
             private let titleLabel: UILabel = UILabel()
-            private let choicePercentageProgress: UIProgressView = UIProgressView()
+            private let choicePercentageProgress: UIView = UIView()
             private let choicePercentageLabel: UILabel = UILabel()
             
             private let sideInset: CGFloat = 15.0
@@ -83,14 +83,20 @@ extension Polls {
             private func updateResult() {
                 guard let result = self.result else {
                     self.choicePercentageLabel.isHidden = true
-                    self.choicePercentageProgress.isHidden = true
+                    self.choicePercentageProgress.isHidden = false
                     return
                 }
                 self.choicePercentageLabel.isHidden = false
                 self.choicePercentageProgress.isHidden = false
                 
                 self.choicePercentageLabel.text = result.percentageText
-                self.choicePercentageProgress.progress = result.percentage
+                self.choicePercentageProgress.snp.remakeConstraints { (make) in
+                    make.leading.bottom.top.equalToSuperview()
+                    make.width.equalToSuperview().multipliedBy(result.percentage)
+                }
+                UIView.animate(withDuration: 1.0, animations: {
+                    self.layoutIfNeeded()
+                })
             }
             
             private func commonInit() {
@@ -115,13 +121,14 @@ extension Polls {
             }
             
             private func setupTitleLabel() {
-                self.titleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.titleLabel.font = Theme.Fonts.largePlainTextFont
+                self.titleLabel.numberOfLines = 0
             }
             
             private func setupChoicePercentageProgress() {
-                self.choicePercentageProgress.progressTintColor = Theme.Colors.accentColor.withAlphaComponent(0.25)
+                self.choicePercentageProgress.backgroundColor = Theme.Colors.accentColor.withAlphaComponent(0.10)
                 self.choicePercentageProgress.layer.cornerRadius = 7.5
+                self.choicePercentageProgress.layer.masksToBounds = true
             }
             
             private func setupChoicePercentageLabel() {
@@ -138,23 +145,20 @@ extension Polls {
                 self.choiceView.addSubview(self.titleLabel)
                 
                 self.choiceView.snp.makeConstraints { (make) in
-                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                    make.leading.trailing.equalToSuperview()
                     make.top.equalToSuperview().inset(self.topInset)
+                }
+                
+                self.titleLabel.snp.makeConstraints { (make) in
+                    make.edges.equalToSuperview().inset(self.sideInset)
+                    make.height.greaterThanOrEqualTo(20.0)
                 }
                 
                 self.choicePercentageLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
                     make.top.equalTo(self.choiceView.snp.bottom).offset(self.topInset)
                     make.bottom.equalToSuperview().inset(self.topInset)
-                }
-                
-                self.choicePercentageProgress.snp.makeConstraints { (make) in
-                    make.edges.equalToSuperview()
-                }
-                
-                self.titleLabel.snp.makeConstraints { (make) in
-                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
-                    make.top.bottom.equalToSuperview().inset(self.topInset)
+                    make.height.equalTo(15.0)
                 }
             }
         }

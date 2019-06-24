@@ -107,6 +107,7 @@ extension Polls {
             self.pollsLabel.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview()
                 make.top.equalToSuperview().inset(self.topInset)
+                make.height.equalTo(17.5)
             }
             
             self.assetLabel.snp.makeConstraints { (make) in

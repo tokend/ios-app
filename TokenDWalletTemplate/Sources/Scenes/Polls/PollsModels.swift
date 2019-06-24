@@ -60,9 +60,24 @@ extension Polls.Model {
         let ownerAccountId: String
     }
     
+    public enum SceneContent {
+        case polls([Poll])
+        case error(Error)
+    }
+    
+    public enum SceneContentViewModel {
+        case polls([Polls.PollCell.ViewModel])
+        case empty(String)
+    }
+    
     public enum LoadingStatus {
         case loaded
         case loading
+    }
+    
+    public enum VoteError: Swift.Error {
+        case failedToIdentifyPoll
+        case failedToBuildTransaction
     }
 }
 
@@ -79,18 +94,19 @@ extension Polls.Event {
     
     public enum SceneUpdated {
         public struct Response {
-            let polls: [Model.Poll]
+            let content: Model.SceneContent
             let selectedAsset: Model.Asset
         }
         
         public struct ViewModel {
-            let polls: [Polls.PollCell.ViewModel]
+            let content: Model.SceneContentViewModel
             let asset: String
         }
     }
     
     public enum AssetSelected {
         public struct Request {
+            let assetCode: String
             let ownerAccountId: String
         }
     }
@@ -107,5 +123,19 @@ extension Polls.Event {
             let pollId: String
             let choice: Int
         }
+    }
+    
+    public enum Error {
+        public struct Response {
+            let error: Swift.Error
+        }
+        public struct ViewModel {
+            let message: String
+        }
+    }
+    
+    public enum LoadingStatusDidChange {
+        public typealias Response = Model.LoadingStatus
+        public typealias ViewModel = Response
     }
 }

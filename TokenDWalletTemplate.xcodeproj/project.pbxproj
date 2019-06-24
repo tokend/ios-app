@@ -419,6 +419,7 @@
 		DB72092622BE4A9800ED116A /* AssetPickerAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */; };
 		DB72092822BE57A700ED116A /* PollsPercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */; };
 		DB72092A22BE642800ED116A /* PollsVoteWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092922BE642700ED116A /* PollsVoteWorker.swift */; };
+		DB72092C22C10EC400ED116A /* PollsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092B22C10EC400ED116A /* PollsEmptyView.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -1039,6 +1040,7 @@
 		DB72091C22BE4A9800ED116A /* AssetPickerAssetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerAssetCell.swift; sourceTree = "<group>"; };
 		DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPercentFormatter.swift; sourceTree = "<group>"; };
 		DB72092922BE642700ED116A /* PollsVoteWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsVoteWorker.swift; sourceTree = "<group>"; };
+		DB72092B22C10EC400ED116A /* PollsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsEmptyView.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2567,6 +2569,7 @@
 				DB7208F722BD127D00ED116A /* PollsChoiceCell.swift */,
 				DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */,
 				DB7208E322BB844700ED116A /* PollsPollCell.swift */,
+				DB72092B22C10EC400ED116A /* PollsEmptyView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3354,6 +3357,7 @@
 			files = (
 				DB59386E227B46EC00C8997C /* ConfirmationSceneBaseCell.swift in Sources */,
 				7FB43543228586D100422746 /* SaleDetailsGeneralContentView.swift in Sources */,
+				DB7208F322BCE88600ED116A /* PollsRepo.swift in Sources */,
 				7FABEA5720FD08810005E751 /* RegisterSceneView.swift in Sources */,
 				DB72090922BE3EB300ED116A /* BalancePickerPresenter.swift in Sources */,
 				E929EA5E20CC1B7C00835EA7 /* ImagesUtility.swift in Sources */,
@@ -3489,6 +3493,7 @@
 				7F749603225E12A30065EE8E /* TradesListAssetPairListView.swift in Sources */,
 				E9063E9F20F767B200A5B343 /* BalanceHeaderWithPickerBalancesFetcher.swift in Sources */,
 				7FF6761520BDA0910074E9A8 /* RegisterScenePresenter.swift in Sources */,
+				DB72092C22C10EC400ED116A /* PollsEmptyView.swift in Sources */,
 				DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */,
 				7F2A7E2C20F62B7D007F8CF8 /* SideMenuInteractor.swift in Sources */,
 				DB16017D21F5DB0F00CD3DA4 /* Assets.swift in Sources */,
@@ -3578,7 +3583,6 @@
 				E9063EA320F771E800A5B343 /* BalanceHeaderWithPickerAmountFormatter.swift in Sources */,
 				E9BCDD652123586800EB0DF2 /* AssetPairsRepo.swift in Sources */,
 				E980D88920D28FC500C53841 /* AccountRepo.swift in Sources */,
-				DB7208F322BCE88600ED116A /* PollsRepo.swift in Sources */,
 				7F2A7E2920F62B7D007F8CF8 /* SideMenuRouting.swift in Sources */,
 				DB72092222BE4A9800ED116A /* AssetPickerAmountFormatter.swift in Sources */,
 				DB59386C2273616B00C8997C /* PrecisedFormatter.swift in Sources */,
