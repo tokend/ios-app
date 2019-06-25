@@ -43,19 +43,34 @@ extension Polls {
             let votesObservable = self.getVotesObservable()
             Observable.zip(pollsObservable, votesObservable)
                 .subscribe(onNext: { [weak self] (pollResources, votes) in
+                    let currentTime = Date()
                     let polls = pollResources.compactMap({ (poll) -> Model.Poll? in
                         guard let id = poll.id,
                         let ownerAccountId = self?.ownerAccountId,
                             let subject = poll.subject,
-                            let pollChoices = poll.choices else {
+                            let pollChoices = poll.choices,
+                            let outcomeDetails = poll.outcome else {
                                 return nil
                         }
                         
+                        let pollIsClosed = currentTime > poll.endTime
+                        let totalVotes = outcomeDetails.outcome
+                            .reduce(0, { (total, pair) -> Int in
+                            return total + pair.value
+                        })
                         let choices = pollChoices.choices.map({ (choice) -> Model.Poll.Choice in
+                            var result: Model.Poll.Choice.Result?
+                            if currentTime > poll.endTime {
+                                let votesCount = outcomeDetails.outcome["\(choice.number)"] ?? 0
+                                result = Model.Poll.Choice.Result(
+                                    voteCounts: votesCount,
+                                    totalVotes: totalVotes
+                                )
+                            }
                             return Model.Poll.Choice(
-                                name: "LOoooøoщщшькугклаунгнгпалгфиыгикплгцйицщшйгнкшгцниушдгцфинфгцшгнифдшцгсанкшфгуицфшгиашгуцфниашгнкифгнкишгфцнфшгнцуфуцшнфдушгцншгуншгфцшгншгфншгцнфшгцнфудн",
+                                name: choice.description,
                                 value: choice.number,
-                                result: nil
+                                result: result
                             )
                         })
                         let currentChoice = votes.first(where: { (vote) -> Bool in
@@ -67,7 +82,8 @@ extension Polls {
                             ownerAccountId: ownerAccountId,
                             subject: subject.question,
                             choices: choices,
-                            currentChoice: currentChoice
+                            currentChoice: currentChoice,
+                            isClosed: pollIsClosed
                         )
                     })
                     self?.polls.accept(polls)

@@ -37,7 +37,6 @@ extension Polls {
             
             var choices: [Polls.PollsChoiceCell.ViewModel] = [] {
                 didSet {
-                    self.indexPathes.removeAll()
                     self.choicesTableView.reloadData()
                     self.choicesTableView.snp.updateConstraints { (make) in
                         make.height.equalTo(self.tableViewHeight)
@@ -71,13 +70,8 @@ extension Polls {
             private let topInset: CGFloat = 10.0
             private let buttonHeight: CGFloat = 44.0
             
-            private var indexPathes: [IndexPath] = []
             private var tableViewHeight: CGFloat {
-                let height = self.indexPathes.reduce(0.0, { (total, indexPath) -> CGFloat in
-                    let height = self.choicesTableView.cellForRow(at: indexPath)?.frame.size.height ?? 0
-                    return total + height
-                })
-                return height
+                return self.choicesTableView.contentSize.height
             }
             
             private let disposeBag: DisposeBag = DisposeBag()
@@ -128,7 +122,7 @@ extension Polls {
                         poll.isSelected == false
                     })
                 } else {
-                    isActionButtonEnabled = true
+                    isActionButtonEnabled = false
                 }
                 let titleColorAlpha: CGFloat = isActionButtonEnabled ? 1.0 : 0.25
                 self.actionButton.setTitleColor(
@@ -164,9 +158,9 @@ extension Polls {
                 )
                 self.choicesTableView.delegate = self
                 self.choicesTableView.dataSource = self
+                self.choicesTableView.estimatedRowHeight = 55.0
+                self.choicesTableView.rowHeight = UITableView.automaticDimension
                 self.choicesTableView.separatorStyle = .none
-                self.choicesTableView.sectionHeaderHeight = 0.0
-                self.choicesTableView.sectionFooterHeight = 0.0
                 self.choicesTableView.isScrollEnabled = false
             }
             
@@ -200,12 +194,12 @@ extension Polls {
                 
                 self.questionLabel.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview().inset(self.sideInset)
-                    make.top.equalToSuperview().inset(self.topInset)
+                    make.top.equalToSuperview().inset(self.topInset * 2)
                 }
                 
                 self.choicesTableView.snp.makeConstraints { (make) in
                     make.leading.trailing.equalTo(self.questionLabel)
-                    make.top.equalTo(self.questionLabel.snp.bottom).offset(-self.topInset)
+                    make.top.equalTo(self.questionLabel.snp.bottom).offset(self.topInset * 2)
                     make.height.equalTo(self.tableViewHeight)
                 }
                 
@@ -256,7 +250,6 @@ extension Polls.PollCell.View: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        self.indexPathes.appendUnique(indexPath)
         let model = self.choices[indexPath.section]
         let cell = tableView.dequeueReusableCell(with: model, for: indexPath)
         return cell

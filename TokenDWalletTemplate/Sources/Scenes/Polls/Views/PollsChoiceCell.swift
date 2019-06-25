@@ -94,9 +94,6 @@ extension Polls {
                     make.leading.bottom.top.equalToSuperview()
                     make.width.equalToSuperview().multipliedBy(result.percentage)
                 }
-                UIView.animate(withDuration: 1.0, animations: {
-                    self.layoutIfNeeded()
-                })
             }
             
             private func commonInit() {
@@ -122,11 +119,12 @@ extension Polls {
             
             private func setupTitleLabel() {
                 self.titleLabel.font = Theme.Fonts.largePlainTextFont
-                self.titleLabel.numberOfLines = 0
+                self.titleLabel.adjustsFontSizeToFitWidth = true
+                self.titleLabel.numberOfLines = 1
             }
             
             private func setupChoicePercentageProgress() {
-                self.choicePercentageProgress.backgroundColor = Theme.Colors.accentColor.withAlphaComponent(0.10)
+                self.choicePercentageProgress.backgroundColor = Theme.Colors.accentColor.withAlphaComponent(0.2)
                 self.choicePercentageProgress.layer.cornerRadius = 7.5
                 self.choicePercentageProgress.layer.masksToBounds = true
             }
@@ -147,11 +145,11 @@ extension Polls {
                 self.choiceView.snp.makeConstraints { (make) in
                     make.leading.trailing.equalToSuperview()
                     make.top.equalToSuperview().inset(self.topInset)
+                    make.height.greaterThanOrEqualTo(self.titleLabel)
                 }
                 
                 self.titleLabel.snp.makeConstraints { (make) in
                     make.edges.equalToSuperview().inset(self.sideInset)
-                    make.height.greaterThanOrEqualTo(20.0)
                 }
                 
                 self.choicePercentageLabel.snp.makeConstraints { (make) in

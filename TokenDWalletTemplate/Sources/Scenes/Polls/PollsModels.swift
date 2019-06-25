@@ -28,6 +28,7 @@ extension Polls.Model {
         let subject: String
         let choices: [Choice]
         var currentChoice: Int?
+        let isClosed: Bool
         
         public struct Choice {
             let name: String

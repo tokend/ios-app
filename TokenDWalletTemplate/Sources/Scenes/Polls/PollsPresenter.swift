@@ -85,10 +85,10 @@ extension Polls.Presenter: Polls.PresentationLogic {
                         models: poll.choices,
                         currentChoice: poll.currentChoice
                     )
-                    let isVotable = poll.currentChoice == nil
+                    let isVotable = poll.currentChoice == nil && !poll.isClosed
                     let actionTitle: String
                     let actionType: Model.ActionType
-                    if isVotable {
+                    if poll.currentChoice == nil {
                         actionTitle = Localized(.submit_vote)
                         actionType = .submit
                     } else {

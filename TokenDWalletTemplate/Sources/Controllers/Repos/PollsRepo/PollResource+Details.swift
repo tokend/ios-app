@@ -31,6 +31,21 @@ extension PollResource {
         
         return choicesDetails
     }
+    
+    var outcome: Outcome? {
+        let details = self.creatorDetails
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: details, options: []) else {
+            return nil
+        }
+        
+        guard let outcome = try? JSONDecoder().decode(
+            Outcome.self,
+            from: jsonData
+            ) else { return nil }
+        
+        return outcome
+    }
 }
 
 extension PollResource {
@@ -46,5 +61,9 @@ extension PollResource {
     struct ChoiceDetails: Decodable {
         let number: Int
         let description: String
+    }
+    
+    struct Outcome: Decodable {
+        let outcome: [String: Int]
     }
 }
