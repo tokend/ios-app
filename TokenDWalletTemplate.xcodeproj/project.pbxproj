@@ -2567,9 +2567,9 @@
 			isa = PBXGroup;
 			children = (
 				DB7208F722BD127D00ED116A /* PollsChoiceCell.swift */,
+				DB72092B22C10EC400ED116A /* PollsEmptyView.swift */,
 				DB7208E522BB86F200ED116A /* PollsNavigationTitleView.swift */,
 				DB7208E322BB844700ED116A /* PollsPollCell.swift */,
-				DB72092B22C10EC400ED116A /* PollsEmptyView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

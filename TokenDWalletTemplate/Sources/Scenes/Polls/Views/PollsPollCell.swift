@@ -5,11 +5,13 @@ extension Polls {
     
     public enum PollCell {
         
-        public struct ViewModel: CellViewModel {
+        public struct ViewModel: CellViewModel, Equatable {
             let pollId: String
             let question: String
+            let subtitle: String?
             let choicesViewModels: [Polls.PollsChoiceCell.ViewModel]
             let isVotable: Bool
+            let isActionEnabled: Bool
             let actionTitle: String
             let actionType: Model.ActionType
             
@@ -17,9 +19,15 @@ extension Polls {
             
             public func setup(cell: View) {
                 cell.question = self.question
+                cell.subtitle = self.subtitle
                 cell.choices = self.choicesViewModels
                 cell.isVotable = self.isVotable
+                cell.isActionEnabled = self.isActionEnabled
                 cell.actionTitle = self.actionTitle
+            }
+            
+            public static func == (lhs: PollCell.ViewModel, rhs: PollCell.ViewModel) -> Bool {
+                return lhs.pollId == rhs.pollId
             }
         }
         
@@ -35,6 +43,11 @@ extension Polls {
                 set { self.questionLabel.text = newValue }
             }
             
+            var subtitle: String? {
+                get { return self.subtitleLabel.text }
+                set { self.subtitleLabel.text = newValue }
+            }
+            
             var choices: [Polls.PollsChoiceCell.ViewModel] = [] {
                 didSet {
                     self.choicesTableView.reloadData()
@@ -47,6 +60,11 @@ extension Polls {
             var isVotable: Bool = false {
                 didSet {
                     self.choicesTableView.isUserInteractionEnabled = self.isVotable
+                }
+            }
+            
+            var isActionEnabled: Bool = false {
+                didSet {
                     self.updateButtonVisibility()
                 }
             }
@@ -60,6 +78,7 @@ extension Polls {
             
             private let container: UIView = UIView()
             private let questionLabel: UILabel = UILabel()
+            private let subtitleLabel: UILabel = UILabel()
             private let choicesTableView: UITableView = UITableView(
                 frame: .zero,
                 style: .grouped
@@ -71,7 +90,7 @@ extension Polls {
             private let buttonHeight: CGFloat = 44.0
             
             private var tableViewHeight: CGFloat {
-                return self.choicesTableView.contentSize.height
+                return self.choicesTableView.contentSize.height + CGFloat(self.choices.count) * self.topInset / 2
             }
             
             private let disposeBag: DisposeBag = DisposeBag()
@@ -96,6 +115,7 @@ extension Polls {
                 self.setupView()
                 self.setupContainer()
                 self.setupQuestionLabel()
+                self.setupSubtitleLabel()
                 self.setupChoicesTableView()
                 self.setupActionButton()
                 self.setupLayout()
@@ -116,20 +136,12 @@ extension Polls {
             }
             
             private func updateButtonVisibility() {
-                let isActionButtonEnabled: Bool
-                if self.isVotable {
-                    isActionButtonEnabled = !self.choices.allSatisfy({ (poll) -> Bool in
-                        poll.isSelected == false
-                    })
-                } else {
-                    isActionButtonEnabled = false
-                }
-                let titleColorAlpha: CGFloat = isActionButtonEnabled ? 1.0 : 0.25
+                let titleColorAlpha: CGFloat = self.isActionEnabled ? 1.0 : 0.25
                 self.actionButton.setTitleColor(
                     Theme.Colors.accentColor.withAlphaComponent(titleColorAlpha),
                     for: .normal
                 )
-                self.actionButton.isEnabled = isActionButtonEnabled
+                self.actionButton.isEnabled = self.isActionEnabled
             }
             
             // MARK: - Setup
@@ -148,6 +160,13 @@ extension Polls {
                 self.questionLabel.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.questionLabel.font = Theme.Fonts.largeTitleFont
                 self.questionLabel.numberOfLines = 0
+            }
+            
+            private func setupSubtitleLabel() {
+                self.subtitleLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.subtitleLabel.textColor = Theme.Colors.separatorOnContentBackgroundColor
+                self.subtitleLabel.font = Theme.Fonts.largePlainTextFont
+                self.subtitleLabel.numberOfLines = 1
             }
             
             private func setupChoicesTableView() {
@@ -184,6 +203,7 @@ extension Polls {
             private func setupLayout() {
                 self.contentView.addSubview(self.container)
                 self.container.addSubview(self.questionLabel)
+                self.container.addSubview(self.subtitleLabel)
                 self.container.addSubview(self.choicesTableView)
                 self.container.addSubview(self.actionButton)
                 
@@ -197,9 +217,14 @@ extension Polls {
                     make.top.equalToSuperview().inset(self.topInset * 2)
                 }
                 
+                self.subtitleLabel.snp.makeConstraints { (make) in
+                    make.leading.trailing.equalToSuperview().inset(self.sideInset)
+                    make.top.equalTo(self.questionLabel.snp.bottom).offset(self.topInset)
+                }
+                
                 self.choicesTableView.snp.makeConstraints { (make) in
                     make.leading.trailing.equalTo(self.questionLabel)
-                    make.top.equalTo(self.questionLabel.snp.bottom).offset(self.topInset * 2)
+                    make.top.equalTo(self.subtitleLabel.snp.bottom).offset(self.topInset * 2)
                     make.height.equalTo(self.tableViewHeight)
                 }
                 
@@ -220,6 +245,7 @@ extension Polls.PollCell.View: UITableViewDelegate {
         let model = self.choices[indexPath.section]
         self.onChoiceSelected?(model.choiceValue)
         self.setSeletctedChoice(index: indexPath.section)
+        self.isActionEnabled = true
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

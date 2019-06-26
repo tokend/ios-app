@@ -45,8 +45,7 @@ extension Polls {
                 return Model.Asset(
                     code: asset.code,
                     ownerAccountId: asset.owner
-                )
-            }
+                )}
             self.assetsRelay.accept(assets)
         }
     }

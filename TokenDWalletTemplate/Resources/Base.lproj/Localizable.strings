@@ -136,6 +136,7 @@
 "empty_recipient_address" = "Empty recipient address";
 "empty_signers_data" = "Empty signers data";
 "ended" = "ended";
+"ended_capitalized" = "Ended";
 "enter_account_holders_name" = "Enter Account holder's name";
 "enter_account_id_or_email" = "Enter Account ID or email";
 "enter_amount" = "Enter amount";
@@ -319,6 +320,8 @@
 "one_for_replace_base_asset" = "base_asset";
 "one_for_replace_quote_asset" = "quote_asset";
 "one_for_replace_sale_invest_price_amount" = "sale_invest_price_amount";
+"one_vote" = "1 vote - $(percent)";
+"one_vote_replace_percent" = "percent";
 "open_app" = "Open App";
 "operation" = "Operation";
 "opportunities" = "Opportunities";
@@ -518,6 +521,9 @@
 "view_history" = "View history";
 "view_more" = "View more";
 "volume" = "Volume";
+"votes" = "$(votes_count) votes - $(percent)";
+"votes_replace_votes_count" = "votes_count";
+"votes_replace_percent" = "percent";
 "wallet" = "Wallet";
 "we_do_not_know_your_seed" = "We do not know your seed";
 "week" = "Week";

@@ -11,7 +11,7 @@ extension Polls {
             let result: Result?
             
             public struct Result {
-                let percentageText: String
+                let votesText: String
                 let percentage: Float
             }
             
@@ -83,13 +83,13 @@ extension Polls {
             private func updateResult() {
                 guard let result = self.result else {
                     self.choicePercentageLabel.isHidden = true
-                    self.choicePercentageProgress.isHidden = false
+                    self.choicePercentageProgress.isHidden = true
                     return
                 }
                 self.choicePercentageLabel.isHidden = false
                 self.choicePercentageProgress.isHidden = false
                 
-                self.choicePercentageLabel.text = result.percentageText
+                self.choicePercentageLabel.text = result.votesText
                 self.choicePercentageProgress.snp.remakeConstraints { (make) in
                     make.leading.bottom.top.equalToSuperview()
                     make.width.equalToSuperview().multipliedBy(result.percentage)

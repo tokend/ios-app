@@ -27,6 +27,7 @@ extension Polls.Model {
         let ownerAccountId: String
         let subject: String
         let choices: [Choice]
+        var currentRemoteChoice: Int?
         var currentChoice: Int?
         let isClosed: Bool
         
@@ -102,6 +103,15 @@ extension Polls.Event {
         public struct ViewModel {
             let content: Model.SceneContentViewModel
             let asset: String
+        }
+    }
+    
+    public enum PollsDidChange {
+        public struct Response {
+            let polls: [Model.Poll]
+        }
+        public struct ViewModel {
+            let polls: [Polls.PollCell.ViewModel]
         }
     }
     

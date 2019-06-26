@@ -56,7 +56,14 @@ public class PollsRepo {
     
     func reloadPolls() {
         self.loadPolls()
-        self.loadVotes()
+    }
+    
+    func reloadVotes() {
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + .seconds(1),
+            execute: { [weak self] in
+                self?.loadVotes()
+        })
     }
     
     func observeLoadingStatus() -> Observable<LoadingStatus> {
@@ -156,17 +163,17 @@ public class PollsRepo {
                             completion(.succeeded(data))
                         }
                 })
-        }, completion: { [weak self] (result, data) in
-            self?.loadingStatus.accept(.loaded)
-            switch result {
-                
-            case .failed(let error):
-                self?.votes.accept(data)
-                self?.errorStatus.accept(error)
-                
-            case .succeded:
-                self?.votes.accept(data)
-            }
+            }, completion: { [weak self] (result, data) in
+                self?.loadingStatus.accept(.loaded)
+                switch result {
+                    
+                case .failed(let error):
+                    self?.votes.accept(data)
+                    self?.errorStatus.accept(error)
+                    
+                case .succeded:
+                    self?.votes.accept(data)
+                }
         })
     }
 }

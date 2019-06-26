@@ -4,6 +4,7 @@ public protocol PollsPresentationLogic {
     typealias Event = Polls.Event
     
     func presentSceneUpdated(response: Event.SceneUpdated.Response)
+    func presentPollsDidChange(response: Event.PollsDidChange.Response)
     func presentError(response: Event.Error.Response)
     func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
 }
@@ -35,6 +36,40 @@ extension Polls {
         
         // MARK: - Private
         
+        private func getPollsViewModel(polls: [Model.Poll]) -> [PollCell.ViewModel] {
+            return polls.map { (poll) -> Polls.PollCell.ViewModel in
+                let subtitle = poll.isClosed ? Localized(.ended_capitalized) : nil
+                
+                let choiceViewModels = self.getChoiceViewModel(
+                    models: poll.choices,
+                    currentChoice: poll.currentChoice
+                )
+                let isVotable = !poll.isClosed && poll.currentChoice == nil
+                let isActionEnabled = !poll.isClosed && poll.currentChoice != nil
+                
+                let actionTitle: String
+                let actionType: Model.ActionType
+                if poll.currentChoice == nil {
+                    actionTitle = Localized(.submit_vote)
+                    actionType = .submit
+                } else {
+                    actionTitle = Localized(.remove_vote)
+                    actionType = .remove
+                }
+                
+                return Polls.PollCell.ViewModel(
+                    pollId: poll.id,
+                    question: poll.subject,
+                    subtitle: subtitle,
+                    choicesViewModels: choiceViewModels,
+                    isVotable: isVotable,
+                    isActionEnabled: isActionEnabled,
+                    actionTitle: actionTitle,
+                    actionType: actionType
+                )
+            }
+        }
+        
         private func getChoiceViewModel(
             models: [Model.Poll.Choice],
             currentChoice: Int?
@@ -53,8 +88,25 @@ extension Polls {
                     let percentageText = self.percentFormatter.formatPercantage(
                         percent: relation * 100
                     )
+                    let votesText: String
+                    if result.voteCounts == 1 {
+                        votesText = Localized(
+                            .one_vote,
+                            replace: [
+                               .one_vote_replace_percent: percentageText
+                            ]
+                        )
+                    } else {
+                        votesText = Localized(
+                            .votes,
+                            replace: [
+                                .votes_replace_votes_count: result.voteCounts.description,
+                                .votes_replace_percent: percentageText
+                            ]
+                        )
+                    }
                     resultViewModel = PollsChoiceCell.ViewModel.Result(
-                        percentageText: percentageText,
+                        votesText: votesText,
                         percentage: relation
                     )
                 }
@@ -80,30 +132,7 @@ extension Polls.Presenter: Polls.PresentationLogic {
             if responsePolls.isEmpty {
                 contentViewModel = .empty(Localized(.there_is_no_any_poll_for_chosen_asset))
             } else {
-                let polls = responsePolls.map { (poll) -> Polls.PollCell.ViewModel in
-                    let choiceViewModels = self.getChoiceViewModel(
-                        models: poll.choices,
-                        currentChoice: poll.currentChoice
-                    )
-                    let isVotable = poll.currentChoice == nil && !poll.isClosed
-                    let actionTitle: String
-                    let actionType: Model.ActionType
-                    if poll.currentChoice == nil {
-                        actionTitle = Localized(.submit_vote)
-                        actionType = .submit
-                    } else {
-                        actionTitle = Localized(.remove_vote)
-                        actionType = .remove
-                    }
-                    return Polls.PollCell.ViewModel(
-                        pollId: poll.id,
-                        question: poll.subject,
-                        choicesViewModels: choiceViewModels,
-                        isVotable: isVotable,
-                        actionTitle: actionTitle,
-                        actionType: actionType
-                    )
-                }
+                let polls = self.getPollsViewModel(polls: responsePolls)
                 contentViewModel = .polls(polls)
             }
         }
@@ -119,6 +148,14 @@ extension Polls.Presenter: Polls.PresentationLogic {
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displaySceneUpdated(viewModel: viewModel)
+        }
+    }
+    
+    public func presentPollsDidChange(response: Event.PollsDidChange.Response) {
+        let polls = self.getPollsViewModel(polls: response.polls)
+        let viewModel = Event.PollsDidChange.ViewModel(polls: polls)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayPollsDidChange(viewModel: viewModel)
         }
     }
     

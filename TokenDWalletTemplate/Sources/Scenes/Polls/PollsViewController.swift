@@ -4,6 +4,7 @@ public protocol PollsDisplayLogic: class {
     typealias Event = Polls.Event
     
     func displaySceneUpdated(viewModel: Event.SceneUpdated.ViewModel)
+    func displayPollsDidChange(viewModel: Event.PollsDidChange.ViewModel)
     func displayError(viewModel: Event.Error.ViewModel)
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
 }
@@ -23,11 +24,7 @@ extension Polls {
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
         private let emptyView: EmptyView.View = EmptyView.View()
         
-        private var polls: [PollCell.ViewModel] = [] {
-            didSet {
-                self.tableView.reloadData()
-            }
-        }
+        private var polls: [PollCell.ViewModel] = []
         
         // MARK: -
         
@@ -130,8 +127,23 @@ extension Polls.ViewController: Polls.DisplayLogic {
         case .polls(let polls):
             self.emptyView.isHidden = true
             self.polls = polls
+            self.tableView.reloadData()
         }
         self.navigationTitleView.setAsset(asset: viewModel.asset)
+    }
+    
+    public func displayPollsDidChange(viewModel: Event.PollsDidChange.ViewModel) {
+        viewModel.polls.forEach { (pollViewModel) in
+            if let index = self.polls.indexOf(pollViewModel) {
+                let indexPath = IndexPath(row: 0, section: index)
+                if let cell = self.tableView.cellForRow(at: indexPath),
+                    let pollCell = cell as? Polls.PollCell.View {
+                    
+                    pollViewModel.setup(cell: pollCell)
+                }
+                self.polls[index] = pollViewModel
+            }
+        }
     }
     
     public func displayError(viewModel: Event.Error.ViewModel) {
@@ -166,9 +178,11 @@ extension Polls.ViewController: UITableViewDataSource {
         
         if let pollCell = cell as? Polls.PollCell.View {
             pollCell.onActionButtonClicked = { [weak self] in
+                guard let upToDateModel = self?.polls[indexPath.section] else { return }
+                
                 let request = Event.ActionButtonClicked.Request(
-                    pollId: model.pollId,
-                    actionType: model.actionType
+                    pollId: upToDateModel.pollId,
+                    actionType: upToDateModel.actionType
                 )
                 self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                     businessLogic.onActionButtonClicked(request: request)
