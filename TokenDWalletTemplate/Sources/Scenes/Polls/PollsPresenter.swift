@@ -7,6 +7,7 @@ public protocol PollsPresentationLogic {
     func presentPollsDidChange(response: Event.PollsDidChange.Response)
     func presentError(response: Event.Error.Response)
     func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
+    func presentAssetChanged(response: Event.AssetChanged.Response)
 }
 
 extension Polls {
@@ -172,6 +173,19 @@ extension Polls.Presenter: Polls.PresentationLogic {
         let viewModel = response
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayLoadingStatusDidChange(viewModel: viewModel)
+        }
+    }
+    
+    public func presentAssetChanged(response: Event.AssetChanged.Response) {
+        let asset = Localized(
+            .asset_colon,
+            replace: [
+                .asset_colon_replace_code: response.asset
+            ]
+        )
+        let viewModel = Event.AssetChanged.ViewModel(asset: asset)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayAssetChanged(viewModel: viewModel)
         }
     }
 }

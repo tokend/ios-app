@@ -7,6 +7,7 @@ public protocol PollsDisplayLogic: class {
     func displayPollsDidChange(viewModel: Event.PollsDidChange.ViewModel)
     func displayError(viewModel: Event.Error.ViewModel)
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
+    func displayAssetChanged(viewModel: Event.AssetChanged.ViewModel)
 }
 
 extension Polls {
@@ -199,5 +200,9 @@ extension Polls.ViewController: UITableViewDataSource {
             }
         }
         return cell
+    }
+    
+    public func displayAssetChanged(viewModel: Event.AssetChanged.ViewModel) {
+        self.navigationTitleView.setAsset(asset: viewModel.asset)
     }
 }

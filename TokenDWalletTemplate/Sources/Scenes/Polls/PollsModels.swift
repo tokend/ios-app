@@ -122,6 +122,13 @@ extension Polls.Event {
         }
     }
     
+    public enum AssetChanged {
+        public struct Response {
+            let asset: String
+        }
+        public typealias ViewModel = Response
+    }
+    
     public enum ActionButtonClicked {
         public struct Request {
             let pollId: String

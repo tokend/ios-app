@@ -219,6 +219,9 @@ extension Polls.Interactor: Polls.BusinessLogic {
         
         self.sceneModel.selectedAsset = asset
         self.updatePolls()
+        
+        let response = Event.AssetChanged.Response(asset: asset.code)
+        self.presenter.presentAssetChanged(response: response)
     }
     
     public func onActionButtonClicked(request: Event.ActionButtonClicked.Request) {
