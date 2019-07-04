@@ -24,6 +24,7 @@ extension DepositScene.Model {
     struct Asset {
         let id: DepositScene.AssetID
         let address: String?
+        let payload: String?
         let asset: String
         let expirationDate: Date?
         let isRenewable: Bool
@@ -123,6 +124,7 @@ extension DepositScene.Event {
             
             struct Data {
                 let address: String?
+                let payload: String?
                 let hint: String
                 let renewStatus: RenewStatus
                 let canShare: Bool

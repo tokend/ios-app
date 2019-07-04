@@ -33,6 +33,7 @@ extension DepositScene {
         private let presenter: PresentationLogic
         private let assetsFetcher: AssetsFetcherProtocol
         private let addressManager: AddressManagerProtocol
+        private let shareItemsProvider: ShareItemsProviderProtocol
         
         private var sceneModel: Model.SceneModel
         
@@ -48,12 +49,14 @@ extension DepositScene {
             presenter: PresentationLogic,
             assetsFetcher: AssetsFetcherProtocol,
             addressManager: AddressManagerProtocol,
+            shareItemsProvider: ShareItemsProviderProtocol,
             sceneModel: Model.SceneModel
             ) {
             
             self.presenter = presenter
             self.assetsFetcher = assetsFetcher
             self.addressManager = addressManager
+            self.shareItemsProvider = shareItemsProvider
             self.sceneModel = sceneModel
             
             let scheduler = SerialDispatchQueueScheduler(
@@ -173,6 +176,7 @@ extension DepositScene {
 }
 
 extension DepositScene.Interactor: DepositScene.BusinessLogic {
+    
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
         self.sceneModel.assets = self.assetsFetcher.assets
         let index = self.sceneModel.assets.first == nil ? nil : 0
@@ -215,15 +219,18 @@ extension DepositScene.Interactor: DepositScene.BusinessLogic {
     }
     
     func onShare(request: Event.Share.Request) {
-        
-        guard let selectedAssetAddress = self.selectedAsset?.address else {
+        guard let selectedAsset = self.selectedAsset else {
             return
         }
-        let items: [Any] = [selectedAssetAddress]
-        let response = Event.Share.Response(
-            items: items
-        )
-        self.presenter.presentShare(response: response)
+        self.shareItemsProvider.getShareItems(
+            address: selectedAsset.address,
+            payload: selectedAsset.payload,
+            completion: { [weak self] (items) in
+                let response = Event.Share.Response(
+                    items: items
+                )
+                self?.presenter.presentShare(response: response)
+            })
     }
     
     func onRefresh(request: Event.DidInitiateRefresh.Request) {

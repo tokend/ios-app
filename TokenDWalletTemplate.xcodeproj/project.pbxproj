@@ -420,6 +420,8 @@
 		DB72092822BE57A700ED116A /* PollsPercentFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */; };
 		DB72092A22BE642800ED116A /* PollsVoteWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092922BE642700ED116A /* PollsVoteWorker.swift */; };
 		DB72092C22C10EC400ED116A /* PollsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72092B22C10EC400ED116A /* PollsEmptyView.swift */; };
+		DB72280D22CE048D00341565 /* ExternalSystemResource+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72280C22CE048D00341565 /* ExternalSystemResource+Address.swift */; };
+		DB72280F22CE1FAB00341565 /* DepositSceneShareItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72280E22CE1FAB00341565 /* DepositSceneShareItemsProvider.swift */; };
 		DB7242B921CBC43200D55EB9 /* DownloadUrlFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */; };
 		DB72EBEA225CF05400A50A07 /* TransactionListActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */; };
 		DB72EBEC225F413100A50A07 /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB72EBEB225F413100A50A07 /* TitleValueCell.swift */; };
@@ -1041,6 +1043,8 @@
 		DB72092722BE57A700ED116A /* PollsPercentFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPercentFormatter.swift; sourceTree = "<group>"; };
 		DB72092922BE642700ED116A /* PollsVoteWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsVoteWorker.swift; sourceTree = "<group>"; };
 		DB72092B22C10EC400ED116A /* PollsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsEmptyView.swift; sourceTree = "<group>"; };
+		DB72280C22CE048D00341565 /* ExternalSystemResource+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExternalSystemResource+Address.swift"; sourceTree = "<group>"; };
+		DB72280E22CE1FAB00341565 /* DepositSceneShareItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSceneShareItemsProvider.swift; sourceTree = "<group>"; };
 		DB7242B821CBC43200D55EB9 /* DownloadUrlFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadUrlFetcher.swift; sourceTree = "<group>"; };
 		DB72EBE9225CF05400A50A07 /* TransactionListActionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListActionProvider.swift; sourceTree = "<group>"; };
 		DB72EBEB225F413100A50A07 /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
@@ -2649,6 +2653,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		DB72280B22CE043200341565 /* AccountsRepo */ = {
+			isa = PBXGroup;
+			children = (
+				E980D88820D28FC500C53841 /* AccountRepo.swift */,
+				DB72280C22CE048D00341565 /* ExternalSystemResource+Address.swift */,
+			);
+			path = AccountsRepo;
+			sourceTree = "<group>";
+		};
 		DB76E3A722940DEB00DA0BA8 /* Chart */ = {
 			isa = PBXGroup;
 			children = (
@@ -2993,6 +3006,7 @@
 				E93F074420D3F13D000C0991 /* DepositSceneDateFormatterProtocol.swift */,
 				E980D86D20D1702400C53841 /* DepositSceneQRCodeGeneratorProtocol.swift */,
 				DB8C4064222853060018148E /* DepositSceneErrorFormatter.swift */,
+				DB72280E22CE1FAB00341565 /* DepositSceneShareItemsProvider.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -3034,7 +3048,6 @@
 		E9908ED12108933900A0EA1C /* Repos */ = {
 			isa = PBXGroup;
 			children = (
-				E980D88820D28FC500C53841 /* AccountRepo.swift */,
 				E9BCDD642123586800EB0DF2 /* AssetPairsRepo.swift */,
 				E99D213620CB144E005023D7 /* AssetsRepo.swift */,
 				E980D84F20CFFBC700C53841 /* BalancesRepo.swift */,
@@ -3044,6 +3057,7 @@
 				7FA02BD22158F855005C1BE4 /* SalesRepo.swift */,
 				DB835F76220D8A25006672C7 /* TransactionsHistoryRepo.swift */,
 				7FF5AE4E215BCC450066A2ED /* WalletRepo.swift */,
+				DB72280B22CE043200341565 /* AccountsRepo */,
 				DB7208F422BD02D400ED116A /* PollsRepo */,
 			);
 			path = Repos;
@@ -3430,6 +3444,7 @@
 				E9908EC621079F4A00A0EA1C /* APIConfigurationModel.swift in Sources */,
 				7F967FDB212DB684005527EA /* BiometricsAuthInteractor.swift in Sources */,
 				E9908ED32108935E00A0EA1C /* TFADataProvider.swift in Sources */,
+				DB72280F22CE1FAB00341565 /* DepositSceneShareItemsProvider.swift in Sources */,
 				7FB9E47120BEB6D2005BFE0E /* LaunchFlowController.swift in Sources */,
 				E9063E9720F669D000A5B343 /* BalanceHeaderWithPickerInteractor.swift in Sources */,
 				E9063EA120F771CA00A5B343 /* BalanceHeaderWithPickerAmountFormatterProtocol.swift in Sources */,
@@ -3511,6 +3526,7 @@
 				7FA0114F21C9651F00CA5586 /* MarkdownViewerModels.swift in Sources */,
 				DB59381C226DD77500C8997C /* SendPaymentAmountModels.swift in Sources */,
 				710E860F2105E1AB007204D4 /* ReceiveAddressManagerProtocol.swift in Sources */,
+				DB72280D22CE048D00341565 /* ExternalSystemResource+Address.swift in Sources */,
 				DB992AE521CD18E2003533FC /* AppController+OpenUrlSubscriber.swift in Sources */,
 				7FB43545228586D100422746 /* SaleDetailsEmptyView.swift in Sources */,
 				713D684D20FF9552009FEBA3 /* SettingsSectionsProvider.swift in Sources */,

@@ -7,7 +7,6 @@ class BalanceBinder: BalanceBinderProtocol {
     // MARK: - Private properties
     
     private let balancesRepo: BalancesRepo
-    private let accountRepo: AccountRepo
     private let externalSystemBalancesManager: ExternalSystemBalancesManager
     
     private var disposables: [String: Disposable] = [:]
@@ -17,12 +16,10 @@ class BalanceBinder: BalanceBinderProtocol {
     
     init(
         balancesRepo: BalancesRepo,
-        accountRepo: AccountRepo,
         externalSystemBalancesManager: ExternalSystemBalancesManager
         ) {
         
         self.balancesRepo = balancesRepo
-        self.accountRepo = accountRepo
         self.externalSystemBalancesManager = externalSystemBalancesManager
     }
     
