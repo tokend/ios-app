@@ -112,7 +112,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
                 self?.navigationController?.showErrorMessage(errorMessage, completion: nil)
             },
             onPresentPicker: { [weak self] (assets, onSelected) in
-                self?.showAssetPicker(
+                self?.showBalancePicker(
                     targetAssets: assets,
                     onSelected: onSelected
                 )
@@ -340,14 +340,14 @@ class WithdrawFlowController: BaseSignedInFlowController {
         })
     }
     
-    private func showAssetPicker(
+    private func showBalancePicker(
         targetAssets: [String],
         onSelected: @escaping ((String) -> Void)
         ) {
         
         let navController = NavigationController()
         
-        let vc = self.setupAssetPicker(
+        let vc = self.setupBalancePicker(
             targetAssets: targetAssets,
             onSelected: onSelected
         )
@@ -372,42 +372,41 @@ class WithdrawFlowController: BaseSignedInFlowController {
         vc.navigationItem.leftBarButtonItem = closeBarItem
         navController.setViewControllers([vc], animated: false)
         
-        self.navigationController?.present(
+        navController.present(
             navController.getViewController(),
             animated: true,
             completion: nil
         )
     }
     
-    private func setupAssetPicker(
+    private func setupBalancePicker(
         targetAssets: [String],
         onSelected: @escaping ((String) -> Void)
         ) -> UIViewController {
         
-        let vc = AssetPicker.ViewController()
-        
+        let vc = BalancePicker.ViewController()
         let imageUtility = ImagesUtility(
             storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
-        let assetsFetcher = AssetPicker.AssetsFetcher(
+        let balancesFetcher = BalancePicker.BalancesFetcher(
             balancesRepo: self.reposController.balancesRepo,
             assetsRepo: self.reposController.assetsRepo,
             imagesUtility: imageUtility,
             targetAssets: targetAssets
         )
-        let sceneModel = AssetPicker.Model.SceneModel(
-            assets: [],
+        let sceneModel = BalancePicker.Model.SceneModel(
+            balances: [],
             filter: nil
         )
-        let amountFormatter = AssetPicker.AmountFormatter()
-        let routing = AssetPicker.Routing(
-            onAssetPicked: { (balanceId) in
+        let amountFormatter = BalancePicker.AmountFormatter()
+        let routing = BalancePicker.Routing(
+            onBalancePicked: { (balanceId) in
                 onSelected(balanceId)
         })
         
-        AssetPicker.Configurator.configure(
+        BalancePicker.Configurator.configure(
             viewController: vc,
-            assetsFetcher: assetsFetcher,
+            balancesFetcher: balancesFetcher,
             sceneModel: sceneModel,
             amountFormatter: amountFormatter,
             routing: routing

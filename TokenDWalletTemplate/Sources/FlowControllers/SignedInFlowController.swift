@@ -165,6 +165,12 @@ class SignedInFlowController: BaseSignedInFlowController {
                         self?.runTradeFlow()
                 }),
                 SideMenu.Model.MenuItem(
+                    iconImage: Assets.polls.image,
+                    title: Localized(.polls),
+                    onSelected: { [weak self] in
+                        self?.runPollsFlow()
+                }),
+                SideMenu.Model.MenuItem(
                     iconImage: Assets.settingsIcon.image,
                     title: Localized(.settings),
                     onSelected: { [weak self] in
@@ -358,6 +364,22 @@ class SignedInFlowController: BaseSignedInFlowController {
             },
             onShowMovements: { [weak self] in
                 self?.runDashboardFlow()
+        })
+    }
+    
+    private func runPollsFlow() {
+        let flow = PollsFlowController(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation
+        )
+        self.currentFlowController = flow
+        flow.run(showRootScreen: { [weak self] (vc) in
+            self?.sideNavigationController.embed(centerViewController: vc)
         })
     }
     

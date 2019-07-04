@@ -39,6 +39,7 @@ enum Assets: String {
     case pendingIcon = "Pending icon"
     case placeHolderIcon = "Place holder icon"
     case plusIcon = "Plus icon"
+    case polls = "Polls icon"
     case price = "Price"
     case receive = "Receive"
     case recipient = "Recipient"

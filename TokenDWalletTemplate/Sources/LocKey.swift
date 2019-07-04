@@ -26,6 +26,8 @@ enum LocKey: String {
     case ask_base_replace_base
     case asset
     case asset_balance_is_not_found
+    case asset_colon
+    case asset_colon_replace_code
     case asset_details
     case asset_pair
     case asset_summary
@@ -137,6 +139,7 @@ enum LocKey: String {
     case empty_recipient_address
     case empty_signers_data
     case ended
+    case ended_capitalized
     case enter_account_holders_name
     case enter_account_id_or_email
     case enter_amount
@@ -320,6 +323,8 @@ enum LocKey: String {
     case one_for_replace_base_asset
     case one_for_replace_quote_asset
     case one_for_replace_sale_invest_price_amount
+    case one_vote
+    case one_vote_replace_percent
     case open_app
     case operation
     case opportunities
@@ -360,6 +365,7 @@ enum LocKey: String {
     case physical_price
     case please_validate_this_seed
     case policy
+    case polls
     case price
     case price_colon
     case price_newline
@@ -386,6 +392,7 @@ enum LocKey: String {
     case register_now
     case rejected
     case reload
+    case remove_vote
     case renew
     case repeat_title
     case request_error
@@ -449,6 +456,7 @@ enum LocKey: String {
     case state
     case subject
     case submit
+    case submit_vote
     case subtype
     case success
     case success_parameter_is_missing_or_invalid
@@ -457,6 +465,7 @@ enum LocKey: String {
     case terms_of_service
     case terms_of_service_not_agreed
     case terms_of_use
+    case there_is_no_any_poll_for_chosen_asset
     case there_is_no_progress_history_yet
     case this_feature_will_be
     case this_seed_is_the_only_way
@@ -515,6 +524,9 @@ enum LocKey: String {
     case view_history
     case view_more
     case volume
+    case votes
+    case votes_replace_votes_count
+    case votes_replace_percent
     case wallet
     case we_do_not_know_your_seed
     case week

@@ -42,13 +42,6 @@ extension AssetPicker.Presenter: AssetPicker.PresentationLogic {
         case .assets(let models):
             let assets = models.map { (asset) -> AssetPicker.AssetCell.ViewModel in
                 let firstLetter = asset.code.first?.description ?? ""
-                let availableBalanceAmount = self.amountFormatter.assetAmountToString(asset.balance.amount)
-                let availableBalance = Localized(
-                    .available_amount,
-                    replace: [
-                        .available_amount_replace_amount: availableBalanceAmount
-                    ]
-                )
                 var imageRepresentation = Model.ImageRepresentation.abbreviation
                 if let url = asset.iconUrl {
                     imageRepresentation = .image(url)
@@ -56,10 +49,9 @@ extension AssetPicker.Presenter: AssetPicker.PresentationLogic {
                 return AssetPicker.AssetCell.ViewModel(
                     code: asset.code,
                     imageRepresentation: imageRepresentation,
-                    balance: availableBalance,
                     abbreviationBackgroundColor: TokenColoringProvider.shared.coloringForCode(asset.code),
                     abbreviationText: firstLetter,
-                    balanceId: asset.balance.balanceId
+                    ownerAccountId: asset.ownerAccountId
                 )
             }
             viewModel = .assets(assets)

@@ -23,6 +23,8 @@
 "ask_base_replace_base" = "base";
 "asset" = "Asset";
 "asset_balance_is_not_found" = "Asset balance is not found";
+"asset_colon" = "Asset: $(code)";
+"asset_colon_replace_code" = "code";
 "asset_details" = "Asset details";
 "asset_pair" = "Asset pair";
 "asset_summary" = "Asset Summary";
@@ -134,6 +136,7 @@
 "empty_recipient_address" = "Empty recipient address";
 "empty_signers_data" = "Empty signers data";
 "ended" = "ended";
+"ended_capitalized" = "Ended";
 "enter_account_holders_name" = "Enter Account holder's name";
 "enter_account_id_or_email" = "Enter Account ID or email";
 "enter_amount" = "Enter amount";
@@ -317,6 +320,8 @@
 "one_for_replace_base_asset" = "base_asset";
 "one_for_replace_quote_asset" = "quote_asset";
 "one_for_replace_sale_invest_price_amount" = "sale_invest_price_amount";
+"one_vote" = "1 vote - $(percent)";
+"one_vote_replace_percent" = "percent";
 "open_app" = "Open App";
 "operation" = "Operation";
 "opportunities" = "Opportunities";
@@ -357,6 +362,7 @@
 "physical_price" = "Physical price";
 "please_validate_this_seed" = "Please validate this seed in the field below to ensure that you copied it properly:";
 "policy" = "Policy";
+"polls" = "Polls";
 "price" = "Price";
 "price_colon" = "Price:";
 "price_newline" = "Price\n$(quote)";
@@ -383,6 +389,7 @@
 "register_now" = "Register now";
 "rejected" = "Rejected";
 "reload" = "Reload";
+"remove_vote" = "REMOVE VOTE";
 "renew" = "Renew";
 "repeat_title" = "Repeat";
 "request_error" = "Request error: $(message)";
@@ -446,6 +453,7 @@
 "state" = "State";
 "subject" = "Subject";
 "submit" = "Submit";
+"submit_vote" = "SUBMIT VOTE";
 "subtype" = "Subtype";
 "success" = "Success";
 "success_parameter_is_missing_or_invalid" = "'success' parameter is missing or invalid";
@@ -454,6 +462,7 @@
 "terms_of_service" = "Terms of Service";
 "terms_of_service_not_agreed" = "Terms of Service not agreed";
 "terms_of_use" = "Terms of use";
+"there_is_no_any_poll_for_chosen_asset" = "There is no any poll for chosen asset";
 "there_is_no_progress_history_yet" = "There is no progress history yet";
 "this_feature_will_be" = "This feature will be available once you have any asset that can be deposited";
 "this_seed_is_the_only_way" = "This seed is the only way to recover your account in case of password loss. You will not be able to get it later.";
@@ -512,6 +521,9 @@
 "view_history" = "View history";
 "view_more" = "View more";
 "volume" = "Volume";
+"votes" = "$(votes_count) votes - $(percent)";
+"votes_replace_votes_count" = "votes_count";
+"votes_replace_percent" = "percent";
 "wallet" = "Wallet";
 "we_do_not_know_your_seed" = "We do not know your seed";
 "week" = "Week";

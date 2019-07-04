@@ -1,20 +1,22 @@
 import UIKit
 import Nuke
 
-extension AssetPicker {
+extension BalancePicker {
     
-    public enum AssetCell {
+    public enum BalanceCell {
         
         public struct ViewModel: CellViewModel {
             let code: String
-            let imageRepresentation: AssetPicker.Model.ImageRepresentation
+            let imageRepresentation: BalancePicker.Model.ImageRepresentation
+            let balance: String
             let abbreviationBackgroundColor: UIColor
             let abbreviationText: String
-            let ownerAccountId: String
+            let balanceId: String
             
             public func setup(cell: Cell) {
                 cell.code = self.code
                 cell.imageRepresentation = imageRepresentation
+                cell.balance = self.balance
                 cell.abbreviationBackgroundColor = self.abbreviationBackgroundColor
                 cell.abbreviationText = self.abbreviationText
             }
@@ -29,10 +31,15 @@ extension AssetPicker {
                 set { self.codeLabel.text = newValue }
             }
             
-            var imageRepresentation: AssetPicker.Model.ImageRepresentation? {
+            var imageRepresentation: BalancePicker.Model.ImageRepresentation? {
                 didSet {
                     self.updateImage()
                 }
+            }
+            
+            var balance: String? {
+                get { return self.balanceLabel.text }
+                set { self.balanceLabel.text = newValue }
             }
             
             var abbreviationBackgroundColor: UIColor? {
@@ -49,6 +56,7 @@ extension AssetPicker {
             
             private let nameLabel: UILabel = UILabel()
             private let codeLabel: UILabel = UILabel()
+            private let balanceLabel: UILabel = UILabel()
             
             private let iconView: UIImageView = UIImageView()
             private let abbreviationView: UIView = UIView()
@@ -65,6 +73,7 @@ extension AssetPicker {
                 
                 self.setupView()
                 self.setupNameLabel()
+                self.setupBalanceLabel()
                 self.setupIconView()
                 self.setupAbbreviationView()
                 self.setupAbbreviationLabel()
@@ -102,6 +111,11 @@ extension AssetPicker {
                 self.nameLabel.font = Theme.Fonts.plainTextFont
             }
             
+            private func setupBalanceLabel() {
+                self.balanceLabel.backgroundColor = Theme.Colors.contentBackgroundColor
+                self.balanceLabel.font = Theme.Fonts.plainTextFont
+            }
+            
             private func setupIconView() {
                 self.iconView.backgroundColor = Theme.Colors.contentBackgroundColor
                 self.iconView.layer.cornerRadius = self.iconSize / 2
@@ -124,6 +138,7 @@ extension AssetPicker {
                 self.abbreviationView.addSubview(self.abbreviationLabel)
                 self.addSubview(self.iconView)
                 self.addSubview(self.codeLabel)
+                self.addSubview(self.balanceLabel)
                 
                 self.abbreviationView.snp.makeConstraints { (make) in
                     make.leading.equalToSuperview().inset(self.sideInset)
@@ -142,7 +157,13 @@ extension AssetPicker {
                 self.codeLabel.snp.makeConstraints { (make) in
                     make.leading.equalTo(self.abbreviationView.snp.trailing).offset(self.sideInset)
                     make.trailing.equalToSuperview().inset(self.sideInset)
-                    make.centerY.equalTo(self.abbreviationView.snp.centerY)
+                    make.centerY.equalTo(self.abbreviationView.snp.centerY).offset(-self.topInset)
+                }
+                
+                self.balanceLabel.snp.makeConstraints { (make) in
+                    make.leading.equalTo(self.abbreviationView.snp.trailing).offset(self.sideInset)
+                    make.trailing.equalToSuperview().inset(self.sideInset)
+                    make.centerY.equalTo(self.abbreviationView.snp.centerY).offset(self.topInset)
                 }
             }
         }

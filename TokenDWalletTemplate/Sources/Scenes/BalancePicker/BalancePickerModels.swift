@@ -1,6 +1,6 @@
 import UIKit
 
-public enum AssetPicker {
+public enum BalancePicker {
     
     // MARK: - Typealiases
     
@@ -14,17 +14,22 @@ public enum AssetPicker {
 
 // MARK: - Models
 
-extension AssetPicker.Model {
+extension BalancePicker.Model {
     
     struct SceneModel {
-        var assets: [Asset]
+        var balances: [Balance]
         var filter: String?
     }
     
-    public struct Asset {
-        let code: String
+    public struct Balance {
+        let assetCode: String
         let iconUrl: URL?
-        let ownerAccountId: String
+        let details: BalanceDetails
+    }
+    
+    public struct BalanceDetails {
+        let amount: Decimal
+        let balanceId: String
     }
     
     public enum ImageRepresentation {
@@ -35,8 +40,8 @@ extension AssetPicker.Model {
 
 // MARK: - Events
 
-extension AssetPicker.Event {
-    public typealias Model = AssetPicker.Model
+extension BalancePicker.Event {
+    public typealias Model = BalancePicker.Model
     
     // MARK: -
     
@@ -44,14 +49,14 @@ extension AssetPicker.Event {
         public struct Request {}
     }
     
-    public enum AssetsUpdated {
+    public enum BalancesUpdated {
         public enum Response {
-            case assets([Model.Asset])
+            case balances([Model.Balance])
             case empty
         }
         
         public enum ViewModel {
-            case assets([AssetPicker.AssetCell.ViewModel])
+            case balances([BalancePicker.BalanceCell.ViewModel])
             case empty
         }
     }

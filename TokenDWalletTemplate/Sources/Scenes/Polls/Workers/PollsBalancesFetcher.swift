@@ -2,34 +2,30 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-protocol AssetPickerAssetsFetcherProtocol {
-    func observeAssets() -> Observable<[AssetPicker.Model.Asset]>
+public protocol PollsAssetsFetcherProtocol {
+    func observeAssets() -> Observable<[Polls.Model.Asset]>
+    func observeLoadingStatus() -> Observable<Polls.Model.LoadingStatus>
 }
 
-extension AssetPicker {
-    typealias AssetsFetcherProtocol = AssetPickerAssetsFetcherProtocol
+extension Polls {
+    public typealias AssetsFetcherProtocol = PollsAssetsFetcherProtocol
     
     class AssetsFetcher {
         
         // MARK: - Private properties
         
         private let assetsRepo: AssetsRepo
-        private let imagesUtility: ImagesUtility
         
         private let assetsRelay: BehaviorRelay<[Model.Asset]> = BehaviorRelay(value: [])
+        private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
         private var assets: [AssetsRepo.Asset] = []
         
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: -
         
-        init(
-            assetsRepo: AssetsRepo,
-            imagesUtility: ImagesUtility
-            ) {
-            
+        init(assetsRepo: AssetsRepo) {
             self.assetsRepo = assetsRepo
-            self.imagesUtility = imagesUtility
         }
         
         // MARK: - Private
@@ -46,27 +42,36 @@ extension AssetPicker {
         
         private func updateAssets() {
             let assets = self.assets.map { (asset) -> Model.Asset in
-                var iconUrl: URL?
-                if let key = asset.defaultDetails?.logo?.key {
-                    let imageKey = ImagesUtility.ImageKey.key(key)
-                    iconUrl = self.imagesUtility.getImageURL(imageKey)
-                }
                 return Model.Asset(
                     code: asset.code,
-                    iconUrl: iconUrl,
                     ownerAccountId: asset.owner
-                )
-            }
-            
+                )}
             self.assetsRelay.accept(assets)
         }
     }
 }
 
-extension AssetPicker.AssetsFetcher: AssetPicker.AssetsFetcherProtocol {
+extension Polls.AssetsFetcher: Polls.AssetsFetcherProtocol {
     
-    func observeAssets() -> Observable<[AssetPicker.Model.Asset]> {
+    public func observeAssets() -> Observable<[Polls.Model.Asset]> {
         self.observeAssetsRepo()
         return self.assetsRelay.asObservable()
+    }
+    
+    public func observeLoadingStatus() -> Observable<Polls.Model.LoadingStatus> {
+        self.assetsRepo
+            .observeLoadingStatus()
+            .subscribe(onNext: { [weak self] (status) in
+                switch status {
+                case .loaded:
+                    self?.loadingStatus.accept(.loaded)
+                    
+                case .loading:
+                    self?.loadingStatus.accept(.loading)
+                }
+            })
+            .disposed(by: self.disposeBag)
+        
+        return self.loadingStatus.asObservable()
     }
 }
