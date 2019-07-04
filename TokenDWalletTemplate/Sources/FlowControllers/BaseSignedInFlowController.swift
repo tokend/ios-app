@@ -135,13 +135,14 @@ class BaseSignedInFlowController: BaseFlowController {
         )
         let balanceBinder = BalanceBinder(
             balancesRepo: self.reposController.balancesRepo,
-            accountRepo: self.reposController.accountRepo,
             externalSystemBalancesManager: self.managersController.externalSystemBalancesManager
         )
         let addressManager = DepositScene.AddressManager(
             balanceBinder: balanceBinder
         )
-        
+        let shareItemsProvider = DepositScene.ShareItemsProvider(
+            qrCodeGenerator: qrCodeGenerator
+        )
         let errorFormatter = DepositScene.ErrorFormatter()
         
         let routing = DepositScene.Routing(
@@ -162,6 +163,7 @@ class BaseSignedInFlowController: BaseFlowController {
             dateFormatter: dateFormatter,
             assetsFetcher: assetsFetcher,
             addressManager: addressManager,
+            shareItemsProvider: shareItemsProvider,
             errorFormatter: errorFormatter,
             routing: routing
         )

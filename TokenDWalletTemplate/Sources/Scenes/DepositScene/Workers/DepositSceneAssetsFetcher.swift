@@ -102,7 +102,7 @@ extension DepositScene {
                 .subscribe(onNext: { (error) in
                     self.depositableAssetErrorStatus.accept(error)
                 })
-            .disposed(by: self.disposeBag)
+                .disposed(by: self.disposeBag)
         }
         
         private func observeBindingStatuses() {
@@ -136,23 +136,26 @@ extension DepositScene {
                 guard let externalSystemType = asset.defaultDetails?.externalSystemType else {
                     return nil
                 }
-                let optionalExternalSystemAccount = account.externalSystemAccounts.first(where: { (account) -> Bool in
-                    return account.type.value == externalSystemType
+                
+                let optionalExternalSystemAccount = account.externalSystemIds?.first(where: { (account) -> Bool in
+                    return account.externalSystemType == externalSystemType
                 })
                 
-                let address: String? = {
-                    guard let account = optionalExternalSystemAccount else {
-                        return nil
-                    }
-                    guard let expirationDate = account.expiresAt else {
-                        return account.data
-                    }
-                    guard Date() < expirationDate else {
-                        return nil
-                    }
+                var address: String?
+                var payload: String?
+                
+                if let externalAccount = optionalExternalSystemAccount,
+                    Date() < externalAccount.expiresAt {
                     
-                    return account.data
-                }()
+                    if let addressWithPayload = externalAccount.addressWithPayload {
+                        address = addressWithPayload.data.address
+                        payload = addressWithPayload.data.payload
+                    } else if let externalAddress = externalAccount.address {
+                        address = externalAddress.data.address
+                    } else {
+                        address = externalAccount.data
+                    }
+                }
                 
                 let balance = balances.first(where: { (state) -> Bool in
                     return state.asset == asset.code
@@ -180,6 +183,7 @@ extension DepositScene {
                 return Model.Asset(
                     id: asset.identifier,
                     address: address,
+                    payload: payload,
                     asset: asset.code,
                     expirationDate: optionalExternalSystemAccount?.expiresAt,
                     isRenewable: isRenewable,

@@ -31,6 +31,7 @@ extension DepositScene {
         private let addressContentView: UIView = UIView()
         private let addressQrCodeImageView: UIImageView = UIImageView()
         private let addressLabel: UILabel = UILabel()
+        private let payloadLabel: UILabel = UILabel()
         private let addressHintLabel: UILabel = UILabel()
         private let renewAddressButton: UIButton = UIButton(type: .custom)
         
@@ -151,6 +152,15 @@ extension DepositScene {
             self.addressLabel.font = Theme.Fonts.plainTextFont
         }
         
+        private func setupPayloadLabel() {
+            self.payloadLabel.textAlignment = .center
+            self.payloadLabel.adjustsFontSizeToFitWidth = true
+            self.payloadLabel.minimumScaleFactor = 0.01
+            self.payloadLabel.numberOfLines = 1
+            self.payloadLabel.textColor = Theme.Colors.textOnContainerBackgroundColor
+            self.payloadLabel.font = Theme.Fonts.plainTextFont
+        }
+        
         private func setupAddressHintLabel() {
             self.setupHintLabel(self.addressHintLabel)
         }
@@ -219,6 +229,7 @@ extension DepositScene {
             self.scrollContentView.addSubview(self.addressContentView)
             self.addressContentView.addSubview(self.addressQrCodeImageView)
             self.addressContentView.addSubview(self.addressLabel)
+            self.addressContentView.addSubview(self.payloadLabel)
             self.addressContentView.addSubview(self.addressHintLabel)
             self.addressContentView.addSubview(self.renewAddressButton)
             
@@ -255,9 +266,14 @@ extension DepositScene {
                 make.top.equalTo(self.addressQrCodeImageView.snp.bottom).offset(24)
             }
             
-            self.addressHintLabel.snp.makeConstraints { (make) in
+            self.payloadLabel.snp.makeConstraints { (make) in
                 make.leading.trailing.equalToSuperview().inset(15)
                 make.top.equalTo(self.addressLabel.snp.bottom).offset(12)
+            }
+            
+            self.addressHintLabel.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(15)
+                make.top.equalTo(self.payloadLabel.snp.bottom).offset(12)
             }
             
             self.showRenewButton()
@@ -328,6 +344,23 @@ extension DepositScene {
                 make.top.equalTo(self.addressHintLabel.snp.bottom)
                 make.bottom.equalToSuperview().inset(32)
                 make.height.equalTo(0)
+            }
+        }
+        
+        private func hidePayloadLabel() {
+            self.payloadLabel.isHidden = true
+            self.payloadLabel.snp.remakeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(15)
+                make.top.equalTo(self.addressLabel.snp.bottom)
+                make.height.equalTo(0)
+            }
+        }
+        
+        private func showPayloadLabel() {
+            self.payloadLabel.isHidden = false
+            self.payloadLabel.snp.remakeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(15)
+                make.top.equalTo(self.addressLabel.snp.bottom).offset(12)
             }
         }
         
@@ -450,7 +483,14 @@ extension DepositScene.ViewController: DepositScene.DisplayLogic {
             self.getAddressContentView.isHidden = true
             
             self.addressLabel.text = viewModel.address
+            self.payloadLabel.text = viewModel.payload
             self.addressHintLabel.text = viewModel.hint
+            
+            if viewModel.payload != nil {
+                self.showPayloadLabel()
+            } else {
+                self.hidePayloadLabel()
+            }
             
             switch viewModel.renewStatus {
             case .renewable:

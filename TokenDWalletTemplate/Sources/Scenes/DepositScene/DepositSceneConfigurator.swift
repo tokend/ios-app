@@ -10,6 +10,7 @@ extension DepositScene {
             dateFormatter: DateFormatterProtocol,
             assetsFetcher: AssetsFetcherProtocol,
             addressManager: AddressManagerProtocol,
+            shareItemsProvider: ShareItemsProviderProtocol,
             errorFormatter: ErrorFormatterProtocol,
             routing: Routing?
             ) {
@@ -25,6 +26,7 @@ extension DepositScene {
                 presenter: presenter,
                 assetsFetcher: assetsFetcher,
                 addressManager: addressManager,
+                shareItemsProvider: shareItemsProvider,
                 sceneModel: sceneModel
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)

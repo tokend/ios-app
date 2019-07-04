@@ -10,15 +10,17 @@ class AccountRepo {
         case loaded
     }
     
-    typealias Account = TokenDSDK.AccountResponse
+    typealias Account = AccountResource
     
     // MARK: - Private properties
     
     private let account: BehaviorRelay<Account?> = BehaviorRelay(value: nil)
     private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
     private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
-    private let api: TokenDSDK.API
+    private let apiV3: TokenDSDK.APIv3
     private let originalAccountId: String
+    
+    private let externalSystemIds: String = "external_system_ids"
     
     // MARK: - Public properties
     
@@ -33,11 +35,11 @@ class AccountRepo {
     // MARK: -
     
     init(
-        api: TokenDSDK.API,
+        apiV3: TokenDSDK.APIv3,
         originalAccountId: String
         ) {
         
-        self.api = api
+        self.apiV3 = apiV3
         self.originalAccountId = originalAccountId
     }
     
@@ -59,24 +61,37 @@ class AccountRepo {
     
     enum UpdateAccountResult {
         case succeeded
-        case failed(TokenDSDK.AccountsApi.RequestAccountResult.RequestError)
+        case failed(Error)
+        
+        enum Error {
+            case empty
+            case other(Swift.Error)
+        }
     }
     public func updateAccount(
         _ completion: @escaping (UpdateAccountResult) -> Void
         ) {
+        
         self.loadingStatus.accept(.loading)
-        self.api.accountsApi.requestAccount(
+        self.apiV3.accountsApi.requestAccount(
             accountId: self.originalAccountId,
+            include: [self.externalSystemIds],
+            pagination: nil,
             completion: { [weak self] (result) in
-                self?.loadingStatus.accept(.loaded)
                 switch result {
-                case .success(let account):
-                    self?.account.accept(account)
-                    completion(.succeeded)
+                    
                 case .failure(let error):
                     self?.errorStatus.accept(error)
-                    completion(.failed(error))
+                    completion(.failed(.other(error)))
+                    
+                case .success(let document):
+                    guard let account = document.data else {
+                        return
+                    }
+                    self?.account.accept(account)
+                    completion(.succeeded)
                 }
-        })
+            }
+        )
     }
 }

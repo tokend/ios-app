@@ -127,6 +127,7 @@ extension DepositScene.Presenter: DepositScene.PresentationLogic {
         
         if let asset = response.asset {
             let address: String? = asset.address
+            let payload: String? = asset.payload
             let hint: String = {
                 let hintAsset = asset.asset
                 if address != nil {
@@ -160,6 +161,7 @@ extension DepositScene.Presenter: DepositScene.PresentationLogic {
             }()
             let asset = Event.AssetDidChange.ViewModel.Data(
                 address: address,
+                payload: payload,
                 hint: hint,
                 renewStatus: response.renewStatus,
                 canShare: response.canShare

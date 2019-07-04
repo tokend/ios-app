@@ -94,8 +94,8 @@ class ExternalSystemBalancesManager {
         ) -> BehaviorRelay<BindingStatus> {
         
         guard let status = self.bindingStatuses[type] else {
-            if self.accountRepo.accountValue?.externalSystemAccounts.first(where: { (account) -> Bool in
-                return account.type.value == type
+            if self.accountRepo.accountValue?.externalSystemIds?.first(where: { (account) -> Bool in
+                return account.externalSystemType == type
             }) != nil {
                 self.bindingStatuses[type] = BehaviorRelay(value: .binded)
             } else {
