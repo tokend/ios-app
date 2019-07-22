@@ -17,13 +17,13 @@ public enum SendPaymentDestination {
 // MARK: - Models
 
 public extension SendPaymentDestination.Model {
-    public typealias FeeModel = SendPaymentAmount.Model.FeeModel
-    public typealias Operation = SendPaymentAmount.Model.Operation
-    public typealias FeeType = SendPaymentAmount.Model.FeeType
-    public typealias BalanceDetails = SendPaymentAmount.Model.BalanceDetails
-    public typealias SceneModel = SendPaymentAmount.Model.SceneModel
+    typealias FeeModel = SendPaymentAmount.Model.FeeModel
+    typealias Operation = SendPaymentAmount.Model.Operation
+    typealias FeeType = SendPaymentAmount.Model.FeeType
+    typealias BalanceDetails = SendPaymentAmount.Model.BalanceDetails
+    typealias SceneModel = SendPaymentAmount.Model.SceneModel
     
-    public struct SendDestinationModel {
+    struct SendDestinationModel {
         public let recipientNickname: String
         public let recipientAccountId: String
     }
@@ -37,34 +37,34 @@ public extension SendPaymentDestination.Model {
         let senderFee: FeeModel
     }
     
-    public enum QRCodeReaderResult {
+    enum QRCodeReaderResult {
         case canceled
         case success(value: String, metadataType: String)
     }
     
-    public struct ContactModel {
+    struct ContactModel {
         let name: String
         let email: String
     }
     
-    public struct SectionModel {
+    struct SectionModel {
         let title: String
         let cells: [ContactModel]
     }
     
-    public struct SectionViewModel {
+    struct SectionViewModel {
         let title: String
         let cells: [CellViewAnyModel]
     }
     
-    public struct ViewConfig {
+    struct ViewConfig {
         let recipientAddressFieldPlaceholder: String
         let actionTitle: String
         let actionButtonTitle: NSAttributedString
         let contactsAreHidden: Bool
     }
     
-    public enum LoadingStatus {
+    enum LoadingStatus {
         case loaded
         case loading
     }

@@ -98,6 +98,8 @@ class DashboardFlowController: BaseSignedInFlowController {
                 self?.navigationController.showShadow()
             }, hideShadow: { [weak self] in
                 self?.navigationController.hideShadow()
+            }, showError: { [weak self] (message) in
+                self?.navigationController.showErrorMessage(message, completion: nil)
             },
                selectedTabIdentifier: selectedTabIdentifier
         )
@@ -258,15 +260,11 @@ class DashboardFlowController: BaseSignedInFlowController {
             imageUtility: imageUtility,
             balanceId: selectedBalanceId
         )
-        let headerRateProvider: BalanceHeader.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
         let container = SharedSceneBuilder.createBalanceDetailsScene(
             transactionsFetcher: transactionsFetcher,
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
             viewConfig: viewConfig,
-            headerRateProvider: headerRateProvider,
             balanceFetcher: balanceFetcher,
             balanceId: selectedBalanceId
         )

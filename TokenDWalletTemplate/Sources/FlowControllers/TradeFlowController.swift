@@ -354,6 +354,7 @@ class TradeFlowController: BaseSignedInFlowController {
         
         let sectionsProvider = ConfirmationScene.CreateOfferConfirmationSectionsProvider(
             createOfferModel: offerModel,
+            reposController: self.reposController,
             transactionSender: self.managersController.transactionSender,
             networkInfoFetcher: self.reposController.networkInfoRepo,
             userDataProvider: self.userDataProvider,

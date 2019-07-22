@@ -20,6 +20,7 @@ extension TabBarContainer {
         private let hideProgress: (() -> Void)
         private let showShadow: (() -> Void)
         private let hideShadow: (() -> Void)
+        private let showError: ((String) -> Void)
         private let selectedTabIdentifier: TabsContainer.Model.TabIdentifier?
         
         private var content: ContentProtocol?
@@ -44,6 +45,7 @@ extension TabBarContainer {
             hideProgress: @escaping (() -> Void),
             showShadow: @escaping (() -> Void),
             hideShadow: @escaping (() -> Void),
+            showError: @escaping ((String) -> Void),
             selectedTabIdentifier: TabsContainer.Model.TabIdentifier?
             ) {
             
@@ -61,6 +63,7 @@ extension TabBarContainer {
             self.hideProgress = hideProgress
             self.showShadow = showShadow
             self.hideShadow = hideShadow
+            self.showError = showError
             self.selectedTabIdentifier = selectedTabIdentifier
         }
         
@@ -139,6 +142,8 @@ extension TabBarContainer {
                     self?.showShadow()
                 }, hideShadow: { [weak self] in
                     self?.hideShadow()
+                }, showError: { [weak self] (message) in
+                    self?.showError(message)
             })
             
             let amountFormatter = BalancesList.AmountFormatter()

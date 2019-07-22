@@ -11,6 +11,7 @@ extension ConfirmationScene {
         // MARK: - Private properties
         
         private let createOfferModel: Model.CreateOfferModel
+        private let reposController: ReposController
         private let transactionSender: TransactionSender
         private let networkInfoFetcher: NetworkInfoFetcher
         private let userDataProvider: UserDataProviderProtocol
@@ -26,6 +27,7 @@ extension ConfirmationScene {
         
         init(
             createOfferModel: Model.CreateOfferModel,
+            reposController: ReposController,
             transactionSender: TransactionSender,
             networkInfoFetcher: NetworkInfoFetcher,
             userDataProvider: UserDataProviderProtocol,
@@ -37,6 +39,7 @@ extension ConfirmationScene {
             ) {
             
             self.createOfferModel = createOfferModel
+            self.reposController = reposController
             self.transactionSender = transactionSender
             self.networkInfoFetcher = networkInfoFetcher
             self.userDataProvider = userDataProvider
@@ -186,6 +189,8 @@ extension ConfirmationScene {
                                 switch result {
                                     
                                 case .succeeded:
+                                    self?.reposController.balancesRepo.reloadBalancesDetails()
+                                    self?.reposController.movementsRepo.reloadTransactions()
                                     completion(.succeeded)
                                     
                                 case .failed(let error):

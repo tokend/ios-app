@@ -118,7 +118,7 @@ public class BalancesRepo {
     }
     
     func observeLoadingStatus() -> Observable<LoadingStatus> {
-        return loadingStatus.asObservable()
+        return self.loadingStatus.asObservable()
     }
     
     func observeErrorStatus() -> Observable<Swift.Error> {

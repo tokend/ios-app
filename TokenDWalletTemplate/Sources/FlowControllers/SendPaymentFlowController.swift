@@ -243,6 +243,7 @@ class SendPaymentFlowController: BaseSignedInFlowController {
         
         let sectionsProvider = ConfirmationScene.SendPaymentConfirmationSectionsProvider(
             sendPaymentModel: paymentModel,
+            reposController: self.reposController,
             transactionSender: self.managersController.transactionSender,
             networkInfoFetcher: self.reposController.networkInfoRepo,
             amountFormatter: amountFormatter,

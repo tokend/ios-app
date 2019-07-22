@@ -9,11 +9,13 @@ extension BalancesList {
             var chartViewModel: Model.PieChartViewModel
             var legendCells: [LegendCell.ViewModel]
             let cellIdentifier: Model.CellIdentifier
+            let shouldDisplayCenterText: Bool
             
             public func setup(cell: View) {
                 cell.chartViewModel = self.chartViewModel
                 cell.legendCells = self.legendCells
                 cell.cellIdentifier = self.cellIdentifier
+                cell.shouldDisplayCenterText = self.shouldDisplayCenterText
             }
         }
         
@@ -34,6 +36,12 @@ extension BalancesList {
             public var legendCells: [LegendCell.ViewModel] = [] {
                 didSet {
                     self.legendTableView.reloadData()
+                }
+            }
+            
+            public var shouldDisplayCenterText: Bool = true {
+                didSet {
+                    self.pieChart.drawCenterTextEnabled = self.shouldDisplayCenterText
                 }
             }
             

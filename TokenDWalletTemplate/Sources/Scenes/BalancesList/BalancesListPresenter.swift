@@ -7,6 +7,7 @@ public protocol BalancesListPresentationLogic {
     func presentLoadingStatusDidChange(response: Event.LoadingStatusDidChange.Response)
     func presentPieChartEntriesChanged(response: Event.PieChartEntriesChanged.Response)
     func presentPieChartBalanceSelected(response: Event.PieChartBalanceSelected.Response)
+    func presentError(response: Event.Error.Response)
 }
 
 extension BalancesList {
@@ -152,10 +153,15 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
                         cells: pieChartModel.legendCells,
                         convertedAsset: pieChartModel.convertAsset
                     )
+                    let shouldDisplayBalanceText = pieChartModel.entries
+                        .reduce(0, { (result, entry) -> Double in
+                            return result + entry.value
+                        }) > 0
                     let chartViewModel = BalancesList.PieChartCell.ViewModel(
                         chartViewModel: pieChartViewModel,
                         legendCells: legendCells,
-                        cellIdentifier: .chart
+                        cellIdentifier: .chart,
+                        shouldDisplayCenterText: shouldDisplayBalanceText
                     )
                     return chartViewModel
                 }
@@ -211,6 +217,13 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
         )
         self.presenterDispatch.display { (displayLogic) in
             displayLogic.displayPieChartBalanceSelected(viewModel: viewModel)
+        }
+    }
+    
+    public func presentError(response: Event.Error.Response) {
+        let viewModel = Event.Error.ViewModel(error: response.error.localizedDescription)
+        self.presenterDispatch.display { (displayLogic) in
+            displayLogic.displayError(viewModel: viewModel)
         }
     }
 }

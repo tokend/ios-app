@@ -197,9 +197,6 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
                 self?.navigationController.hideShadow()
         })
         
-        let headerRateProvider: BalanceHeaderWithPicker.RateProviderProtocol = RateProvider(
-            assetPairsRepo: self.reposController.assetPairsRepo
-        )
         let imageUtility = ImagesUtility(
             storageUrl: self.flowControllerStack.apiConfigurationModel.storageEndpoint
         )
@@ -214,7 +211,6 @@ class ExploreTokensFlowController: BaseSignedInFlowController {
             actionProvider: actionProvider,
             transactionsRouting: transactionsRouting,
             viewConfig: viewConfig,
-            headerRateProvider: headerRateProvider,
             balanceFetcher: balanceFetcher,
             balanceId: selectedBalanceId
         )

@@ -15,6 +15,7 @@ extension ConfirmationScene {
         // MARK: - Private properties
         
         private let withdrawModel: Model.WithdrawModel
+        private let reposController: ReposController
         private let transactionSender: TransactionSender
         private let networkInfoFetcher: NetworkInfoFetcher
         private let userDataProvider: UserDataProviderProtocol
@@ -27,6 +28,7 @@ extension ConfirmationScene {
         
         init(
             withdrawModel: Model.WithdrawModel,
+            reposController: ReposController,
             transactionSender: TransactionSender,
             networkInfoFetcher: NetworkInfoFetcher,
             amountFormatter: AmountFormatterProtocol,
@@ -36,6 +38,7 @@ extension ConfirmationScene {
             ) {
             
             self.withdrawModel = withdrawModel
+            self.reposController = reposController
             self.transactionSender = transactionSender
             self.networkInfoFetcher = networkInfoFetcher
             self.userDataProvider = userDataProvider
@@ -115,6 +118,8 @@ extension ConfirmationScene {
                         switch result {
                             
                         case .succeeded:
+                            self.reposController.balancesRepo.reloadBalancesDetails()
+                            self.reposController.movementsRepo.reloadTransactions()
                             completion(.succeeded)
                             
                         case .failed(let error):

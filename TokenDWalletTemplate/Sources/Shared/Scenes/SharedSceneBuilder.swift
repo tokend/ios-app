@@ -99,7 +99,6 @@ enum SharedSceneBuilder {
         actionProvider: TransactionsListScene.ActionProviderProtocol,
         transactionsRouting: TransactionsListScene.Routing,
         viewConfig: TransactionsListScene.Model.ViewConfig,
-        headerRateProvider: BalanceHeader.RateProviderProtocol,
         balanceFetcher: BalanceHeader.BalanceFetcherProtocol,
         balanceId: String
         ) -> FlexibleHeaderContainerViewController {
@@ -127,7 +126,6 @@ enum SharedSceneBuilder {
             view: headerView,
             sceneModel: headerSceneModel,
             balanceFetcher: balanceFetcher,
-            rateProvider: headerRateProvider,
             amountFormatter: headerAmountFormatter,
             routing: balancesRouting
         )

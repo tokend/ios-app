@@ -173,4 +173,17 @@ extension BalancesList.Event {
             let legendCells: [BalancesList.LegendCell.ViewModel]
         }
     }
+    
+    public enum RefreshInitiated {
+        public struct Request {}
+    }
+    
+    public enum Error {
+        public struct Response {
+            let error: Swift.Error
+        }
+        public struct ViewModel {
+            let error: String
+        }
+    }
 }

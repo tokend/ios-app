@@ -9,6 +9,7 @@ extension ConfirmationScene {
     class SaleInvestConfirmationProvider {
         
         private let saleInvestModel: Model.SaleInvestModel
+        private let reposController: ReposController
         private let transactionSender: TransactionSender
         private let networkInfoFetcher: NetworkInfoFetcher
         private let userDataProvider: UserDataProviderProtocol
@@ -21,6 +22,7 @@ extension ConfirmationScene {
         
         init(
             saleInvestModel: Model.SaleInvestModel,
+            reposController: ReposController,
             transactionSender: TransactionSender,
             networkInfoFetcher: NetworkInfoFetcher,
             amountFormatter: AmountFormatterProtocol,
@@ -30,6 +32,7 @@ extension ConfirmationScene {
             ) {
             
             self.saleInvestModel = saleInvestModel
+            self.reposController = reposController
             self.transactionSender = transactionSender
             self.networkInfoFetcher = networkInfoFetcher
             self.userDataProvider = userDataProvider
@@ -127,8 +130,12 @@ extension ConfirmationScene {
                     walletId: self.userDataProvider.walletId
                 ) { (result) in
                     switch result {
+                        
                     case .succeeded:
+                        self.reposController.balancesRepo.reloadBalancesDetails()
+                        self.reposController.movementsRepo.reloadTransactions()
                         completion(.succeeded)
+                        
                     case .failed(let error):
                         completion(.failed(.sendTransactionError(error)))
                     }

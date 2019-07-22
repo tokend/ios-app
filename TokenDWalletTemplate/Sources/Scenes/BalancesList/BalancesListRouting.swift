@@ -7,5 +7,6 @@ extension BalancesList {
         let hideProgress: () -> Void
         let showShadow: () -> Void
         let hideShadow: () -> Void
+        let showError: (_ message: String) -> Void
     }
 }

@@ -5,6 +5,7 @@ public protocol BalancesListBusinessLogic {
     typealias Event = BalancesList.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
+    func onRefreshInitiated(request: Event.RefreshInitiated.Request)
     func onPieChartBalanceSelected(request: Event.PieChartBalanceSelected.Request)
 }
 
@@ -40,6 +41,16 @@ extension BalancesList {
         }
         
         // MARK: - Private
+        
+        private func observeErrors() {
+            self.balancesFetcher
+                .observeErrors()
+                .subscribe(onNext: { [weak self] (error) in
+                    let response = Event.Error.Response(error: error)
+                    self?.presenter.presentError(response: response)
+                })
+            .disposed(by: self.disposeBag)
+        }
         
         private func updateSections() {
             let headerSection = self.getHeaderSectionModel()
@@ -225,6 +236,7 @@ extension BalancesList {
 extension BalancesList.Interactor: BalancesList.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        self.observeErrors()
         self.balancesFetcher
             .observeLoadingStatus()
             .subscribe(onNext: { [weak self] (status) in
@@ -240,6 +252,10 @@ extension BalancesList.Interactor: BalancesList.BusinessLogic {
                 self?.updateSections()
             })
             .disposed(by: self.disposeBag)
+    }
+    
+    public func onRefreshInitiated(request: Event.RefreshInitiated.Request) {
+        self.balancesFetcher.reloadBalances()
     }
     
     public func onPieChartBalanceSelected(request: Event.PieChartBalanceSelected.Request) {

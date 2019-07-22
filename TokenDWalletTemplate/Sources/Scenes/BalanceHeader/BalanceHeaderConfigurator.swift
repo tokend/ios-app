@@ -8,7 +8,6 @@ extension BalanceHeader {
             view: View,
             sceneModel: Model.SceneModel,
             balanceFetcher: BalanceFetcherProtocol,
-            rateProvider: RateProviderProtocol,
             amountFormatter: AmountFormatterProtocol,
             routing: Routing?,
             onDeinit: DeinitCompletion = nil
@@ -22,8 +21,7 @@ extension BalanceHeader {
             let interactor = Interactor(
                 sceneModel: sceneModel,
                 presenter: presenter,
-                balanceFetcher: balanceFetcher,
-                rateProvider: rateProvider
+                balanceFetcher: balanceFetcher
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             view.inject(

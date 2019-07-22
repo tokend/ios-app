@@ -172,7 +172,7 @@ CHECKOUT OPTIONS:
     :commit: a96eb9b1aafccd419e4ba7005c778c099344dd17
     :git: https://github.com/tokend/Floaty.git
   SideMenuController:
-    :commit: a69b0c5704353ed5c35eb7df21d37f094e7582bf
+    :commit: 18faf0b94465a8c9b4db08938cd11c530a34e16c
     :git: https://github.com/tokend/SideMenuController.git
 
 SPEC CHECKSUMS:
@@ -207,6 +207,6 @@ SPEC CHECKSUMS:
   TokenDWallet: 4e97425fd46607d70bbafccc471e1af991998cc8
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
-PODFILE CHECKSUM: c1ae253cada90ce11a4520854c945178c42394aa
+PODFILE CHECKSUM: 1c2c1c2fe5f05ceb6b0eaac58153f3ecdbe0197f
 
 COCOAPODS: 1.6.1

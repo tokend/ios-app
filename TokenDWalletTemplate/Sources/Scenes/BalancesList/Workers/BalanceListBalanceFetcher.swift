@@ -4,7 +4,9 @@ import RxSwift
 
 protocol BalanceListBalanceFetcherProtocol {
     func observeBalances() -> Observable<[BalancesList.Model.Balance]>
+    func observeErrors() -> Observable<Swift.Error>
     func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus>
+    func reloadBalances()
 }
 
 extension BalancesList {
@@ -112,6 +114,16 @@ extension BalancesList.BalancesFetcher: BalancesList.BalancesFetcherProtocol {
         return self.balancesRelay.asObservable()
     }
     
+    public func observeErrors() -> Observable<Swift.Error> {
+        let assetErrorsObservable = self.assetsRepo.observeErrorStatus()
+        let balancesErrorsObservable = self.balancesRepo.observeErrorStatus()
+        
+        return Observable.merge(
+            assetErrorsObservable,
+            balancesErrorsObservable
+        )
+    }
+    
     func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus> {
         self.balancesRepo
             .observeLoadingStatus()
@@ -127,5 +139,9 @@ extension BalancesList.BalancesFetcher: BalancesList.BalancesFetcherProtocol {
             .disposed(by: self.disposeBag)
         
         return self.loadingStatus.asObservable()
+    }
+    
+    func reloadBalances() {
+        self.balancesRepo.reloadBalancesDetails()
     }
 }

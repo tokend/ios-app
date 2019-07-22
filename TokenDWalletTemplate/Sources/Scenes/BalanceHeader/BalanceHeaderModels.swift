@@ -24,6 +24,7 @@ extension BalanceHeader.Model {
     public struct Balance {
         let balance: Amount
         let iconUrl: URL?
+        let convertedBalance: Amount
     }
     
     public struct Amount {

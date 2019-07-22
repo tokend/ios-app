@@ -24,6 +24,7 @@ extension BalanceHeader {
         private let disposeBag: DisposeBag = DisposeBag()
         
         private let balanceId: String
+        private let rateAsset: String = "USD"
         
         // MARK: -
         
@@ -91,9 +92,14 @@ extension BalanceHeader {
                 value: balance.balance,
                 asset: balance.asset
             )
+            let convertedBalance = BalanceHeader.Model.Amount(
+                value: balance.convertedBalance,
+                asset: self.rateAsset
+            )
             let updatedBalance = Model.Balance(
                 balance: amount,
-                iconUrl: iconUrl
+                iconUrl: iconUrl,
+                convertedBalance: convertedBalance
             )
             self.balance.accept(updatedBalance)
         }

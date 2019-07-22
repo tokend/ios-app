@@ -164,28 +164,38 @@ extension BalanceHeader {
         }
         
         private func setupLayout() {
-            self.addSubview(self.labelsStackView)
-            self.labelsStackView.addArrangedSubview(self.iconContainerView)
-            self.labelsStackView.addArrangedSubview(self.balanceLabel)
-            self.labelsStackView.addArrangedSubview(self.rateLabel)
+            self.addSubview(self.iconContainerView)
+            self.addSubview(self.balanceLabel)
+            self.addSubview(self.rateLabel)
             
             self.abbreviationView.addSubview(self.abbreviationLabel)
             self.iconContainerView.addSubview(self.abbreviationView)
             self.iconContainerView.addSubview(self.iconView)
             
-            self.abbreviationView.snp.makeConstraints { (make) in
-                make.height.width.equalTo(self.iconSize)
+            self.iconContainerView.snp.makeConstraints { (make) in
                 make.centerX.equalToSuperview()
+                make.top.equalToSuperview()
+                make.height.width.equalTo(self.iconSize)
+            }
+            
+            self.abbreviationView.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
             }
             self.abbreviationLabel.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
             self.iconView.snp.makeConstraints { (make) in
-                make.height.width.equalTo(self.iconSize)
-                make.centerX.equalToSuperview()
-            }
-            self.labelsStackView.snp.remakeConstraints { (make) in
                 make.edges.equalToSuperview()
+            }
+            
+            self.balanceLabel.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                make.top.equalTo(self.iconContainerView.snp.bottom).offset(10.0)
+            }
+            
+            self.rateLabel.snp.makeConstraints { (make) in
+                make.leading.trailing.equalToSuperview()
+                make.top.equalTo(self.balanceLabel.snp.bottom).offset(5.0)
             }
         }
         

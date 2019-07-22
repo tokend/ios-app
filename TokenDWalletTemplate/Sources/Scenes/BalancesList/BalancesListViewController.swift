@@ -9,6 +9,7 @@ public protocol BalancesListDisplayLogic: class {
     func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel)
     func displayPieChartEntriesChanged(viewModel: Event.PieChartEntriesChanged.ViewModel)
     func displayPieChartBalanceSelected(viewModel: Event.PieChartBalanceSelected.ViewModel)
+    func displayError(viewModel: Event.Error.ViewModel)
 }
 
 extension BalancesList {
@@ -23,8 +24,20 @@ extension BalancesList {
         // MARK: - Private properties
         
         private let tableView: UITableView = UITableView(frame: .zero, style: .grouped)
+        private let refreshControl: UIRefreshControl = UIRefreshControl()
         
-        private var sections: [Model.SectionViewModel] = []
+        private var sections: [Model.SectionViewModel] = [] {
+            didSet {
+                if self.refreshControl.isRefreshing {
+                    self.refreshControl.endRefreshing()
+                }
+                UIView.animate(
+                    withDuration: 0.5,
+                    animations: {
+                        self.tableView.reloadData()
+                })
+            }
+        }
         
         private let disposeBag: DisposeBag = DisposeBag()
         
@@ -58,6 +71,7 @@ extension BalancesList {
             
             self.setupView()
             self.setupTableView()
+            self.setupRefreshControl()
             self.setupLayout()
             
             let request = Event.ViewDidLoad.Request()
@@ -122,6 +136,9 @@ extension BalancesList {
             self.tableView.dataSource = self
             self.tableView.separatorStyle = .none
             self.tableView.sectionFooterHeight = 0.0
+            self.tableView.estimatedRowHeight = UITableView.automaticDimension
+            self.tableView.rowHeight = UITableView.automaticDimension
+            
             self.tableView
                 .rx
                 .contentOffset
@@ -133,8 +150,23 @@ extension BalancesList {
                 .disposed(by: self.disposeBag)
         }
         
+        private func setupRefreshControl() {
+            self.refreshControl
+                .rx
+                .controlEvent(.valueChanged)
+                .asDriver()
+                .drive(onNext: { [weak self] (_) in
+                    let request = Event.RefreshInitiated.Request()
+                    self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
+                        businessLogic.onRefreshInitiated(request: request)
+                    })
+                })
+                .disposed(by: self.disposeBag)
+        }
+        
         private func setupLayout() {
             self.view.addSubview(self.tableView)
+            self.tableView.addSubview(self.refreshControl)
             
             self.tableView.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
@@ -147,7 +179,6 @@ extension BalancesList.ViewController: BalancesList.DisplayLogic {
     
     public func displaySectionsUpdated(viewModel: Event.SectionsUpdated.ViewModel) {
         self.sections = viewModel.sections
-        self.tableView.reloadData()
     }
     
     public func displayLoadingStatusDidChange(viewModel: Event.LoadingStatusDidChange.ViewModel) {
@@ -182,6 +213,13 @@ extension BalancesList.ViewController: BalancesList.DisplayLogic {
         udpdatedChartViewModel.legendCells = viewModel.legendCells
         udpdatedChartViewModel.setup(cell: chartCell)
         self.sections[indexPath.section].cells[indexPath.row] = udpdatedChartViewModel
+    }
+    
+    public func displayError(viewModel: Event.Error.ViewModel) {
+        if self.refreshControl.isRefreshing {
+            self.refreshControl.endRefreshing()
+        }
+        self.routing?.showError(viewModel.error)
     }
 }
 
@@ -218,5 +256,36 @@ extension BalancesList.ViewController: UITableViewDataSource {
             }
         }
         return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let model = self.sections[indexPath.section].cells[indexPath.row]
+        
+        if model as? BalancesList.HeaderCell.ViewModel != nil {
+            return 30.0
+        } else if model as? BalancesList.BalanceCell.ViewModel != nil {
+            return 90.0
+        } else if model as? BalancesList.LegendCell.ViewModel != nil {
+            return 44.0
+        } else if model as? BalancesList.PieChartCell.ViewModel != nil {
+            return 240.0
+        } else {
+            return 0.0
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let model = self.sections[indexPath.section].cells[indexPath.row]
+        if model as? BalancesList.HeaderCell.ViewModel != nil {
+            return 30.0
+        } else if model as? BalancesList.BalanceCell.ViewModel != nil {
+            return 90.0
+        } else if model as? BalancesList.LegendCell.ViewModel != nil {
+            return 44.0
+        } else if model as? BalancesList.PieChartCell.ViewModel != nil {
+            return 240.0
+        } else {
+            return 0.0
+        }
     }
 }

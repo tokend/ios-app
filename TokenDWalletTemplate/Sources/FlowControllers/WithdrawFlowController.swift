@@ -252,6 +252,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
         
         let sectionsProvider = ConfirmationScene.WithdrawConfirmationSectionsProvider(
             withdrawModel: withdrawModel,
+            reposController: self.reposController,
             transactionSender: self.managersController.transactionSender,
             networkInfoFetcher: self.reposController.networkInfoRepo,
             amountFormatter: amountFormatter,
