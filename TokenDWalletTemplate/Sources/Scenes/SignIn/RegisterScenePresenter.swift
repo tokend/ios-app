@@ -45,7 +45,7 @@ extension RegisterScene {
                 
             case .signIn, .localAuth:
                 title = Localized(.sign_in)
-                actionTitle = Localized(.sign_in)
+                actionTitle = Localized(.signin)
                 
             case .signUp:
                 title = Localized(.sign_up)

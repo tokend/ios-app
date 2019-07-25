@@ -52,6 +52,7 @@ extension ConfirmationScene {
         
         // MARK: - Private
         
+        // swiftlint:disable function_body_length
         private func confirmationCreateOffer(
             networkInfo: NetworkInfoModel,
             completion: @escaping (ConfirmationResult) -> Void
@@ -154,7 +155,6 @@ extension ConfirmationScene {
                         value: strongSelf.createOfferModel.fee,
                         precision: networkInfo.precision
                     )
-                    
                     let operation = ManageOfferOp(
                         baseBalance: baseBalanceId,
                         quoteBalance: quoteBalanceId,
@@ -166,7 +166,6 @@ extension ConfirmationScene {
                         orderBookID: 0,
                         ext: .emptyVersion()
                     )
-                    
                     let transactionBuilder = TransactionBuilder(
                         networkParams: networkInfo.networkParams,
                         sourceAccountId: strongSelf.userDataProvider.accountId,
@@ -202,6 +201,7 @@ extension ConfirmationScene {
                     }
             })
         }
+        // swiftlint:enable function_body_length
         
         enum BalanceForAssetResult {
             case balance(TokenDSDK.BalanceDetails)

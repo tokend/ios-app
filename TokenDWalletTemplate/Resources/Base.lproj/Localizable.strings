@@ -439,7 +439,7 @@
 "sign_out" = "Sign Out";
 "sign_out_and_erase" = "Sign Out and Erase";
 "sign_up" = "Sign up";
-"signin" = "SignIn";
+"signin" = "Sign In";
 "signing_in" = "Signing In";
 "since_last_period" = "since last $(period)";
 "since_last_period_replace_period" = "period";

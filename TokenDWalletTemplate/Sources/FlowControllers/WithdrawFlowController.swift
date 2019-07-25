@@ -373,7 +373,7 @@ class WithdrawFlowController: BaseSignedInFlowController {
         vc.navigationItem.leftBarButtonItem = closeBarItem
         navController.setViewControllers([vc], animated: false)
         
-        navController.present(
+        self.navigationController?.present(
             navController.getViewController(),
             animated: true,
             completion: nil
