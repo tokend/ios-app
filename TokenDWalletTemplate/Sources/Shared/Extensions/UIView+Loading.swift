@@ -22,7 +22,7 @@ extension UIView {
     }
     
     private static func createReusableIndicator() -> UIActivityIndicatorView {
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        let activityIndicator = UIActivityIndicatorView(style: .gray)
         activityIndicator.setContentHuggingPriority(.defaultLow, for: .vertical)
         activityIndicator.setContentHuggingPriority(.defaultLow, for: .horizontal)
         activityIndicator.setContentCompressionResistancePriority(.defaultLow, for: .vertical)

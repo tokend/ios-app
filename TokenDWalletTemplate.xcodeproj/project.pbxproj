@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		42EF9CF1F00518DF6D89067B /* libPods-TokenDWalletTemplate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDCE20DA0CB1B1ADFA5C83C1 /* libPods-TokenDWalletTemplate.a */; };
 		710D30AA2114A3B1007BCCB0 /* Hashable+Iterate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710D30A92114A3B1007BCCB0 /* Hashable+Iterate.swift */; };
 		710D30B62115D10F007BCCB0 /* TradeFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710D30B52115D10F007BCCB0 /* TradeFlowController.swift */; };
 		710E86042105E1AB007204D4 /* ReceiveAddressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710E85F42105E1AA007204D4 /* ReceiveAddressModels.swift */; };
@@ -236,6 +235,7 @@
 		7FF6761A20BDA0910074E9A8 /* RegisterSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF6761420BDA0910074E9A8 /* RegisterSceneConfigurator.swift */; };
 		7FF6761E20BDA10C0074E9A8 /* String+QueueLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF6761D20BDA10C0074E9A8 /* String+QueueLabel.swift */; };
 		7FF6762520BDBBF40074E9A8 /* RootNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF6762420BDBBF40074E9A8 /* RootNavigationViewController.swift */; };
+		9BB3EDF83425351085403DB8 /* libPods-TokenDWalletTemplate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A96BD7E14E8B2857D3F54E4 /* libPods-TokenDWalletTemplate.a */; };
 		DB0E51D02164E99F00DDA88C /* SaleInfoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C32164E99E00DDA88C /* SaleInfoPresenter.swift */; };
 		DB0E51D12164E99F00DDA88C /* SaleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C42164E99E00DDA88C /* SaleInfoViewController.swift */; };
 		DB0E51D22164E99F00DDA88C /* SaleInfoConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0E51C52164E99E00DDA88C /* SaleInfoConfigurator.swift */; };
@@ -425,7 +425,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5C3AC0F1FE3B7A01F25AFB50 /* Pods-TokenDWalletTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TokenDWalletTemplate.release.xcconfig"; path = "Pods/Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate.release.xcconfig"; sourceTree = "<group>"; };
+		180ECADEBD4C4E07A6F2A6F2 /* Pods-TokenDWalletTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TokenDWalletTemplate.release.xcconfig"; path = "Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate.release.xcconfig"; sourceTree = "<group>"; };
+		2A96BD7E14E8B2857D3F54E4 /* libPods-TokenDWalletTemplate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TokenDWalletTemplate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		710D30A92114A3B1007BCCB0 /* Hashable+Iterate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Hashable+Iterate.swift"; sourceTree = "<group>"; };
 		710D30B52115D10F007BCCB0 /* TradeFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeFlowController.swift; sourceTree = "<group>"; };
 		710E85F42105E1AA007204D4 /* ReceiveAddressModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveAddressModels.swift; sourceTree = "<group>"; };
@@ -660,8 +661,6 @@
 		7FF6761420BDA0910074E9A8 /* RegisterSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSceneConfigurator.swift; sourceTree = "<group>"; };
 		7FF6761D20BDA10C0074E9A8 /* String+QueueLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+QueueLabel.swift"; sourceTree = "<group>"; };
 		7FF6762420BDBBF40074E9A8 /* RootNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationViewController.swift; sourceTree = "<group>"; };
-		BBC9C98D335EF6644C02EBDF /* Pods-TokenDWalletTemplate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TokenDWalletTemplate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate.debug.xcconfig"; sourceTree = "<group>"; };
-		BDCE20DA0CB1B1ADFA5C83C1 /* libPods-TokenDWalletTemplate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TokenDWalletTemplate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB0E51C22164E99E00DDA88C /* SaleInfoModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoModels.swift; sourceTree = "<group>"; };
 		DB0E51C32164E99E00DDA88C /* SaleInfoPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoPresenter.swift; sourceTree = "<group>"; };
 		DB0E51C42164E99E00DDA88C /* SaleInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaleInfoViewController.swift; sourceTree = "<group>"; };
@@ -678,6 +677,7 @@
 		DB1B2F30216E25A40081EB1D /* TransactionsListSalesFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSalesFetcher.swift; sourceTree = "<group>"; };
 		DB33ECA0216672D1006D220B /* SaleInfoEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleInfoEmptyView.swift; sourceTree = "<group>"; };
 		DB4512AA216E34FD00922DA7 /* TransactionDetailsInvestmentSectionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailsInvestmentSectionsProvider.swift; sourceTree = "<group>"; };
+		E6F9BF8EDB9A08349F6E27EA /* Pods-TokenDWalletTemplate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TokenDWalletTemplate.debug.xcconfig"; path = "Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate.debug.xcconfig"; sourceTree = "<group>"; };
 		E9063E8220E7C55000A5B343 /* TransactionsListSceneRateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListSceneRateProviderProtocol.swift; sourceTree = "<group>"; };
 		E9063E8720F6381C00A5B343 /* FlexibleHeaderContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexibleHeaderContainerViewController.swift; sourceTree = "<group>"; };
 		E9063E8920F63FEC00A5B343 /* UIColor+Interpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Interpolation.swift"; sourceTree = "<group>"; };
@@ -853,13 +853,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42EF9CF1F00518DF6D89067B /* libPods-TokenDWalletTemplate.a in Frameworks */,
+				9BB3EDF83425351085403DB8 /* libPods-TokenDWalletTemplate.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A20B94C7F03C0E8B84FBB2F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A96BD7E14E8B2857D3F54E4 /* libPods-TokenDWalletTemplate.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		710E85F32105E1AA007204D4 /* ReceiveAddress */ = {
 			isa = PBXGroup;
 			children = (
@@ -904,14 +912,14 @@
 				710E862F2105FA94007204D4 /* BXFInteractiveLabel.swift */,
 				710E862E2105FA94007204D4 /* BXFLabelWithInsets.swift */,
 				710E86312105FA95007204D4 /* BXFScrollViewWithKeyboardResponder.swift */,
-				710E86132105ECAD007204D4 /* BXFStaticTableViewInputSection */,
-				710E86162105ECAD007204D4 /* BXFStaticTableViewSectionCell.swift */,
-				710E86172105ECAD007204D4 /* BXFStaticTableViewUtils.swift */,
 				710E861A2105ECAD007204D4 /* BXFStaticTableView.swift */,
-				710E861B2105ECAD007204D4 /* BXFStaticTableViewButtonCell */,
-				710E861F2105ECAD007204D4 /* BXFStaticTableViewSectionHeaderFooterView.swift */,
-				710E86202105ECAD007204D4 /* BXFStaticTableViewSection.swift */,
 				710E86212105ECAD007204D4 /* BXFStaticTableViewInfoSection.swift */,
+				710E86202105ECAD007204D4 /* BXFStaticTableViewSection.swift */,
+				710E86162105ECAD007204D4 /* BXFStaticTableViewSectionCell.swift */,
+				710E861F2105ECAD007204D4 /* BXFStaticTableViewSectionHeaderFooterView.swift */,
+				710E86172105ECAD007204D4 /* BXFStaticTableViewUtils.swift */,
+				710E861B2105ECAD007204D4 /* BXFStaticTableViewButtonCell */,
+				710E86132105ECAD007204D4 /* BXFStaticTableViewInputSection */,
 			);
 			path = BXFStaticTableView;
 			sourceTree = "<group>";
@@ -1088,6 +1096,15 @@
 				71A9B74A2136ABBF003CCC34 /* QRCodeReaderView.swift */,
 			);
 			path = QR;
+			sourceTree = "<group>";
+		};
+		78CDA2364921E0F335FD9094 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E6F9BF8EDB9A08349F6E27EA /* Pods-TokenDWalletTemplate.debug.xcconfig */,
+				180ECADEBD4C4E07A6F2A6F2 /* Pods-TokenDWalletTemplate.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		7F0F36B020E2695200E906D5 /* WalletRecovery */ = {
@@ -1513,8 +1530,8 @@
 				7FF675F520BD98630074E9A8 /* TokenDWalletTemplate */,
 				7FF675E120BD95630074E9A8 /* Products */,
 				E92F1BDC2139B72400D4695E /* Recovered References */,
-				E4546F63AF50CE7BD9D84F4D /* Pods */,
-				C6A48DD405343D04EA3ABE46 /* Frameworks */,
+				78CDA2364921E0F335FD9094 /* Pods */,
+				1A20B94C7F03C0E8B84FBB2F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1683,14 +1700,6 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		C6A48DD405343D04EA3ABE46 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BDCE20DA0CB1B1ADFA5C83C1 /* libPods-TokenDWalletTemplate.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		DB0E51C12164E99E00DDA88C /* SaleInfo */ = {
 			isa = PBXGroup;
 			children = (
@@ -1724,15 +1733,6 @@
 				DB0E51CE2164E99E00DDA88C /* SaleInfoTokenContent.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		E4546F63AF50CE7BD9D84F4D /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				BBC9C98D335EF6644C02EBDF /* Pods-TokenDWalletTemplate.debug.xcconfig */,
-				5C3AC0F1FE3B7A01F25AFB50 /* Pods-TokenDWalletTemplate.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		E9063E9A20F669D300A5B343 /* BalanceHeaderWithPicker */ = {
@@ -2222,7 +2222,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7FF675F220BD95640074E9A8 /* Build configuration list for PBXNativeTarget "TokenDWalletTemplate" */;
 			buildPhases = (
-				B2960697ED1E87EAC2D408AB /* [CP] Check Pods Manifest.lock */,
+				EBF6119A60D7683B2C6BAC95 /* [CP] Check Pods Manifest.lock */,
 				7FF675DC20BD95630074E9A8 /* Sources */,
 				7FF675DD20BD95630074E9A8 /* Frameworks */,
 				7FF675DE20BD95630074E9A8 /* Resources */,
@@ -2304,7 +2304,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		B2960697ED1E87EAC2D408AB /* [CP] Check Pods Manifest.lock */ = {
+		EBF6119A60D7683B2C6BAC95 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2865,13 +2865,13 @@
 		};
 		7FF675F320BD95640074E9A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BBC9C98D335EF6644C02EBDF /* Pods-TokenDWalletTemplate.debug.xcconfig */;
+			baseConfigurationReference = E6F9BF8EDB9A08349F6E27EA /* Pods-TokenDWalletTemplate.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TokenDWalletTemplate/Resources/TokenDWalletTemplate.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = TW4HA36GCB;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/TokenDWalletTemplate/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -2882,20 +2882,20 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.tokend.wallet.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		7FF675F420BD95640074E9A8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5C3AC0F1FE3B7A01F25AFB50 /* Pods-TokenDWalletTemplate.release.xcconfig */;
+			baseConfigurationReference = 180ECADEBD4C4E07A6F2A6F2 /* Pods-TokenDWalletTemplate.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TokenDWalletTemplate/Resources/TokenDWalletTemplate.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = TW4HA36GCB;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/TokenDWalletTemplate/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -2906,7 +2906,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.tokend.wallet.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

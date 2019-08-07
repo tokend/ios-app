@@ -9,7 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
         ) -> Bool {
         
         self.rootNavigationController = RootNavigationViewController()
@@ -38,8 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
         continue userActivity: NSUserActivity,
-        restorationHandler: @escaping ([Any]?) -> Void
-        ) -> Bool {
+        restorationHandler: @escaping ([UIUserActivityRestoring]?
+        ) -> Void) -> Bool {
         
         return self.appController.applicationContinue(
             userActivity: userActivity,

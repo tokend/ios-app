@@ -56,6 +56,7 @@ class SalesRepo {
             SaleResponse.self,
             limit: nil,
             cursor: nil,
+            page: nil,
             owner: nil,
             name: nil,
             baseAsset: nil,

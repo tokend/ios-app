@@ -38,8 +38,8 @@ class LaunchFlowController: BaseFlowController {
         )
         
         self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
+            NSAttributedString.Key.font: Theme.Fonts.navigationBarBoldFont,
+            NSAttributedString.Key.foregroundColor: Theme.Colors.textOnMainColor
         ]
     }
     
@@ -56,11 +56,14 @@ class LaunchFlowController: BaseFlowController {
     // MARK: - Public
     
     class func canHandle(
-        launchOptions: [UIApplicationLaunchOptionsKey: Any],
+        launchOptions: [UIApplication.LaunchOptionsKey: Any],
         userDataManager: UserDataManagerProtocol
         ) -> URL? {
         
-        if let userActivityInfo = launchOptions[UIApplicationLaunchOptionsKey.userActivityDictionary] as? [String: Any],
+        if
+            let userActivityInfo = launchOptions[
+                UIApplication.LaunchOptionsKey.userActivityDictionary
+                ] as? [String: Any],
             let activity = userActivityInfo["UIApplicationLaunchOptionsUserActivityKey"] as? NSUserActivity {
             
             if activity.activityType == NSUserActivityTypeBrowsingWeb, let url = activity.webpageURL {

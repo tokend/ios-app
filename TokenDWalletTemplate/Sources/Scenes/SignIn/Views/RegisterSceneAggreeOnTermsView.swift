@@ -94,8 +94,8 @@ extension RegisterScene.View {
             let firstPart = NSAttributedString(
                 string: "I agree on the ",
                 attributes: [
-                    NSAttributedStringKey.foregroundColor: Theme.Colors.textOnContainerBackgroundColor,
-                    NSAttributedStringKey.font: Theme.Fonts.plainTextFont
+                    NSAttributedString.Key.foregroundColor: Theme.Colors.textOnContainerBackgroundColor,
+                    NSAttributedString.Key.font: Theme.Fonts.plainTextFont
                 ]
             )
             title.append(firstPart)
@@ -103,9 +103,9 @@ extension RegisterScene.View {
             let secondPart = NSAttributedString(
                 string: "Terms of Service",
                 attributes: [
-                    NSAttributedStringKey.foregroundColor: Theme.Colors.actionButtonColor,
-                    NSAttributedStringKey.font: Theme.Fonts.plainTextFont,
-                    NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue
+                    NSAttributedString.Key.foregroundColor: Theme.Colors.actionButtonColor,
+                    NSAttributedString.Key.font: Theme.Fonts.plainTextFont,
+                    NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
                 ]
             )
             title.append(secondPart)

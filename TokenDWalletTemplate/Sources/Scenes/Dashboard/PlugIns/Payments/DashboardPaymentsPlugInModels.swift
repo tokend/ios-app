@@ -125,8 +125,8 @@ extension DashboardPaymentsPlugIn.Event.BalancesDidChange.ViewModel {
 extension DashboardPaymentsPlugIn.Model.Balance: Hashable {
     typealias SelfType = DashboardPaymentsPlugIn.Model.Balance
     
-    var hashValue: Int {
-        return self.balanceId?.hashValue ?? balance.asset.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.balanceId?.hashValue ?? balance.asset.hashValue)
     }
     
     static func == (lhs: SelfType, rhs: SelfType) -> Bool {

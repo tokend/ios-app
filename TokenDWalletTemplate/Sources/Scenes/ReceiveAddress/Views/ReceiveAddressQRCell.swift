@@ -68,7 +68,7 @@ extension ReceiveAddress {
         public func setQRImage(_ qr: UIImage, animated: Bool) {
             self.qrImageView.image = qr
             if self.qrImageView.alpha != 1 {
-                let duration: TimeInterval = animated ? TimeInterval(UINavigationControllerHideShowBarDuration) : 0
+                let duration: TimeInterval = animated ? TimeInterval(UINavigationController.hideShowBarDuration) : 0
                 UIView.animate(withDuration: duration) {
                     self.qrImageView.alpha = 1
                 }
@@ -134,7 +134,7 @@ extension ReceiveAddress {
             ) {
             
             UIView.animate(
-                withDuration: TimeInterval(UINavigationControllerHideShowBarDuration),
+                withDuration: TimeInterval(UINavigationController.hideShowBarDuration),
                 delay: 0,
                 options: [show ? .curveEaseIn : .curveEaseOut],
                 animations: {

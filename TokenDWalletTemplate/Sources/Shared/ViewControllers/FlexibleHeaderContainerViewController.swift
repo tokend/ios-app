@@ -126,10 +126,10 @@ class FlexibleHeaderContainerViewController: UIViewController {
             return
         }
         self.view.addSubview(headerView.view)
-        self.view.sendSubview(toBack: headerView.view)
+        self.view.sendSubviewToBack(headerView.view)
         
         if let view = self.contentViewController?.viewController.view {
-            self.view.sendSubview(toBack: view)
+            self.view.sendSubviewToBack(view)
         }
         
         self.updateHeaderConstraints(headerView.maximumHeight)
@@ -152,7 +152,7 @@ class FlexibleHeaderContainerViewController: UIViewController {
             return
         }
         self.addChildViewController(controller, to: self.view)
-        self.view.sendSubview(toBack: controller.view)
+        self.view.sendSubviewToBack(controller.view)
     }
     
     private func setupTitleLabel() {

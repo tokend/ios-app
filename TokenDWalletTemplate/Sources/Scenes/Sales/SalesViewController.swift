@@ -101,7 +101,7 @@ extension Sales {
             self.tableView.dataSource = self
             self.tableView.delegate = self
             self.tableView.separatorColor = UIColor.clear
-            self.tableView.rowHeight = UITableViewAutomaticDimension
+            self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 380.0
             self.tableView.refreshControl = self.refreshControl
         }

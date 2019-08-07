@@ -14,7 +14,7 @@ protocol NavigationControllerProtocol: RootContentProtocol {
     func showDialog(
         title: String?,
         message: String?,
-        style: UIAlertControllerStyle,
+        style: UIAlertController.Style,
         options: [String],
         onSelected: @escaping (_ selectedIndex: Int) -> Void,
         onCanceled: (() -> Void)?
@@ -34,7 +34,7 @@ class NavigationController: UINavigationController {
     // MARK: - Private properties
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let activity = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        let activity = UIActivityIndicatorView(style: .whiteLarge)
         return activity
     }()
     
@@ -137,7 +137,7 @@ extension NavigationController: NavigationControllerProtocol {
     func showDialog(
         title: String?,
         message: String?,
-        style: UIAlertControllerStyle,
+        style: UIAlertController.Style,
         options: [String],
         onSelected: @escaping (_ selectedIndex: Int) -> Void,
         onCanceled: (() -> Void)?

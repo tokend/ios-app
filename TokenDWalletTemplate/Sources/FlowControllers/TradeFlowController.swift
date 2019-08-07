@@ -68,8 +68,8 @@ class TradeFlowController: BaseSignedInFlowController {
         vc.navigationItem.title = "Trade"
         
         self.navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
+            NSAttributedString.Key.font: Theme.Fonts.navigationBarBoldFont,
+            NSAttributedString.Key.foregroundColor: Theme.Colors.textOnMainColor
         ]
         
         self.navigationController.setViewControllers([vc], animated: false)

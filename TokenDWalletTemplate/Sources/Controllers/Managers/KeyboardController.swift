@@ -1,8 +1,8 @@
 import UIKit
 
-private extension UIViewAnimationCurve {
-    var animationOptions: UIViewAnimationOptions {
-        return UIViewAnimationOptions(rawValue: UInt(self.rawValue))
+private extension UIView.AnimationCurve {
+    var animationOptions: UIView.AnimationOptions {
+        return UIView.AnimationOptions(rawValue: UInt(self.rawValue))
     }
 }
 
@@ -26,7 +26,7 @@ extension UIView {
 struct KeyboardAttributes {
     let rectInWindow: CGRect
     let animationDuration: TimeInterval
-    let animationCurve: UIViewAnimationCurve
+    let animationCurve: UIView.AnimationCurve
     
     func heightIn(view: UIView) -> CGFloat {
         let convertedRect = view.convert(self.rectInWindow, from: view.window)
@@ -109,23 +109,23 @@ class KeyboardController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillChange(notification:)),
-            name: .UIKeyboardWillChangeFrame,
+            name: UIResponder.keyboardWillChangeFrameNotification,
             object: nil
         )
     }
     
     private func handleKeyboardAttributes(notification: Notification) {
         guard let userInfo = notification.userInfo,
-            let keyboardRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+            let keyboardRect = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
             else {
                 return
         }
         
-        let durationNumber = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber
+        let durationNumber = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber
         let duration: TimeInterval = durationNumber?.doubleValue ?? 0.0
-        let curveValue = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue
-        let curveRawValue: UIViewAnimationCurve.RawValue = curveValue ?? UIViewAnimationCurve.linear.rawValue
-        let curve = UIViewAnimationCurve(rawValue: curveRawValue) ?? UIViewAnimationCurve.linear
+        let curveValue = (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue
+        let curveRawValue: UIView.AnimationCurve.RawValue = curveValue ?? UIView.AnimationCurve.linear.rawValue
+        let curve = UIView.AnimationCurve(rawValue: curveRawValue) ?? UIView.AnimationCurve.linear
         
         let attributes = KeyboardAttributes(
             rectInWindow: keyboardRect,

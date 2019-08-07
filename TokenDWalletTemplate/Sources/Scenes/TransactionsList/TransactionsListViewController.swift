@@ -134,7 +134,7 @@ extension TransactionsListScene {
             self.tableView.delegate = self
             self.tableView.dataSource = self
             self.tableView.register(classes: [TransactionsListTableViewCell.Model.self])
-            self.tableView.rowHeight = UITableViewAutomaticDimension
+            self.tableView.rowHeight = UITableView.automaticDimension
             self.tableView.estimatedRowHeight = 85
             self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
             self.tableView.refreshControl = self.refreshControl

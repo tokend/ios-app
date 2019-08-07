@@ -22,7 +22,7 @@ class SignedInFlowController: BaseSignedInFlowController {
     private var localAuthFlow: LocalAuthFlowController?
     private var timeoutSubscribeToken: TimerUIApplication.SubscribeToken = TimerUIApplication.SubscribeTokenInvalid
     private var backgroundTimer: Timer?
-    private var backgroundToken: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var backgroundToken: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
     
     // MARK: - Callbacks
     
@@ -49,7 +49,7 @@ class SignedInFlowController: BaseSignedInFlowController {
         SideMenuController.preferences.drawing.menuButtonImage = UIImage(named: "Menu icon")
         SideMenuController.preferences.drawing.sidePanelPosition = .underCenterPanelLeft
         SideMenuController.preferences.drawing.sidePanelWidth = 300
-        SideMenuController.preferences.drawing.menuButtonSize = 35
+        SideMenuController.preferences.drawing.menuButtonWidth  = 35
         SideMenuController.preferences.drawing.centerPanelShadow = true
         SideMenuController.preferences.animating.statusBarBehaviour = .horizontalPan
         SideMenuController.preferences.animating.transitionAnimator = nil
@@ -438,8 +438,8 @@ class SignedInFlowController: BaseSignedInFlowController {
         )
         
         navigationController.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: Theme.Fonts.navigationBarBoldFont,
-            NSAttributedStringKey.foregroundColor: Theme.Colors.textOnMainColor
+            NSAttributedString.Key.font: Theme.Fonts.navigationBarBoldFont,
+            NSAttributedString.Key.foregroundColor: Theme.Colors.textOnMainColor
         ]
         
         viewController.navigationItem.title = "Deposit"
@@ -514,7 +514,7 @@ class SignedInFlowController: BaseSignedInFlowController {
         self.backgroundTimer?.invalidate()
         self.backgroundTimer = nil
         UIApplication.shared.endBackgroundTask(self.backgroundToken)
-        self.backgroundToken = UIBackgroundTaskInvalid
+        self.backgroundToken = UIBackgroundTaskIdentifier.invalid
     }
     
     private func checkIsAuthorized() -> Bool {
