@@ -66,7 +66,7 @@ extension RegisterScene {
             self.sceneModel = Model.SceneModel(
                 state: .signIn,
                 fields: [serverField, emailField, passwordField],
-                subActions: [.signUp, .recovery],
+                subActions: [.signUp],
                 termsUrl: self.sceneModel.termsUrl
             )
         }
@@ -117,7 +117,7 @@ extension RegisterScene {
             self.sceneModel = Model.SceneModel(
                 state: .signIn,
                 fields: [emailField, passwordField],
-                subActions: [.recovery, .signOut],
+                subActions: [.signOut],
                 termsUrl: self.sceneModel.termsUrl
             )
         }
@@ -297,7 +297,7 @@ extension RegisterScene {
                         self?.presenter.presentSignAction(response: .failed(.signUpRequestError(error)))
                         
                     case .succeeded(let model):
-                        self?.presenter.presentSignAction(response: .showRecoverySeed(model: model))
+                        self?.presenter.presentSignAction(response: .succeededSignUp(model: model))
                     }
             })
         }

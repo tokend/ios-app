@@ -115,12 +115,6 @@
 		7F7187102137F74300F5C0BD /* KDFParamsSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71870F2137F74300F5C0BD /* KDFParamsSerializable.swift */; };
 		7F7187122138035A00F5C0BD /* SettingsLoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7187112138035A00F5C0BD /* SettingsLoadingCell.swift */; };
 		7F71871321383FF000F5C0BD /* ReceiveAddressShareUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7182B0532107403A00A88984 /* ReceiveAddressShareUtil.swift */; };
-		7F71871B2138471D00F5C0BD /* RecoverySeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7187152138471D00F5C0BD /* RecoverySeedPresenter.swift */; };
-		7F71871C2138471D00F5C0BD /* RecoverySeedRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7187162138471D00F5C0BD /* RecoverySeedRouting.swift */; };
-		7F71871D2138471D00F5C0BD /* RecoverySeedModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7187172138471D00F5C0BD /* RecoverySeedModels.swift */; };
-		7F71871E2138471D00F5C0BD /* RecoverySeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7187182138471D00F5C0BD /* RecoverySeedViewController.swift */; };
-		7F71871F2138471D00F5C0BD /* RecoverySeedInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7187192138471D00F5C0BD /* RecoverySeedInteractor.swift */; };
-		7F7187202138471D00F5C0BD /* RecoverySeedConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71871A2138471D00F5C0BD /* RecoverySeedConfigurator.swift */; };
 		7F73396521B14DDD0007B5A1 /* ContactEmailPickerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F73396421B14DDD0007B5A1 /* ContactEmailPickerHandler.swift */; };
 		7F7495F4225CF9C00065EE8E /* TradesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7495EE225CF9C00065EE8E /* TradesListPresenter.swift */; };
 		7F7495F5225CF9C00065EE8E /* TradesListRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7495EF225CF9C00065EE8E /* TradesListRouting.swift */; };
@@ -453,7 +447,6 @@
 		DBB565A321F789820066B5E5 /* String+Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB565A221F789820066B5E5 /* String+Index.swift */; };
 		DBED51CF2280360D0040632E /* Array+IndexOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51CE2280360D0040632E /* Array+IndexOf.swift */; };
 		DBED51D12280835B0040632E /* SendPaymentDestinationEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */; };
-		DBED51E22285C6600040632E /* RecoverySeedSignUpWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51E12285C65F0040632E /* RecoverySeedSignUpWorker.swift */; };
 		DBED51E522899BA80040632E /* SendPaymentAmountFeeOverviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51E422899BA70040632E /* SendPaymentAmountFeeOverviewer.swift */; };
 		DBED51ED228AE6B50040632E /* SaleInvestPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51E7228AE6B50040632E /* SaleInvestPresenter.swift */; };
 		DBED51EE228AE6B50040632E /* SaleInvestRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBED51E8228AE6B50040632E /* SaleInvestRouting.swift */; };
@@ -730,12 +723,6 @@
 		7F6A8487210A00D700B7FE6B /* ConfirmationSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSceneConfigurator.swift; sourceTree = "<group>"; };
 		7F71870F2137F74300F5C0BD /* KDFParamsSerializable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDFParamsSerializable.swift; sourceTree = "<group>"; };
 		7F7187112138035A00F5C0BD /* SettingsLoadingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsLoadingCell.swift; sourceTree = "<group>"; };
-		7F7187152138471D00F5C0BD /* RecoverySeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedPresenter.swift; sourceTree = "<group>"; };
-		7F7187162138471D00F5C0BD /* RecoverySeedRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedRouting.swift; sourceTree = "<group>"; };
-		7F7187172138471D00F5C0BD /* RecoverySeedModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedModels.swift; sourceTree = "<group>"; };
-		7F7187182138471D00F5C0BD /* RecoverySeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedViewController.swift; sourceTree = "<group>"; };
-		7F7187192138471D00F5C0BD /* RecoverySeedInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedInteractor.swift; sourceTree = "<group>"; };
-		7F71871A2138471D00F5C0BD /* RecoverySeedConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedConfigurator.swift; sourceTree = "<group>"; };
 		7F73396421B14DDD0007B5A1 /* ContactEmailPickerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEmailPickerHandler.swift; sourceTree = "<group>"; };
 		7F7495EE225CF9C00065EE8E /* TradesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListPresenter.swift; sourceTree = "<group>"; };
 		7F7495EF225CF9C00065EE8E /* TradesListRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradesListRouting.swift; sourceTree = "<group>"; };
@@ -1076,7 +1063,6 @@
 		DBB565A221F789820066B5E5 /* String+Index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Index.swift"; sourceTree = "<group>"; };
 		DBED51CE2280360D0040632E /* Array+IndexOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+IndexOf.swift"; sourceTree = "<group>"; };
 		DBED51D02280835B0040632E /* SendPaymentDestinationEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentDestinationEmptyCell.swift; sourceTree = "<group>"; };
-		DBED51E12285C65F0040632E /* RecoverySeedSignUpWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverySeedSignUpWorker.swift; sourceTree = "<group>"; };
 		DBED51E422899BA70040632E /* SendPaymentAmountFeeOverviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentAmountFeeOverviewer.swift; sourceTree = "<group>"; };
 		DBED51E7228AE6B50040632E /* SaleInvestPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleInvestPresenter.swift; sourceTree = "<group>"; };
 		DBED51E8228AE6B50040632E /* SaleInvestRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleInvestRouting.swift; sourceTree = "<group>"; };
@@ -1599,20 +1585,6 @@
 			path = Workers;
 			sourceTree = "<group>";
 		};
-		7F7187142138470100F5C0BD /* RecoverySeed */ = {
-			isa = PBXGroup;
-			children = (
-				7F71871A2138471D00F5C0BD /* RecoverySeedConfigurator.swift */,
-				7F7187192138471D00F5C0BD /* RecoverySeedInteractor.swift */,
-				7F7187172138471D00F5C0BD /* RecoverySeedModels.swift */,
-				7F7187152138471D00F5C0BD /* RecoverySeedPresenter.swift */,
-				7F7187162138471D00F5C0BD /* RecoverySeedRouting.swift */,
-				7F7187182138471D00F5C0BD /* RecoverySeedViewController.swift */,
-				DBED51E02285C63A0040632E /* Workers */,
-			);
-			path = RecoverySeed;
-			sourceTree = "<group>";
-		};
 		7F7495ED225CF9740065EE8E /* TradesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -2116,7 +2088,6 @@
 				7FA0114621C964F900CA5586 /* MarkdownViewer */,
 				DB7208D022BB763100ED116A /* Polls */,
 				710E85F32105E1AA007204D4 /* ReceiveAddress */,
-				7F7187142138470100F5C0BD /* RecoverySeed */,
 				7FB4352D228586D000422746 /* SaleDetails */,
 				DBED51E6228AE68E0040632E /* SaleInvest */,
 				7FB434FD2282D2B800422746 /* SaleOverview */,
@@ -2712,14 +2683,6 @@
 				DBB5659E21F771140066B5E5 /* Localizable.strings */,
 			);
 			path = Base.lproj;
-			sourceTree = "<group>";
-		};
-		DBED51E02285C63A0040632E /* Workers */ = {
-			isa = PBXGroup;
-			children = (
-				DBED51E12285C65F0040632E /* RecoverySeedSignUpWorker.swift */,
-			);
-			path = Workers;
 			sourceTree = "<group>";
 		};
 		DBED51E6228AE68E0040632E /* SaleInvest */ = {
@@ -3431,7 +3394,6 @@
 				DB15932F22982BA7008D4128 /* BalancesListAmountFormatter.swift in Sources */,
 				7FF5AE4F215BCC450066A2ED /* WalletRepo.swift in Sources */,
 				E9A5CBFB211DD768009112CA /* DashboardPaymentsPlugInBalancesFetcherProtocol.swift in Sources */,
-				7F71871F2138471D00F5C0BD /* RecoverySeedInteractor.swift in Sources */,
 				DB15938F22AA7804008D4128 /* BalancesListPercentFormatter.swift in Sources */,
 				DB15932D22982103008D4128 /* BalancesListDataProvider.swift in Sources */,
 				E9908EC2210788F600A0EA1C /* BaseSignedInFlowController.swift in Sources */,
@@ -3616,10 +3578,8 @@
 				DB97A42722B0F3BB00BD2E9A /* SaleInvestEnterInvestAmountView.swift in Sources */,
 				DB1AFBAB21C9338300D87D5D /* AuthenticatorAuthRouting.swift in Sources */,
 				71136B0E2134433F00D83DD3 /* TransactionDetailsRouting.swift in Sources */,
-				7F71871C2138471D00F5C0BD /* RecoverySeedRouting.swift in Sources */,
 				E9A5CBDA211B338C009112CA /* DashboardModels.swift in Sources */,
 				DB990C3621E51A0100D041BE /* UpdatePasswordRequestBuilderProtocol.swift in Sources */,
-				DBED51E22285C6600040632E /* RecoverySeedSignUpWorker.swift in Sources */,
 				DBED51EE228AE6B50040632E /* SaleInvestRouting.swift in Sources */,
 				DB593844227095F900C8997C /* SendPaymentDestinationContactsFethcer.swift in Sources */,
 				DB97A42122AE7FB900BD2E9A /* SaleOverviewFundedValueFormatter.swift in Sources */,
@@ -3738,7 +3698,6 @@
 				DB7208E422BB844700ED116A /* PollsPollCell.swift in Sources */,
 				E9A5CBF2211DBCCB009112CA /* DashboardPaymentsPlugInRouting.swift in Sources */,
 				E911320D20C6D0D800A8AC4D /* TokenDetailsPresenter.swift in Sources */,
-				7F71871D2138471D00F5C0BD /* RecoverySeedModels.swift in Sources */,
 				7FF896E721ADACFE001A5D48 /* TokenDetailsTokenColoringProviderProtocol.swift in Sources */,
 				E9BCDD612121F64500EB0DF2 /* DashboardPendingOffersPreviewPlugInViewController.swift in Sources */,
 				E980D85920D1267900C53841 /* DepositSceneRouting.swift in Sources */,
@@ -3762,7 +3721,6 @@
 				7FABEA6920FD08B30005E751 /* ValueFormatter.swift in Sources */,
 				E911321220C6D0D800A8AC4D /* TokenDetailsConfigurator.swift in Sources */,
 				E980D85820D1267900C53841 /* DepositScenePresenter.swift in Sources */,
-				7F71871B2138471D00F5C0BD /* RecoverySeedPresenter.swift in Sources */,
 				7FF6762520BDBBF40074E9A8 /* RootNavigationViewController.swift in Sources */,
 				DB5A3BC921C1593800520604 /* FeeSectionProvider.swift in Sources */,
 				DB7208DC22BB766700ED116A /* PollsConfigurator.swift in Sources */,
@@ -3853,7 +3811,6 @@
 				7F0F36BC20E2696500E906D5 /* WalletRecoveryConfigurator.swift in Sources */,
 				E980D84420CF0AD300C53841 /* TokenDSDK.Asset+Identifier.swift in Sources */,
 				DB71306321CA510700234C12 /* AuthenticatorAuthFlowController.swift in Sources */,
-				7F7187202138471D00F5C0BD /* RecoverySeedConfigurator.swift in Sources */,
 				E9908EEF2110799B00A0EA1C /* BalanceBinderProtocol.swift in Sources */,
 				E91131E720C532AC00A8AC4D /* ExploreTokensModels.swift in Sources */,
 				E911321120C6D0D800A8AC4D /* TokenDetailsInteractor.swift in Sources */,
@@ -3884,7 +3841,6 @@
 				7F967FA42125985A005527EA /* UpdatePasswordViewController.swift in Sources */,
 				E9063E9620F669D000A5B343 /* BalanceHeaderWithPickerModels.swift in Sources */,
 				DB15934422984B55008D4128 /* TabBarRouting.swift in Sources */,
-				7F71871E2138471D00F5C0BD /* RecoverySeedViewController.swift in Sources */,
 				7FB435252283168C00422746 /* TabsContainerRouting.swift in Sources */,
 				DB97A42522B0F37300BD2E9A /* SaleInvestBalancesView.swift in Sources */,
 				7FB435192282D47700422746 /* SaleOverviewConfigurator.swift in Sources */,

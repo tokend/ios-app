@@ -267,10 +267,9 @@ extension RegisterScene {
                     case .failure(let error):
                         completion(.failed(.otherError(error)))
                         
-                    case .success(let email, let recoveryKey, let walletInfo, let walletKDF):
-                        self?.showRecovery(
+                    case .success(let email, _, let walletInfo, let walletKDF):
+                        self?.signUp(
                             email: email,
-                            recoveryKey: recoveryKey,
                             walletInfo: walletInfo,
                             walletKDF: walletKDF,
                             accountNetwork: accountNetwork,
@@ -280,25 +279,74 @@ extension RegisterScene {
             })
         }
         
-        private func showRecovery(
+        private func signUp(
             email: String,
-            recoveryKey: ECDSA.KeyData,
             walletInfo: WalletInfoModel,
             walletKDF: WalletKDFParams,
             accountNetwork: WalletDataSerializable.AccountNetworkModel,
             completion: @escaping (RegisterSceneSignUpResult) -> Void
             ) {
             
-            let recoverySeed = Base32Check.encode(version: .seedEd25519, data: recoveryKey.getSeedData())
-            
-            let model = SignUpModel(
-                email: email,
-                recoverySeed: recoverySeed,
+            self.flowControllerStack.keyServerApi.createWallet(
                 walletInfo: walletInfo,
-                walletKDF: walletKDF,
-                accountNetwork: accountNetwork
-            )
-            completion(.succeeded(model: model))
+                completion: { [weak self] (result) in
+                    switch result {
+                        
+                    case .failure(let error):
+                        let signError: RegisterSceneSignInResult.SignError
+                        
+                        switch error {
+                            
+                        case .emailAlreadyTaken:
+                            signError = .emailAlreadyTaken
+                            
+                        default:
+                            signError = .otherError(error)
+                        }
+                        
+                        completion(.failed(signError))
+                        
+                    case .success(let response):
+                        guard let strongSelf = self else {
+                            completion(.failed(.failedToSaveAccount))
+                            return
+                        }
+                        let walletDataModel = WalletDataModel(
+                            email: email,
+                            accountId: walletInfo.data.attributes.accountId,
+                            walletId: response.id,
+                            type: response.type,
+                            keychainData: walletInfo.data.attributes.keychainData,
+                            walletKDF: walletKDF,
+                            verified: response.attributes.verified
+                        )
+                        guard
+                            let walletData = WalletDataSerializable.fromWalletData(
+                                walletDataModel,
+                                signedViaAuthenticator: false,
+                                network: accountNetwork
+                            )
+                            else {
+                                completion(.failed(.failedToSaveAccount))
+                                return
+                        }
+                        
+                        guard strongSelf.userDataManager.saveWalletData(
+                            walletData,
+                            account: walletData.email
+                            )
+                            else {
+                                completion(.failed(.failedToSaveAccount))
+                                return
+                        }
+                        
+                        completion(.succeeded(model: SignUpModel(
+                            account: walletData.email,
+                            walletData: walletData
+                        ))
+                        )
+                    }
+            })
         }
         
         private func onSuccessfulSignInRequest(
@@ -323,10 +371,7 @@ extension RegisterScene {
 extension RegisterScene.TokenDRegisterWorker {
     
     struct SignUpModel {
-        let email: String
-        let recoverySeed: String
-        let walletInfo: WalletInfoModel
-        let walletKDF: WalletKDFParams
-        let accountNetwork: WalletDataSerializable.AccountNetworkModel
+        let account: String
+        let walletData: WalletDataSerializable
     }
 }

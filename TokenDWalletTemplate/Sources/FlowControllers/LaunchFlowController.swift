@@ -271,86 +271,6 @@ class LaunchFlowController: BaseFlowController {
         }
     }
     
-    private func showRecoverySeedScreen(
-        model: RegisterScene.TokenDRegisterWorker.SignUpModel
-        ) {
-        
-        let vc = self.setupRecoverySeedScreen(model: model)
-        
-        self.navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func setupRecoverySeedScreen(
-        model: RegisterScene.TokenDRegisterWorker.SignUpModel
-        ) -> RecoverySeed.ViewController {
-        
-        let vc = RecoverySeed.ViewController()
-        
-        let signUpWorker = RecoverySeed.SignUpWorker(
-            keyServerApi: self.flowControllerStack.keyServerApi,
-            userDataManager: self.userDataManager,
-            signUpModel: model
-        )
-        
-        let routing = RecoverySeed.Routing(
-            onShowMessage: { [weak self] message in
-                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
-                    return
-                }
-                
-                self?.showDialog(
-                    title: message,
-                    message: nil,
-                    style: .alert,
-                    options: [],
-                    onSelected: { _ in },
-                    onCanceled: nil,
-                    presentViewController: present
-                )
-            },
-            onRegisterFailure: { [weak self] (message) in
-                self?.navigationController.showErrorMessage(
-                    message,
-                    completion: {
-                        self?.navigationController.popViewController(true)
-                })
-            },
-            onShowAlertDialog: { [weak self] (message, options, onSelected) in
-                guard let present = self?.navigationController.getPresentViewControllerClosure() else {
-                    return
-                }
-                
-                self?.showDialog(
-                    title: nil,
-                    message: message,
-                    style: .alert,
-                    options: options,
-                    onSelected: onSelected,
-                    onCanceled: nil,
-                    presentViewController: present
-                )
-            },
-            onSuccessfulRegister: { [weak self] (account, walletData) in
-                self?.handleSuccessfulRegister(account: account, walletData: walletData)
-            }, showLoading: { [weak self] in
-                self?.navigationController.showProgress()
-            }, hideLoading: { [weak self] in
-                self?.navigationController.hideProgress()
-            })
-        
-        RecoverySeed.Configurator.configure(
-            viewController: vc,
-            signUpWorker: signUpWorker,
-            seed: model.recoverySeed,
-            routing: routing
-        )
-        
-        vc.navigationItem.title = Localized(.recovery_seed)
-        vc.navigationItem.hidesBackButton = true
-        
-        return vc
-    }
-    
     private func showSignInScreenOnVerified() {
         let vc = self.setupRegisterScreen()
         
@@ -398,8 +318,11 @@ class LaunchFlowController: BaseFlowController {
             onPresentQRCodeReader: { [weak self] (completion) in
                 self?.presentQRCodeReader(completion: completion)
             },
-            onShowRecoverySeed: { [weak self] (model) in
-                self?.showRecoverySeedScreen(model: model)
+            onSuccessfulRegister: { [weak self] (account, walletData) in
+                self?.handleSuccessfulRegister(
+                    account: account,
+                    walletData: walletData
+                )
             },
             onRecovery: { [weak self] in
                 self?.showRecoveryScreen()

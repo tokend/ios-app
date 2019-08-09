@@ -233,7 +233,7 @@ extension RegisterScene.Event {
             case loaded
             case loading
             case succeededSignIn(account: String)
-            case showRecoverySeed(model: RegisterScene.TokenDRegisterWorker.SignUpModel)
+            case succeededSignUp(model: RegisterScene.TokenDRegisterWorker.SignUpModel)
         }
         
         enum ViewModel {
@@ -241,7 +241,7 @@ extension RegisterScene.Event {
             case loaded
             case loading
             case succeededSignIn(account: String)
-            case showRecoverySeed(model: RegisterScene.TokenDRegisterWorker.SignUpModel)
+            case succeededSignUp(model: RegisterScene.TokenDRegisterWorker.SignUpModel)
         }
     }
     
