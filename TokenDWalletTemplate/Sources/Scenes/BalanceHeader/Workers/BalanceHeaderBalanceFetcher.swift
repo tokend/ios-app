@@ -4,6 +4,7 @@ import RxSwift
 
 protocol BalanceHeaderBalanceFetcherProtocol {
     func observeBalance() -> Observable<BalanceHeader.Model.Balance?>
+    func reloadBalance()
 }
 
 extension BalanceHeader {
@@ -113,5 +114,9 @@ extension BalanceHeader.BalancesFetcher: BalanceHeader.BalanceFetcherProtocol {
         self.observeBalancesRepo()
         
         return self.balance.asObservable()
+    }
+    
+    public func reloadBalance() {
+        self.balancesRepo.reloadBalancesDetails()
     }
 }

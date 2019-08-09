@@ -112,7 +112,9 @@ enum SharedSceneBuilder {
             viewConfig: viewConfig,
             routing: transactionsRouting
         )
-        
+        viewController.onRefreshInitiated = {
+            balanceFetcher.reloadBalance()
+        }
         let balancesRouting = BalanceHeader.Routing()
         
         let headerView = BalanceHeader.View(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
