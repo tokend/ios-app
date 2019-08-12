@@ -64,8 +64,8 @@ extension CreateOffer {
             self.addSubview(self.titleLabel)
             self.addSubview(self.amountLabel)
             
-            self.titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            self.amountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            self.titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            self.amountLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             
             self.titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             self.amountLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)

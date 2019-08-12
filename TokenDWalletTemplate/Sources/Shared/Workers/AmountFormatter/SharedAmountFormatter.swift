@@ -62,11 +62,11 @@ public class SharedAmountFormatter: NSObject {
         let units: [String] = ["K", "M", "G", "T", "P", "E"]
         let multiplier: Double = pow(10.0, 2)
         
-        let roundedNumber: Double = round(multiplier * num / pow(1000.0, Double(exp))) / multiplier
+        let roundedNumber: Double = round(multiplier * num / pow(1000.0, Double(min(exp, units.count-1)))) / multiplier
         let decimalRoundedNumber: Decimal = Decimal(roundedNumber)
         
         let formatted = numberFormatter.string(from: decimalRoundedNumber)
-        return (formatted ?? "\(decimalRoundedNumber)") + "\(units[exp-1])"
+        return (formatted ?? "\(decimalRoundedNumber)") + "\(units[min(exp-1, units.count-1)])"
     }
     
     private func createNumberFormatter(maxFractionDigits: Int? = nil) -> NumberFormatter {
