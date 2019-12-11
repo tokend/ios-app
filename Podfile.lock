@@ -132,7 +132,7 @@ SPEC REPOS:
     - DLOpenSSL
     - TokenDSDK
     - TokenDWallet
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - ActionsList
     - AFDateHelper
     - Alamofire
@@ -209,4 +209,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c1ae253cada90ce11a4520854c945178c42394aa
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.0
