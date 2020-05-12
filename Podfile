@@ -19,7 +19,7 @@ def main_app_pods
   pod 'RxSwift',                  '~> 4.1'
   pod 'SnapKit',                  '~> 4.0'
   pod 'SwiftKeychainWrapper',     '3.0.1'
-  pod 'ActionsList', 		  '~> 0.9.1'
+  pod 'ActionsList', :git => 'https://github.com/LowKostKustomz/ActionsList.git', :branch => 'hotfix/swift_5.0_compatibility_stable'
   
   pod 'PullToRefresher', '~> 3.0'
   pod 'Nuke'
@@ -50,17 +50,17 @@ target 'TokenDWalletTemplate' do
     #   end
     # end
 
-    swift3Targets = ['SideMenuController']
-
-    installer.pods_project.targets.each do |target|
-      next unless swift3Targets.include? target.name
-
-      target.build_configurations.each do |config|
-        config.build_settings['SWIFT_VERSION'] = '3.2'
-      end
-    end
+#    swift3Targets = ['SideMenuController']
+#
+#    installer.pods_project.targets.each do |target|
+#      next unless swift3Targets.include? target.name
+#
+#      target.build_configurations.each do |config|
+#        config.build_settings['SWIFT_VERSION'] = '3.2'
+#      end
+#    end
     
-    swift4Targets = ['QRCodeReader.swift', 'ActionsList']
+    swift4Targets = ['QRCodeReader.swift']
     
     installer.pods_project.targets.each do |target|
       next unless swift4Targets.include? target.name
