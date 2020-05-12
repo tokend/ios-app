@@ -102,7 +102,7 @@ PODS:
   - UICircularProgressRing (6.1.0)
 
 DEPENDENCIES:
-  - ActionsList (~> 0.9.1)
+  - ActionsList (from `https://github.com/LowKostKustomz/ActionsList.git`, branch `hotfix/swift_5.0_compatibility_stable`)
   - AFDateHelper (~> 4.2.2)
   - Charts (from `https://github.com/tokend/Charts.git`)
   - Crashlytics
@@ -133,7 +133,6 @@ SPEC REPOS:
     - TokenDSDK
     - TokenDWallet
   https://github.com/CocoaPods/Specs.git:
-    - ActionsList
     - AFDateHelper
     - Alamofire
     - AlamofireNetworkActivityLogger
@@ -157,6 +156,9 @@ SPEC REPOS:
     - UICircularProgressRing
 
 EXTERNAL SOURCES:
+  ActionsList:
+    :branch: hotfix/swift_5.0_compatibility_stable
+    :git: https://github.com/LowKostKustomz/ActionsList.git
   Charts:
     :git: https://github.com/tokend/Charts.git
   Floaty:
@@ -165,6 +167,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/tokend/SideMenuController.git
 
 CHECKOUT OPTIONS:
+  ActionsList:
+    :commit: 5be57fabefa7e709373d99704dc214ce839a0c9e
+    :git: https://github.com/LowKostKustomz/ActionsList.git
   Charts:
     :commit: 90f818dfc9432b617bca971ea56b57f2fbc4ae09
     :git: https://github.com/tokend/Charts.git
@@ -172,11 +177,11 @@ CHECKOUT OPTIONS:
     :commit: a96eb9b1aafccd419e4ba7005c778c099344dd17
     :git: https://github.com/tokend/Floaty.git
   SideMenuController:
-    :commit: a69b0c5704353ed5c35eb7df21d37f094e7582bf
+    :commit: 18faf0b94465a8c9b4db08938cd11c530a34e16c
     :git: https://github.com/tokend/SideMenuController.git
 
 SPEC CHECKSUMS:
-  ActionsList: ab6cf254d259ccb921fbdee139ef6171fb9976ac
+  ActionsList: 93a2d6506b15b1852ee080262898e428ad957420
   AFDateHelper: 4ad66fb19503041fbba8a3018cb7ef9c71b2ff88
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlamofireNetworkActivityLogger: 6d3398c692d2c5d83b0c58793537860aca1e383d
@@ -207,6 +212,6 @@ SPEC CHECKSUMS:
   TokenDWallet: 4e97425fd46607d70bbafccc471e1af991998cc8
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
-PODFILE CHECKSUM: c1ae253cada90ce11a4520854c945178c42394aa
+PODFILE CHECKSUM: d2d25df1b11b7074ac769dc8f053b99959dba514
 
-COCOAPODS: 1.8.0
+COCOAPODS: 1.8.4
