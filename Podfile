@@ -15,8 +15,8 @@ def main_app_pods
   
   pod 'QRCodeReader.swift',       '8.1.1'
 #  pod 'ReachabilitySwift',        '~> 4.1'
-  pod 'RxCocoa',                  '~> 4.1'
-  pod 'RxSwift',                  '~> 4.1'
+  pod 'RxCocoa',                  '5.1.0'
+  pod 'RxSwift',                  '5.1.0'
   pod 'SnapKit',                  '~> 4.0'
   pod 'SwiftKeychainWrapper',     '3.0.1'
   pod 'ActionsList', :git => 'https://github.com/LowKostKustomz/ActionsList.git', :branch => 'hotfix/swift_5.0_compatibility_stable'
