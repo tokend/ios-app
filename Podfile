@@ -71,6 +71,18 @@ target 'TokenDWalletTemplate' do
       end
     end
 
+    
+    swift42Targets = ['Charts']
+       
+       installer.pods_project.targets.each do |target|
+         next unless swift42Targets.include? target.name
+         
+         target.build_configurations.each do |config|
+           config.build_settings['SWIFT_VERSION'] = '4.2'
+         end
+       end
+
+
     # copy Acknowledgements
     require 'fileutils'
     FileUtils.cp_r('Pods/Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate-acknowledgements.markdown', 'TokenDWalletTemplate/Resources/acknowledgements.markdown')
