@@ -1,75 +1,91 @@
 PODS:
   - ActionsList (0.9.1)
   - AFDateHelper (4.2.7)
-  - Alamofire (4.8.2)
+  - Alamofire (4.9.1)
   - AlamofireNetworkActivityLogger (2.4.0):
     - Alamofire (~> 4.8)
   - Charts (3.0.4):
     - Charts/Core (= 3.0.4)
   - Charts/Core (3.0.4)
-  - Crashlytics (3.12.0):
-    - Fabric (~> 1.9.0)
+  - Crashlytics (3.14.0):
+    - Fabric (~> 1.10.2)
   - DLCryptoKit (2.0.1):
     - DLOpenSSL
   - DLJSONAPI (1.0.3):
     - DLJSONAPI/Default (= 1.0.3)
   - DLJSONAPI/Default (1.0.3)
   - DLOpenSSL (1.0.2)
-  - Fabric (1.9.0)
-  - Firebase/Core (5.20.2):
+  - Fabric (1.10.2)
+  - Firebase/Core (6.26.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.8.1)
-  - Firebase/CoreOnly (5.20.2):
-    - FirebaseCore (= 5.4.1)
-  - FirebaseAnalytics (5.8.1):
-    - FirebaseCore (~> 5.4)
-    - FirebaseInstanceID (~> 3.8)
-    - GoogleAppMeasurement (= 5.8.1)
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
-    - nanopb (~> 0.3)
-  - FirebaseCore (5.4.1):
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseInstanceID (3.8.1):
-    - FirebaseCore (~> 5.2)
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/UserDefaults (~> 5.2)
+    - FirebaseAnalytics (= 6.6.0)
+  - Firebase/CoreOnly (6.26.0):
+    - FirebaseCore (= 6.7.2)
+  - FirebaseAnalytics (6.6.0):
+    - FirebaseCore (~> 6.7)
+    - FirebaseInstallations (~> 1.3)
+    - GoogleAppMeasurement (= 6.6.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 1.30905.0)
+  - FirebaseCore (6.7.2):
+    - FirebaseCoreDiagnostics (~> 1.3)
+    - FirebaseCoreDiagnosticsInterop (~> 1.2)
+    - GoogleUtilities/Environment (~> 6.5)
+    - GoogleUtilities/Logger (~> 6.5)
+  - FirebaseCoreDiagnostics (1.3.0):
+    - FirebaseCoreDiagnosticsInterop (~> 1.2)
+    - GoogleDataTransportCCTSupport (~> 3.1)
+    - GoogleUtilities/Environment (~> 6.5)
+    - GoogleUtilities/Logger (~> 6.5)
+    - nanopb (~> 1.30905.0)
+  - FirebaseCoreDiagnosticsInterop (1.2.0)
+  - FirebaseInstallations (1.3.0):
+    - FirebaseCore (~> 6.6)
+    - GoogleUtilities/Environment (~> 6.6)
+    - GoogleUtilities/UserDefaults (~> 6.6)
+    - PromisesObjC (~> 1.2)
   - Floaty (4.1.0)
-  - GoogleAppMeasurement (5.8.1):
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
-    - nanopb (~> 0.3)
-  - GoogleUtilities/AppDelegateSwizzler (5.8.0):
+  - GoogleAppMeasurement (6.6.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 1.30905.0)
+  - GoogleDataTransport (6.2.1)
+  - GoogleDataTransportCCTSupport (3.1.0):
+    - GoogleDataTransport (~> 6.1)
+    - nanopb (~> 1.30905.0)
+  - GoogleUtilities/AppDelegateSwizzler (6.6.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.8.0)
-  - GoogleUtilities/Logger (5.8.0):
+  - GoogleUtilities/Environment (6.6.0):
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/Logger (6.6.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.8.0):
+  - GoogleUtilities/MethodSwizzler (6.6.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.8.0):
+  - GoogleUtilities/Network (6.6.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.8.0)"
-  - GoogleUtilities/Reachability (5.8.0):
+  - "GoogleUtilities/NSData+zlib (6.6.0)"
+  - GoogleUtilities/Reachability (6.6.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (5.8.0):
+  - GoogleUtilities/UserDefaults (6.6.0):
     - GoogleUtilities/Logger
-  - MarkdownView (1.5.0)
-  - nanopb (0.3.901):
-    - nanopb/decode (= 0.3.901)
-    - nanopb/encode (= 0.3.901)
-  - nanopb/decode (0.3.901)
-  - nanopb/encode (0.3.901)
+  - MarkdownView (1.6.0)
+  - nanopb (1.30905.0):
+    - nanopb/decode (= 1.30905.0)
+    - nanopb/encode (= 1.30905.0)
+  - nanopb/decode (1.30905.0)
+  - nanopb/encode (1.30905.0)
   - Nuke (7.6.3)
-  - PullToRefresher (3.1)
+  - PromisesObjC (1.2.8)
+  - PullToRefresher (3.3)
   - QRCodeReader.swift (8.1.1)
   - RxCocoa (4.5.0):
     - RxSwift (>= 4.4.2, ~> 4.4)
@@ -77,40 +93,41 @@ PODS:
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
-  - TokenDSDK (3.1.0-rc.7):
-    - TokenDSDK/API (= 3.1.0-rc.7)
-    - TokenDSDK/JSONAPI (= 3.1.0-rc.7)
-    - TokenDSDK/KeyServer (= 3.1.0-rc.7)
+  - TokenDSDK (3.2.0-rc.1):
+    - TokenDSDK/API (= 3.2.0-rc.1)
+    - TokenDSDK/JSONAPI (= 3.2.0-rc.1)
+    - TokenDSDK/KeyServer (= 3.2.0-rc.1)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetwork (3.1.0-rc.7):
+  - TokenDSDK/AlamofireNetwork (3.2.0-rc.1):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (3.1.0-rc.7):
+  - TokenDSDK/AlamofireNetworkJSONAPI (3.2.0-rc.1):
     - Alamofire
     - AlamofireNetworkActivityLogger
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/API (3.1.0-rc.7):
+  - TokenDSDK/API (3.2.0-rc.1):
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/JSONAPI (3.1.0-rc.7):
+  - TokenDSDK/JSONAPI (3.2.0-rc.1):
     - DLJSONAPI (>= 1.0.3)
     - TokenDWallet (>= 3.0.1)
-  - TokenDSDK/KeyServer (3.1.0-rc.7):
+  - TokenDSDK/KeyServer (3.2.0-rc.1):
     - TokenDWallet (>= 3.0.1)
-  - TokenDWallet (3.0.2):
+  - TokenDWallet (3.1.0):
     - DLCryptoKit (>= 2.0.1)
-  - UICircularProgressRing (6.1.0)
+  - UICircularProgressRing (6.5.0)
 
 DEPENDENCIES:
   - ActionsList (from `https://github.com/LowKostKustomz/ActionsList.git`, branch `hotfix/swift_5.0_compatibility_stable`)
   - AFDateHelper (~> 4.2.2)
+  - Alamofire (~> 4.8)
   - Charts (from `https://github.com/tokend/Charts.git`)
   - Crashlytics
   - Fabric
   - Firebase/Core
   - Floaty (from `https://github.com/tokend/Floaty.git`)
   - MarkdownView
-  - Nuke
+  - Nuke (= 7.6.3)
   - PullToRefresher (~> 3.0)
   - QRCodeReader.swift (= 8.1.1)
   - RxCocoa (~> 4.1)
@@ -118,7 +135,7 @@ DEPENDENCIES:
   - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
-  - TokenDSDK (= 3.1.0-rc.7)
+  - TokenDSDK (= 3.2.0-rc.1)
   - TokenDSDK/AlamofireNetwork
   - TokenDSDK/AlamofireNetworkJSONAPI
   - TokenDSDK/JSONAPI
@@ -141,12 +158,17 @@ SPEC REPOS:
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
-    - FirebaseInstanceID
+    - FirebaseCoreDiagnostics
+    - FirebaseCoreDiagnosticsInterop
+    - FirebaseInstallations
     - GoogleAppMeasurement
+    - GoogleDataTransport
+    - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - MarkdownView
     - nanopb
     - Nuke
+    - PromisesObjC
     - PullToRefresher
     - QRCodeReader.swift
     - RxCocoa
@@ -183,35 +205,40 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   ActionsList: 93a2d6506b15b1852ee080262898e428ad957420
   AFDateHelper: 4ad66fb19503041fbba8a3018cb7ef9c71b2ff88
-  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   AlamofireNetworkActivityLogger: 6d3398c692d2c5d83b0c58793537860aca1e383d
   Charts: c5f4491efc3a24de9213fe3e68484bfdff881cfb
-  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   DLCryptoKit: 491c522583e92c90c09c06bf1192ef741022af33
   DLJSONAPI: 4d448f06fd412dae20c53ba1c71d601c4b422ce5
   DLOpenSSL: 78d928228cb6d95fcaa354f4f9aba041ccf95457
-  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
-  Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
-  FirebaseAnalytics: ece1aa57a4f43c64d53a648b5a5e05151aae947b
-  FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
-  FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
+  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
+  Firebase: 7cf5f9c67f03cb3b606d1d6535286e1080e57eb6
+  FirebaseAnalytics: 96634d356482d4f3af8fe459a0ebf19a99c71b75
+  FirebaseCore: f42e5e5f382cdcf6b617ed737bf6c871a6947b17
+  FirebaseCoreDiagnostics: 4a773a47bd83bbd5a9b1ccf1ce7caa8b2d535e67
+  FirebaseCoreDiagnosticsInterop: 296e2c5f5314500a850ad0b83e9e7c10b011a850
+  FirebaseInstallations: 6f5f680e65dc374397a483c32d1799ba822a395b
   Floaty: 1a4e213f3512cf3045ef9cb0c1ff456226d1f66a
-  GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
-  GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
-  MarkdownView: 5bbee438c823db1cd189002d44c84fa909b3a896
-  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  GoogleAppMeasurement: 67458367830514fb20fd9e233496f1eef9d90185
+  GoogleDataTransport: 9a8a16f79feffc7f42096743de2a7c4815e84020
+  GoogleDataTransportCCTSupport: d70a561f7d236af529fee598835caad5e25f6d3d
+  GoogleUtilities: 39530bc0ad980530298e9c4af8549e991fd033b1
+  MarkdownView: 25c1c2d7ff9706624a575556296e188be3dd3f6b
+  nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   Nuke: 44130e95e09463f8773ae4b96b90de1eba6b3350
-  PullToRefresher: ec8c1942bd61bb512ff520c49f9f00903cfa86c7
+  PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
+  PullToRefresher: 6fc2ab6494caf949bcf6f0223ffd23f9d21a06f6
   QRCodeReader.swift: b164a681887de276d405ff02bce854d82cd6360b
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  TokenDSDK: 0b8baa505beb493e05fa575e7f4febc30a00fc00
-  TokenDWallet: 4e97425fd46607d70bbafccc471e1af991998cc8
-  UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
+  TokenDSDK: 0f3fa9cc9c1019efc05b6f61b902078243691b91
+  TokenDWallet: f8296cdc95639a6f8bea46ffe1b0b1401ca3c0c9
+  UICircularProgressRing: e6852e8f88e296cbbbe2720cccb55241acda6708
 
-PODFILE CHECKSUM: d2d25df1b11b7074ac769dc8f053b99959dba514
+PODFILE CHECKSUM: c52729a0b9cd479cfe46c18b48b2f123f3b205d7
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.0

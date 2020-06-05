@@ -302,8 +302,9 @@ class BaseFlowController {
             
         case .code(let type, _):
             switch type {
-                
-            case .email:
+            
+                // TODO: Use separate handlers
+            case .email, .phone, .telegram(_):
                 alertTitle = Localized(.input_2fa_code)
                 alertMessage = Localized(.input_code_sent_to_your_email)
                 

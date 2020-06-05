@@ -480,9 +480,9 @@ extension TransactionDetails {
                 }
                 
             case .opCreateAMLAlertRequestDetails,
-                 .opCreateAtomicSwapBidRequestDetails,
                  .opPayoutDetails,
                  .opCreateIssuanceRequestDetails,
+                 .opCreateAtomicSwapAskRequestDetails(_),
                  .`self`:
                 
                 return cells
@@ -632,8 +632,8 @@ extension TransactionDetails {
             case .`self`,
                  .opCreateIssuanceRequestDetails,
                  .opCreateAMLAlertRequestDetails,
-                 .opCreateAtomicSwapBidRequestDetails,
                  .opCreateWithdrawRequestDetails,
+                 .opCreateAtomicSwapAskRequestDetails(_),
                  .opPayoutDetails:
                 
                 break
@@ -684,8 +684,8 @@ extension TransactionDetails {
                 
             case .`self`,
                  .opCreateAMLAlertRequestDetails,
-                 .opCreateAtomicSwapBidRequestDetails,
                  .opCreateWithdrawRequestDetails,
+                 .opCreateAtomicSwapAskRequestDetails(_),
                  .opPayoutDetails:
                 
                 break

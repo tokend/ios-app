@@ -275,8 +275,7 @@ extension TransactionsListScene {
                 case .opPayoutDetails:
                     return Localized(.payout)
                     
-                case .`self`,
-                     .opCreateAtomicSwapBidRequestDetails:
+                case .`self`, .opCreateAtomicSwapAskRequestDetails(_):
                     
                     return nil
                 }

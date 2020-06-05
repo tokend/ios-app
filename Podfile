@@ -7,12 +7,13 @@ source 'https://github.com/CocoaPods/Specs.git'
 source 'git@github.com:tokend/ios-specs.git'
 
 def main_app_pods
-  pod 'TokenDSDK', '3.1.0-rc.7'
+  pod 'TokenDSDK', '3.2.0-rc.1'
   pod 'TokenDSDK/AlamofireNetwork'
   pod 'TokenDSDK/JSONAPI'
   pod 'TokenDSDK/AlamofireNetworkJSONAPI'
   pod 'TokenDSDK/KeyServer'
   
+  pod 'Alamofire', '~> 4.8'
   pod 'QRCodeReader.swift',       '8.1.1'
 #  pod 'ReachabilitySwift',        '~> 4.1'
   pod 'RxCocoa',                  '~> 4.1'
@@ -22,7 +23,7 @@ def main_app_pods
   pod 'ActionsList', :git => 'https://github.com/LowKostKustomz/ActionsList.git', :branch => 'hotfix/swift_5.0_compatibility_stable'
   
   pod 'PullToRefresher', '~> 3.0'
-  pod 'Nuke'
+  pod 'Nuke', '7.6.3'
   pod 'MarkdownView'
   pod 'AFDateHelper', '~> 4.2.2'
   

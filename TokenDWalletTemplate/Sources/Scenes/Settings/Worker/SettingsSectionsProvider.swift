@@ -580,7 +580,7 @@ extension Settings {
                         if let totpFactor = totpFactors.first {
                             self?.tfaApi.deleteFactor(
                                 walletId: walletId,
-                                factorId: totpFactor.id,
+                                factorId: Int(totpFactor.id) ?? 0,
                                 completion: { (deleteResult) in
                                     switch deleteResult {
                                         
@@ -627,7 +627,7 @@ extension Settings {
                     
                     self?.updateTOTPFactor(
                         walletId: walletId,
-                        factorId: response.id,
+                        factorId: Int(response.id) ?? 0,
                         priority: priority,
                         stopLoading: stopLoading,
                         completion: completion
@@ -645,7 +645,7 @@ extension Settings {
                         
                         self?.updateTOTPFactor(
                             walletId: walletId,
-                            factorId: response.id,
+                            factorId: Int(response.id) ?? 0,
                             priority: priority,
                             stopLoading: stopLoading,
                             completion: completion

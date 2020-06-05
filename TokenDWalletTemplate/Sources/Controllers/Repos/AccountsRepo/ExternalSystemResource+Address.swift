@@ -4,15 +4,21 @@ import TokenDSDK
 extension ExternalSystemIdResource {
     
     public var addressWithPayload: AddressWithPayload? {
-        guard let jsonData = self.data.data(using: .utf8) else { return nil }
+        guard let data = self.data else { return nil }
+        if data.data.payload == nil {
+            return nil
+        }
         
-        return try? JSONDecoder().decode(AddressWithPayload.self, from: jsonData)
+        return AddressWithPayload(type: data.type, data: AddressWithPayload.Data(address: data.data.address, payload: data.data.payload ?? ""))
     }
     
     public var address: Address? {
-        guard let jsonData = self.data.data(using: .utf8) else { return nil }
+        guard let data = self.data else { return nil }
+        if data.data.payload != nil {
+            return nil
+        }
         
-        return try? JSONDecoder().decode(Address.self, from: jsonData)
+        return Address(type: data.type, data: Address.Data(address: data.data.address))
     }
     
     public struct AddressWithPayload: Decodable {

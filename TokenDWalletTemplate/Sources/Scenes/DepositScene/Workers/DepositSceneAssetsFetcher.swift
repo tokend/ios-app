@@ -153,7 +153,7 @@ extension DepositScene {
                     } else if let externalAddress = externalAccount.address {
                         address = externalAddress.data.address
                     } else {
-                        address = externalAccount.data
+                        address = nil
                     }
                 }
                 
