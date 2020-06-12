@@ -16,8 +16,8 @@ def main_app_pods
   pod 'Alamofire', '~> 4.8'
   pod 'QRCodeReader.swift',       '8.1.1'
 #  pod 'ReachabilitySwift',        '~> 4.1'
-  pod 'RxCocoa',                  '~> 4.1'
-  pod 'RxSwift',                  '~> 4.1'
+  pod 'RxCocoa',                  '5.1.0'
+  pod 'RxSwift',                  '5.1.0'
   pod 'SnapKit',                  '~> 4.0'
   pod 'SwiftKeychainWrapper',     '3.0.1'
   pod 'ActionsList', :git => 'https://github.com/LowKostKustomz/ActionsList.git', :branch => 'hotfix/swift_5.0_compatibility_stable'
@@ -70,6 +70,18 @@ target 'TokenDWalletTemplate' do
         config.build_settings['SWIFT_VERSION'] = '4'
       end
     end
+
+    
+    swift42Targets = ['Charts']
+       
+       installer.pods_project.targets.each do |target|
+         next unless swift42Targets.include? target.name
+         
+         target.build_configurations.each do |config|
+           config.build_settings['SWIFT_VERSION'] = '4.2'
+         end
+       end
+
 
     # copy Acknowledgements
     require 'fileutils'

@@ -203,7 +203,7 @@ extension Sales {
                 internalSerialQueueName: self.queue.label
             )
             self.loadMoreIndicator
-                .debounce(0.1, scheduler: scheduler)
+                .debounce(RxTimeInterval.milliseconds(100), scheduler: scheduler)
                 .subscribe { [weak self] (_) in
                     self?.interactorDispatch?.sendRequest(requestBlock: { (businessLogic) in
                         let request = Sales.Event.DidInitiateLoadMore.Request()

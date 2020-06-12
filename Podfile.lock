@@ -87,9 +87,12 @@ PODS:
   - PromisesObjC (1.2.8)
   - PullToRefresher (3.3)
   - QRCodeReader.swift (8.1.1)
-  - RxCocoa (4.5.0):
-    - RxSwift (>= 4.4.2, ~> 4.4)
-  - RxSwift (4.5.0)
+  - RxCocoa (5.1.0):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.0)
   - SideMenuController (0.2.4)
   - SnapKit (4.2.0)
   - SwiftKeychainWrapper (3.0.1)
@@ -130,9 +133,9 @@ DEPENDENCIES:
   - Nuke (= 7.6.3)
   - PullToRefresher (~> 3.0)
   - QRCodeReader.swift (= 8.1.1)
-  - RxCocoa (~> 4.1)
-  - RxSwift (~> 4.1)
-  - SideMenuController (from `https://github.com/tokend/SideMenuController.git`)
+  - RxCocoa (= 5.1.0)
+  - RxSwift (= 5.1.0)
+  - SideMenuController (from `https://github.com/iuriivolochai/SideMenuController`)
   - SnapKit (~> 4.0)
   - SwiftKeychainWrapper (= 3.0.1)
   - TokenDSDK (= 3.2.0-rc.1)
@@ -172,6 +175,7 @@ SPEC REPOS:
     - PullToRefresher
     - QRCodeReader.swift
     - RxCocoa
+    - RxRelay
     - RxSwift
     - SnapKit
     - SwiftKeychainWrapper
@@ -186,7 +190,7 @@ EXTERNAL SOURCES:
   Floaty:
     :git: https://github.com/tokend/Floaty.git
   SideMenuController:
-    :git: https://github.com/tokend/SideMenuController.git
+    :git: https://github.com/iuriivolochai/SideMenuController
 
 CHECKOUT OPTIONS:
   ActionsList:
@@ -199,8 +203,8 @@ CHECKOUT OPTIONS:
     :commit: a96eb9b1aafccd419e4ba7005c778c099344dd17
     :git: https://github.com/tokend/Floaty.git
   SideMenuController:
-    :commit: 18faf0b94465a8c9b4db08938cd11c530a34e16c
-    :git: https://github.com/tokend/SideMenuController.git
+    :commit: a430adc11fb74c5b0213b08fed685a1cef9d0701
+    :git: https://github.com/iuriivolochai/SideMenuController
 
 SPEC CHECKSUMS:
   ActionsList: 93a2d6506b15b1852ee080262898e428ad957420
@@ -230,8 +234,9 @@ SPEC CHECKSUMS:
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   PullToRefresher: 6fc2ab6494caf949bcf6f0223ffd23f9d21a06f6
   QRCodeReader.swift: b164a681887de276d405ff02bce854d82cd6360b
-  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
-  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  RxCocoa: 13d2a4d7546a34b8ececae8c281e4ea1dbb94f2b
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: ad5874f24bb0dbffd1e9bb8443604e3578796c7a
   SideMenuController: 4c47fe044a8a0f13edf2ecb73fc90b2d82dcf392
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
@@ -239,6 +244,6 @@ SPEC CHECKSUMS:
   TokenDWallet: f8296cdc95639a6f8bea46ffe1b0b1401ca3c0c9
   UICircularProgressRing: e6852e8f88e296cbbbe2720cccb55241acda6708
 
-PODFILE CHECKSUM: c52729a0b9cd479cfe46c18b48b2f123f3b205d7
+PODFILE CHECKSUM: 2b7b2d77e1bb5c4d0144ac38a040765a738ccbef
 
 COCOAPODS: 1.8.0

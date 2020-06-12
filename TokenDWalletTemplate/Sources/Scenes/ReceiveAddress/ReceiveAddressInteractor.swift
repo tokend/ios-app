@@ -35,7 +35,7 @@ extension ReceiveAddress {
             self.addressManager = addressManager
             
             self.regenerateQRDebounceEvent
-                .debounce(0.2, scheduler: SerialDispatchQueueScheduler(
+                .debounce(RxTimeInterval.milliseconds(200), scheduler: SerialDispatchQueueScheduler(
                     queue: self.queue,
                     internalSerialQueueName: self.queue.label
                     )

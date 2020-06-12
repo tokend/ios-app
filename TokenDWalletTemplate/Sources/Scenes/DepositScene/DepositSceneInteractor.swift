@@ -64,7 +64,7 @@ extension DepositScene {
                 internalSerialQueueName: self.queue.label
             )
             self.regenerateQrDebounceEvent
-                .debounce(0.15, scheduler: scheduler)
+                .debounce(RxTimeInterval.milliseconds(150), scheduler: scheduler)
                 .subscribe(onNext: { [weak self] (_) in
                     self?.regenerateQrCodeTask()
                 })
@@ -73,7 +73,7 @@ extension DepositScene {
         
         private func updateSelectedAsset() {
             let selectedId = self.sceneModel.selectedAssetId
-            let index: Int? = self.sceneModel.assets.index { (asset) -> Bool in
+            let index: Int? = self.sceneModel.assets.firstIndex { (asset) -> Bool in
                 return asset.id == selectedId
             }
             if index == nil,
