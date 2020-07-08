@@ -53,10 +53,21 @@ extension BalancesList {
                     value: NSAttributedString(string: percent)
                 )
             }
-            let colorsPallete = self.colorsProvider.getDefaultPieChartColors()
-            
+            var colorsPallete = self.colorsProvider.getDefaultPieChartColors()
+
+            var entries = model.entries
+
+            if entries.isEmpty {
+                entries = [
+                    .init(
+                        value: 100.0
+                    )
+                ]
+                colorsPallete = [self.colorsProvider.getPieChartColorForOther()]
+            }
+
             return Model.PieChartViewModel(
-                entries: model.entries,
+                entries: entries,
                 highlitedEntry: highlightedEntry,
                 colorsPallete: colorsPallete
             )
@@ -134,6 +145,11 @@ extension BalancesList.Presenter: BalancesList.PresentationLogic {
                         cellIdentifier: .balances
                     )
                     return balanceViewModel
+
+                case .noBalances(let error):
+                    return SendPaymentDestination.EmptyCell.ViewModel(
+                        message: error?.localizedDescription ?? "No balances"
+                    )
                     
                 case .header(let headerModel):
                     let balanceTitle = self.amountFormatter.formatAmount(

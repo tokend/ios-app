@@ -115,7 +115,8 @@ extension BalancesList {
             self.tableView.register(classes: [
                 HeaderCell.ViewModel.self,
                 BalanceCell.ViewModel.self,
-                PieChartCell.ViewModel.self
+                PieChartCell.ViewModel.self,
+                SendPaymentDestination.EmptyCell.ViewModel.self
                 ]
             )
             self.tableView.delegate = self

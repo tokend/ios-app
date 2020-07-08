@@ -80,6 +80,11 @@ extension BalancesList {
             self.sceneModel.balances.forEach { (balance) in
                 cells.append(.balance(balance))
             }
+
+            if cells.isEmpty {
+                cells.append(.noBalances(sceneModel.balancesError))
+            }
+
             return Model.SectionModel(cells: cells)
         }
         
@@ -240,6 +245,14 @@ extension BalancesList.Interactor: BalancesList.BusinessLogic {
                 self?.updateSections()
             })
             .disposed(by: self.disposeBag)
+
+        self.balancesFetcher
+            .observeErrorStatus()
+            .subscribe(onNext: { [weak self] (error) in
+                self?.sceneModel.balancesError = error
+                self?.updateSections()
+            })
+            .disposed(by: disposeBag)
     }
     
     public func onPieChartBalanceSelected(request: Event.PieChartBalanceSelected.Request) {
