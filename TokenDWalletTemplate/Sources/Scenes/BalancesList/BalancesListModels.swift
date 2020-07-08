@@ -18,6 +18,7 @@ extension BalancesList.Model {
     
     public struct SceneModel {
         var balances: [Balance]
+        var balancesError: Swift.Error?
         var chartBalances: [ChartBalance]
         var selectedChartBalance: ChartBalance?
         let convertedAsset: String
@@ -34,6 +35,7 @@ extension BalancesList.Model {
     public enum CellModel {
         case header(Header)
         case balance(Balance)
+        case noBalances(Swift.Error?)
         case chart(PieChartModel)
     }
     

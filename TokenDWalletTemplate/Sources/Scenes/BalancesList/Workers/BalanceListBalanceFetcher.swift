@@ -5,6 +5,7 @@ import RxSwift
 protocol BalanceListBalanceFetcherProtocol {
     func observeBalances() -> Observable<[BalancesList.Model.Balance]>
     func observeLoadingStatus() -> Observable<BalancesList.Model.LoadingStatus>
+    func observeErrorStatus() -> Observable<Swift.Error>
 }
 
 extension BalancesList {
@@ -20,6 +21,7 @@ extension BalancesList {
         private let imageUtility: ImagesUtility
         private let balancesRelay: BehaviorRelay<[Model.Balance]> = BehaviorRelay(value: [])
         private let loadingStatus: BehaviorRelay<Model.LoadingStatus> = BehaviorRelay(value: .loaded)
+        private let errorStatus: PublishRelay<Swift.Error> = .init()
         
         private var balances: [BalancesRepo.BalanceDetails] = []
         private var assets: [AssetsRepo.Asset] = []
@@ -57,6 +59,13 @@ extension BalancesList {
                     self?.updateBalances()
                 })
                 .disposed(by: self.disposeBag)
+
+            self.balancesRepo
+                .observeErrorStatus()
+                .subscribe(onNext: { [weak self] (error) in
+                    self?.errorStatus.accept(error)
+                })
+                .disposed(by: disposeBag)
         }
         
         private func observeAssetsRepo() {
@@ -67,6 +76,13 @@ extension BalancesList {
                     self?.updateBalances()
                 })
                 .disposed(by: self.disposeBag)
+
+            self.assetsRepo
+                .observeErrorStatus()
+                .subscribe(onNext: { [weak self] (error) in
+                    self?.errorStatus.accept(error)
+                })
+                .disposed(by: disposeBag)
         }
         
         private func updateBalances() {
@@ -127,5 +143,9 @@ extension BalancesList.BalancesFetcher: BalancesList.BalancesFetcherProtocol {
             .disposed(by: self.disposeBag)
         
         return self.loadingStatus.asObservable()
+    }
+
+    func observeErrorStatus() -> Observable<Error> {
+        return self.errorStatus.asObservable()
     }
 }
