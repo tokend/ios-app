@@ -185,7 +185,7 @@ public class BalancesRepo {
             action: ManageBalanceAction.create,
             destination: self.accountId,
             asset: asset,
-            ext: .emptyVersion()
+            ext: .emptyVersion
         )
         
         let transactionBuilder: TransactionBuilder = TransactionBuilder(
@@ -278,7 +278,7 @@ extension BalancesRepo {
         
         var newSequence = sequence
         
-        while let index = newSequence.index(where: { (state) -> Bool in
+        while let index = newSequence.firstIndex(where: { (state) -> Bool in
             return state.asset == asset
         }) {
             newSequence.remove(at: index)

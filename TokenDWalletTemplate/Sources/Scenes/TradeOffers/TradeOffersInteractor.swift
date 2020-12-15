@@ -34,12 +34,12 @@ extension TradeOffers {
         private let tradesFetcher: TradesFetcherProtocol
         
         private var selectedTabIndex: Int? {
-            return self.sceneModel.tabs.index(of: self.sceneModel.selectedTab)
+            return self.sceneModel.tabs.firstIndex(of: self.sceneModel.selectedTab)
         }
         
         private var selectedPeriodIndex: Int? {
             guard let selectedPeriod = self.sceneModel.selectedPeriod else { return nil }
-            return self.sceneModel.periods.index(of: selectedPeriod)
+            return self.sceneModel.periods.firstIndex(of: selectedPeriod)
         }
         
         private let disposeBag: DisposeBag = DisposeBag()

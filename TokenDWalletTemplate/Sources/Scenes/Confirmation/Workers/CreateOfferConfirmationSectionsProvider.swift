@@ -161,7 +161,7 @@ extension ConfirmationScene {
                         fee: fee,
                         offerID: 0,
                         orderBookID: 0,
-                        ext: .emptyVersion()
+                        ext: .emptyVersion
                     )
                     
                     let transactionBuilder = TransactionBuilder(

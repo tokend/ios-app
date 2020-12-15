@@ -71,7 +71,7 @@ extension TokenDetailsScene {
             self.tableView.rx
                 .contentOffset
                 .asDriver()
-                .throttle(0.25)
+                .throttle(.milliseconds(250))
                 .drive(onNext: { [weak self] (offset) in
                     self?.contentOffsetUpdated(point: offset)
                 })

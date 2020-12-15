@@ -21,7 +21,7 @@ enum UpdatePasswordRequestBuilderBuildResult {
                 return Localized(.cannot_derive_encoded_wallet_id)
                 
             case .cannotDeriveOldKeyFrom(let error):
-                return error.localizedDescription
+                return error?.localizedDescription
                 
             case .cannotDeriveRecoveryKeyFromSeed(let error):
                 return error.localizedDescription

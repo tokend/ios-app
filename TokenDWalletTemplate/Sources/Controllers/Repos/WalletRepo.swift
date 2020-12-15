@@ -76,7 +76,7 @@ class WalletRepo {
         let walletKDF = self.userDataProvider.walletData.walletKDF.getWalletKDFParams()
         
         self.loadingStatus.accept(.loading)
-        self.keyServerApi.requestWallet(
+        self.keyServerApi.getWallet(
             walletId: walletId,
             walletKDF: walletKDF,
             completion: { [weak self] (result) in

@@ -36,15 +36,18 @@ extension RegisterScene {
             
             let walletKDF = walletData.walletKDF.getWalletKDFParams()
             
-            let checkedEmail = walletKDF.kdfParams.checkedEmail(email)
+            let checkedEmail = walletKDF.kdfParams.checkedLogin(email)
             
             do {
-                let derivedKey = try KeyPairBuilder.getKeyPair(
-                    forEmail: checkedEmail,
+                guard let derivedKey = try KeyPairBuilder.getKeyPairs(
+                    forLogin: checkedEmail,
                     password: password,
                     keychainData: walletData.keychainData,
                     walletKDF: walletKDF
-                )
+                ).first else {
+                    completion(.failed(.wrongPassword))
+                    return
+                }
                 
                 if self.keychainManager.validateDerivedKeyData(derivedKey, account: email) {
                     completion(.succeeded(account: email))

@@ -68,7 +68,7 @@ extension ConfirmationScene {
             let fee = Fee(
                 fixed: 0,
                 percent: 0,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             guard let balance = BalanceID(
@@ -85,13 +85,13 @@ extension ConfirmationScene {
                 universalAmount: 0,
                 fee: fee,
                 creatorDetails: destAddress,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let operation = CreateWithdrawalRequestOp(
                 request: request,
                 allTasks: nil,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let transactionBuilder: TransactionBuilder = TransactionBuilder(

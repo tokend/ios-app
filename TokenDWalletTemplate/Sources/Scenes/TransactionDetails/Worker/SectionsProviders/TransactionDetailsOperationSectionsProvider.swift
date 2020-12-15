@@ -19,7 +19,7 @@ extension TransactionDetails {
         private let sectionsRelay: BehaviorRelay<[Model.SectionModel]> = BehaviorRelay(value: [])
         private let disposeBag: DisposeBag = DisposeBag()
         
-        private var effect: ParticipantEffectResource?
+        private var effect: Horizon.ParticipantsEffectResource?
         private var counterpartyEmail: String?
         
         init(
@@ -45,7 +45,7 @@ extension TransactionDetails {
             }
             
             var sections: [Model.SectionModel] = []
-            switch effect.effectType {
+            switch effect.baseEffectType {
                 
             case .effectBalanceChange(let balanceChangeEffect):
                 let balancesSections = self.sectionsForBalanceChangeEffect(
@@ -71,9 +71,9 @@ extension TransactionDetails {
         }
         
         private func sectionsForBalanceChangeEffect(
-            participantEffect: ParticipantEffectResource,
-            balanceChangeEffect: EffectBalanceChangeResource,
-            operation: OperationResource
+            participantEffect: Horizon.ParticipantsEffectResource,
+            balanceChangeEffect: Horizon.EffectBalanceChangeResource,
+            operation: Horizon.OperationResource
             ) -> [TransactionDetails.Model.SectionModel] {
             
             guard let assetResource = participantEffect.asset,
@@ -83,7 +83,7 @@ extension TransactionDetails {
             }
             var sections: [Model.SectionModel] = []
             
-            if let operationDetails = details as? OpManageOfferDetailsResource {
+            if let operationDetails = details as? Horizon.ManageOfferOpResource {
                 return self.sectionsForManageOfferOperation(
                     participantEffect: participantEffect,
                     operation: operation,
@@ -98,19 +98,19 @@ extension TransactionDetails {
             let amount: TransactionDetails.Model.Amount
             switch balanceChangeEffect.effectBalanceChangeType {
                 
-            case .effectCharged,
-                 .effectLocked,
-                 .effectUnlocked,
-                 .effectChargedFromLocked,
-                 .effectWithdrawn:
+            case .effectsCharged,
+                 .effectsLocked,
+                 .effectsUnlocked,
+                 .effectsChargedFromLocked,
+                 .effectsWithdrawn:
                 
                 amount = TransactionDetails.Model.Amount(
                     value: balanceChangeEffect.amount,
                     asset: asset
                 )
                 
-            case .effectFunded,
-                 .effectIssued:
+            case .effectsFunded,
+                 .effectsIssued:
                 
                 amount = TransactionDetails.Model.Amount(
                     value: balanceChangeEffect.amount,
@@ -163,7 +163,7 @@ extension TransactionDetails {
                 description: ""
             )
             sections.append(infoSection)
-            if let manageAssetPairDetails = details as? OpManageAssetPairDetailsResource,
+            if let manageAssetPairDetails = details as? Horizon.ManageAssetPairOpResource,
                 let assetPairsSection = self.createManageAssetPairDetailsSection(
                     details: manageAssetPairDetails
                 ) {
@@ -175,9 +175,9 @@ extension TransactionDetails {
         }
         
         private func sectionsForManageOfferOperation(
-            participantEffect: ParticipantEffectResource,
-            operation: OperationResource,
-            details: OpManageOfferDetailsResource
+            participantEffect: Horizon.ParticipantsEffectResource,
+            operation: Horizon.OperationResource,
+            details: Horizon.ManageOfferOpResource
             ) -> [TransactionDetails.Model.SectionModel] {
             
             guard let baseAssetResource = details.baseAsset,
@@ -265,9 +265,9 @@ extension TransactionDetails {
         }
         
         private func sectionsForMatchedEffect(
-            participantEffect: ParticipantEffectResource,
-            matchedEffect: EffectMatchedResource,
-            operation: OperationResource
+            participantEffect: Horizon.ParticipantsEffectResource,
+            matchedEffect: Horizon.EffectMatchedResource,
+            operation: Horizon.OperationResource
             ) -> [TransactionDetails.Model.SectionModel] {
             
             guard let funded = matchedEffect.funded,
@@ -415,14 +415,14 @@ extension TransactionDetails {
         }
         
         private func createDescriptionCells(
-            details: OperationDetailsResource,
-            balanceChangeEffect: EffectBalanceChangeResource
+            details: Horizon.BaseOperationDetailsResource,
+            balanceChangeEffect: Horizon.EffectBalanceChangeResource
             ) -> [TransactionDetails.Model.CellModel] {
             
             var cells: [TransactionDetails.Model.CellModel] = []
-            switch details.operationDetailsRelatedToBalance {
+            switch details.baseOperationDetailsRelatedToBalance {
                 
-            case .opCreateWithdrawRequestDetails(let withdraw):
+            case .createWithdrawRequestOp(let withdraw):
                 guard let address = withdraw.creatorDetails["address"] as? String else {
                     return cells
                 }
@@ -433,10 +433,10 @@ extension TransactionDetails {
                 )
                 cells.append(addressCell)
                 
-            case .opPaymentDetails(let payment):
+            case .paymentOp(let payment):
                 var emailCell: TransactionDetails.Model.CellModel?
                 
-                if balanceChangeEffect as? EffectChargedResource != nil,
+                if balanceChangeEffect as? Horizon.EffectsChargedResource != nil,
                     let toAccount = payment.accountTo,
                     let toAccountId = toAccount.id {
                     
@@ -455,7 +455,7 @@ extension TransactionDetails {
                         identifier: .email
                     )
                     cells.append(accountToCell)
-                } else if balanceChangeEffect as? EffectFundedResource != nil,
+                } else if balanceChangeEffect as? Horizon.EffectsFundedResource != nil,
                     let fromAccount = payment.accountFrom,
                     let fromAccountId = fromAccount.id {
                     
@@ -479,10 +479,13 @@ extension TransactionDetails {
                     cells.append(cell)
                 }
                 
-            case .opCreateAMLAlertRequestDetails,
-                 .opPayoutDetails,
-                 .opCreateIssuanceRequestDetails,
-                 .opCreateAtomicSwapAskRequestDetails(_),
+            case .createAmlAlertRequestOp,
+                 .payoutOp,
+                 .createIssuanceRequestOp,
+                 .createAtomicSwapAskRequestOp,
+                 .createPaymentRequestOp,
+                 .createRedemptionRequestOp,
+                 .openSwapOp,
                  .`self`:
                 
                 return cells
@@ -491,7 +494,7 @@ extension TransactionDetails {
         }
         
         private func createTitleCell(
-            balanceChangeEffect: EffectBalanceChangeResource
+            balanceChangeEffect: Horizon.EffectBalanceChangeResource
             ) -> TransactionDetails.Model.CellModel {
             
             var effectCellValue: String?
@@ -499,31 +502,31 @@ extension TransactionDetails {
             
             switch balanceChangeEffect.effectBalanceChangeType {
                 
-            case .effectCharged:
+            case .effectsCharged:
                 effectCellValue = Localized(.charged)
                 identifier = .charged
                 
-            case .effectChargedFromLocked:
+            case .effectsChargedFromLocked:
                 effectCellValue = Localized(.charged_from_lock)
                 identifier = .charged
                 
-            case .effectFunded:
+            case .effectsFunded:
                 effectCellValue = Localized(.funded)
                 identifier = .received
                 
-            case .effectIssued:
+            case .effectsIssued:
                 effectCellValue = Localized(.issued)
                 identifier = .received
                 
-            case .effectLocked:
+            case .effectsLocked:
                 effectCellValue = Localized(.locked)
                 identifier = .locked
                 
-            case .effectUnlocked:
+            case .effectsUnlocked:
                 effectCellValue = Localized(.unlocked)
                 identifier = .unlocked
                 
-            case .effectWithdrawn:
+            case .effectsWithdrawn:
                 effectCellValue = Localized(.withdrawn)
                 identifier = .locked
                 
@@ -541,14 +544,14 @@ extension TransactionDetails {
         }
         
         private func createPriceCell(
-            details: OperationDetailsResource,
-            matchedEffect: EffectMatchedResource
+            details: Horizon.BaseOperationDetailsResource,
+            matchedEffect: Horizon.EffectMatchedResource
             ) -> TransactionDetails.Model.CellModel? {
             
             var baseAsset: String
             var quoteAsset: String
             
-            if let manageOffer = details as? OpManageOfferDetailsResource {
+            if let manageOffer = details as? Horizon.ManageOfferOpResource {
                 guard let baseAssetResource = manageOffer.baseAsset,
                     let manageOfferBaseAsset = baseAssetResource.id,
                     let quoteAssetResource = manageOffer.quoteAsset,
@@ -559,7 +562,7 @@ extension TransactionDetails {
                 baseAsset = manageOfferBaseAsset
                 quoteAsset = manageOfferQuoteAsset
                 
-            } else if details as? OpCheckSaleStateDetailsResource != nil {
+            } else if details as? Horizon.CheckSaleStateOpResource != nil {
                 guard let charged = matchedEffect.charged,
                     let funded = matchedEffect.funded else {
                         return nil
@@ -590,15 +593,15 @@ extension TransactionDetails {
         }
         
         private func createPaymentFeeCell(
-            details: OperationDetailsResource,
-            balanceChangeEffect: EffectBalanceChangeResource
+            details: Horizon.BaseOperationDetailsResource,
+            balanceChangeEffect: Horizon.EffectBalanceChangeResource
             ) -> [TransactionDetails.Model.CellModel] {
             
             var cells: [Model.CellModel] = []
-            switch details.operationDetailsRelatedToBalance {
+            switch details.baseOperationDetailsRelatedToBalance {
                 
-            case .opPaymentDetails(let resource):
-                guard balanceChangeEffect as? EffectChargedResource != nil,
+            case .paymentOp(let resource):
+                guard balanceChangeEffect as? Horizon.EffectsChargedResource != nil,
                     let assetResource = resource.asset,
                     let asset = assetResource.id,
                     let fee = balanceChangeEffect.fee,
@@ -630,11 +633,14 @@ extension TransactionDetails {
                 return cells
                 
             case .`self`,
-                 .opCreateIssuanceRequestDetails,
-                 .opCreateAMLAlertRequestDetails,
-                 .opCreateWithdrawRequestDetails,
-                 .opCreateAtomicSwapAskRequestDetails(_),
-                 .opPayoutDetails:
+                 .createIssuanceRequestOp,
+                 .createAmlAlertRequestOp,
+                 .createWithdrawRequestOp,
+                 .createAtomicSwapAskRequestOp,
+                 .createPaymentRequestOp,
+                 .createRedemptionRequestOp,
+                 .openSwapOp,
+                 .payoutOp:
                 
                 break
             }
@@ -643,15 +649,15 @@ extension TransactionDetails {
         }
         
         private func createDetailsCells(
-            details: OperationDetailsResource,
-            balanceChangeEffect: EffectBalanceChangeResource
+            details: Horizon.BaseOperationDetailsResource,
+            balanceChangeEffect: Horizon.EffectBalanceChangeResource
             ) -> [TransactionDetails.Model.CellModel] {
             
             var detailsCells: [TransactionDetails.Model.CellModel] = []
             
-            switch details.operationDetailsRelatedToBalance {
+            switch details.baseOperationDetailsRelatedToBalance {
                 
-            case .opCreateIssuanceRequestDetails(let resource):
+            case .createIssuanceRequestOp(let resource):
                 let referenceCell = TransactionDetails.Model.CellModel(
                     title: resource.reference,
                     hint: Localized(.reference),
@@ -659,8 +665,8 @@ extension TransactionDetails {
                 )
                 detailsCells.append(referenceCell)
                 
-            case .opPaymentDetails(let resource):
-                guard balanceChangeEffect as? EffectChargedResource != nil else {
+            case .paymentOp(let resource):
+                guard balanceChangeEffect as? Horizon.EffectsChargedResource != nil else {
                     return []
                 }
                 
@@ -683,10 +689,13 @@ extension TransactionDetails {
                 }
                 
             case .`self`,
-                 .opCreateAMLAlertRequestDetails,
-                 .opCreateWithdrawRequestDetails,
-                 .opCreateAtomicSwapAskRequestDetails(_),
-                 .opPayoutDetails:
+                 .createAmlAlertRequestOp,
+                 .createWithdrawRequestOp,
+                 .createAtomicSwapAskRequestOp,
+                 .createPaymentRequestOp,
+                 .createRedemptionRequestOp,
+                 .openSwapOp,
+                 .payoutOp:
                 
                 break
             }
@@ -695,7 +704,7 @@ extension TransactionDetails {
         }
         
         private func createManageAssetPairDetailsSection(
-            details: OpManageAssetPairDetailsResource
+            details: Horizon.ManageAssetPairOpResource
             ) -> TransactionDetails.Model.SectionModel? {
             
             guard let baseAssetResource = details.baseAsset,
@@ -737,21 +746,21 @@ extension TransactionDetails {
             let restrictedByPhysical: String
             let restrictedByCurrent: String
             
-            if let policy = details.policies {
+            if let policy = details.policies?.value {
                 tradable = self.meetsPolicy(
-                    policy: policy.value,
+                    policy: policy,
                     policyToCheck: .tradeableSecondaryMarket
                     ) ? Localized(.can_be_traded_on_secondary_market) :
                     Localized(.cannot_be_traded_on_secondary_market)
                 
                 restrictedByPhysical = self.meetsPolicy(
-                    policy: policy.value,
+                    policy: policy,
                     policyToCheck: .physicalPriceRestriction
                     ) ? Localized(.is_restricted_by_physical_price) :
                     Localized(.is_not_restricted_by_physical_price)
                 
                 restrictedByCurrent = self.meetsPolicy(
-                    policy: policy.value,
+                    policy: policy,
                     policyToCheck: .currentPriceRestriction
                     ) ? Localized(.is_restricted_by_current_price) :
                     Localized(.is_not_restricted_by_current_price)

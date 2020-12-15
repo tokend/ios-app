@@ -12,13 +12,13 @@ class TransactionsHistoryRepo {
     private let api: HistoryApiV3
     private let balanceId: String
     
-    private let transactionsHistory: BehaviorRelay<[ParticipantEffectResource]> = BehaviorRelay(value: [])
+    private let transactionsHistory: BehaviorRelay<[Horizon.ParticipantsEffectResource]> = BehaviorRelay(value: [])
     private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
     private let errors: PublishRelay<Swift.Error> = PublishRelay()
     
     private let pagination: RequestPagination = {
         let strategy = IndexedPaginationStrategy(index: nil, limit: 10, order: .descending)
-        return RequestPagination(.strategy(strategy))
+        return RequestPagination(.indexedStrategy(strategy))
     }()
     
     private var prevRequest: JSONAPI.RequestModel?
@@ -33,7 +33,7 @@ class TransactionsHistoryRepo {
     
     // MARK: - Public propeties
     
-    public var history: [ParticipantEffectResource] {
+    public var history: [Horizon.ParticipantsEffectResource] {
         return self.transactionsHistory.value
     }
     
@@ -50,7 +50,7 @@ class TransactionsHistoryRepo {
     
     // MARK: - Public
     
-    func observeHistory() -> Observable<[ParticipantEffectResource]> {
+    func observeHistory() -> Observable<[Horizon.ParticipantsEffectResource]> {
         return self.transactionsHistory.asObservable()
     }
     
@@ -108,7 +108,7 @@ class TransactionsHistoryRepo {
         self.isLoadingMore = true
         self.loadingStatus.accept(.loading)
         self.api.loadPageForLinks(
-            ParticipantEffectResource.self,
+            Horizon.ParticipantsEffectResource.self,
             links: links,
             page: .next,
             previousRequest: prevRequest,
@@ -148,11 +148,11 @@ class TransactionsHistoryRepo {
     // MARK: - Private
     
     private func historyDidLoad(
-        history: [ParticipantEffectResource],
+        history: [Horizon.ParticipantsEffectResource],
         fromLast: Bool
         ) {
         
-        var newHistory: [ParticipantEffectResource] = []
+        var newHistory: [Horizon.ParticipantsEffectResource] = []
         if fromLast {
             newHistory.append(contentsOf: self.history)
         }

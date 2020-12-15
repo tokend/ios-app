@@ -10,7 +10,7 @@ class AccountRepo {
         case loaded
     }
     
-    typealias Account = AccountResource
+    typealias Account = Horizon.AccountResource
     
     // MARK: - Private properties
     

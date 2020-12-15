@@ -250,8 +250,7 @@ extension TransactionDetails.InvestmentSectionsProvider: TransactionDetails.Sect
             fee: self.amountConverter.convertDecimalToInt64(value: offer.fee, precision: networkInfo.precision),
             offerID: offer.offerId,
             orderBookID: Uint64(offer.orderBookId),
-            ext: .emptyVersion()
-        )
+            ext: .emptyVersion       )
         
         let transactionBuilder = TransactionBuilder(
             networkParams: networkInfo.networkParams,

@@ -370,7 +370,7 @@ extension SaleInvest.Interactor: SaleInvest.BusinessLogic {
         
         self.updateRelay
             .asObservable()
-            .throttle(0.2, scheduler: scheduler)
+            .throttle(.milliseconds(200), scheduler: scheduler)
             .subscribe(onNext: { [weak self] _ in
                 self?.updateScene()
             }).disposed(by: self.disposeBag)

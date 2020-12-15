@@ -3,7 +3,7 @@ import TokenDSDK
 import RxSwift
 
 protocol TransactionsListSceneTransactionsProviderProtocol {
-    func observeParicipantEffects() -> Observable<[ParticipantEffectResource]>
+    func observeParicipantEffects() -> Observable<[Horizon.ParticipantsEffectResource]>
     func observeLoadingStatus() -> Observable<TransactionsListScene.TransactionsFetcherProtocol.LoadingStatus>
     func observeLoadingMoreStatus() -> Observable<TransactionsListScene.TransactionsFetcherProtocol.LoadingStatus>
     func observeErrors() -> Observable<Swift.Error>

@@ -9,7 +9,7 @@ extension TransactionsListScene {
         // MARK: - Private properties
         
         private let transactionsProvider: TransactionsProviderProtocol
-        private var effects: [ParticipantEffectResource] = []
+        private var effects: [Horizon.ParticipantsEffectResource] = []
         private let disposeBag: DisposeBag = DisposeBag()
         
         // MARK: - Public properties
@@ -108,20 +108,20 @@ extension TransactionsListScene {
         
         // MARK: Helpers
         
-        private func parseEffects(_ effects: [ParticipantEffectResource]) -> Transactions {
+        private func parseEffects(_ effects: [Horizon.ParticipantsEffectResource]) -> Transactions {
             let transactions = effects.compactMap { (effect) -> Transaction? in
                 return self.parseTransactionsFromEffect(effect)
             }
             return transactions
         }
         
-        private func parseTransactionsFromEffect(_ participantEffect: ParticipantEffectResource) -> Transaction? {
+        private func parseTransactionsFromEffect(_ participantEffect: Horizon.ParticipantsEffectResource) -> Transaction? {
             guard let effect = participantEffect.effect,
                 let operation = participantEffect.operation else {
                     return nil
             }
             
-            switch effect.effectType {
+            switch effect.baseEffectType {
                 
             case .effectBalanceChange(let balanceChangeEffect):
                 return self.parseBalanceChnageEffect(
@@ -143,9 +143,9 @@ extension TransactionsListScene {
         }
         
         private func parseBalanceChnageEffect(
-            participantEffect: ParticipantEffectResource,
-            balanceChangeEffect: EffectBalanceChangeResource,
-            operation: OperationResource
+            participantEffect: Horizon.ParticipantsEffectResource,
+            balanceChangeEffect: Horizon.EffectBalanceChangeResource,
+            operation: Horizon.OperationResource
             ) -> Transaction? {
             
             guard let balance = participantEffect.balance,
@@ -179,9 +179,9 @@ extension TransactionsListScene {
         }
         
         private func parseMatchedEffect(
-            participantEffect: ParticipantEffectResource,
-            matchedEffect: EffectMatchedResource,
-            operation: OperationResource
+            participantEffect: Horizon.ParticipantsEffectResource,
+            matchedEffect: Horizon.EffectMatchedResource,
+            operation: Horizon.OperationResource
             ) -> Transaction? {
             
             guard let balance = participantEffect.balance,
@@ -219,29 +219,29 @@ extension TransactionsListScene {
             return transaction
         }
         
-        private func getAmountEffect(_ effect: EffectBalanceChangeResource) -> Transaction.AmountEffect {
+        private func getAmountEffect(_ effect: Horizon.EffectBalanceChangeResource) -> Transaction.AmountEffect {
             
             switch effect.effectBalanceChangeType {
                 
-            case .effectCharged:
+            case .effectsCharged:
                 return .charged
                 
-            case .effectChargedFromLocked:
+            case .effectsChargedFromLocked:
                 return .charged_from_locked
                 
-            case .effectFunded:
+            case .effectsFunded:
                 return .funded
                 
-            case .effectIssued:
+            case .effectsIssued:
                 return .issued
                 
-            case .effectLocked:
+            case .effectsLocked:
                 return .locked
                 
-            case .effectUnlocked:
+            case .effectsUnlocked:
                 return .unlocked
                 
-            case .effectWithdrawn:
+            case .effectsWithdrawn:
                 return .withdrawn
                 
             case .`self`:
@@ -249,33 +249,37 @@ extension TransactionsListScene {
             }
         }
         
-        private func getCounterparty(details: OperationDetailsResource) -> String? {
-            if let manageOfferDetails = details as? OpManageOfferDetailsResource {
+        private func getCounterparty(details: Horizon.BaseOperationDetailsResource) -> String? {
+            if let manageOfferDetails = details as? Horizon.ManageOfferOpResource {
                 return manageOfferDetails.orderBookId == 0 ?
                     Localized(.pending_order) : Localized(.pending_investment)
-            } else if details as? OpManageAssetPairDetailsResource != nil {
+            } else if details as? Horizon.ManageAssetPairOpResource != nil {
                 return Localized(.manage_asset_pair)
-            } else if details as? OpCheckSaleStateDetailsResource != nil {
+            } else if details as? Horizon.CheckSaleStateOpResource != nil {
                 return Localized(.investment_cancellation)
             } else {
-                switch details.operationDetailsRelatedToBalance {
+                switch details.baseOperationDetailsRelatedToBalance {
                     
-                case .opCreateWithdrawRequestDetails:
+                case .createWithdrawRequestOp:
                     return Localized(.withdrawal)
                     
-                case .opPaymentDetails:
+                case .paymentOp:
                     return Localized(.payment)
                     
-                case .opCreateIssuanceRequestDetails:
+                case .createIssuanceRequestOp:
                     return Localized(.issuance)
                     
-                case .opCreateAMLAlertRequestDetails:
+                case .createAmlAlertRequestOp:
                     return Localized(.aml_alert_request)
                     
-                case .opPayoutDetails:
+                case .payoutOp:
                     return Localized(.payout)
                     
-                case .`self`, .opCreateAtomicSwapAskRequestDetails(_):
+                case .`self`,
+                     .createAtomicSwapAskRequestOp,
+                     .createPaymentRequestOp,
+                     .createRedemptionRequestOp,
+                     .openSwapOp:
                     
                     return nil
                 }

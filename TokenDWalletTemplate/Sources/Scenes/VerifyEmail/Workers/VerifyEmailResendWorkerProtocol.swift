@@ -3,7 +3,7 @@ import TokenDSDK
 
 enum VerifyEmailResendResult {
     case succeded
-    case failed(ApiErrors)
+    case failed(Error)
 }
 
 protocol VerifyEmailResendWorkerProtocol {

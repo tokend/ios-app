@@ -14,18 +14,18 @@ public class PollsRepo {
     
     private let pagination: RequestPagination = {
         let strategy = IndexedPaginationStrategy(index: nil, limit: 10, order: .descending)
-        return RequestPagination(.strategy(strategy))
+        return RequestPagination(.indexedStrategy(strategy))
     }()
-    private let loadAllVotesController: LoadAllResourcesController<VoteResource> = {
+    private let loadAllVotesController: LoadAllResourcesController<Horizon.VoteResource> = {
         let strategy = IndexedPaginationStrategy(index: nil, limit: 50, order: .descending)
-        return LoadAllResourcesController(requestPagination: RequestPagination(.strategy(strategy)))
+        return LoadAllResourcesController(requestPagination: RequestPagination(.indexedStrategy(strategy)))
     }()
     private var prevRequest: JSONAPI.RequestModel?
     private var prevLinks: Links?
     private var isLoadingMore: Bool = false
     
-    private let polls: BehaviorRelay<[PollResource]> = BehaviorRelay(value: [])
-    private let votes: BehaviorRelay<[VoteResource]> = BehaviorRelay(value: [])
+    private let polls: BehaviorRelay<[Horizon.PollResource]> = BehaviorRelay(value: [])
+    private let votes: BehaviorRelay<[Horizon.VoteResource]> = BehaviorRelay(value: [])
     private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
     private let errorStatus: PublishRelay<Swift.Error> = PublishRelay()
     
@@ -44,12 +44,12 @@ public class PollsRepo {
     
     // MARK: - Public
     
-    func observePolls() -> Observable<[PollResource]> {
+    func observePolls() -> Observable<[Horizon.PollResource]> {
         self.loadPolls()
         return self.polls.asObservable()
     }
     
-    func observeVotes() -> Observable<[VoteResource]> {
+    func observeVotes() -> Observable<[Horizon.VoteResource]> {
         self.loadVotes()
         return self.votes.asObservable()
     }
@@ -85,7 +85,7 @@ public class PollsRepo {
         self.isLoadingMore = true
         self.loadingStatus.accept(.loading)
         self.pollsApi.loadPageForLinks(
-            PollResource.self,
+            Horizon.PollResource.self,
             links: links,
             page: .next,
             previousRequest: prevRequest,

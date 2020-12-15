@@ -131,7 +131,7 @@ extension Chart {
                 return nil
             }
             
-            return self.sceneModel.chartsPeriods.index(of: selected)
+            return self.sceneModel.chartsPeriods.firstIndex(of: selected)
         }
         
         private func getChartInfoModel(

@@ -358,7 +358,7 @@ extension RegisterScene.Interactor: RegisterScene.BusinessLogic {
     }
     
     func onFieldShouldReturn(request: Event.FieldShouldReturn.Request) {
-        guard let fieldIndex = self.sceneModel.fields.index(where: { (field) -> Bool in
+        guard let fieldIndex = self.sceneModel.fields.firstIndex(where: { (field) -> Bool in
             switch field.type {
                 
             case .scanServerInfo:

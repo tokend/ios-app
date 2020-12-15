@@ -85,7 +85,7 @@ extension ConfirmationScene {
                 fee: fee,
                 offerID: self.saleInvestModel.offerId,
                 orderBookID: self.saleInvestModel.orderBookId,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let transactionBuilder: TransactionBuilder = TransactionBuilder(
@@ -105,7 +105,7 @@ extension ConfirmationScene {
                     fee: fee,
                     offerID: prevOfferId,
                     orderBookID: self.saleInvestModel.orderBookId,
-                    ext: .emptyVersion()
+                    ext: .emptyVersion
                 )
                 
                 transactionBuilder.add(

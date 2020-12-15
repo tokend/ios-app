@@ -281,7 +281,7 @@ extension TransactionDetails.PendingOfferSectionsProvider: TransactionDetails.Se
             fee: self.amountConverter.convertDecimalToInt64(value: offer.fee, precision: networkInfo.precision),
             offerID: offer.offerId,
             orderBookID: 0,
-            ext: .emptyVersion()
+            ext: .emptyVersion
         )
         
         let transactionBuilder = TransactionBuilder(

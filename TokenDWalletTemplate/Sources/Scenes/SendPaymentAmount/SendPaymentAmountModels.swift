@@ -12,7 +12,7 @@ public enum SendPaymentAmount {
 
 public extension SendPaymentAmount.Model {
     
-   public class SceneModel {
+   class SceneModel {
         public var selectedBalance: BalanceDetails?
         public var senderFee: FeeModel?
         public var recipientAddress: String?
@@ -34,37 +34,37 @@ public extension SendPaymentAmount.Model {
         }
     }
     
-    public struct ViewConfig {
+    struct ViewConfig {
         let descriptionIsHidden: Bool
         let actionButtonTitle: NSAttributedString
     }
     
-    public struct SceneViewModel {
+    struct SceneViewModel {
         let selectedBalance: BalanceDetailsViewModel?
         let recipientAddress: String?
         let amount: Decimal
         let amountValid: Bool
     }
     
-    public struct BalanceDetails {
+    struct BalanceDetails {
         public let asset: String
         public let balance: Decimal
         public let balanceId: String
     }
     
-    public struct BalanceDetailsViewModel {
+    struct BalanceDetailsViewModel {
         public let asset: String
         public let balance: String
         public let balanceId: String
     }
     
-    public struct FeeModel {
+    struct FeeModel {
         public let asset: String
         public let fixed: Decimal
         public let percent: Decimal
     }
     
-    public struct SendPaymentModel {
+    struct SendPaymentModel {
         public let senderBalanceId: String
         public let asset: String
         public let amount: Decimal
@@ -76,25 +76,25 @@ public extension SendPaymentAmount.Model {
         public let reference: String
     }
     
-    public struct SendWithdrawModel {
+    struct SendWithdrawModel {
         public let senderBalance: BalanceDetails
         public let asset: String
         public let amount: Decimal
         public let senderFee: FeeModel
     }
     
-    public enum Operation {
+    enum Operation {
         case handleSend
         case handleWithdraw
     }
     
-    public enum FeeType {
+    enum FeeType {
         case payment
         case offer
         case withdraw
     }
     
-    public struct FeeOverviewModel {
+    struct FeeOverviewModel {
         let asset: String
     }
 }

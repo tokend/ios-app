@@ -1,7 +1,7 @@
 import Foundation
 import TokenDSDK
 
-extension ExternalSystemIdResource {
+extension Horizon.ExternalSystemIDResource {
     
     public var addressWithPayload: AddressWithPayload? {
         guard let data = self.data else { return nil }

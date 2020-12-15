@@ -1,6 +1,6 @@
 import TokenDSDK
 
-extension PollResource {
+extension Horizon.PollResource {
     
     var subject: SubjectDetails? {
         let details = self.creatorDetails
@@ -48,7 +48,7 @@ extension PollResource {
     }
 }
 
-extension PollResource {
+extension Horizon.PollResource {
     
     struct SubjectDetails: Decodable {
         let question: String

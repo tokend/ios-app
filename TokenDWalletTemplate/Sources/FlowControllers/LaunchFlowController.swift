@@ -364,7 +364,8 @@ class LaunchFlowController: BaseFlowController {
         let termsUrl = provider.getTermsUrl()
         let sceneModel = RegisterScene.Model.SceneModel.signInWithEmail(self.submittedEmail, termsUrl: termsUrl)
         let signUpRequestBuilder = SignUpRequestBuilder(
-            keyServerApi: self.flowControllerStack.keyServerApi
+            keyServerApi: self.flowControllerStack.keyServerApi,
+            keyValueApi: self.flowControllerStack.apiV3.keyValuesApi
         )
         
         let registrationWorker = RegisterScene.TokenDRegisterWorker(

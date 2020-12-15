@@ -345,7 +345,7 @@ class BaseFlowController {
                 )
                 
             case .code(_, let inputCallback):
-                inputCallback(text)
+                inputCallback(text, { })
             }
             }, cancel: {
                 cancel()
@@ -357,7 +357,7 @@ class BaseFlowController {
         password: String,
         kdfParams: KDFParams,
         tokenSignData: ApiCallbacks.TokenSignData,
-        inputCallback: @escaping (_ signedToken: String) -> Void,
+        inputCallback: @escaping (_ signedToken: String, _ completion: @escaping () -> Void) -> Void,
         cancel: @escaping () -> Void
         ) {
         
@@ -378,7 +378,7 @@ class BaseFlowController {
                 cancel()
                 return
         }
-        inputCallback(signedToken)
+        inputCallback(signedToken, { })
     }
     
     public func getSignedTokenForPassword(
@@ -392,12 +392,12 @@ class BaseFlowController {
         ) -> String? {
         
         guard
-            let keyPair = try? KeyPairBuilder.getKeyPair(
-                forEmail: email,
+            let keyPair = try? KeyPairBuilder.getKeyPairs(
+                forLogin: email,
                 password: password,
                 keychainData: keychainData,
                 walletKDF: walletKDF
-            ) else {
+            ).first else {
                 print(Localized(.unable_to_get_keychaindata_or_create_key_pair))
                 return nil
         }

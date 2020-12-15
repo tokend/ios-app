@@ -62,7 +62,7 @@ extension TradesList {
             }
             
             let selectedQuoteAssetIndex: Int?
-            if let selected = selectedQuoteAsset, let index = quoteAssets.index(of: selected) {
+            if let selected = selectedQuoteAsset, let index = quoteAssets.firstIndex(of: selected) {
                 selectedQuoteAssetIndex = index
             } else {
                 selectedQuoteAssetIndex = nil

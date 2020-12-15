@@ -79,14 +79,14 @@ extension TradeOffers {
             self.loadOffers(pageSize: self.pageSize)
         }
         
-        private func onItemsLoaded(resource: OrderBookResource?) {
+        private func onItemsLoaded(resource: Horizon.OrderBookResource?) {
             let buyItems = self.mapItems(resource?.buyEntries)
             let sellItems = self.mapItems(resource?.sellEntries)
             
             self.orderBook.accept(OrderBook(buyItems: buyItems, sellItems: sellItems))
         }
         
-        private func mapItems(_ items: [OrderBookEntryResource]?) -> [Model.Offer] {
+        private func mapItems(_ items: [Horizon.OrderBookEntryResource]?) -> [Model.Offer] {
             guard let items = items else {
                 return []
             }
@@ -135,7 +135,7 @@ extension TradeOffers.OffersFetcher: TradeOffers.OffersFetcherProtocol {
     }
 }
 
-extension OrderBookEntryResource {
+extension Horizon.OrderBookEntryResource {
     fileprivate typealias Model = TradeOffers.Model
     fileprivate typealias Amount = Model.Amount
     fileprivate typealias Offer = Model.Offer

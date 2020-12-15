@@ -67,7 +67,7 @@ extension AuthenticatorAuth {
             completion: @escaping (PollAuthResult) -> Void
             ) {
             
-            self.keyServerApi.requestDefaultKDF { [weak self] (result) in
+            self.keyServerApi.getDefaultKDFParams { [weak self] (result) in
                 switch result {
                     
                 case .failure(let error):
@@ -96,7 +96,7 @@ extension AuthenticatorAuth {
             }
             
             let walletKdfParams = WalletKDFParams(kdfParams: kdfParams, salt: salt)
-            self.keyServerApi.requestWallet(
+            self.keyServerApi.getWallet(
                 walletId: walletId,
                 walletKDF: walletKdfParams,
                 completion: { [weak self] (result) in
@@ -161,11 +161,11 @@ extension AuthenticatorAuth {
                     return
             }
             
-            if self.keychainManager.saveAccount(walletDataModel.email),
-                self.keychainManager.saveKeyData(key, account: walletDataModel.email),
-                self.userDataManager.saveWalletData(walletData, account: walletDataModel.email) {
+            if self.keychainManager.saveAccount(walletDataModel.login),
+               self.keychainManager.saveKeyData(key, account: walletDataModel.login),
+               self.userDataManager.saveWalletData(walletData, account: walletDataModel.login) {
                 
-                completion(.success(account: walletDataModel.email))
+                completion(.success(account: walletDataModel.login))
             } else {
                 completion(.failure(Localized(.failed_to_save_key_and_wallet_data)))
             }

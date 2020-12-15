@@ -65,19 +65,19 @@ extension Polls {
             
             let singleChoiceVote = SingleChoiceVote(
                 choice: Uint32(choice),
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             let voteData = VoteData.singleChoice(singleChoiceVote)
             let createVoteData = CreateVoteData(
                 pollID: pollId,
                 data: voteData,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             let data = ManageVoteOp.ManageVoteOpData.create(createVoteData)
             
             let manageVoteOp = ManageVoteOp(
                 data: data,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let transactionBuilder = TransactionBuilder(
@@ -120,12 +120,12 @@ extension Polls {
             
             let removeVoteData = RemoveVoteData(
                 pollID: pollId,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             let data = ManageVoteOp.ManageVoteOpData.remove(removeVoteData)
             let manageVoteOp = ManageVoteOp(
                 data: data,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let transactionBuilder = TransactionBuilder(

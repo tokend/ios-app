@@ -83,7 +83,7 @@ extension Settings {
                 .rx
                 .contentOffset
                 .asDriver()
-                .throttle(0.25)
+                .throttle(.milliseconds(250))
                 .drive(onNext: { [weak self] (offset) in
                     self?.updateContentOffset(offset: offset)
                 })

@@ -50,8 +50,7 @@ class ExternalSystemBalancesManager {
         
         let operation = BindExternalSystemAccountIdOp(
             externalSystemType: externalSystemType,
-            ext: .emptyVersion()
-        )
+            ext: .emptyVersion       )
         let transactionBuilder: TransactionBuilder = TransactionBuilder(
             networkParams: networkInfo.networkParams,
             sourceAccountId: self.userDataProvider.accountId,

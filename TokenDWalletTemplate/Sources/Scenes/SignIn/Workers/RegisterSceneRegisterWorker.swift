@@ -167,13 +167,18 @@ extension RegisterScene {
             ) {
             
             self.flowControllerStack.keyServerApi.loginWith(
-                email: email,
+                login: email,
                 password: password,
                 completion: { [weak self] (result) in
                     switch result {
                         
-                    case .success(let walletDataModel, let keyPair):
+                    case .success((let walletDataModel, let keyPair)):
                         guard let strongSelf = self else {
+                            completion(.failed(.failedToSaveAccount))
+                            return
+                        }
+                        
+                        guard let keyPair = keyPair.first else {
                             completion(.failed(.failedToSaveAccount))
                             return
                         }
@@ -204,35 +209,18 @@ extension RegisterScene {
                         let signError: RegisterSceneSignInResult.SignError
                         
                         switch error {
+                        
+                        case KeyServerApi.GetWalletError.wrongPassword:
+                            signError = .wrongPassword
                             
-                        case .requestWalletError(let requestWalletError):
-                            switch requestWalletError {
-                                
-                            case .wrongEmail:
-                                signError = .wrongEmail
-                                
-                            case .wrongPassword:
-                                signError = .wrongPassword
-                                
-                            case .emailShouldBeVerified(let walletId):
-                                signError = .emailShouldBeVerified(walletId: walletId)
-                                
-                            case .tfaFailed:
-                                signError = .tfaFailed
-                                
-                            default:
-                                signError = .otherError(requestWalletError)
-                            }
+                        case KeyServerApi.GetWalletError.walletShouldBeVerified(let walletId):
+                            signError = .emailShouldBeVerified(walletId: walletId)
                             
-                        case .walletKDFError(let walletKDFError):
-                            switch walletKDFError {
-                                
-                            case .emailNotFound:
-                                signError = .wrongPassword
-                                
-                            default:
-                                signError = .otherError(walletKDFError)
-                            }
+                        case KeyServerApi.GetWalletKDFError.loginNotFound:
+                            signError = .wrongEmail
+                            
+                        case KeyServerApi.GetWalletError.tfaFailed:
+                            signError = .tfaFailed
                             
                         default:
                             signError = .otherError(error)

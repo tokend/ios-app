@@ -7,13 +7,12 @@ source 'https://github.com/CocoaPods/Specs.git'
 source 'git@github.com:tokend/ios-specs.git'
 
 def main_app_pods
-  pod 'TokenDSDK', '3.2.0-rc.1'
-  pod 'TokenDSDK/AlamofireNetwork'
-  pod 'TokenDSDK/JSONAPI'
-  pod 'TokenDSDK/AlamofireNetworkJSONAPI'
-  pod 'TokenDSDK/KeyServer'
+  pod 'TokenDSDK',                          '3.2.0-rc.6'
+  pod 'TokenDSDK/AlamofireNetwork',         '3.2.0-rc.6'
+  pod 'TokenDSDK/JSONAPI',                  '3.2.0-rc.6'
+  pod 'TokenDSDK/AlamofireNetworkJSONAPI',  '3.2.0-rc.6'
+  pod 'TokenDSDK/KeyServer',                '3.2.0-rc.6'
   
-  pod 'Alamofire', '~> 4.8'
   pod 'QRCodeReader.swift',       '8.1.1'
 #  pod 'ReachabilitySwift',        '~> 4.1'
   pod 'RxCocoa',                  '5.1.0'

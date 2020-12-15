@@ -83,7 +83,7 @@ extension SendPaymentDestination {
             }
             
             self.generalApi.requestIdentities(
-                filter: .email(email),
+                filter: .login(email),
                 completion: { (result) in
                     switch result {
                         

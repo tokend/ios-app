@@ -211,7 +211,7 @@ extension SaleDetails {
                         options: [.new],
                         retainSelf: false
                     )
-                    .throttle(0.100, scheduler: MainScheduler.instance)
+                    .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
                     .subscribe { [weak self] _ in
                         self?.invalidateIntrinsicContentSize()
                     }

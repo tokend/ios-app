@@ -67,7 +67,7 @@ extension ConfirmationScene {
                 sourceFee: sourceFee,
                 destinationFee: destinationFee,
                 sourcePaysForDest: self.payRecipientFeeCellState,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let amount = self.amountConverter.convertDecimalToUInt64(
@@ -98,7 +98,7 @@ extension ConfirmationScene {
                 feeData: feeData,
                 subject: self.sendPaymentModel.description,
                 reference: self.sendPaymentModel.reference,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let transactionBuilder: TransactionBuilder = TransactionBuilder(
@@ -144,7 +144,7 @@ extension ConfirmationScene {
             let destinationFee = Fee(
                 fixed: fixedFee,
                 percent: percent,
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             return destinationFee
         }

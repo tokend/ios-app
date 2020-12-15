@@ -83,7 +83,7 @@ extension SaleInvest {
                 fee: fee,
                 offerID: cancelModel.prevOfferId,
                 orderBookID: Uint64(cancelModel.orderBookId),
-                ext: .emptyVersion()
+                ext: .emptyVersion
             )
             
             let transactionBuilder = TransactionBuilder(

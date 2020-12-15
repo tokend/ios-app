@@ -60,7 +60,7 @@ extension TransactionsListScene {
         
         // MARK: - TransactionsProviderProtocol
         
-        func observeParicipantEffects() -> Observable<[ParticipantEffectResource]> {
+        func observeParicipantEffects() -> Observable<[Horizon.ParticipantsEffectResource]> {
             return self.movementsRepo.observeMovements()
         }
         

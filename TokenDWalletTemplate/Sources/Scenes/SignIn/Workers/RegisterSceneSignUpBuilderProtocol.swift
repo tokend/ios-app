@@ -58,7 +58,7 @@ extension SignUpRequestBuilder: RegisterSceneSignUpBuilderProtocol {
         ) {
         
         self.buildSignUpRequest(
-            email: email,
+            login: email,
             password: password,
             completion: { (result) in
                 switch result {

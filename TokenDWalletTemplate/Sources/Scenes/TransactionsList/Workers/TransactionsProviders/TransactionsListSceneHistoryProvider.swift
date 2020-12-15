@@ -25,7 +25,7 @@ extension TransactionsListScene {
         
         // MARK: - Public properties
         
-        private let effects: BehaviorRelay<[ParticipantEffectResource]> = BehaviorRelay(value: [])
+        private let effects: BehaviorRelay<[Horizon.ParticipantsEffectResource]> = BehaviorRelay(value: [])
         
         private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
         private let loadingMoreStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
@@ -43,7 +43,7 @@ extension TransactionsListScene {
         
         // MARK: - Public
         
-        func observeParicipantEffects() -> Observable<[ParticipantEffectResource]> {
+        func observeParicipantEffects() -> Observable<[Horizon.ParticipantsEffectResource]> {
             return self.effects.asObservable()
         }
         

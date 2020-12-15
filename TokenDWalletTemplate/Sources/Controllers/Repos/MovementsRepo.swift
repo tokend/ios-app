@@ -12,13 +12,13 @@ class MovementsRepo {
     private let api: HistoryApiV3
     private let accountId: String
     
-    private let movements: BehaviorRelay<[ParticipantEffectResource]> = BehaviorRelay(value: [])
+    private let movements: BehaviorRelay<[Horizon.ParticipantsEffectResource]> = BehaviorRelay(value: [])
     private let loadingStatus: BehaviorRelay<LoadingStatus> = BehaviorRelay(value: .loaded)
     private let errors: PublishRelay<Swift.Error> = PublishRelay()
     
     private let pagination: RequestPagination = {
         let strategy = IndexedPaginationStrategy(index: nil, limit: 10, order: .descending)
-        return RequestPagination(.strategy(strategy))
+        return RequestPagination(.indexedStrategy(strategy))
     }()
     
     private var prevRequest: JSONAPI.RequestModel?
@@ -33,7 +33,7 @@ class MovementsRepo {
     
     // MARK: - Public propeties
     
-    public var movementsValue: [ParticipantEffectResource] {
+    public var movementsValue: [Horizon.ParticipantsEffectResource] {
         return self.movements.value
     }
     
@@ -50,7 +50,7 @@ class MovementsRepo {
     
     // MARK: - Public
     
-    func observeMovements() -> Observable<[ParticipantEffectResource]> {
+    func observeMovements() -> Observable<[Horizon.ParticipantsEffectResource]> {
         return self.movements.asObservable()
     }
     
@@ -110,7 +110,7 @@ class MovementsRepo {
         self.isLoadingMore = true
         self.loadingStatus.accept(.loading)
         self.api.loadPageForLinks(
-            ParticipantEffectResource.self,
+            Horizon.ParticipantsEffectResource.self,
             links: links,
             page: .next,
             previousRequest: prevRequest,
@@ -151,11 +151,11 @@ class MovementsRepo {
     // MARK: - Private
     
     private func movementsDidLoad(
-        movements: [ParticipantEffectResource],
+        movements: [Horizon.ParticipantsEffectResource],
         fromLast: Bool
         ) {
         
-        var newMovements: [ParticipantEffectResource] = []
+        var newMovements: [Horizon.ParticipantsEffectResource] = []
         if fromLast {
             newMovements.append(contentsOf: self.movementsValue)
         }

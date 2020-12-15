@@ -271,7 +271,8 @@ extension Settings {
                     case .faceID:
                         isTouchID = false
                         
-                    case .none:
+                    case .none,
+                         .LABiometryNone:
                         return nil
                         
                     case .touchID:

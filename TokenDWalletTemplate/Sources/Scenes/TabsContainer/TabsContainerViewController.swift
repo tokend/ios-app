@@ -162,7 +162,7 @@ extension TabsContainer {
             let scheduler = MainScheduler.instance
             self.containerView.rx
                 .contentOffset
-                .throttle(0.1, scheduler: scheduler)
+                .throttle(.milliseconds(100), scheduler: scheduler)
                 .subscribe(onNext: { [weak self] (offset) in
                     guard let tabIndex = self?.tabIndexForContentOffset(offset.x) else {
                         return

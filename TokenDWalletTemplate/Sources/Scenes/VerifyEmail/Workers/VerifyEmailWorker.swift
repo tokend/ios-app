@@ -65,7 +65,7 @@ extension VerifyEmailWorker: VerifyEmail.ResendWorker {
         completion: @escaping (VerifyEmailResendWorkerProtocol.Result) -> Void
         ) {
         
-        self.keyServerApi.resendEmail(walletId: self.walletId, completion: { (result) in
+        self.keyServerApi.resendVerificationCode(walletId: self.walletId, completion: { (result) in
             switch result {
                 
             case .failure(let errors):
@@ -84,7 +84,7 @@ extension VerifyEmailWorker: VerifyEmail.VerifyWorker {
         completion: @escaping (VerifyEmailVerifyWorkerProtocol.Result) -> Void
         ) {
         
-        self.keyServerApi.verifyEmail(
+        self.keyServerApi.verifyWallet(
             walletId: self.walletId,
             token: token,
             completion: { (result) in

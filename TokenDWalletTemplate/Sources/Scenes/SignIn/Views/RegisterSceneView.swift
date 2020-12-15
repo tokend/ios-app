@@ -83,7 +83,7 @@ extension RegisterScene {
         // MARK: - Private
         
         private func fieldForPurpose(_ purpose: Model.Field.FieldPurpose) -> FieldView? {
-            if let index = self.fields.index(where: { (field) -> Bool in
+            if let index = self.fields.firstIndex(where: { (field) -> Bool in
                 switch field.fieldType {
                     
                 case .scanServerInfo:
