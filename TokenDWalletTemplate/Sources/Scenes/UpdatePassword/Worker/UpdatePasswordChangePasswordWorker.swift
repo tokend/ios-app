@@ -123,10 +123,10 @@ extension UpdatePassword {
                     
                     switch result {
                         
-                    case .failed(let error):
+                    case .failure(let error):
                         completion(.failed(.submitError(error)))
                         
-                    case .succeeded:
+                    case .success:
                         completion(.succeeded)
                     }
             })

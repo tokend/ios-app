@@ -57,7 +57,7 @@ extension RecoverySeed {
 extension RecoverySeed.SignUpWorker: RecoverySeed.SignUpWorkerProtocol {
     
     func signUp(completion: @escaping ((RecoverySeedSignUpWorkerResult) -> Void)) {
-        self.keyServerApi.createWalletV2(
+        self.keyServerApi.createWallet(
             walletInfo: self.signUpModel.walletInfo,
             completion: { [weak self] (result) in
                 switch result {

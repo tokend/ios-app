@@ -118,6 +118,10 @@ extension DashboardPaymentsPlugIn.Model.Balance: Hashable {
         return self.balanceId?.hashValue ?? balance.asset.hashValue
     }
     
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.balanceId?.hashValue ?? balance.asset.hashValue)
+    }
+    
     static func == (lhs: SelfType, rhs: SelfType) -> Bool {
         if let left = lhs.balanceId,
             let right = rhs.balanceId {

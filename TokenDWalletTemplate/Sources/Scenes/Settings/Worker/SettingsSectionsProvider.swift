@@ -271,12 +271,14 @@ extension Settings {
                     case .faceID:
                         isTouchID = false
                         
-                    case .none,
-                         .LABiometryNone:
+                    case .none:
                         return nil
                         
                     case .touchID:
                         isTouchID = true
+                        
+                    @unknown default:
+                        return nil
                     }
                 } else {
                     isTouchID = true

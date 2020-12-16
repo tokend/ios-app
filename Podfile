@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 use_modular_headers!
 inhibit_all_warnings!
@@ -26,9 +26,9 @@ def main_app_pods
   pod 'MarkdownView'
   pod 'AFDateHelper', '~> 4.2.2'
   
-  pod 'Firebase/Core'
-  pod 'Fabric'
-  pod 'Crashlytics'
+#  pod 'Firebase/Core', '6.26.0'
+#  pod 'Fabric'
+#  pod 'Crashlytics'
   
   pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
   pod 'Charts', git: 'https://github.com/tokend/Charts.git'

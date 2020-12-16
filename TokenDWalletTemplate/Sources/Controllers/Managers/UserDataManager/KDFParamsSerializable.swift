@@ -12,6 +12,18 @@ struct KDFParamsSerializable: Codable {
     let p: UInt32
     let r: UInt32
     let type: String
+
+    enum CodingKeys: String, CodingKey {
+
+        case algorithm
+        case bits
+        case id
+        case n
+        case p
+        case r
+        case type
+    }
+
     let serializationVersion: UInt = KDFParamsSerializable.serializationVersion
     
     static func fromKDFParams(_ kdfParams: KDFParams) -> KDFParamsSerializable {

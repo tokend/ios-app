@@ -14,6 +14,20 @@ struct WalletDataSerializable: Codable {
     let walletKDF: WalletKDFSerializable
     let verified: Bool
     let signedViaAuthenticator: Bool
+
+    enum CodingKeys: String, CodingKey {
+
+        case email
+        case accountId
+        case walletId
+        case type
+        case keychainData
+        case network
+        case walletKDF
+        case verified
+        case signedViaAuthenticator
+    }
+
     let serializationVersion: UInt = WalletDataSerializable.serializationVersion
     
     struct WalletKDFSerializable: Codable {
@@ -71,7 +85,7 @@ struct WalletDataSerializable: Codable {
         }
         
         return WalletDataSerializable(
-            email: walletData.email,
+            email: walletData.login,
             accountId: walletData.accountId,
             walletId: walletData.walletId,
             type: walletData.type,
@@ -149,5 +163,19 @@ private struct WalletDataSerializable1: Codable {
     let walletKDF: WalletDataSerializable.WalletKDFSerializable
     let verified: Bool
     let signedViaAuthenticator: Bool
+
+    enum CodingKeys: String, CodingKey {
+
+        case email
+        case accountId
+        case walletId
+        case type
+        case keychainData
+        case network
+        case walletKDF
+        case verified
+        case signedViaAuthenticator
+    }
+    
     let serializationVersion: UInt = WalletDataSerializable1.serializationVersion
 }

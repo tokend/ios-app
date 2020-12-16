@@ -93,7 +93,7 @@ extension UpdatePasswordRequestBuilder: UpdatePasswordRequestBuilderProtocol {
         ) -> Cancelable {
         
         return self.buildChangePasswordRequest(
-            email: email,
+            login: email,
             oldPassword: oldPassword,
             newPassword: newPassword,
             onSignRequest: onSignRequest,
@@ -121,7 +121,7 @@ extension UpdatePasswordRequestBuilder: UpdatePasswordRequestBuilderProtocol {
         ) -> Cancelable {
         
         return self.buildRecoveryWalletRequest(
-            email: email,
+            login: email,
             recoverySeedBase32Check: recoverySeedBase32Check,
             newPassword: newPassword,
             onSignRequest: onSignRequest,

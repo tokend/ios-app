@@ -60,6 +60,8 @@ extension SignUpRequestBuilder: RegisterSceneSignUpBuilderProtocol {
         self.buildSignUpRequest(
             login: email,
             password: password,
+            // TODO: - Fix maybe
+            defaultSignerRole: 1,
             completion: { (result) in
                 switch result {
                     
