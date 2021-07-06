@@ -1,90 +1,37 @@
-platform :ios, '10.0'
+platform :ios, '11.0'
+workspace 'TokenDClient'
 
 use_modular_headers!
 inhibit_all_warnings!
-workspace 'TokenDWalletTemplate'
-source 'https://github.com/CocoaPods/Specs.git'
-source 'git@github.com:tokend/ios-specs.git'
 
-def main_app_pods
-  pod 'TokenDSDK', '3.2.0-rc.1'
-  pod 'TokenDSDK/AlamofireNetwork'
-  pod 'TokenDSDK/JSONAPI'
-  pod 'TokenDSDK/AlamofireNetworkJSONAPI'
-  pod 'TokenDSDK/KeyServer'
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/tokend/ios-specs.git'
+
+def token_d_pods
   
-  pod 'Alamofire', '~> 4.8'
-  pod 'QRCodeReader.swift',       '8.1.1'
-#  pod 'ReachabilitySwift',        '~> 4.1'
-  pod 'RxCocoa',                  '5.1.0'
-  pod 'RxSwift',                  '5.1.0'
-  pod 'SnapKit',                  '~> 4.0'
-  pod 'SwiftKeychainWrapper',     '3.0.1'
-  pod 'ActionsList', :git => 'https://github.com/LowKostKustomz/ActionsList.git', :branch => 'hotfix/swift_5.0_compatibility_stable'
+  pod 'TokenDSDK',                          '4.0.1'
+  pod 'TokenDSDK/AlamofireNetwork',         '4.0.1'
+  pod 'TokenDSDK/JSONAPI',                  '4.0.1'
+  pod 'TokenDSDK/AlamofireNetworkJSONAPI',  '4.0.1'
+  pod 'TokenDSDK/KeyServer',                '4.0.1'
   
-  pod 'PullToRefresher', '~> 3.0'
-  pod 'Nuke', '7.6.3'
-  pod 'MarkdownView'
-  pod 'AFDateHelper', '~> 4.2.2'
-  
-  pod 'Firebase/Core'
-  pod 'Fabric'
-  pod 'Crashlytics'
-  
-  pod 'SideMenuController', git: 'https://github.com/tokend/SideMenuController.git'
-  pod 'Charts', git: 'https://github.com/tokend/Charts.git'
-  pod 'Floaty', git: 'https://github.com/tokend/Floaty.git'
-  pod 'UICircularProgressRing'
 end
 
-target 'TokenDWalletTemplate' do
-  main_app_pods
+def ui_pods
+  
+  pod 'RxSwift',                  '6.0.0-rc.1'
+  pod 'RxCocoa',                  '6.0.0-rc.1'
+  
+  pod 'SwiftKeychainWrapper',     '4.0.1'
+  pod 'SnapKit',                  '5.0.1'
+  pod 'DifferenceKit',            '1.1.5'
+  
+end
 
-  post_install do |installer|
-    # targetsToDisableBitcode = %w[TokenDSDK DLCryptoKit]
-    #
-    # installer.pods_project.targets.each do |target|
-    #   next unless targetsToDisableBitcode.include? target.name
-    #
-    #   target.build_configurations.each do |config|
-    #     config.build_settings['ENABLE_BITCODE'] = 'NO'
-    #   end
-    # end
+def other_pods
+end
 
-#    swift3Targets = ['SideMenuController']
-#
-#    installer.pods_project.targets.each do |target|
-#      next unless swift3Targets.include? target.name
-#
-#      target.build_configurations.each do |config|
-#        config.build_settings['SWIFT_VERSION'] = '3.2'
-#      end
-#    end
-    
-    swift4Targets = ['QRCodeReader.swift']
-    
-    installer.pods_project.targets.each do |target|
-      next unless swift4Targets.include? target.name
-      
-      target.build_configurations.each do |config|
-        config.build_settings['SWIFT_VERSION'] = '4'
-      end
-    end
-
-    
-    swift42Targets = ['Charts']
-       
-       installer.pods_project.targets.each do |target|
-         next unless swift42Targets.include? target.name
-         
-         target.build_configurations.each do |config|
-           config.build_settings['SWIFT_VERSION'] = '4.2'
-         end
-       end
-
-
-    # copy Acknowledgements
-    require 'fileutils'
-    FileUtils.cp_r('Pods/Target Support Files/Pods-TokenDWalletTemplate/Pods-TokenDWalletTemplate-acknowledgements.markdown', 'TokenDWalletTemplate/Resources/acknowledgements.markdown')
-  end
+target 'Client' do
+  token_d_pods
+  ui_pods
 end

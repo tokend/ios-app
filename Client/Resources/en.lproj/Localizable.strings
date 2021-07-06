@@ -1,0 +1,26 @@
+// Localized strings
+
+"keychaindataprovider_should_always_provide_key" = "KeychainDataProvider should always provide key";
+"unsupported_version" = "$(function) - Unsupported version";
+"unsupported_version_replace_function" = "function";
+"access_revoked_sign_in_required" = "Access revoked.\nSign In required.";
+"unathorized_request" = "Unathorized request: $(message)";
+"unathorized_request_replace_message" = "message";
+"fatal_error" = "Fatal Error";
+"sign_out" = "Sign Out";
+"are_you_sure_you_want_to_sign_out" = "Are you sure you want to Sign Out and Erase All Data from device?";
+"unable_to_read_keychain_data" = "Unable to read keychain data";
+"unable_to_read_user_data" = "Unable to read user data";
+"unable_to_read_wallet_data" = "Unable to read wallet data";
+"userdataprovider_should_always_provide_walletdata" = "UserDataProvider should always provide walletData";
+"permissions_denied" = "Permissions Denied";
+"you_can_grant_permissions" = "You can grant permissions from app Settings in System Preferences. Would you like to open Settings?";
+"sign_out_and_erase" = "Sign Out and Erase";
+"cancel" = "Cancel";
+"settings" = "Settings";
+"error_unknown" = "Error occurred. Try again";
+"ok_alert_action" = "OK";
+"signing_in" = "Signing In";
+"mediapicker_sourcetype_camera_title" = "Camera";
+"mediapicker_sourcetype_documents_title" = "Documents";
+"mediapicker_sourcetype_photolibrary_title" = "Photo Library";
