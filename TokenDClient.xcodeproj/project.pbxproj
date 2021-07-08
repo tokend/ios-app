@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */; };
+		0D2FA2E62695CC720018B7D4 /* SignInSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */; };
+		0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */; };
+		0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */; };
+		0D2FA2E92695CC720018B7D4 /* SignInSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */; };
+		0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */; };
+		0D2FA2F02695CF4A0018B7D4 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */; };
+		0D2FA2F3269714830018B7D4 /* UnderlinedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2F2269714830018B7D4 /* UnderlinedTextField.swift */; };
+		0D2FA2F82697150B0018B7D4 /* UnderlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2F72697150B0018B7D4 /* UnderlineView.swift */; };
 		0D59BCEE2694930300B6658F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCEC2694930300B6658F /* LaunchScreen.storyboard */; };
 		0D59BCF02694930700B6658F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCEF2694930700B6658F /* Assets.xcassets */; };
 		0D59BCF62694930700B6658F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCF42694930700B6658F /* Localizable.strings */; };
@@ -207,6 +216,15 @@
 
 /* Begin PBXFileReference section */
 		02666CCDA59ABF0770196DAA /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
+		0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInScenePresenter.swift; sourceTree = "<group>"; };
+		0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneRouting.swift; sourceTree = "<group>"; };
+		0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneModels.swift; sourceTree = "<group>"; };
+		0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneViewController.swift; sourceTree = "<group>"; };
+		0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneInteractor.swift; sourceTree = "<group>"; };
+		0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneConfigurator.swift; sourceTree = "<group>"; };
+		0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
+		0D2FA2F2269714830018B7D4 /* UnderlinedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlinedTextField.swift; sourceTree = "<group>"; };
+		0D2FA2F72697150B0018B7D4 /* UnderlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlineView.swift; sourceTree = "<group>"; };
 		0D59BBFC269491C800B6658F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0D59BBFD269491C800B6658F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0D59BBFF269491C800B6658F /* VerificationCodeTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeTextField.swift; sourceTree = "<group>"; };
@@ -424,6 +442,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D2FA2DD2695CC350018B7D4 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		0D2FA2DE2695CC4D0018B7D4 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */,
+				0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */,
+				0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */,
+				0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */,
+				0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */,
+				0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		0D2FA2ED2695CEAF0018B7D4 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				0D2FA2EE2695CF340018B7D4 /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		0D2FA2EE2695CF340018B7D4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */,
+				0D2FA2F2269714830018B7D4 /* UnderlinedTextField.swift */,
+				0D2FA2F72697150B0018B7D4 /* UnderlineView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		0D59BBF3269491C800B6658F = {
 			isa = PBXGroup;
 			children = (
@@ -1070,10 +1127,12 @@
 			isa = PBXGroup;
 			children = (
 				0D59BD1C2694930700B6658F /* LocKey.swift */,
-				0D59BCFA2694930700B6658F /* Default */,
-				0D59BCFD2694930700B6658F /* Theme */,
 				0D59BD022694930700B6658F /* Controllers */,
+				0D59BCFA2694930700B6658F /* Default */,
 				0D59BD0D2694930700B6658F /* FlowControllers */,
+				0D2FA2DD2695CC350018B7D4 /* Scenes */,
+				0D2FA2ED2695CEAF0018B7D4 /* Shared */,
+				0D59BCFD2694930700B6658F /* Theme */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1240,6 +1299,7 @@
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D59BD26269493BB00B6658F /* Array+IndexOf.swift in Sources */,
 				0D59BD27269493BB00B6658F /* String+Index.swift in Sources */,
+				0D2FA2F02695CF4A0018B7D4 /* NavigationBar.swift in Sources */,
 				0D59BD28269493BB00B6658F /* UITextfield+SetText.swift in Sources */,
 				0D59BD29269493BB00B6658F /* UIColor+Interpolation.swift in Sources */,
 				0D59BD2A269493BB00B6658F /* Optional+Extension.swift in Sources */,
@@ -1258,10 +1318,12 @@
 				0D59BD37269493BB00B6658F /* String+Extension.swift in Sources */,
 				0D59BD38269493BB00B6658F /* Hashable+Iterate.swift in Sources */,
 				0D59BD39269493BB00B6658F /* String+ValidateEmail.swift in Sources */,
+				0D2FA2E92695CC720018B7D4 /* SignInSceneInteractor.swift in Sources */,
 				0D59BD3A269493BB00B6658F /* UIView+Loading.swift in Sources */,
 				0D59BD3B269493BB00B6658F /* UIView+IsVisible.swift in Sources */,
 				0D59BD3C269493BB00B6658F /* UIView+Image.swift in Sources */,
 				0D59BD3D269493BB00B6658F /* UIKit+SetIfNeeded.swift in Sources */,
+				0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */,
 				0D59BD3E269493BB00B6658F /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				0D59BD3F269493BB00B6658F /* UploadedAttachment+Extensions.swift in Sources */,
 				0D59BD40269493BB00B6658F /* NumberFormatter+Decimal.swift in Sources */,
@@ -1279,6 +1341,7 @@
 				0D59BD4C269493BB00B6658F /* AccountRoleFetcherProtocol.swift in Sources */,
 				0D59BD4D269493BB00B6658F /* AccountKYCFormSender.swift in Sources */,
 				0D59BD4E269493BB00B6658F /* AccountKYCFormSenderProtocol.swift in Sources */,
+				0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */,
 				0D59BD4F269493BB00B6658F /* PasswordTFAProcessor.swift in Sources */,
 				0D59BD50269493BB00B6658F /* TFACodeProcessorProtocol.swift in Sources */,
 				0D59BD51269493BB00B6658F /* DefaultTFACodeProcessor.swift in Sources */,
@@ -1286,6 +1349,7 @@
 				0D59BD53269493BB00B6658F /* SignOutWorkerProtocol.swift in Sources */,
 				0D59BD54269493BB00B6658F /* SharedAmountFormatter.swift in Sources */,
 				0D59BD55269493BB00B6658F /* BaseLoginChanger.swift in Sources */,
+				0D2FA2F3269714830018B7D4 /* UnderlinedTextField.swift in Sources */,
 				0D59BD56269493BB00B6658F /* LoginChangerProtocol.swift in Sources */,
 				0D59BD57269493BB00B6658F /* FCMTokenUploader.swift in Sources */,
 				0D59BD58269493BB00B6658F /* FCMTokenUploaderProtocol.swift in Sources */,
@@ -1332,6 +1396,7 @@
 				0D59BD81269493BB00B6658F /* PasswordChangerProtocol.swift in Sources */,
 				0D59BD82269493BB00B6658F /* DocumentsDownloader.swift in Sources */,
 				0D59BD83269493BB00B6658F /* DocumentsDownloaderProtocol.swift in Sources */,
+				0D2FA2E62695CC720018B7D4 /* SignInSceneRouting.swift in Sources */,
 				0D59BD84269493BB00B6658F /* RecoveryStatusChecker.swift in Sources */,
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
 				0D59BD86269493BB00B6658F /* ChangeRoleRequestSender.swift in Sources */,
@@ -1384,6 +1449,7 @@
 				0D59BDB5269493BC00B6658F /* AuthKeychainManager.swift in Sources */,
 				0D59BDB6269493BC00B6658F /* KeychainManager.swift in Sources */,
 				0D59BDB7269493BC00B6658F /* KeychainCodableKeyDataV1.swift in Sources */,
+				0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */,
 				0D59BDB8269493BC00B6658F /* KeychainCodableAccountsV1.swift in Sources */,
 				0D59BDB9269493BC00B6658F /* KeychainAccountsModel.swift in Sources */,
 				0D59BDBA269493BC00B6658F /* WalletDataSerializable.swift in Sources */,
@@ -1395,9 +1461,11 @@
 				0D59BDC0269493BC00B6658F /* APIConfigurationModel.swift in Sources */,
 				0D59BDC1269493BC00B6658F /* ContactEmailPickerHandler.swift in Sources */,
 				0D59BDC2269493BC00B6658F /* PermissionsManager.swift in Sources */,
+				0D2FA2F82697150B0018B7D4 /* UnderlineView.swift in Sources */,
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,
+				0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */,
 				0D59BDC6269493BC00B6658F /* BaseSignedInFlowController.swift in Sources */,
 				0D59BDC7269493BC00B6658F /* PermissionRequestFlowController.swift in Sources */,
 				0D59BDC8269493BC00B6658F /* MediaPickerFlowController.swift in Sources */,
