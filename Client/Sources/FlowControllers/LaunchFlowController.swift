@@ -151,11 +151,11 @@ private extension LaunchFlowController {
                     completion: { [weak self] (accountType) in
                         self?.navigationController.hideProgress()
                         if let type = accountType {
-
+                            
                             self?.accountTypeManager.setType(type)
                             self?.onAuthorized(login, type)
                         }
-                })
+                    })
             },
             onDidFinishForgotPassword: { [weak self] (password) in
                 
@@ -163,7 +163,7 @@ private extension LaunchFlowController {
                     login: login,
                     password: password
                 )
-        },
+            },
             onSignOut: { [weak self] in
                 self?.onSignOut()
             },

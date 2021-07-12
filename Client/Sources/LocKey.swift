@@ -28,4 +28,15 @@ enum LocKey: String {
     case mediapicker_sourcetype_camera_title
     case mediapicker_sourcetype_documents_title
     case mediapicker_sourcetype_photolibrary_title
+    case sign_in_title
+    case sign_in_network_placeholder
+    case sign_in_login_placeholder
+    case sign_in_password_placeholder
+    case sign_in_forgot_password
+    case sign_in_button
+    case sign_in_use_local_key
+    case sign_in_email_validation_error
+    case sign_in_invalid_password_error
+    case validation_error_empty
+    case sign_up_title
 }

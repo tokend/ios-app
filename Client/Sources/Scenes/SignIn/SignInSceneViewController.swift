@@ -81,8 +81,7 @@ private extension SignInScene.ViewController {
     }
     
     func setupView() {
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.title = "Sign in"
+
     }
     
     func setupNetworkTextField() {
@@ -139,10 +138,6 @@ private extension SignInScene.ViewController {
 // MARK: - DisplayLogic
 
 extension SignInScene.ViewController: SignInScene.DisplayLogic {
-    
-    public func display<#Event#>(viewModel: Event.<#Event#>.ViewModel) {
-        
-    }
     
     public func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)

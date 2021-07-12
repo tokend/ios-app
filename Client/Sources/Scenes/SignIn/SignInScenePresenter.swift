@@ -46,10 +46,27 @@ private extension SignInScene.Presenter {
         
         switch sceneModel.networkError {
         case .emptyString:
-            break
-            
+            networkError = Localized(.validation_error_empty)
         case .none:
-            break
+            networkError = nil
+        }
+        
+        switch sceneModel.loginError {
+        case .emptyString:
+            loginError = Localized(.validation_error_empty)
+        case .doesNotMatchRequirements:
+            loginError = Localized(.sign_in_email_validation_error)
+        case .none:
+            loginError = nil
+        }
+        
+        switch sceneModel.passwordError {
+        case .emptyString:
+            passwordError = Localized(.validation_error_empty)
+        case .doesNotMatchRequirements:
+            passwordError = Localized(.sign_in_invalid_password_error)
+        case .none:
+            passwordError = nil
         }
         
         

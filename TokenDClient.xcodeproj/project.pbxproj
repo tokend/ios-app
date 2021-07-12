@@ -14,8 +14,7 @@
 		0D2FA2E92695CC720018B7D4 /* SignInSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */; };
 		0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */; };
 		0D2FA2F02695CF4A0018B7D4 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */; };
-		0D2FA2F3269714830018B7D4 /* UnderlinedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2F2269714830018B7D4 /* UnderlinedTextField.swift */; };
-		0D2FA2F82697150B0018B7D4 /* UnderlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2F72697150B0018B7D4 /* UnderlineView.swift */; };
+		0D2FA2FC269893720018B7D4 /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2FB269893720018B7D4 /* TextField.swift */; };
 		0D59BCEE2694930300B6658F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCEC2694930300B6658F /* LaunchScreen.storyboard */; };
 		0D59BCF02694930700B6658F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCEF2694930700B6658F /* Assets.xcassets */; };
 		0D59BCF62694930700B6658F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCF42694930700B6658F /* Localizable.strings */; };
@@ -223,8 +222,7 @@
 		0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneInteractor.swift; sourceTree = "<group>"; };
 		0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneConfigurator.swift; sourceTree = "<group>"; };
 		0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
-		0D2FA2F2269714830018B7D4 /* UnderlinedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlinedTextField.swift; sourceTree = "<group>"; };
-		0D2FA2F72697150B0018B7D4 /* UnderlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlineView.swift; sourceTree = "<group>"; };
+		0D2FA2FB269893720018B7D4 /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		0D59BBFC269491C800B6658F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0D59BBFD269491C800B6658F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0D59BBFF269491C800B6658F /* VerificationCodeTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeTextField.swift; sourceTree = "<group>"; };
@@ -475,8 +473,7 @@
 			isa = PBXGroup;
 			children = (
 				0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */,
-				0D2FA2F2269714830018B7D4 /* UnderlinedTextField.swift */,
-				0D2FA2F72697150B0018B7D4 /* UnderlineView.swift */,
+				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1294,6 +1291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D2FA2FC269893720018B7D4 /* TextField.swift in Sources */,
 				0D59BD23269493BB00B6658F /* DebugLog.swift in Sources */,
 				0D59BD24269493BB00B6658F /* VerificationCodeTextField.swift in Sources */,
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
@@ -1349,7 +1347,6 @@
 				0D59BD53269493BB00B6658F /* SignOutWorkerProtocol.swift in Sources */,
 				0D59BD54269493BB00B6658F /* SharedAmountFormatter.swift in Sources */,
 				0D59BD55269493BB00B6658F /* BaseLoginChanger.swift in Sources */,
-				0D2FA2F3269714830018B7D4 /* UnderlinedTextField.swift in Sources */,
 				0D59BD56269493BB00B6658F /* LoginChangerProtocol.swift in Sources */,
 				0D59BD57269493BB00B6658F /* FCMTokenUploader.swift in Sources */,
 				0D59BD58269493BB00B6658F /* FCMTokenUploaderProtocol.swift in Sources */,
@@ -1461,7 +1458,6 @@
 				0D59BDC0269493BC00B6658F /* APIConfigurationModel.swift in Sources */,
 				0D59BDC1269493BC00B6658F /* ContactEmailPickerHandler.swift in Sources */,
 				0D59BDC2269493BC00B6658F /* PermissionsManager.swift in Sources */,
-				0D2FA2F82697150B0018B7D4 /* UnderlineView.swift in Sources */,
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,

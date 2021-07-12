@@ -32,7 +32,7 @@
 "sign_in_button" = "Sign in";
 "sign_in_use_local_key" = "Use local key";
 "sign_in_email_validation_error" = "Email does not match requirements";
-"sign_in_invalid_passport_error" = "Invalid password";
+"sign_in_invalid_password_error" = "Invalid password";
 "validation_error_empty" = "Empty line";
 "sign_up_title" = "Sign up";
 
