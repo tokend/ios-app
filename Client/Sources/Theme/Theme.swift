@@ -12,13 +12,15 @@ extension Theme {
         static let lightBlue: UIColor = .init(hexString: "#DADDE9")
         static let green: UIColor = .init(hexString: "#33A494")
         static let orange: UIColor = .init(hexString: "#EF6C00")
-        static let violet: UIColor = .init(hexString: "6052E4")
+        static let violet: UIColor = .init(hexString: "#6052E4")
         
-        static let mainBackgroundColor: UIColor = white
+        static let mainBackgroundColor: UIColor = .init(hexString: "#EFEFF4")
+        static let mainSeparatorColor: UIColor = UIColor.init(hexString: "#3C3C43").withAlphaComponent(0.36)
         static let errorColor: UIColor = red
         
         static let textFieldTintColor: UIColor = dark
         static let textFieldPlaceholderColor: UIColor = grey
+        static let toolbarTintColor: UIColor = dark
     }
 }
 

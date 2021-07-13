@@ -15,6 +15,13 @@ protocol FlowControllerProtocol {
     func showBlockingProgress()
     func hideBlockingProgress()
     
+    // MARK: - QRCodeReader
+    
+    func runQRCodeReaderFlow(
+        presentingViewController: UIViewController,
+        handler: @escaping QRCodeReaderFlowController.QRCodeReaderCompletion
+    )
+    
     // MARK: - TokenD SDK
     
     func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void)

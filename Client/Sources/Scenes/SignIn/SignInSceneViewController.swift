@@ -24,6 +24,20 @@ extension SignInScene {
             self.onDeinit?(self)
         }
         
+        // MARK: - Private properties
+        
+        private let scrollView: UIScrollView = .init()
+        private let scrollViewContentView: UIView = .init()
+        private let textFieldsContainer: TextFieldsContainer = .init()
+        private let networkTextField: TextField = .init()
+        private let loginTextField: TextField = .init()
+        private let passwordTextField: TextField = .init()
+        private let forgotPasswordButton: UIButton = .init()
+        private let signInButton: ActionButton = .init()
+        private let signUpButton: ActionButton = .init()
+        
+        private var textFieldsOrder: [TextField] = []
+        
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
@@ -45,6 +59,14 @@ extension SignInScene {
         
         public override func viewDidLoad() {
             super.viewDidLoad()
+            
+            textFieldsOrder = [
+                networkTextField,
+                loginTextField,
+                passwordTextField
+            ]
+            
+            setup()
             
             let request = Event.ViewDidLoad.Request()
             self.interactorDispatch?.sendRequest { businessLogic in
@@ -77,21 +99,221 @@ private extension SignInScene.ViewController {
     
     func setup() {
         setupView()
+        setupScrollView()
+        setupScrollViewContentView()
+        setupTextFieldsContainer()
         setupNetworkTextField()
+        setupLoginTextField()
+        setupPasswordTextField()
+        setupForgotPasswordButton()
+        setupSignInButton()
+        setupSignUpButton()
+        setupLayout()
     }
     
     func setupView() {
-
+        view.backgroundColor = Theme.Colors.mainBackgroundColor
+        let navigationBar = self.navigationController?.navigationBar
+        navigationController?.setNavigationBarHidden(false, animated: true)
+//        navigationController?.title = Localized(.sign_in_title)
+        navigationBar?.prefersLargeTitles = true
+        navigationItem.title = Localized(.sign_in_title)
+    }
+    
+    func setupScrollView() {
+        scrollView.backgroundColor = Theme.Colors.mainBackgroundColor
+        scrollView.alwaysBounceVertical = false
+        scrollView.keyboardDismissMode = .onDrag
+    }
+    
+    func setupScrollViewContentView() {
+        scrollViewContentView.backgroundColor = Theme.Colors.mainBackgroundColor
+    }
+    
+    func setupTextFieldsContainer() {
+        textFieldsContainer.textFieldsList = textFieldsOrder
     }
     
     func setupNetworkTextField() {
+        networkTextField.title = Localized(.sign_in_network_title)
+        networkTextField.placeholder = "network.example.com"
+        networkTextField.setUserInteractionEnabled = false
         
+        let selectNetworkButton: UIButton = .init()
+        selectNetworkButton.setImage(Assets.scan_qr_code_icon.image, for: .normal)
+        selectNetworkButton.addTarget(
+            self,
+            action: #selector(selectNetworkButtonTouchUpInside),
+            for: .touchUpInside
+        )
+        networkTextField.accessoryButton = selectNetworkButton
+    }
+    
+    @objc func selectNetworkButtonTouchUpInside() {
+        routing?.onSelectNetwork(
+            { [weak self] (value) in
+                let request: Event.DidSelectNetworkSync.Request = .init(value: value)
+                self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                    businessLogic.onDidSelectNetworkSync(request: request)
+                }
+            }
+        )
+    }
+    
+    func setupLoginTextField() {
+        loginTextField.title = Localized(.sign_in_login_title)
+        loginTextField.placeholder = "example@mail.com"
+        loginTextField.onTextChanged = { [weak self] (text) in
+            let request: Event.DidEnterLoginSync.Request = .init(value: text)
+            self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                businessLogic.onDidEnterLoginSync(request: request)
+            }
+        }
+        
+        loginTextField.onReturnAction = { [weak self] in
+            guard let textField = self?.loginTextField
+                else { return }
+            self?.returnAction(for: textField)
+        }
+        
+        let toolbar: UIToolbar = SharedViewsBuilder.configureToolbar()
+        toolbar.items = [
+            .init(
+                title: Localized(.next),
+                style: .done,
+                target: self,
+                action: #selector(loginTextFieldNextAction)
+            )
+        ]
+        toolbar.sizeToFit()
+        loginTextField.accessoryView = toolbar
+    }
+    
+    @objc func loginTextFieldNextAction() {
+        returnAction(for: loginTextField)
+    }
+    
+    func setupPasswordTextField() {
+        passwordTextField.title = Localized(.sign_in_password_title)
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.onTextChanged = { [weak self] (text) in
+            let request: Event.DidEnterPasswordSync.Request = .init(value: text)
+            self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                businessLogic.onDidEnterPasswordSync(request: request)
+            }
+        }
+        
+        passwordTextField.onReturnAction = { [weak self] in
+            guard let textField = self?.passwordTextField
+                else { return }
+            self?.returnAction(for: textField)
+        }
+        
+        let toolbar: UIToolbar = SharedViewsBuilder.configureToolbar()
+        toolbar.items = [
+            .init(
+                title: Localized(.next),
+                style: .done,
+                target: self,
+                action: #selector(passwordTextFieldNextAction)
+            )
+        ]
+        toolbar.sizeToFit()
+        passwordTextField.accessoryView = toolbar
+    }
+    
+    @objc func passwordTextFieldNextAction() {
+        returnAction(for: passwordTextField)
+    }
+    
+    func setupForgotPasswordButton() {
+        forgotPasswordButton.setTitle(Localized(.sign_in_forgot_password), for: .normal)
+        forgotPasswordButton.backgroundColor = Theme.Colors.mainBackgroundColor
+        forgotPasswordButton.titleLabel?.font = Theme.Fonts.mediumFont.withSize(14.0)
+        forgotPasswordButton.setTitleColor(.systemBlue, for: .normal)
+        forgotPasswordButton.contentEdgeInsets = .init(top: 5.0, left: 6.0, bottom: 5.0, right: 5.0)
+        
+        forgotPasswordButton.addTarget(
+            self,
+            action: #selector(forgotPasswordButtonTouchUpInside),
+            for: .touchUpInside
+        )
+    }
+    
+    @objc func forgotPasswordButtonTouchUpInside() {
+        routing?.onForgotPassword()
+    }
+    
+    func setupSignInButton() {
+        signInButton.title = Localized(.sign_in_button)
+        signInButton.onTouchUpInside = { [weak self] in
+            self?.didTapLoginButton()
+        }
+    }
+    
+    func setupSignUpButton() {
+        signUpButton.title = Localized(.sign_up_title)
+        signInButton.onTouchUpInside = { [weak self] in
+            
+        }
+    }
+    
+    func setupLayout() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollViewContentView)
+        scrollViewContentView.addSubview(textFieldsContainer)
+        scrollViewContentView.addSubview(forgotPasswordButton)
+        scrollViewContentView.addSubview(signInButton)
+        scrollViewContentView.addSubview(signUpButton)
+        
+        scrollView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().inset(24.0)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+
+        scrollViewContentView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+            make.width.equalTo(scrollView.snp.width)
+        }
+        
+        textFieldsContainer.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().inset(40.0)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        forgotPasswordButton.snp.makeConstraints { (make) in
+            make.top.equalTo(textFieldsContainer.snp.bottom).offset(7.0)
+            make.leading.equalToSuperview().inset(10.0)
+            make.height.equalTo(24.0)
+        }
+        
+        signInButton.snp.makeConstraints { (make) in
+            make.top.equalTo(forgotPasswordButton.snp.bottom).offset(40.0)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        signUpButton.snp.makeConstraints { (make) in
+            make.top.equalTo(signInButton.snp.bottom).offset(12.0)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().inset(24.0)
+        }
+        
+        updateView(with: nil)
     }
     
     func setup(
         with sceneViewModel: Model.SceneViewModel,
         animated: Bool
-    ) { }
+    ) {
+        networkTextField.text = sceneViewModel.network
+        loginTextField.text = sceneViewModel.login
+        passwordTextField.text = sceneViewModel.password
+        
+        networkTextField.error = sceneViewModel.networkError
+        loginTextField.error = sceneViewModel.loginError
+        passwordTextField.error = sceneViewModel.passwordError
+    }
     
     func addKeyboardObserver() {
         let observer: KeyboardObserver = .init(
@@ -105,6 +327,21 @@ private extension SignInScene.ViewController {
     
     func removeKeyboardObserver() {
         KeyboardController.shared.remove(observer: .init(self))
+        updateView(with: nil)
+    }
+    
+    func returnAction(for textField: TextField) {
+        guard let index = textFieldsOrder.firstIndex(of: textField)
+            else {
+                return
+        }
+        
+        if index < textFieldsOrder.count - 1 {
+            textFieldsOrder[index + 1].becomeFirstResponder()
+        } else {
+            textFieldsOrder[index].resignFirstResponder()
+            didTapLoginButton()
+        }
     }
     
     func updateView(
@@ -132,6 +369,46 @@ private extension SignInScene.ViewController {
     ) {
         
         let keyboardHeightInView: CGFloat = attributes?.heightIn(view: self.view) ?? 0.0
+        scrollView.snp.remakeConstraints({ (make) in
+            make.top.leading.trailing.equalToSuperview()
+            if attributes?.showingIn(view: self.view) == true {
+                make.bottom.equalToSuperview().inset(keyboardHeightInView)
+            } else {
+                make.bottom.equalToSuperview()
+            }
+        })
+        scrollToTextField(with: attributes)
+    }
+    
+    func scrollToTextField(
+        with attributes: KeyboardAttributes?
+    ) {
+        
+        guard let attributes = attributes
+            else {
+                return
+        }
+        
+        UIView.animate(
+            withKeyboardAttributes: attributes,
+            animations: {
+                
+                self.textFieldsOrder.forEach { (textField) in
+                    if textField.isFirstResponder {
+                        self.scrollView.scrollRectToVisible(
+                            textField.frame,
+                            animated: false
+                        )
+                    }
+                }
+        })
+    }
+    
+    func didTapLoginButton() {
+        let request: Event.DidTapLoginButtonSync.Request = .init()
+        interactorDispatch?.sendSyncRequest { (businessLogic) in
+            businessLogic.onDidTapLoginButtonSync(request: request)
+        }
     }
 }
 

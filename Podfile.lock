@@ -12,6 +12,7 @@ PODS:
     - DLJSONAPI/Default (= 1.0.9)
   - DLJSONAPI/Default (1.0.9)
   - DLOpenSSL (1.0.2)
+  - QRCodeReader.swift (10.1.0)
   - RxCocoa (6.0.0-rc.1):
     - RxRelay (= 6.0.0-rc.1)
     - RxSwift (= 6.0.0-rc.1)
@@ -43,6 +44,7 @@ PODS:
 
 DEPENDENCIES:
   - DifferenceKit (= 1.1.5)
+  - QRCodeReader.swift (= 10.1.0)
   - RxCocoa (= 6.0.0-rc.1)
   - RxSwift (= 6.0.0-rc.1)
   - SnapKit (= 5.0.1)
@@ -57,6 +59,7 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - DifferenceKit
+    - QRCodeReader.swift
     - RxCocoa
     - RxRelay
     - RxSwift
@@ -75,6 +78,7 @@ SPEC CHECKSUMS:
   DLCryptoKit: 89c9b51260db5a08ca73b81eba2dd5a6a9792ce1
   DLJSONAPI: 6cccdea7276f50ed127b90b95a402b3eacdb0704
   DLOpenSSL: 78d928228cb6d95fcaa354f4f9aba041ccf95457
+  QRCodeReader.swift: 373a389fe9a22d513c879a32a6f647c58f4ef572
   RxCocoa: a28d75145c07b7547b85faf1e1ad8b25af88a752
   RxRelay: 56abad6d32f73567858506d08735fdb341935b9a
   RxSwift: dae1a32c48148897494b9e2a6b00a68b40694236
@@ -83,6 +87,6 @@ SPEC CHECKSUMS:
   TokenDSDK: 9131c1e925f536b4f2104b5fe2494592b1fcfdd6
   TokenDWallet: d13f6dfd420e9258ff4734e2d52e57bcdfc60eb3
 
-PODFILE CHECKSUM: a9afe49e6485f5a72ac7f5020238a5923b5cb799
+PODFILE CHECKSUM: 5245c87d7e0a83dc289f5adf6e7be50622fa414d
 
 COCOAPODS: 1.10.1

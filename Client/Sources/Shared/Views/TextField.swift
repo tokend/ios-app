@@ -7,12 +7,14 @@ final class TextField: UIView {
     typealias OnReturnAction = () -> Void
     
     private static var titleLeadingInset: CGFloat { 16.0 }
+    private static var titleTrailingOffset: CGFloat { 16.0 }
     private static var textFieldTopBottomInset: CGFloat { 11.0 }
-    private static var textFieldLeadingOffset: CGFloat { 16.0 }
-    private static var imagesStackViewTopBottomInset: CGFloat { 5.0 }
+    private static var textFieldLeadingInset: CGFloat { 116.0 }
+    private static var imagesStackViewTopBottomInset: CGFloat { 10.0 }
     private static var imagesStackViewLeadingOffset: CGFloat { 16.0 }
     private static var imagesStackViewTrailingInset: CGFloat { 16.0 }
     
+    private static var titleFont: UIFont { Theme.Fonts.regularFont.withSize(14.0) }
     private static var commonBackgroundColor: UIColor { Theme.Colors.white }
     
     // MARK: - Private properties
@@ -32,10 +34,20 @@ final class TextField: UIView {
         }
     }
     
+    private static func textFieldHeight() -> CGFloat {
+        
+        let titleHeight: CGFloat = String.singleLineHeight(font: titleFont)
+        
+        return textFieldTopBottomInset
+        + titleHeight
+        + textFieldTopBottomInset
+    }
+    
     // MARK: - Public properties
 
     public var onTextChanged: OnTextChanged?
     public var onReturnAction: OnReturnAction?
+    static let height: CGFloat = textFieldHeight()
     
     public var title: String? {
         get { titleLabel.text }
@@ -100,6 +112,16 @@ final class TextField: UIView {
         set { textField.autocorrectionType = newValue }
     }
     
+    public var accessoryButton: UIButton? {
+        didSet {
+            if let accessoryButton = accessoryButton {
+                accessoryButton.setContentHuggingPriority(.required, for: .horizontal)
+                accessoryButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+                imagesStackView.addArrangedSubview(accessoryButton)
+            }
+        }
+    }
+    
     public var contentType: UITextContentType {
         get { textField.textContentType }
         set { textField.textContentType = newValue }
@@ -162,9 +184,11 @@ private extension TextField {
     
     func commonInit() {
         setupView()
-        setupTitleLabel
-        setupTextField
-        setupImagesStackView
+        setupTitleLabel()
+        setupTextField()
+        setupImagesStackView()
+        setupPasswordImageView()
+        setupLayout()
     }
     
     func setupView() {
@@ -182,7 +206,7 @@ private extension TextField {
     
     func setupTitleLabel() {
         titleLabel.textColor = Theme.Colors.dark
-        titleLabel.font = Theme.Fonts.regularFont.withSize(14.0)
+        titleLabel.font = NameSpace.titleFont
         titleLabel.numberOfLines = 1
         titleLabel.textAlignment = .left
         titleLabel.backgroundColor = .clear
@@ -229,25 +253,28 @@ private extension TextField {
         addSubview(titleLabel)
         addSubview(textField)
         addSubview(imagesStackView)
-        imagesStackView.addSubview(passwordImageView)
+        imagesStackView.addArrangedSubview(passwordImageView)
         
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
         titleLabel.snp.makeConstraints { (make) in
             make.top.bottom.equalToSuperview().inset(NameSpace.textFieldTopBottomInset)
             make.leading.equalToSuperview().inset(NameSpace.titleLeadingInset)
-            make.trailing.lessThanOrEqualToSuperview().multipliedBy(0.4)
+            make.trailing.lessThanOrEqualTo(textField.snp.leading).offset(-NameSpace.titleTrailingOffset)
         }
         
         textField.snp.makeConstraints { (make) in
             make.top.bottom.equalToSuperview().inset(NameSpace.textFieldTopBottomInset)
-            make.leading.equalTo(titleLabel.snp.trailing).offset(NameSpace.textFieldLeadingOffset)
+            make.leading.equalToSuperview().inset(NameSpace.textFieldLeadingInset)
         }
         
         passwordImageView.setContentHuggingPriority(.required, for: .horizontal)
         passwordImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        imagesStackView.setContentHuggingPriority(.required, for: .horizontal)
+        imagesStackView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imagesStackView.snp.makeConstraints { (make) in
             make.top.bottom.equalToSuperview().inset(NameSpace.imagesStackViewTopBottomInset)
-            make.leading.equalTo(textField.snp.trailing).offset(NameSpace.textFieldLeadingOffset)
+            make.leading.equalTo(textField.snp.trailing).offset(NameSpace.imagesStackViewLeadingOffset)
             make.trailing.equalToSuperview().inset(NameSpace.imagesStackViewTrailingInset)
         }
     }
@@ -255,14 +282,14 @@ private extension TextField {
     func renderSecureTextEntry() {
         textField.isSecureTextEntry = isSecureTextEntry
         passwordImageView.isHidden = !isSecureTextEntry
-//        passwordImageView.image = Assets.passwordIsHidden.image
+        passwordImageView.image = Assets.password_is_hidden_icon.image
     }
     
     func renderTextVisible() {
         if isTextVisible {
-//            passwordImageView.image = Assets.passwordIsVisible.image
+            passwordImageView.image = Assets.password_is_visible_icon.image
         } else {
-//            passwordImageView.image = Assets.passwordIsHidden.image
+            passwordImageView.image = Assets.password_is_hidden_icon.image
         }
         textField.isSecureTextEntry = !isTextVisible
     }

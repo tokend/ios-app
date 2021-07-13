@@ -118,8 +118,8 @@ class LaunchFlowController: BaseFlowController {
             self.runLocalAuthFlow(login: login, animated: animated)
         }  else {
 
-            // TODO: - Implement
-            self.startFrom(vcs: [], animated: animated)
+            let vc = initSignIn()
+            self.startFrom(vcs: [vc], animated: animated)
         }
     }
 }
@@ -183,6 +183,43 @@ private extension LaunchFlowController {
     
     func startFrom(vcs: [UIViewController], animated: Bool) {
         self.navigationController.setViewControllers(vcs, animated: animated)
+    }
+    
+    func initSignIn(
+    ) -> SignInScene.ViewController {
+        
+        let vc = SignInScene.ViewController()
+        
+        let routing: SignInScene.Routing = .init(
+            onSelectNetwork: { [weak self] (completion) in
+                self?.runQRCodeReaderFlow(
+                    presentingViewController: vc,
+                    handler: { [weak self] (result) in
+                        
+//                        switch result {
+//
+//                        case .success(value: let value, metadataType: let metadataType):
+//                            <#code#>
+//                        case .canceled:
+//                            <#code#>
+//                        }
+                    }
+                )
+            },
+            onForgotPassword: { [weak self]  in
+                
+            },
+            onSignUp: { [weak self] in
+                
+            }
+        )
+        
+        SignInScene.Configurator.configure(
+            viewController: vc,
+            routing: routing
+        )
+        
+        return vc
     }
     
     func loginWorker(
