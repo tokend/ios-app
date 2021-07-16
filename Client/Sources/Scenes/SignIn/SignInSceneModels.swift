@@ -23,7 +23,6 @@ extension SignInScene.Model {
         var networkError: NetworkValidationError?
         var loginError: LoginValidationError?
         var passwordError: PasswordValidationError?
-//        var loginActionError: LoginActionError?
     }
     
     struct SceneViewModel {
@@ -34,10 +33,6 @@ extension SignInScene.Model {
         var loginError: String?
         var passwordError: String?
     }
-    
-//    public enum LoginActionError {
-//        case wrongPassword
-//    }
     
     public enum NetworkValidationError {
         case emptyString
@@ -94,12 +89,6 @@ extension SignInScene.Event {
         }
     }
     
-    public enum DidSelectNetworkSync {
-        public struct Request {
-            let value: String?
-        }
-    }
-    
     public enum DidEnterLoginSync {
         public struct Request {
             let value: String?
@@ -116,18 +105,10 @@ extension SignInScene.Event {
         public struct Request {}
         
         public struct Response {
-            let network: String
             let login: String
             let password: String
         }
         
         public typealias ViewModel = Response
     }
-    
-//    public enum LoginErrorOccuredSync {
-//        
-//        public struct Request {
-//            let error: Model.LoginActionError
-//        }
-//    }
 }

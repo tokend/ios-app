@@ -37,3 +37,7 @@
 "sign_up_title" = "Sign up";
 "next" = "Next";
 "done" = "Done";
+"fetch_network_info_error" = "Failed to fetch network information. Please try again";
+"passcode_authorization_error" = "You've entered wrong passcode. Please, try again";
+"authorization_error_wrong_login" = "You've entered wrong email. Please, try again";
+

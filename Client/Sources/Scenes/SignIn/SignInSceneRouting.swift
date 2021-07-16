@@ -4,8 +4,8 @@ extension SignInScene {
     
     public struct Routing {
         
-//        public let onBackAction: () -> Void
-        public let onSelectNetwork: (_ completion: (String) -> Void) -> Void
+        public let onSignIn: (_ login: String, _ password: String) -> Void
+        public let onSelectNetwork: () -> Void
         public let onForgotPassword: () -> Void
         public let onSignUp: () -> Void
     }

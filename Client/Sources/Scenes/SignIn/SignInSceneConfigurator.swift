@@ -7,6 +7,7 @@ extension SignInScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
+            networkInfoProvider: NetworkInfoProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -15,7 +16,8 @@ extension SignInScene {
                 presenterDispatch: presenterDispatch
             )
             let interactor = Interactor(
-                presenter: presenter
+                presenter: presenter,
+                networkInfoProvider: networkInfoProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

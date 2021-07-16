@@ -6,6 +6,7 @@ public protocol SignInSceneDisplayLogic: class {
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
+    func displayDidTapLoginButtonSync(viewModel: Event.DidTapLoginButtonSync.ViewModel)
 }
 
 extension SignInScene {
@@ -113,10 +114,8 @@ private extension SignInScene.ViewController {
     
     func setupView() {
         view.backgroundColor = Theme.Colors.mainBackgroundColor
-        let navigationBar = self.navigationController?.navigationBar
         navigationController?.setNavigationBarHidden(false, animated: true)
-//        navigationController?.title = Localized(.sign_in_title)
-        navigationBar?.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = Localized(.sign_in_title)
     }
     
@@ -150,19 +149,14 @@ private extension SignInScene.ViewController {
     }
     
     @objc func selectNetworkButtonTouchUpInside() {
-        routing?.onSelectNetwork(
-            { [weak self] (value) in
-                let request: Event.DidSelectNetworkSync.Request = .init(value: value)
-                self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
-                    businessLogic.onDidSelectNetworkSync(request: request)
-                }
-            }
-        )
+        routing?.onSelectNetwork()
     }
     
     func setupLoginTextField() {
         loginTextField.title = Localized(.sign_in_login_title)
         loginTextField.placeholder = "example@mail.com"
+        loginTextField.capitalizationType = .none
+        loginTextField.keyboardType = .emailAddress
         loginTextField.onTextChanged = { [weak self] (text) in
             let request: Event.DidEnterLoginSync.Request = .init(value: text)
             self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
@@ -212,7 +206,7 @@ private extension SignInScene.ViewController {
         let toolbar: UIToolbar = SharedViewsBuilder.configureToolbar()
         toolbar.items = [
             .init(
-                title: Localized(.next),
+                title: Localized(.done),
                 style: .done,
                 target: self,
                 action: #selector(passwordTextFieldNextAction)
@@ -253,8 +247,8 @@ private extension SignInScene.ViewController {
     
     func setupSignUpButton() {
         signUpButton.title = Localized(.sign_up_title)
-        signInButton.onTouchUpInside = { [weak self] in
-            
+        signUpButton.onTouchUpInside = { [weak self] in
+            self?.routing?.onSignUp()
         }
     }
     
@@ -422,5 +416,9 @@ extension SignInScene.ViewController: SignInScene.DisplayLogic {
     
     public func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
+    }
+    
+    public func displayDidTapLoginButtonSync(viewModel: Event.DidTapLoginButtonSync.ViewModel) {
+        routing?.onSignIn(viewModel.login, viewModel.password)
     }
 }

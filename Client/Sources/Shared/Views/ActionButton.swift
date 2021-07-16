@@ -19,6 +19,12 @@ final class ActionButton: UIView {
         set { button.setTitle(newValue, for: .normal) }
     }
     
+    public var titleColor: UIColor = .systemBlue {
+        didSet {
+            button.setTitleColor(titleColor, for: .normal)
+        }
+    }
+    
     public var isEnabled: Bool {
         get { button.isEnabled }
         set {

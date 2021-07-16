@@ -21,9 +21,10 @@ class LaunchFlowController: BaseFlowController {
     private let registrationChecker: RegistrationCheckerProtocol
     private lazy var accountTypeChecker: AccountTypeCheckerProtocol! = initAccountTypeChecker()
     private lazy var registerWorker: RegisterWorkerProtocol! = initRegisterWorker()
-
+    private lazy var networkInfoWorker: NetworkInfoWorkerProtocol = NetworkInfoWorker()
+    private lazy var walletDataProvider: WalletDataProviderProtocol = initWalletDataProvider()
     private var login: String?
-    private var cachedLoginWorker: LoginWorkerProtocol!
+    private lazy var cachedLoginWorker: LoginWorkerProtocol = initLoginWorker()
 
     // MARK: -
 
@@ -190,19 +191,80 @@ private extension LaunchFlowController {
         
         let vc = SignInScene.ViewController()
         
+        let networkInfoProvider = SignInScene.NetworkInfoProvider()
+        
         let routing: SignInScene.Routing = .init(
-            onSelectNetwork: { [weak self] (completion) in
+            onSignIn: { [weak self] (login, password) in
+                self?.navigationController.showProgress()
+                
+                self?.loginWorker(for: login)
+                    .loginAction(
+                    login: login,
+                    password: password,
+                    completion: { [weak self] (result) in
+                        
+                        self?.navigationController.hideProgress()
+                        
+                        switch result {
+                        
+                        case .success(login: let login):
+                            // TODO: - handle account type
+                            self?.onAuthorized(login, .general)
+                            
+                        case .failure(let error):
+                            
+                            switch error {
+                            
+                            case KeyServerApi.GetWalletError.wrongPassword:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.passcode_authorization_error),
+                                    completion: nil
+                                )
+                                
+                            case KeyServerApi.GetWalletKDFError.loginNotFound:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.authorization_error_wrong_login),
+                                    completion: nil
+                                )
+                                
+                            default:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.error_unknown),
+                                    completion: nil
+                                )
+                            }
+                        }
+                    }
+                )
+            },
+            onSelectNetwork: { [weak self] in
                 self?.runQRCodeReaderFlow(
                     presentingViewController: vc,
                     handler: { [weak self] (result) in
                         
-//                        switch result {
-//
-//                        case .success(value: let value, metadataType: let metadataType):
-//                            <#code#>
-//                        case .canceled:
-//                            <#code#>
-//                        }
+                        guard let self = self
+                        else {
+                            return
+                        }
+                        
+                        switch result {
+
+                        case .success(value: let value, _):
+                            let newApiConfigurationModel: APIConfigurationModel
+                            do {
+                                newApiConfigurationModel = try self.networkInfoWorker.handleNetworkInfo(qrCodeValue: value)
+                            } catch {
+                                self.navigationController.showErrorMessage(Localized(.fetch_network_info_error), completion: nil)
+                                return
+                            }
+                            
+                            self.appController.updateFlowControllerStack(newApiConfigurationModel, self.keychainManager)
+                            networkInfoProvider.setNewNetworkInfo(value: newApiConfigurationModel.apiEndpoint)
+                            
+                        case .canceled:
+                            // TODO: - handle
+                            break
+                        }
                     }
                 )
             },
@@ -216,7 +278,8 @@ private extension LaunchFlowController {
         
         SignInScene.Configurator.configure(
             viewController: vc,
-            routing: routing
+            routing: routing,
+            networkInfoProvider: networkInfoProvider
         )
         
         return vc
@@ -225,21 +288,37 @@ private extension LaunchFlowController {
     func loginWorker(
         for login: String
     ) -> LoginWorkerProtocol! {
-        
+
         guard self.login != login
         else {
             return cachedLoginWorker
         }
-        
+
         self.login = login
-        
-        // TODO: - Implement
-//        cachedLoginWorker = BaseLoginWorker(
-//            walletDataProvider: <#T##WalletDataProviderProtocol#>,
-//            userDataManager: userDataManager,
-//            keychainManager: keychainManager
-//        )
+
+        cachedLoginWorker = BaseLoginWorker(
+            walletDataProvider: self.walletDataProvider,
+            userDataManager: userDataManager,
+            keychainManager: keychainManager
+        )
         return cachedLoginWorker
+    }
+    
+    func initLoginWorker() -> LoginWorkerProtocol {
+        return BaseLoginWorker(
+            walletDataProvider: self.walletDataProvider,
+            userDataManager: self.userDataManager,
+            keychainManager: self.keychainManager
+     )
+    }
+    
+    func initWalletDataProvider() -> WalletDataProviderProtocol {
+        return WalletDataProvider(
+            flowControllerStack: self.flowControllerStack,
+            onVerifyWallet: { [weak self] (_, _) in
+                // TODO: - Implement
+            }
+        )
     }
     
     func initAccountTypeChecker() -> AccountTypeCheckerProtocol! {

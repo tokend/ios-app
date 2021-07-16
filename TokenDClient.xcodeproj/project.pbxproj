@@ -214,6 +214,10 @@
 		0D5FC7FD269D976F006C8FC7 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */; };
 		0D5FC84D269DC345006C8FC7 /* SharedViewsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */; };
 		0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */; };
+		0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoWorker.swift */; };
+		0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift */; };
+		0DD5F2B0269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */; };
+		0DD5F2B3269F158D00B5CFB5 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -431,6 +435,10 @@
 		0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewsBuilder.swift; sourceTree = "<group>"; };
 		0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeReaderFlowController.swift; sourceTree = "<group>"; };
+		0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoWorker.swift; sourceTree = "<group>"; };
+		0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoWorkerProtocol.swift; sourceTree = "<group>"; };
+		0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProviderProtocol.swift; sourceTree = "<group>"; };
+		0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProvider.swift; sourceTree = "<group>"; };
 		111CA24DFC0B42D0D8442E41 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		624397EB410687DC85703FF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		9606380E3DF7F24E64D5490C /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
@@ -465,6 +473,7 @@
 				0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */,
 				0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */,
 				0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */,
+				0DD5F2AD269F156300B5CFB5 /* Workers */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -570,6 +579,7 @@
 		0D59BC26269491C900B6658F /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				0DD5F2A5269EF8CF00B5CFB5 /* NetworkInfoWorker */,
 				0D59BC3F269491C900B6658F /* BalanceCreator.swift */,
 				0D59BC80269491C900B6658F /* LatestChangeRoleRequestProvider.swift */,
 				0D59BC27269491C900B6658F /* AccountRoleFetcher */,
@@ -1189,6 +1199,32 @@
 			path = FlowControllers;
 			sourceTree = "<group>";
 		};
+		0DD5F2A5269EF8CF00B5CFB5 /* NetworkInfoWorker */ = {
+			isa = PBXGroup;
+			children = (
+				0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoWorker.swift */,
+				0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift */,
+			);
+			path = NetworkInfoWorker;
+			sourceTree = "<group>";
+		};
+		0DD5F2AD269F156300B5CFB5 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				0DD5F2AE269F156D00B5CFB5 /* NetworkInfoProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		0DD5F2AE269F156D00B5CFB5 /* NetworkInfoProvider */ = {
+			isa = PBXGroup;
+			children = (
+				0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */,
+				0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */,
+			);
+			path = NetworkInfoProvider;
+			sourceTree = "<group>";
+		};
 		51C9FF6C8C5A61429A1872DA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1477,6 +1513,7 @@
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,
+				0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoWorker.swift in Sources */,
 				0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */,
 				0D59BDC6269493BC00B6658F /* BaseSignedInFlowController.swift in Sources */,
 				0D59BDC7269493BC00B6658F /* PermissionRequestFlowController.swift in Sources */,
@@ -1488,15 +1525,18 @@
 				0D59BDCD269493BC00B6658F /* UIImagePickerFlowController.swift in Sources */,
 				0D59BDCE269493BC00B6658F /* ImagePickerFlowController.swift in Sources */,
 				0D59BDCF269493BC00B6658F /* PHPickerFlowController.swift in Sources */,
+				0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift in Sources */,
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
 				0D59BD132694930700B6658F /* KYCFlowController.swift in Sources */,
 				0D59BD172694930700B6658F /* LocalAuthFlowController.swift in Sources */,
+				0DD5F2B0269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift in Sources */,
 				0D59BD012694930700B6658F /* Theme.swift in Sources */,
 				0D59BD042694930700B6658F /* AppController+UserActivitySubscribers.swift in Sources */,
 				0D59BD0F2694930700B6658F /* RecoveryFlowController.swift in Sources */,
 				0D59BD062694930700B6658F /* ManagersController.swift in Sources */,
 				0D59BD112694930700B6658F /* LaunchFlowController.swift in Sources */,
+				0DD5F2B3269F158D00B5CFB5 /* NetworkInfoProvider.swift in Sources */,
 				0D59BD082694930700B6658F /* AppController+OpenUrlSubscriber.swift in Sources */,
 				0D59BCFF2694930700B6658F /* Assets.swift in Sources */,
 				0D59BD152694930700B6658F /* SignedInFlowController.swift in Sources */,

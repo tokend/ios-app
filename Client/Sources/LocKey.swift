@@ -41,4 +41,7 @@ enum LocKey: String {
     case sign_up_title
     case next
     case done
+    case fetch_network_info_error
+    case passcode_authorization_error
+    case authorization_error_wrong_login
 }

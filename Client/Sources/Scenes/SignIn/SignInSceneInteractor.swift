@@ -1,4 +1,6 @@
 import Foundation
+import RxCocoa
+import RxSwift
 
 public protocol SignInSceneBusinessLogic {
     
@@ -6,11 +8,9 @@ public protocol SignInSceneBusinessLogic {
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
-    func onDidSelectNetworkSync(request: Event.DidSelectNetworkSync.Request)
     func onDidEnterLoginSync(request: Event.DidEnterLoginSync.Request)
     func onDidEnterPasswordSync(request: Event.DidEnterPasswordSync.Request)
     func onDidTapLoginButtonSync(request: Event.DidTapLoginButtonSync.Request)
-//    func onLoginErrorOccuredSync(request: Event.LoginErrorOccuredSync.Request)
 }
 
 extension SignInScene {
@@ -27,16 +27,22 @@ extension SignInScene {
         
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
+        private let networkInfoProvider: NetworkInfoProviderProtocol
+        
+        private let disposeBag: DisposeBag = .init()
         
         // MARK: -
         
         public init(
-            presenter: PresentationLogic
+            presenter: PresentationLogic,
+            networkInfoProvider: NetworkInfoProviderProtocol
         ) {
             
             self.presenter = presenter
+            self.networkInfoProvider = networkInfoProvider
+            
             self.sceneModel = .init(
-                network: nil,
+                network: networkInfoProvider.network,
                 login: nil,
                 password: nil,
                 networkError: nil,
@@ -109,20 +115,26 @@ private extension SignInScene.Interactor {
             && sceneModel.loginError == nil
             && sceneModel.passwordError == nil
     }
+    
+    func observeNetworkInfo() {
+        networkInfoProvider
+            .observeNetwork()
+            .subscribe(onNext: { [weak self] (value) in
+                self?.sceneModel.network = value
+                self?.presentSceneDidUpdate(animated: false)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - BusinessLogic
 
 extension SignInScene.Interactor: SignInScene.BusinessLogic {
-    public func onViewDidLoad(request: Event.ViewDidLoad.Request) { }
-    
-    public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
-        presentSceneDidUpdateSync(animated: false)
+    public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        observeNetworkInfo()
     }
     
-    public func onDidSelectNetworkSync(request: Event.DidSelectNetworkSync.Request) {
-        sceneModel.network = request.value
-        sceneModel.networkError = nil
+    public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
         presentSceneDidUpdateSync(animated: false)
     }
     
@@ -140,8 +152,7 @@ extension SignInScene.Interactor: SignInScene.BusinessLogic {
     
     public func onDidTapLoginButtonSync(request: Event.DidTapLoginButtonSync.Request) {
         
-        guard let network = sceneModel.network,
-              let login = sceneModel.login,
+        guard let login = sceneModel.login,
               let password = sceneModel.password,
               isAbleToLogin()
         else {
@@ -150,14 +161,9 @@ extension SignInScene.Interactor: SignInScene.BusinessLogic {
         }
 
         let response: Event.DidTapLoginButtonSync.Response = .init(
-            network: network,
             login: login,
             password: password
         )
         presenter.presentDidTapLoginButtonSync(response: response)
     }
-    
-//    public func onLoginErrorOccuredSync(request: Event.LoginErrorOccuredSync.Request) {
-//
-//    }
 }

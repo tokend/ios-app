@@ -111,6 +111,8 @@ extension SignInScene.Presenter: SignInScene.PresentationLogic {
     
     public func presentDidTapLoginButtonSync(response: Event.DidTapLoginButtonSync.Response) {
         let viewModel: Event.DidTapLoginButtonSync.ViewModel = response
-        
+        self.presenterDispatch.displaySync { (displayLogic) in
+            displayLogic.displayDidTapLoginButtonSync(viewModel: viewModel)
+        }
     }
 }
