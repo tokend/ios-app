@@ -51,6 +51,25 @@ class BaseFlowController: FlowControllerProtocol {
     
     func hideBlockingProgress() { }
     
+    // MARK: - QRCodeReader
+    
+    func runQRCodeReaderFlow(
+        presentingViewController: UIViewController,
+        handler: @escaping QRCodeReaderFlowController.QRCodeReaderCompletion
+    ) {
+        let flow = QRCodeReaderFlowController(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            rootNavigation: self.rootNavigation,
+            presentingViewController: presentingViewController,
+            handler: { [weak self] (result) in
+                self?.currentFlowController = nil
+                handler(result)
+        })
+        self.currentFlowController = flow
+        flow.run()
+    }
+    
     // MARK: - TFA
     
     func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) { }
@@ -142,7 +161,7 @@ class BaseFlowController: FlowControllerProtocol {
 
 // MARK: - Private methods
 
-private extension  BaseFlowController {
+private extension BaseFlowController {
     
     func processTFACode(
         _ code: String,

@@ -24,3 +24,20 @@
 "mediapicker_sourcetype_camera_title" = "Camera";
 "mediapicker_sourcetype_documents_title" = "Documents";
 "mediapicker_sourcetype_photolibrary_title" = "Photo Library";
+"sign_in_title" = "Sign in";
+"sign_in_network_title" = "Network";
+"sign_in_login_title" = "Email";
+"sign_in_password_title" = "Password";
+"sign_in_forgot_password" = "Forgot password";
+"sign_in_button" = "Sign in";
+"sign_in_use_local_key" = "Use local key";
+"sign_in_email_validation_error" = "Email does not match requirements";
+"sign_in_invalid_password_error" = "Invalid password";
+"validation_error_empty" = "Empty line";
+"sign_up_title" = "Sign up";
+"next" = "Next";
+"done" = "Done";
+"fetch_network_info_error" = "Failed to fetch network information. Please try again";
+"passcode_authorization_error" = "You've entered wrong passcode. Please, try again";
+"authorization_error_wrong_login" = "You've entered wrong email. Please, try again";
+

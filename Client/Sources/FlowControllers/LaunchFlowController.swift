@@ -19,9 +19,10 @@ class LaunchFlowController: BaseFlowController {
     private let onSignOut: () -> Void
 
     private let registrationChecker: RegistrationCheckerProtocol
-    private lazy var accountTypeChecker: AccountTypeCheckerProtocol! = initAccountTypeChecker()
+    private lazy var accountTypeChecker: AccountTypeCheckerProtocol = initAccountTypeChecker()
     private lazy var registerWorker: RegisterWorkerProtocol! = initRegisterWorker()
-
+    private lazy var networkInfoParser: NetworkInfoParserProtocol = NetworkInfoParser()
+    private lazy var walletDataProvider: WalletDataProviderProtocol = initWalletDataProvider()
     private var login: String?
     private var cachedLoginWorker: LoginWorkerProtocol!
 
@@ -118,8 +119,8 @@ class LaunchFlowController: BaseFlowController {
             self.runLocalAuthFlow(login: login, animated: animated)
         }  else {
 
-            // TODO: - Implement
-            self.startFrom(vcs: [], animated: animated)
+            let vc = initSignIn()
+            self.startFrom(vcs: [vc], animated: animated)
         }
     }
 }
@@ -151,11 +152,11 @@ private extension LaunchFlowController {
                     completion: { [weak self] (accountType) in
                         self?.navigationController.hideProgress()
                         if let type = accountType {
-
+                            
                             self?.accountTypeManager.setType(type)
                             self?.onAuthorized(login, type)
                         }
-                })
+                    })
             },
             onDidFinishForgotPassword: { [weak self] (password) in
                 
@@ -163,7 +164,7 @@ private extension LaunchFlowController {
                     login: login,
                     password: password
                 )
-        },
+            },
             onSignOut: { [weak self] in
                 self?.onSignOut()
             },
@@ -185,30 +186,150 @@ private extension LaunchFlowController {
         self.navigationController.setViewControllers(vcs, animated: animated)
     }
     
+    func initSignIn(
+    ) -> SignInScene.ViewController {
+        
+        let vc = SignInScene.ViewController()
+        
+        let networkInfoProvider = SignInScene.NetworkInfoProvider()
+        
+        let routing: SignInScene.Routing = .init(
+            onSignIn: { [weak self] (login, password) in
+                self?.navigationController.showProgress()
+                
+                self?.loginWorker(for: login)
+                    .loginAction(
+                    login: login,
+                    password: password,
+                    completion: { [weak self] (result) in
+                        
+                        self?.navigationController.hideProgress()
+                        
+                        switch result {
+                        
+                        case .success(login: let login):
+                            self?.accountTypeChecker.checkAccountType(
+                                login: login,
+                                completion: { [weak self] (result) in
+                                    
+                                    switch result {
+                                    
+                                    case .success(let type):
+                                        self?.onAuthorized(login, type)
+
+                                    case .failure:
+                                        self?.navigationController.showErrorMessage(
+                                            Localized(.error_unknown),
+                                            completion: nil
+                                        )
+                                    }
+                                }
+                            )
+                            
+                        case .failure(let error):
+                            
+                            switch error {
+                            
+                            case KeyServerApi.GetWalletError.wrongPassword:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.passcode_authorization_error),
+                                    completion: nil
+                                )
+                                
+                            case KeyServerApi.GetWalletKDFError.loginNotFound:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.authorization_error_wrong_login),
+                                    completion: nil
+                                )
+                                
+                            default:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.error_unknown),
+                                    completion: nil
+                                )
+                            }
+                        }
+                    }
+                )
+            },
+            onSelectNetwork: { [weak self] in
+                self?.runQRCodeReaderFlow(
+                    presentingViewController: vc,
+                    handler: { [weak self] (result) in
+                        
+                        guard let self = self
+                        else {
+                            return
+                        }
+                        
+                        switch result {
+
+                        case .success(value: let value, _):
+                            let newApiConfigurationModel: APIConfigurationModel
+                            do {
+                                newApiConfigurationModel = try self.networkInfoParser.parseNetworkInfo(qrCodeValue: value)
+                            } catch {
+                                self.navigationController.showErrorMessage(Localized(.fetch_network_info_error), completion: nil)
+                                return
+                            }
+                            
+                            self.appController.updateFlowControllerStack(newApiConfigurationModel, self.keychainManager)
+                            networkInfoProvider.setNewNetworkInfo(value: newApiConfigurationModel.apiEndpoint)
+                            
+                        case .canceled:
+                            break
+                        }
+                    }
+                )
+            },
+            onForgotPassword: { [weak self]  in
+                
+            },
+            onSignUp: { [weak self] in
+                
+            }
+        )
+        
+        SignInScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            networkInfoProvider: networkInfoProvider
+        )
+        
+        return vc
+    }
+    
     func loginWorker(
         for login: String
     ) -> LoginWorkerProtocol! {
-        
+
         guard self.login != login
         else {
             return cachedLoginWorker
         }
-        
+
         self.login = login
-        
-        // TODO: - Implement
-//        cachedLoginWorker = BaseLoginWorker(
-//            walletDataProvider: <#T##WalletDataProviderProtocol#>,
-//            userDataManager: userDataManager,
-//            keychainManager: keychainManager
-//        )
+
+        cachedLoginWorker = BaseLoginWorker(
+            walletDataProvider: self.walletDataProvider,
+            userDataManager: userDataManager,
+            keychainManager: keychainManager
+        )
         return cachedLoginWorker
+    }
+    
+    func initWalletDataProvider() -> WalletDataProviderProtocol {
+        return WalletDataProvider(
+            flowControllerStack: self.flowControllerStack,
+            onVerifyWallet: { [weak self] (_, _) in
+                // TODO: - Implement
+            }
+        )
     }
     
     func initAccountTypeChecker() -> AccountTypeCheckerProtocol! {
         
-        // TODO: - Implement
-        return nil
+        return TokenDAccountTypeChecker()
     }
     
     func initRegisterWorker() -> RegisterWorkerProtocol! {

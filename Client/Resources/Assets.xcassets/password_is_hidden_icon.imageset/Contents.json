@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "password_is_hidden.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
