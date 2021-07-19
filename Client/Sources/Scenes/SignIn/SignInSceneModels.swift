@@ -29,9 +29,9 @@ extension SignInScene.Model {
         let network: String?
         let login: String?
         let password: String?
-        var networkError: String?
-        var loginError: String?
-        var passwordError: String?
+        let networkError: String?
+        let loginError: String?
+        let passwordError: String?
     }
     
     public enum NetworkValidationError {

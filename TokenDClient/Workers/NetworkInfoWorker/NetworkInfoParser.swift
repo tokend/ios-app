@@ -1,13 +1,13 @@
 import Foundation
 
-class NetworkInfoWorker {
+class NetworkInfoParser {
     
     // MARK: - Private properties
     
     private let decoder: JSONDecoder = .init()
 }
 
-private extension NetworkInfoWorker {
+private extension NetworkInfoParser {
     struct NetworkInfo: Decodable {
         let api: String
         let storage: String
@@ -38,8 +38,8 @@ private extension NetworkInfoWorker {
     }
 }
 
-extension NetworkInfoWorker: NetworkInfoWorkerProtocol {
-    func handleNetworkInfo(qrCodeValue: String) throws -> APIConfigurationModel {
+extension NetworkInfoParser: NetworkInfoParserProtocol {
+    func parseNetworkInfo(qrCodeValue: String) throws -> APIConfigurationModel {
         
         return try decodeQrCodeValue(value: qrCodeValue)
     }

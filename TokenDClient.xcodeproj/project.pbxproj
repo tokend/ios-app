@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D0CC83626A5AC29002B0543 /* TokenDAccountTypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */; };
 		0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */; };
 		0D2FA2E62695CC720018B7D4 /* SignInSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */; };
 		0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */; };
 		0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */; };
 		0D2FA2E92695CC720018B7D4 /* SignInSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */; };
 		0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */; };
-		0D2FA2F02695CF4A0018B7D4 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */; };
 		0D2FA2FC269893720018B7D4 /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2FB269893720018B7D4 /* TextField.swift */; };
 		0D2FA30F269C92BF0018B7D4 /* TextFieldsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */; };
 		0D59BCEE2694930300B6658F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D59BCEC2694930300B6658F /* LaunchScreen.storyboard */; };
@@ -214,21 +214,21 @@
 		0D5FC7FD269D976F006C8FC7 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */; };
 		0D5FC84D269DC345006C8FC7 /* SharedViewsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */; };
 		0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */; };
-		0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoWorker.swift */; };
-		0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift */; };
+		0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoParser.swift */; };
+		0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift */; };
 		0DD5F2B0269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */; };
 		0DD5F2B3269F158D00B5CFB5 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDAccountTypeChecker.swift; sourceTree = "<group>"; };
 		0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInScenePresenter.swift; sourceTree = "<group>"; };
 		0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneRouting.swift; sourceTree = "<group>"; };
 		0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneModels.swift; sourceTree = "<group>"; };
 		0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneViewController.swift; sourceTree = "<group>"; };
 		0D2FA2E32695CC720018B7D4 /* SignInSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneInteractor.swift; sourceTree = "<group>"; };
 		0D2FA2E42695CC720018B7D4 /* SignInSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneConfigurator.swift; sourceTree = "<group>"; };
-		0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		0D2FA2FB269893720018B7D4 /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldsContainer.swift; sourceTree = "<group>"; };
 		0D59BBFC269491C800B6658F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
@@ -435,8 +435,8 @@
 		0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewsBuilder.swift; sourceTree = "<group>"; };
 		0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeReaderFlowController.swift; sourceTree = "<group>"; };
-		0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoWorker.swift; sourceTree = "<group>"; };
-		0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoWorkerProtocol.swift; sourceTree = "<group>"; };
+		0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoParser.swift; sourceTree = "<group>"; };
+		0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoParserProtocol.swift; sourceTree = "<group>"; };
 		0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProviderProtocol.swift; sourceTree = "<group>"; };
 		0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProvider.swift; sourceTree = "<group>"; };
 		111CA24DFC0B42D0D8442E41 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -490,7 +490,6 @@
 			isa = PBXGroup;
 			children = (
 				0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */,
-				0D2FA2EF2695CF4A0018B7D4 /* NavigationBar.swift */,
 				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 				0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */,
 				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
@@ -714,6 +713,7 @@
 				0D59BC47269491C900B6658F /* ContoPassAccountTypeChecker.swift */,
 				0D59BC48269491C900B6658F /* AccountTypeCheckerProtocol.swift */,
 				0D59BC49269491C900B6658F /* ContoFAAccountTypeChecker.swift */,
+				0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */,
 			);
 			path = AccountTypeChecker;
 			sourceTree = "<group>";
@@ -1202,8 +1202,8 @@
 		0DD5F2A5269EF8CF00B5CFB5 /* NetworkInfoWorker */ = {
 			isa = PBXGroup;
 			children = (
-				0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoWorker.swift */,
-				0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift */,
+				0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoParser.swift */,
+				0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift */,
 			);
 			path = NetworkInfoWorker;
 			sourceTree = "<group>";
@@ -1346,7 +1346,6 @@
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D59BD26269493BB00B6658F /* Array+IndexOf.swift in Sources */,
 				0D59BD27269493BB00B6658F /* String+Index.swift in Sources */,
-				0D2FA2F02695CF4A0018B7D4 /* NavigationBar.swift in Sources */,
 				0D59BD28269493BB00B6658F /* UITextfield+SetText.swift in Sources */,
 				0D59BD29269493BB00B6658F /* UIColor+Interpolation.swift in Sources */,
 				0D59BD2A269493BB00B6658F /* Optional+Extension.swift in Sources */,
@@ -1507,13 +1506,14 @@
 				0D59BDBD269493BC00B6658F /* TFAManager.swift in Sources */,
 				0D59BDBE269493BC00B6658F /* TFAManagerProtocol.swift in Sources */,
 				0D59BDBF269493BC00B6658F /* APIConfigurationFetcher.swift in Sources */,
+				0D0CC83626A5AC29002B0543 /* TokenDAccountTypeChecker.swift in Sources */,
 				0D59BDC0269493BC00B6658F /* APIConfigurationModel.swift in Sources */,
 				0D59BDC1269493BC00B6658F /* ContactEmailPickerHandler.swift in Sources */,
 				0D59BDC2269493BC00B6658F /* PermissionsManager.swift in Sources */,
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,
-				0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoWorker.swift in Sources */,
+				0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */,
 				0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */,
 				0D59BDC6269493BC00B6658F /* BaseSignedInFlowController.swift in Sources */,
 				0D59BDC7269493BC00B6658F /* PermissionRequestFlowController.swift in Sources */,
@@ -1525,7 +1525,7 @@
 				0D59BDCD269493BC00B6658F /* UIImagePickerFlowController.swift in Sources */,
 				0D59BDCE269493BC00B6658F /* ImagePickerFlowController.swift in Sources */,
 				0D59BDCF269493BC00B6658F /* PHPickerFlowController.swift in Sources */,
-				0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoWorkerProtocol.swift in Sources */,
+				0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */,
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
 				0D59BD132694930700B6658F /* KYCFlowController.swift in Sources */,
@@ -1617,6 +1617,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1640,6 +1641,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = io.tokend.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -1692,6 +1694,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1715,6 +1718,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = io.tokend.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;

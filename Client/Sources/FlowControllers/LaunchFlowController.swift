@@ -19,12 +19,12 @@ class LaunchFlowController: BaseFlowController {
     private let onSignOut: () -> Void
 
     private let registrationChecker: RegistrationCheckerProtocol
-    private lazy var accountTypeChecker: AccountTypeCheckerProtocol! = initAccountTypeChecker()
+    private lazy var accountTypeChecker: AccountTypeCheckerProtocol = initAccountTypeChecker()
     private lazy var registerWorker: RegisterWorkerProtocol! = initRegisterWorker()
-    private lazy var networkInfoWorker: NetworkInfoWorkerProtocol = NetworkInfoWorker()
+    private lazy var networkInfoParser: NetworkInfoParserProtocol = NetworkInfoParser()
     private lazy var walletDataProvider: WalletDataProviderProtocol = initWalletDataProvider()
     private var login: String?
-    private lazy var cachedLoginWorker: LoginWorkerProtocol = initLoginWorker()
+    private var cachedLoginWorker: LoginWorkerProtocol!
 
     // MARK: -
 
@@ -208,8 +208,23 @@ private extension LaunchFlowController {
                         switch result {
                         
                         case .success(login: let login):
-                            // TODO: - handle account type
-                            self?.onAuthorized(login, .general)
+                            self?.accountTypeChecker.checkAccountType(
+                                login: login,
+                                completion: { [weak self] (result) in
+                                    
+                                    switch result {
+                                    
+                                    case .success(let type):
+                                        self?.onAuthorized(login, type)
+
+                                    case .failure:
+                                        self?.navigationController.showErrorMessage(
+                                            Localized(.error_unknown),
+                                            completion: nil
+                                        )
+                                    }
+                                }
+                            )
                             
                         case .failure(let error):
                             
@@ -252,7 +267,7 @@ private extension LaunchFlowController {
                         case .success(value: let value, _):
                             let newApiConfigurationModel: APIConfigurationModel
                             do {
-                                newApiConfigurationModel = try self.networkInfoWorker.handleNetworkInfo(qrCodeValue: value)
+                                newApiConfigurationModel = try self.networkInfoParser.parseNetworkInfo(qrCodeValue: value)
                             } catch {
                                 self.navigationController.showErrorMessage(Localized(.fetch_network_info_error), completion: nil)
                                 return
@@ -262,7 +277,6 @@ private extension LaunchFlowController {
                             networkInfoProvider.setNewNetworkInfo(value: newApiConfigurationModel.apiEndpoint)
                             
                         case .canceled:
-                            // TODO: - handle
                             break
                         }
                     }
@@ -304,14 +318,6 @@ private extension LaunchFlowController {
         return cachedLoginWorker
     }
     
-    func initLoginWorker() -> LoginWorkerProtocol {
-        return BaseLoginWorker(
-            walletDataProvider: self.walletDataProvider,
-            userDataManager: self.userDataManager,
-            keychainManager: self.keychainManager
-     )
-    }
-    
     func initWalletDataProvider() -> WalletDataProviderProtocol {
         return WalletDataProvider(
             flowControllerStack: self.flowControllerStack,
@@ -323,8 +329,7 @@ private extension LaunchFlowController {
     
     func initAccountTypeChecker() -> AccountTypeCheckerProtocol! {
         
-        // TODO: - Implement
-        return nil
+        return TokenDAccountTypeChecker()
     }
     
     func initRegisterWorker() -> RegisterWorkerProtocol! {

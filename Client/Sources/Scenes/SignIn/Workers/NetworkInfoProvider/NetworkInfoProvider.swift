@@ -7,7 +7,6 @@ extension SignInScene {
         
         private let networkInfoBehaviorRelay: BehaviorRelay<String?> = .init(value: nil)
         
-        
         func setNewNetworkInfo(value: String) {
             
             let networkInfo: String = value
