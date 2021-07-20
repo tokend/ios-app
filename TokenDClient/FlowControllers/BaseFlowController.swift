@@ -142,9 +142,49 @@ class BaseFlowController: FlowControllerProtocol {
     func setupTFACodeScreen(
         onClosed: @escaping () -> Void,
         onCode: @escaping (String) -> Void
-    ) -> UIViewController! {
+    ) -> UIAlertController {
 
-        return nil
+        let alert = UIAlertController(
+            title: Localized(.tfa_code_title),
+            message: nil,
+            preferredStyle: .alert
+        )
+        
+        alert.addTextField(
+            configurationHandler: { (textField) in
+                textField.placeholder = Localized(.tfa_code_placeholder)
+                textField.isSecureTextEntry = true
+            }
+        )
+        
+        alert.addAction(
+            UIAlertAction(
+                title: Localized(.done),
+                style: .default,
+                handler: { (_) in
+                    guard let textField = alert.textFields?.first,
+                          let code = textField.text
+                    else {
+                        onClosed()
+                        return
+                    }
+
+                    onCode(code)
+                }
+            )
+        )
+        
+        alert.addAction(
+            UIAlertAction(
+                title: Localized(.cancel),
+                style: .cancel,
+                handler: { (_) in
+                    onClosed()
+                }
+            )
+        )
+        
+        return alert
     }
     
     /// - Parameters:
@@ -153,9 +193,49 @@ class BaseFlowController: FlowControllerProtocol {
     func setupTFAPasswordScreen(
         onClosed: @escaping () -> Void,
         onCode: @escaping (String) -> Void
-    ) -> UIAlertController! {
+    ) -> UIAlertController {
         
-        return nil
+        let alert = UIAlertController(
+            title: Localized(.tfa_password_title),
+            message: nil,
+            preferredStyle: .alert
+        )
+        
+        alert.addTextField(
+            configurationHandler: { (textField) in
+                textField.placeholder = Localized(.tfa_password_placeholder)
+                textField.isSecureTextEntry = true
+            }
+        )
+        
+        alert.addAction(
+            UIAlertAction(
+                title: Localized(.done),
+                style: .default,
+                handler: { (_) in
+                    guard let textField = alert.textFields?.first,
+                          let password = textField.text
+                    else {
+                        onClosed()
+                        return
+                    }
+
+                    onCode(password)
+                }
+            )
+        )
+        
+        alert.addAction(
+            UIAlertAction(
+                title: Localized(.cancel),
+                style: .cancel,
+                handler: { (_) in
+                    onClosed()
+                }
+            )
+        )
+        
+        return alert
     }
 }
 
