@@ -157,6 +157,7 @@ private extension SignedInFlowController {
             rootNavigation: rootNavigation,
             onKYCFinished: { [weak self] in
                 self?.currentFlowController = nil
+                self?.showMainFlow()
                 self?.checkNotifications()
             },
             onKYCFailed: { [weak self] in
@@ -221,6 +222,38 @@ private extension SignedInFlowController {
     
     func runReposPreload() {
         // TODO: - Add if needed
+    }
+    
+    func showMainFlow() {
+        let flow = setupMainFlow()
+        flow.run(
+            showRootScreen: { [weak self] (controller) in
+                self?.rootNavigation.setRootContent(
+                    controller,
+                    transition: .fade,
+                    animated: true
+                )
+            },
+            selectedTab: .balances
+        )
+        currentFlowController = flow
+    }
+    
+    func setupMainFlow(
+    ) -> TabBarFlowController {
+        let tabBarFlow: TabBarFlowController = .init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation,
+            onAskSignOut: onAskToSignOut,
+            onPerformSignOut: onSignOut
+        )
+        
+        return tabBarFlow
     }
     
     // MARK: - Timeout management

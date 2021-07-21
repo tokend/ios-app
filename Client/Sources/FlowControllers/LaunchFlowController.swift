@@ -112,16 +112,16 @@ class LaunchFlowController: BaseFlowController {
 //            )
 //        }
 
-        if let login = self.userDataManager.getMainAccount(),
-            self.userDataManager.hasWalletDataForMainAccount(),
-            !self.userDataManager.isSignedViaAuthenticator() {
-            
-            self.runLocalAuthFlow(login: login, animated: animated)
-        }  else {
+//        if let login = self.userDataManager.getMainAccount(),
+//            self.userDataManager.hasWalletDataForMainAccount(),
+//            !self.userDataManager.isSignedViaAuthenticator() {
+//
+//            self.runLocalAuthFlow(login: login, animated: animated)
+//        }  else {
 
             let vc = initSignIn()
             self.startFrom(vcs: [vc], animated: animated)
-        }
+//        }
     }
 }
 
