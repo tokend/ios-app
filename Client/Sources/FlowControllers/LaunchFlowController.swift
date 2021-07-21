@@ -20,9 +20,10 @@ class LaunchFlowController: BaseFlowController {
 
     private let registrationChecker: RegistrationCheckerProtocol
     private lazy var accountTypeChecker: AccountTypeCheckerProtocol = initAccountTypeChecker()
-    private lazy var registerWorker: RegisterWorkerProtocol! = initRegisterWorker()
+    private lazy var registerWorker: RegisterWorkerProtocol = initRegisterWorker()
     private lazy var networkInfoParser: NetworkInfoParserProtocol = NetworkInfoParser()
     private lazy var walletDataProvider: WalletDataProviderProtocol = initWalletDataProvider()
+    private lazy var networkInfoProvider: NetworkInfoProvider = .init()
     private var login: String?
     private var cachedLoginWorker: LoginWorkerProtocol!
 
@@ -191,8 +192,6 @@ private extension LaunchFlowController {
         
         let vc = SignInScene.ViewController()
         
-        let networkInfoProvider = SignInScene.NetworkInfoProvider()
-        
         let routing: SignInScene.Routing = .init(
             onSignIn: { [weak self] (login, password) in
                 self?.navigationController.showProgress()
@@ -253,50 +252,157 @@ private extension LaunchFlowController {
                 )
             },
             onSelectNetwork: { [weak self] in
-                self?.runQRCodeReaderFlow(
-                    presentingViewController: vc,
-                    handler: { [weak self] (result) in
-                        
-                        guard let self = self
-                        else {
-                            return
-                        }
-                        
-                        switch result {
-
-                        case .success(value: let value, _):
-                            let newApiConfigurationModel: APIConfigurationModel
-                            do {
-                                newApiConfigurationModel = try self.networkInfoParser.parseNetworkInfo(qrCodeValue: value)
-                            } catch {
-                                self.navigationController.showErrorMessage(Localized(.fetch_network_info_error), completion: nil)
-                                return
-                            }
-                            
-                            self.appController.updateFlowControllerStack(newApiConfigurationModel, self.keychainManager)
-                            networkInfoProvider.setNewNetworkInfo(value: newApiConfigurationModel.apiEndpoint)
-                            
-                        case .canceled:
-                            break
-                        }
-                    }
-                )
+                self?.selectNewNetwork(for: vc)
             },
             onForgotPassword: { [weak self]  in
                 
             },
             onSignUp: { [weak self] in
-                
+                self?.showSignUp()
             }
         )
         
         SignInScene.Configurator.configure(
             viewController: vc,
             routing: routing,
-            networkInfoProvider: networkInfoProvider
+            networkInfoProvider: self.networkInfoProvider
         )
         
         return vc
+    }
+    
+    func showSignUp() {
+        let vc: SignUpScene.ViewController = initSignUp(
+            onBack: { [weak self] in
+                self?.navigationController.popViewController(true)
+            }
+        )
+        
+        navigationController.pushViewController(vc, animated: true)
+    }
+    
+    func initSignUp(
+        onBack: @escaping () -> Void
+    ) -> SignUpScene.ViewController {
+        
+        let vc: SignUpScene.ViewController = .init()
+        
+        let routing: SignUpScene.Routing = .init(
+            onBackAction: onBack,
+            onSelectNetwork: { [weak self] in
+                self?.selectNewNetwork(for: vc)
+            },
+            onCreateAccount: { [weak self] (email, password) in
+                self?.signUp(email: email, password: password)
+            }
+        )
+        
+        SignUpScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            networkInfoProvider: self.networkInfoProvider
+        )
+        
+        return vc
+    }
+    
+    func selectNewNetwork(for viewController: UIViewController) {
+        self.runQRCodeReaderFlow(
+            presentingViewController: viewController,
+            handler: { [weak self] (result) in
+                
+                guard let self = self
+                else {
+                    return
+                }
+                
+                switch result {
+
+                case .success(value: let value, _):
+                    let newApiConfigurationModel: APIConfigurationModel
+                    do {
+                        newApiConfigurationModel = try self.networkInfoParser.parseNetworkInfo(qrCodeValue: value)
+                    } catch {
+                        self.navigationController.showErrorMessage(Localized(.fetch_network_info_error), completion: nil)
+                        return
+                    }
+                    
+                    self.appController.updateFlowControllerStack(newApiConfigurationModel, self.keychainManager)
+                    self.networkInfoProvider.setNewNetworkInfo(value: newApiConfigurationModel.apiEndpoint)
+                    
+                case .canceled:
+                    break
+                }
+            }
+        )
+    }
+    
+    func signUp(
+        email: String,
+        password: String
+    ) {
+        navigationController.showProgress()
+
+        registerWorker.registerAction(
+            login: email,
+            password: password,
+            completion: { [weak self] (result) in
+                
+                switch result {
+                
+                case .success(login: let login):
+                    self?.loginWorker(for: login)
+                        .loginAction(
+                            login: login,
+                            password: password,
+                            completion: { [weak self] (result) in
+                                
+                                switch result {
+                                
+                                case .success(let login):
+                                    self?.checkAccountType(
+                                        login: login,
+                                        completion: { [weak self] (accountType) in
+                                            self?.navigationController.hideProgress()
+                                            if let type = accountType {
+                                                
+                                                self?.accountTypeManager.setType(type)
+                                                self?.onAuthorized(login, type)
+                                            }
+                                        }
+                                    )
+                                    
+                                case .failure:
+                                    self?.navigationController.hideProgress()
+                                    self?.navigationController.showErrorMessage(
+                                        Localized(.error_unknown),
+                                        completion: nil
+                                    )
+                                    
+                                }
+                            }
+                        )
+                    
+                case .failure(let error):
+                    self?.navigationController.hideProgress()
+                    
+                    switch error {
+                    
+                    case KeyServerApi.CreateWalletV2Error.loginAlreadyTaken:
+                        self?.navigationController.showErrorMessage(
+                            Localized(.sign_up_error_login_already_taken),
+                            completion: nil
+                        )
+                        
+                    default:
+                        self?.navigationController.showErrorMessage(
+                            Localized(.error_unknown),
+                            completion: nil
+                        )
+                    }
+                }
+            }
+        )
     }
     
     func loginWorker(
@@ -327,19 +433,28 @@ private extension LaunchFlowController {
         )
     }
     
-    func initAccountTypeChecker() -> AccountTypeCheckerProtocol! {
+    func initAccountTypeChecker() -> AccountTypeCheckerProtocol {
         
         return TokenDAccountTypeChecker()
     }
     
     func initRegisterWorker() -> RegisterWorkerProtocol! {
+        var keysProvider: KeyServerAPIKeysProviderProtocol?
+        repeat {
+            keysProvider = try? ContoPassRegisterKeysProvider(
+                keyValuesApi: flowControllerStack.apiV3.keyValuesApi
+            )
+        } while keysProvider == nil
         
-        // TODO: - Implement
-//        return BaseRegisterWorker(
-//            keyServerApi: flowControllerStack.keyServerApi,
-//            keysProvider: <#T##KeyServerAPIKeysProviderProtocol#>
-//        )
-        return nil
+        guard let provider = keysProvider
+        else {
+            return nil
+        }
+        
+        return BaseRegisterWorker(
+            keyServerApi: flowControllerStack.keyServerApi,
+            keysProvider: provider
+        )
     }
     
     func showForgotPassword(

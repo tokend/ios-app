@@ -216,8 +216,14 @@
 		0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */; };
 		0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoParser.swift */; };
 		0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift */; };
-		0DD5F2B0269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */; };
-		0DD5F2B3269F158D00B5CFB5 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */; };
+		0DDC5A5C26A7D8560004D326 /* SignUpScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5626A7D8550004D326 /* SignUpScenePresenter.swift */; };
+		0DDC5A5D26A7D8560004D326 /* SignUpSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5726A7D8550004D326 /* SignUpSceneRouting.swift */; };
+		0DDC5A5E26A7D8560004D326 /* SignUpSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5826A7D8550004D326 /* SignUpSceneModels.swift */; };
+		0DDC5A5F26A7D8560004D326 /* SignUpSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5926A7D8560004D326 /* SignUpSceneViewController.swift */; };
+		0DDC5A6026A7D8560004D326 /* SignUpSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5A26A7D8560004D326 /* SignUpSceneInteractor.swift */; };
+		0DDC5A6126A7D8560004D326 /* SignUpSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5B26A7D8560004D326 /* SignUpSceneConfigurator.swift */; };
+		0DDC5A6626A7EF380004D326 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6526A7EF380004D326 /* NetworkInfoProviderProtocol.swift */; };
+		0DDC5A6826A7EF520004D326 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6726A7EF520004D326 /* NetworkInfoProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -437,8 +443,14 @@
 		0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeReaderFlowController.swift; sourceTree = "<group>"; };
 		0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoParser.swift; sourceTree = "<group>"; };
 		0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoParserProtocol.swift; sourceTree = "<group>"; };
-		0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProviderProtocol.swift; sourceTree = "<group>"; };
-		0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProvider.swift; sourceTree = "<group>"; };
+		0DDC5A5626A7D8550004D326 /* SignUpScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScenePresenter.swift; sourceTree = "<group>"; };
+		0DDC5A5726A7D8550004D326 /* SignUpSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpSceneRouting.swift; sourceTree = "<group>"; };
+		0DDC5A5826A7D8550004D326 /* SignUpSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpSceneModels.swift; sourceTree = "<group>"; };
+		0DDC5A5926A7D8560004D326 /* SignUpSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpSceneViewController.swift; sourceTree = "<group>"; };
+		0DDC5A5A26A7D8560004D326 /* SignUpSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpSceneInteractor.swift; sourceTree = "<group>"; };
+		0DDC5A5B26A7D8560004D326 /* SignUpSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpSceneConfigurator.swift; sourceTree = "<group>"; };
+		0DDC5A6526A7EF380004D326 /* NetworkInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProviderProtocol.swift; sourceTree = "<group>"; };
+		0DDC5A6726A7EF520004D326 /* NetworkInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoProvider.swift; sourceTree = "<group>"; };
 		111CA24DFC0B42D0D8442E41 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		624397EB410687DC85703FF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		9606380E3DF7F24E64D5490C /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
@@ -459,6 +471,7 @@
 		0D2FA2DD2695CC350018B7D4 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				0DDC5A5526A7D82D0004D326 /* SignUp */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
 			);
 			path = Scenes;
@@ -473,7 +486,6 @@
 				0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */,
 				0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */,
 				0D2FA2E22695CC720018B7D4 /* SignInSceneViewController.swift */,
-				0DD5F2AD269F156300B5CFB5 /* Workers */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -481,6 +493,7 @@
 		0D2FA2ED2695CEAF0018B7D4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				0DDC5A6326A7EF030004D326 /* Workers */,
 				0D2FA2EE2695CF340018B7D4 /* Views */,
 			);
 			path = Shared;
@@ -1208,19 +1221,32 @@
 			path = NetworkInfoWorker;
 			sourceTree = "<group>";
 		};
-		0DD5F2AD269F156300B5CFB5 /* Workers */ = {
+		0DDC5A5526A7D82D0004D326 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
-				0DD5F2AE269F156D00B5CFB5 /* NetworkInfoProvider */,
+				0DDC5A5B26A7D8560004D326 /* SignUpSceneConfigurator.swift */,
+				0DDC5A5A26A7D8560004D326 /* SignUpSceneInteractor.swift */,
+				0DDC5A5826A7D8550004D326 /* SignUpSceneModels.swift */,
+				0DDC5A5626A7D8550004D326 /* SignUpScenePresenter.swift */,
+				0DDC5A5726A7D8550004D326 /* SignUpSceneRouting.swift */,
+				0DDC5A5926A7D8560004D326 /* SignUpSceneViewController.swift */,
+			);
+			path = SignUp;
+			sourceTree = "<group>";
+		};
+		0DDC5A6326A7EF030004D326 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				0DDC5A6426A7EF090004D326 /* NetworkInfoProvider */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
 		};
-		0DD5F2AE269F156D00B5CFB5 /* NetworkInfoProvider */ = {
+		0DDC5A6426A7EF090004D326 /* NetworkInfoProvider */ = {
 			isa = PBXGroup;
 			children = (
-				0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */,
-				0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */,
+				0DDC5A6526A7EF380004D326 /* NetworkInfoProviderProtocol.swift */,
+				0DDC5A6726A7EF520004D326 /* NetworkInfoProvider.swift */,
 			);
 			path = NetworkInfoProvider;
 			sourceTree = "<group>";
@@ -1369,7 +1395,9 @@
 				0D59BD3B269493BB00B6658F /* UIView+IsVisible.swift in Sources */,
 				0D59BD3C269493BB00B6658F /* UIView+Image.swift in Sources */,
 				0D59BD3D269493BB00B6658F /* UIKit+SetIfNeeded.swift in Sources */,
+				0DDC5A5F26A7D8560004D326 /* SignUpSceneViewController.swift in Sources */,
 				0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */,
+				0DDC5A5D26A7D8560004D326 /* SignUpSceneRouting.swift in Sources */,
 				0D59BD3E269493BB00B6658F /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				0D59BD3F269493BB00B6658F /* UploadedAttachment+Extensions.swift in Sources */,
 				0D59BD40269493BB00B6658F /* NumberFormatter+Decimal.swift in Sources */,
@@ -1419,6 +1447,7 @@
 				0D59BD6A269493BB00B6658F /* LatestKYCChecker.swift in Sources */,
 				0D5FC84D269DC345006C8FC7 /* SharedViewsBuilder.swift in Sources */,
 				0D59BD6B269493BB00B6658F /* ActiveKYCChecker.swift in Sources */,
+				0DDC5A6126A7D8560004D326 /* SignUpSceneConfigurator.swift in Sources */,
 				0D59BD6C269493BB00B6658F /* AccountTypeFetcherProtocol.swift in Sources */,
 				0D59BD6D269493BB00B6658F /* AccountTypeFetcher.swift in Sources */,
 				0D59BD6E269493BB00B6658F /* AccountKYCRoleProviderProtocol.swift in Sources */,
@@ -1442,10 +1471,12 @@
 				0D59BD80269493BB00B6658F /* BasePasswordChanger.swift in Sources */,
 				0D59BD81269493BB00B6658F /* PasswordChangerProtocol.swift in Sources */,
 				0D59BD82269493BB00B6658F /* DocumentsDownloader.swift in Sources */,
+				0DDC5A6826A7EF520004D326 /* NetworkInfoProvider.swift in Sources */,
 				0D59BD83269493BB00B6658F /* DocumentsDownloaderProtocol.swift in Sources */,
 				0D2FA2E62695CC720018B7D4 /* SignInSceneRouting.swift in Sources */,
 				0D59BD84269493BB00B6658F /* RecoveryStatusChecker.swift in Sources */,
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
+				0DDC5A6026A7D8560004D326 /* SignUpSceneInteractor.swift in Sources */,
 				0D59BD86269493BB00B6658F /* ChangeRoleRequestSender.swift in Sources */,
 				0D59BD87269493BB00B6658F /* ChangeRoleRequestSenderProtocol.swift in Sources */,
 				0D59BD88269493BB00B6658F /* RegisterWorkerProtocol.swift in Sources */,
@@ -1470,6 +1501,7 @@
 				0D59BD9B269493BC00B6658F /* ActiveKYCRepo.swift in Sources */,
 				0D59BD9C269493BC00B6658F /* AccountRepo.swift in Sources */,
 				0D59BD9D269493BC00B6658F /* BalancesRepo.swift in Sources */,
+				0DDC5A6626A7EF380004D326 /* NetworkInfoProviderProtocol.swift in Sources */,
 				0D59BD9E269493BC00B6658F /* NetworkInfoRepo.swift in Sources */,
 				0D59BD9F269493BC00B6658F /* AssetsRepo.swift in Sources */,
 				0D59BDA0269493BC00B6658F /* IdentitiesRepo.swift in Sources */,
@@ -1484,6 +1516,7 @@
 				0D59BDA9269493BC00B6658F /* UserDataProvider.swift in Sources */,
 				0D59BDAA269493BC00B6658F /* TFADataProvider.swift in Sources */,
 				0D59BDAB269493BC00B6658F /* KeychainDataProvider.swift in Sources */,
+				0DDC5A5C26A7D8560004D326 /* SignUpScenePresenter.swift in Sources */,
 				0D59BDAC269493BC00B6658F /* KeyboardController.swift in Sources */,
 				0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */,
 				0D59BDAD269493BC00B6658F /* LocalizationManager.swift in Sources */,
@@ -1501,6 +1534,7 @@
 				0D59BDB8269493BC00B6658F /* KeychainCodableAccountsV1.swift in Sources */,
 				0D59BDB9269493BC00B6658F /* KeychainAccountsModel.swift in Sources */,
 				0D59BDBA269493BC00B6658F /* WalletDataSerializable.swift in Sources */,
+				0DDC5A5E26A7D8560004D326 /* SignUpSceneModels.swift in Sources */,
 				0D59BDBB269493BC00B6658F /* UserDataManager.swift in Sources */,
 				0D59BDBC269493BC00B6658F /* KDFParamsSerializable.swift in Sources */,
 				0D59BDBD269493BC00B6658F /* TFAManager.swift in Sources */,
@@ -1530,13 +1564,11 @@
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
 				0D59BD132694930700B6658F /* KYCFlowController.swift in Sources */,
 				0D59BD172694930700B6658F /* LocalAuthFlowController.swift in Sources */,
-				0DD5F2B0269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift in Sources */,
 				0D59BD012694930700B6658F /* Theme.swift in Sources */,
 				0D59BD042694930700B6658F /* AppController+UserActivitySubscribers.swift in Sources */,
 				0D59BD0F2694930700B6658F /* RecoveryFlowController.swift in Sources */,
 				0D59BD062694930700B6658F /* ManagersController.swift in Sources */,
 				0D59BD112694930700B6658F /* LaunchFlowController.swift in Sources */,
-				0DD5F2B3269F158D00B5CFB5 /* NetworkInfoProvider.swift in Sources */,
 				0D59BD082694930700B6658F /* AppController+OpenUrlSubscriber.swift in Sources */,
 				0D59BCFF2694930700B6658F /* Assets.swift in Sources */,
 				0D59BD152694930700B6658F /* SignedInFlowController.swift in Sources */,

@@ -1,23 +1,23 @@
 import UIKit
 
-public protocol SignInSceneDisplayLogic: class {
+public protocol SignUpSceneDisplayLogic: AnyObject {
     
-    typealias Event = SignInScene.Event
+    typealias Event = SignUpScene.Event
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
-    func displayDidTapLoginButtonSync(viewModel: Event.DidTapLoginButtonSync.ViewModel)
+    func displayDidTapCreateAccountButtonSync(viewModel: Event.DidTapCreateAccountButtonSync.ViewModel)
 }
 
-extension SignInScene {
+extension SignUpScene {
     
-    public typealias DisplayLogic = SignInSceneDisplayLogic
+    public typealias DisplayLogic = SignUpSceneDisplayLogic
     
-    @objc(SignInSceneViewController)
+    @objc(SignUpSceneViewController)
     public class ViewController: BaseViewController {
         
-        public typealias Event = SignInScene.Event
-        public typealias Model = SignInScene.Model
+        public typealias Event = SignUpScene.Event
+        public typealias Model = SignUpScene.Model
         
         // MARK: -
         
@@ -26,19 +26,18 @@ extension SignInScene {
         }
         
         // MARK: - Private properties
-        
+
         private let scrollView: UIScrollView = .init()
         private let scrollViewContentView: UIView = .init()
         private let textFieldsContainer: TextFieldsContainer = .init()
         private let networkTextField: TextField = .init()
-        private let loginTextField: TextField = .init()
+        private let emailTextField: TextField = .init()
         private let passwordTextField: TextField = .init()
-        private let forgotPasswordButton: UIButton = .init()
-        private let signInButton: ActionButton = .init()
-        private let signUpButton: ActionButton = .init()
-        
+        private let passwordConfirmationTextField: TextField = .init()
+        private let createAccountButton: ActionButton = .init()
+
         private var textFieldsOrder: [TextField] = []
-        
+
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
@@ -63,10 +62,11 @@ extension SignInScene {
             
             textFieldsOrder = [
                 networkTextField,
-                loginTextField,
-                passwordTextField
+                emailTextField,
+                passwordTextField,
+                passwordConfirmationTextField
             ]
-            
+
             setup()
             
             let request = Event.ViewDidLoad.Request()
@@ -96,7 +96,7 @@ extension SignInScene {
 
 // MARK: - Private methods
 
-private extension SignInScene.ViewController {
+private extension SignUpScene.ViewController {
     
     func setup() {
         setupView()
@@ -104,11 +104,10 @@ private extension SignInScene.ViewController {
         setupScrollViewContentView()
         setupTextFieldsContainer()
         setupNetworkTextField()
-        setupLoginTextField()
+        setupEmailTextField()
         setupPasswordTextField()
-        setupForgotPasswordButton()
-        setupSignInButton()
-        setupSignUpButton()
+        setupPasswordConfirmationTextField()
+        setupCreateAccountButton()
         setupLayout()
     }
     
@@ -116,7 +115,11 @@ private extension SignInScene.ViewController {
         view.backgroundColor = Theme.Colors.mainBackgroundColor
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = Localized(.sign_in_title)
+        navigationItem.title = Localized(.sign_up_title)
+    }
+    
+    @objc func didTapNavigationItem() {
+        routing?.onBackAction()
     }
     
     func setupScrollView() {
@@ -152,20 +155,20 @@ private extension SignInScene.ViewController {
         routing?.onSelectNetwork()
     }
     
-    func setupLoginTextField() {
-        loginTextField.title = Localized(.sign_in_login_title)
-        loginTextField.placeholder = "example@mail.com"
-        loginTextField.capitalizationType = .none
-        loginTextField.keyboardType = .emailAddress
-        loginTextField.onTextChanged = { [weak self] (text) in
-            let request: Event.DidEnterLoginSync.Request = .init(value: text)
+    func setupEmailTextField() {
+        emailTextField.title = Localized(.sign_up_email_title)
+        emailTextField.placeholder = "example@mail.com"
+        emailTextField.capitalizationType = .none
+        emailTextField.keyboardType = .emailAddress
+        emailTextField.onTextChanged = { [weak self] (text) in
+            let request: Event.DidEnterEmailSync.Request = .init(value: text)
             self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
-                businessLogic.onDidEnterLoginSync(request: request)
+                businessLogic.onDidEnterEmailSync(request: request)
             }
         }
         
-        loginTextField.onReturnAction = { [weak self] in
-            guard let textField = self?.loginTextField
+        emailTextField.onReturnAction = { [weak self] in
+            guard let textField = self?.emailTextField
                 else { return }
             self?.returnAction(for: textField)
         }
@@ -176,19 +179,19 @@ private extension SignInScene.ViewController {
                 title: Localized(.next),
                 style: .done,
                 target: self,
-                action: #selector(loginTextFieldNextAction)
+                action: #selector(emailTextFieldNextAction)
             )
         ]
         toolbar.sizeToFit()
-        loginTextField.accessoryView = toolbar
+        emailTextField.accessoryView = toolbar
     }
     
-    @objc func loginTextFieldNextAction() {
-        returnAction(for: loginTextField)
+    @objc func emailTextFieldNextAction() {
+        returnAction(for: emailTextField)
     }
     
     func setupPasswordTextField() {
-        passwordTextField.title = Localized(.sign_in_password_title)
+        passwordTextField.title = Localized(.sign_up_password_title)
         passwordTextField.isSecureTextEntry = true
         passwordTextField.onTextChanged = { [weak self] (text) in
             let request: Event.DidEnterPasswordSync.Request = .init(value: text)
@@ -206,7 +209,7 @@ private extension SignInScene.ViewController {
         let toolbar: UIToolbar = SharedViewsBuilder.configureToolbar()
         toolbar.items = [
             .init(
-                title: Localized(.done),
+                title: Localized(.next),
                 style: .done,
                 target: self,
                 action: #selector(passwordTextFieldNextAction)
@@ -220,35 +223,43 @@ private extension SignInScene.ViewController {
         returnAction(for: passwordTextField)
     }
     
-    func setupForgotPasswordButton() {
-        forgotPasswordButton.setTitle(Localized(.sign_in_forgot_password), for: .normal)
-        forgotPasswordButton.backgroundColor = Theme.Colors.mainBackgroundColor
-        forgotPasswordButton.titleLabel?.font = Theme.Fonts.mediumFont.withSize(14.0)
-        forgotPasswordButton.setTitleColor(.systemBlue, for: .normal)
-        forgotPasswordButton.contentEdgeInsets = .init(top: 5.0, left: 6.0, bottom: 5.0, right: 5.0)
-        
-        forgotPasswordButton.addTarget(
-            self,
-            action: #selector(forgotPasswordButtonTouchUpInside),
-            for: .touchUpInside
-        )
-    }
-    
-    @objc func forgotPasswordButtonTouchUpInside() {
-        routing?.onForgotPassword()
-    }
-    
-    func setupSignInButton() {
-        signInButton.title = Localized(.sign_in_button)
-        signInButton.onTouchUpInside = { [weak self] in
-            self?.didTapLoginButton()
+    func setupPasswordConfirmationTextField() {
+        passwordConfirmationTextField.title = Localized(.sign_up_password_confirmation_title)
+        passwordConfirmationTextField.isSecureTextEntry = true
+        passwordConfirmationTextField.onTextChanged = { [weak self] (text) in
+            let request: Event.DidEnterPasswordConfirmationSync.Request = .init(value: text)
+            self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                businessLogic.onDidEnterPasswordConfirmationSync(request: request)
+            }
         }
+        
+        passwordConfirmationTextField.onReturnAction = { [weak self] in
+            guard let textField = self?.passwordConfirmationTextField
+                else { return }
+            self?.returnAction(for: textField)
+        }
+        
+        let toolbar: UIToolbar = SharedViewsBuilder.configureToolbar()
+        toolbar.items = [
+            .init(
+                title: Localized(.done),
+                style: .done,
+                target: self,
+                action: #selector(passwordConfirmationTextFieldNextAction)
+            )
+        ]
+        toolbar.sizeToFit()
+        passwordConfirmationTextField.accessoryView = toolbar
     }
     
-    func setupSignUpButton() {
-        signUpButton.title = Localized(.sign_up_title)
-        signUpButton.onTouchUpInside = { [weak self] in
-            self?.routing?.onSignUp()
+    @objc func passwordConfirmationTextFieldNextAction() {
+        returnAction(for: passwordConfirmationTextField)
+    }
+    
+    func setupCreateAccountButton() {
+        createAccountButton.title = Localized(.sign_up_create_account)
+        createAccountButton.onTouchUpInside = { [weak self] in
+            self?.didTapCreateAccountButton()
         }
     }
     
@@ -256,9 +267,7 @@ private extension SignInScene.ViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContentView)
         scrollViewContentView.addSubview(textFieldsContainer)
-        scrollViewContentView.addSubview(forgotPasswordButton)
-        scrollViewContentView.addSubview(signInButton)
-        scrollViewContentView.addSubview(signUpButton)
+        scrollViewContentView.addSubview(createAccountButton)
         
         scrollView.snp.makeConstraints { (make) in
             make.top.equalTo(view.safeArea.top)
@@ -276,37 +285,27 @@ private extension SignInScene.ViewController {
             make.leading.trailing.equalToSuperview()
         }
         
-        forgotPasswordButton.snp.makeConstraints { (make) in
-            make.top.equalTo(textFieldsContainer.snp.bottom).offset(7.0)
-            make.leading.equalToSuperview().inset(10.0)
-            make.height.equalTo(24.0)
-        }
-        
-        signInButton.snp.makeConstraints { (make) in
-            make.top.equalTo(forgotPasswordButton.snp.bottom).offset(40.0)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        signUpButton.snp.makeConstraints { (make) in
-            make.top.equalTo(signInButton.snp.bottom).offset(12.0)
+        createAccountButton.snp.makeConstraints { (make) in
+            make.top.equalTo(textFieldsContainer.snp.bottom).offset(80.0)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().inset(24.0)
         }
-        
-        updateView(with: nil)
     }
     
     func setup(
         with sceneViewModel: Model.SceneViewModel,
         animated: Bool
     ) {
+        
         networkTextField.text = sceneViewModel.network
-        loginTextField.text = sceneViewModel.login
+        emailTextField.text = sceneViewModel.email
         passwordTextField.text = sceneViewModel.password
+        passwordConfirmationTextField.text = sceneViewModel.passwordConfirmation
         
         networkTextField.error = sceneViewModel.networkError
-        loginTextField.error = sceneViewModel.loginError
+        emailTextField.error = sceneViewModel.emailError
         passwordTextField.error = sceneViewModel.passwordError
+        passwordConfirmationTextField.error = sceneViewModel.passwordConfirmationError
     }
     
     func addKeyboardObserver() {
@@ -321,7 +320,6 @@ private extension SignInScene.ViewController {
     
     func removeKeyboardObserver() {
         KeyboardController.shared.remove(observer: .init(self))
-        updateView(with: nil)
     }
     
     func returnAction(for textField: TextField) {
@@ -334,7 +332,7 @@ private extension SignInScene.ViewController {
             textFieldsOrder[index + 1].becomeFirstResponder()
         } else {
             textFieldsOrder[index].resignFirstResponder()
-            didTapLoginButton()
+            didTapCreateAccountButton()
         }
     }
     
@@ -363,52 +361,27 @@ private extension SignInScene.ViewController {
     ) {
         
         let keyboardHeightInView: CGFloat = attributes?.heightIn(view: self.view) ?? 0.0
-        scrollView.snp.remakeConstraints({ (make) in
-            make.top.leading.trailing.equalToSuperview()
+        scrollView.snp.remakeConstraints { (remake) in
+            remake.top.leading.trailing.equalToSuperview()
             if attributes?.showingIn(view: self.view) == true {
-                make.bottom.equalToSuperview().inset(keyboardHeightInView)
+                remake.bottom.equalToSuperview().inset(keyboardHeightInView)
             } else {
-                make.bottom.equalToSuperview()
+                remake.bottom.equalToSuperview()
             }
-        })
-        scrollToTextField(with: attributes)
-    }
-    
-    func scrollToTextField(
-        with attributes: KeyboardAttributes?
-    ) {
-        
-        guard let attributes = attributes
-            else {
-                return
         }
-        
-        UIView.animate(
-            withKeyboardAttributes: attributes,
-            animations: {
-                
-                self.textFieldsOrder.forEach { (textField) in
-                    if textField.isFirstResponder {
-                        self.scrollView.scrollRectToVisible(
-                            textField.frame,
-                            animated: false
-                        )
-                    }
-                }
-        })
     }
     
-    func didTapLoginButton() {
-        let request: Event.DidTapLoginButtonSync.Request = .init()
+    func didTapCreateAccountButton() {
+        let request: Event.DidTapCreateAccountButtonSync.Request = .init()
         interactorDispatch?.sendSyncRequest { (businessLogic) in
-            businessLogic.onDidTapLoginButtonSync(request: request)
+            businessLogic.onDidTapCreateAccountButtonSync(request: request)
         }
     }
 }
 
 // MARK: - DisplayLogic
 
-extension SignInScene.ViewController: SignInScene.DisplayLogic {
+extension SignUpScene.ViewController: SignUpScene.DisplayLogic {
     
     public func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
@@ -418,7 +391,7 @@ extension SignInScene.ViewController: SignInScene.DisplayLogic {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
     }
     
-    public func displayDidTapLoginButtonSync(viewModel: Event.DidTapLoginButtonSync.ViewModel) {
-        routing?.onSignIn(viewModel.login, viewModel.password)
+    public func displayDidTapCreateAccountButtonSync(viewModel: Event.DidTapCreateAccountButtonSync.ViewModel) {
+        routing?.onCreateAccount(viewModel.email, viewModel.password)
     }
 }

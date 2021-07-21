@@ -40,4 +40,11 @@
 "fetch_network_info_error" = "Failed to fetch network information. Please try again";
 "passcode_authorization_error" = "You've entered wrong passcode. Please, try again";
 "authorization_error_wrong_login" = "You've entered wrong email. Please, try again";
-
+"sign_up_email_title" = "Email";
+"sign_up_password_title" = "Password";
+"sign_up_password_confirmation_title" = "Confirm";
+"sign_up_email_validation_error" = "Email does not match requirements";
+"sign_up_password_validation_error" = "Password does not match requirements";
+"sign_up_password_confirmation_validation_error" = "Passwords do not match";
+"sign_up_create_account" = "Create account";
+"sign_up_error_login_already_taken" = "This email is already taken";
