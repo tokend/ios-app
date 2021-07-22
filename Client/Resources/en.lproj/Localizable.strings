@@ -40,4 +40,7 @@
 "fetch_network_info_error" = "Failed to fetch network information. Please try again";
 "passcode_authorization_error" = "You've entered wrong passcode. Please, try again";
 "authorization_error_wrong_login" = "You've entered wrong email. Please, try again";
-
+"tfa_code_title" = "Please enter verification code";
+"tfa_code_placeholder" = "Code";
+"tfa_password_title" = "Please enter your password";
+"tfa_password_placeholder" = "Password";

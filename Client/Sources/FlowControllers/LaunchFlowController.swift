@@ -71,6 +71,46 @@ class LaunchFlowController: BaseFlowController {
 
         if let currentFlowController = currentFlowController {
             currentFlowController.performTFA(tfaInput: tfaInput, cancel: cancel)
+        } else {
+            navigationController.hideProgress()
+            
+            let viewController = self.setupTFA(
+                tfaInput: tfaInput,
+                onDone: { [weak self] in
+                    self?.navigationController.showProgress()
+                },
+                onClose: { [weak self] in
+                    
+                    self?.navigationController.hideProgress()
+                    
+                    switch tfaInput {
+                    
+                    case .password(_, _):
+                        break
+                        
+                    case .code(_, _):
+                        self?.navigationController.popViewController(true)
+                    }
+                },
+                cancel: cancel
+            )
+            
+            switch tfaInput {
+            
+            case .password(_, _):
+                self.navigationController.present(
+                    viewController,
+                    animated: true,
+                    completion: nil
+                )
+                
+            case .code(_, _):
+                self.navigationController.present(
+                    viewController,
+                    animated: true,
+                    completion: nil
+                )
+            }
         }
     }
     

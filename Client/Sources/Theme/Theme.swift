@@ -46,6 +46,6 @@ extension Theme {
         static let regularFont: UIFont = font(for: .regular)
         static let mediumFont: UIFont = font(for: .medium)
         static let semiboldFont: UIFont = font(for: .semibold)
-        static let bold: UIFont = font(for: .bold)
+        static let boldFont: UIFont = font(for: .bold)
     }
 }

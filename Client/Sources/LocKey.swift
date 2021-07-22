@@ -44,4 +44,8 @@ enum LocKey: String {
     case fetch_network_info_error
     case passcode_authorization_error
     case authorization_error_wrong_login
+    case tfa_code_title
+    case tfa_code_placeholder
+    case tfa_password_title
+    case tfa_password_placeholder
 }
