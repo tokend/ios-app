@@ -193,7 +193,7 @@ class BaseFlowController: FlowControllerProtocol {
     func setupTFAPasswordScreen(
         onClosed: @escaping () -> Void,
         onCode: @escaping (String) -> Void
-    ) -> UIAlertController {
+    ) -> UIViewController {
         
         let alert = UIAlertController(
             title: Localized(.tfa_password_title),
