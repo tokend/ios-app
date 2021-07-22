@@ -12,6 +12,7 @@ protocol NavigationControllerProtocol: RootContentProtocol {
     func showProgress()
     func hideProgress()
 
+    func setNavigationBarHidden(_ hidden: Bool, animated: Bool)
     func showErrorMessage(_ errorMessage: String, completion: (() -> Void)?)
 
     func getPresentViewControllerClosure() -> PresentViewControllerClosure

@@ -96,8 +96,7 @@ private extension KYCFlowController {
                 }
 
             case .noKyc:
-                break
-                // TODO: - Implement
+                self?.onKYCFinished()
             }
         })
     }
