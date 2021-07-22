@@ -44,6 +44,14 @@ enum LocKey: String {
     case fetch_network_info_error
     case passcode_authorization_error
     case authorization_error_wrong_login
+    case sign_up_email_title
+    case sign_up_password_title
+    case sign_up_password_confirmation_title
+    case sign_up_email_validation_error
+    case sign_up_password_validation_error
+    case sign_up_password_confirmation_validation_error
+    case sign_up_create_account
+    case sign_up_error_login_already_taken
     case tfa_code_title
     case tfa_code_placeholder
     case tfa_password_title

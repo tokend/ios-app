@@ -2,8 +2,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-extension SignInScene {
-    class NetworkInfoProvider {
+class NetworkInfoProvider {
         
         private let networkInfoBehaviorRelay: BehaviorRelay<String?> = .init(value: nil)
         
@@ -14,10 +13,9 @@ extension SignInScene {
                 .replacingOccurrences(of: "http://", with: "")
             networkInfoBehaviorRelay.accept(networkInfo)
         }
-    }
 }
 
-extension SignInScene.NetworkInfoProvider: SignInScene.NetworkInfoProviderProtocol {
+extension NetworkInfoProvider: NetworkInfoProviderProtocol {
     var network: String? {
         networkInfoBehaviorRelay.value
     }

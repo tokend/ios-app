@@ -2,26 +2,27 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-public protocol SignInSceneBusinessLogic {
+public protocol SignUpSceneBusinessLogic {
     
-    typealias Event = SignInScene.Event
+    typealias Event = SignUpScene.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
-    func onDidEnterLoginSync(request: Event.DidEnterLoginSync.Request)
+    func onDidEnterEmailSync(request: Event.DidEnterEmailSync.Request)
     func onDidEnterPasswordSync(request: Event.DidEnterPasswordSync.Request)
-    func onDidTapLoginButtonSync(request: Event.DidTapLoginButtonSync.Request)
+    func onDidEnterPasswordConfirmationSync(request: Event.DidEnterPasswordConfirmationSync.Request)
+    func onDidTapCreateAccountButtonSync(request: Event.DidTapCreateAccountButtonSync.Request)
 }
 
-extension SignInScene {
+extension SignUpScene {
     
-    public typealias BusinessLogic = SignInSceneBusinessLogic
+    public typealias BusinessLogic = SignUpSceneBusinessLogic
     
-    @objc(SignInSceneInteractor)
+    @objc(SignUpSceneInteractor)
     public class Interactor: NSObject {
         
-        public typealias Event = SignInScene.Event
-        public typealias Model = SignInScene.Model
+        public typealias Event = SignUpScene.Event
+        public typealias Model = SignUpScene.Model
         
         // MARK: - Private properties
         
@@ -30,7 +31,7 @@ extension SignInScene {
         private let networkInfoProvider: NetworkInfoProviderProtocol
         
         private let disposeBag: DisposeBag = .init()
-        
+
         // MARK: -
         
         public init(
@@ -40,22 +41,15 @@ extension SignInScene {
             
             self.presenter = presenter
             self.networkInfoProvider = networkInfoProvider
-            
-            self.sceneModel = .init(
-                network: networkInfoProvider.network,
-                login: nil,
-                password: nil,
-                networkError: nil,
-                loginError: nil,
-                passwordError: nil
-            )
+
+            self.sceneModel = .init()
         }
     }
 }
 
 // MARK: - Private methods
 
-private extension SignInScene.Interactor {
+private extension SignUpScene.Interactor {
     
     func presentSceneDidUpdate(animated: Bool) {
         let response: Event.SceneDidUpdate.Response = .init(
@@ -83,37 +77,61 @@ private extension SignInScene.Interactor {
         return nil
     }
     
-    func validateLogin() -> Model.LoginValidationError? {
+    func validateEmail() -> Model.EmailValidationError? {
         
-        guard let login = sceneModel.login
+        guard let email = sceneModel.email
         else {
             return .emptyString
         }
         
-        return login.validateEmail()
+        if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return .emptyString
+        }
+        
+        return email.validateEmail()
             ? nil
-            : .doesNotMatchRequirements
+            : .emailDoesNotMatchRequirements
     }
     
     func validatePassword() -> Model.PasswordValidationError? {
-        guard let login = sceneModel.login
+        
+        guard let password = sceneModel.password
         else {
             return .emptyString
         }
         
-        return login.count > 6
+        return validatePassword(password: password)
             ? nil
-            : .doesNotMatchRequirements
+            : .passwordDoesNotMatchRequirements
     }
     
-    func isAbleToLogin() -> Bool {
+    func validatePassword(password: String) -> Bool {
+        return password.count > 5
+    }
+    
+    func validatePasswordConfirmation() -> Model.PasswordConfirmationError? {
+        
+        guard let passwordConfirmation = sceneModel.passwordConfirmation
+        else {
+            return .emptyString
+        }
+        
+        return sceneModel.password == passwordConfirmation
+            ? nil
+            : .passwordsDoNotMatch
+    }
+    
+    func isAbleToContinue() -> Bool {
+        
         sceneModel.networkError = validateNetwork()
-        sceneModel.loginError = validateLogin()
+        sceneModel.emailError = validateEmail()
         sceneModel.passwordError = validatePassword()
+        sceneModel.passwordConfirmationError = validatePasswordConfirmation()
         
         return sceneModel.networkError == nil
-            && sceneModel.loginError == nil
+            && sceneModel.emailError == nil
             && sceneModel.passwordError == nil
+            && sceneModel.passwordConfirmationError == nil
     }
     
     func observeNetworkInfo() {
@@ -129,7 +147,8 @@ private extension SignInScene.Interactor {
 
 // MARK: - BusinessLogic
 
-extension SignInScene.Interactor: SignInScene.BusinessLogic {
+extension SignUpScene.Interactor: SignUpScene.BusinessLogic {
+    
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         observeNetworkInfo()
     }
@@ -138,9 +157,9 @@ extension SignInScene.Interactor: SignInScene.BusinessLogic {
         presentSceneDidUpdateSync(animated: false)
     }
     
-    public func onDidEnterLoginSync(request: Event.DidEnterLoginSync.Request) {
-        sceneModel.login = request.value
-        sceneModel.loginError = nil
+    public func onDidEnterEmailSync(request: Event.DidEnterEmailSync.Request) {
+        sceneModel.email = request.value
+        sceneModel.emailError = nil
         presentSceneDidUpdateSync(animated: false)
     }
     
@@ -150,20 +169,26 @@ extension SignInScene.Interactor: SignInScene.BusinessLogic {
         presentSceneDidUpdateSync(animated: false)
     }
     
-    public func onDidTapLoginButtonSync(request: Event.DidTapLoginButtonSync.Request) {
+    public func onDidEnterPasswordConfirmationSync(request: Event.DidEnterPasswordConfirmationSync.Request) {
+        sceneModel.passwordConfirmation = request.value
+        sceneModel.passwordConfirmationError = nil
+        presentSceneDidUpdateSync(animated: false)
+    }
+    
+    public func onDidTapCreateAccountButtonSync(request: Event.DidTapCreateAccountButtonSync.Request) {
         
-        guard isAbleToLogin(),
-              let login = sceneModel.login,
+        guard isAbleToContinue(),
+              let email = sceneModel.email,
               let password = sceneModel.password
         else {
             presentSceneDidUpdateSync(animated: false)
             return
         }
-
-        let response: Event.DidTapLoginButtonSync.Response = .init(
-            login: login,
+        
+        let response: Event.DidTapCreateAccountButtonSync.Response = .init(
+            email: email,
             password: password
         )
-        presenter.presentDidTapLoginButtonSync(response: response)
+        presenter.presentDidTapCreateAccountButtonSync(response: response)
     }
 }
