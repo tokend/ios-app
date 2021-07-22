@@ -113,7 +113,6 @@ private extension SignUpScene.ViewController {
     
     func setupView() {
         view.backgroundColor = Theme.Colors.mainBackgroundColor
-        navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = Localized(.sign_up_title)
     }

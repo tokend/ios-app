@@ -121,6 +121,8 @@ class LaunchFlowController: BaseFlowController {
         }  else {
 
             let vc = initSignIn()
+            
+            navigationController.setNavigationBarHidden(false, animated: true)
             self.startFrom(vcs: [vc], animated: animated)
         }
     }
@@ -252,7 +254,7 @@ private extension LaunchFlowController {
                 )
             },
             onSelectNetwork: { [weak self] in
-                self?.selectNewNetwork(for: vc)
+                self?.selectNewNetwork()
             },
             onForgotPassword: { [weak self]  in
                 
@@ -278,6 +280,7 @@ private extension LaunchFlowController {
             }
         )
         
+        navigationController.setNavigationBarHidden(false, animated: true)
         navigationController.pushViewController(vc, animated: true)
     }
     
@@ -290,7 +293,7 @@ private extension LaunchFlowController {
         let routing: SignUpScene.Routing = .init(
             onBackAction: onBack,
             onSelectNetwork: { [weak self] in
-                self?.selectNewNetwork(for: vc)
+                self?.selectNewNetwork()
             },
             onCreateAccount: { [weak self] (email, password) in
                 self?.signUp(email: email, password: password)
@@ -306,9 +309,9 @@ private extension LaunchFlowController {
         return vc
     }
     
-    func selectNewNetwork(for viewController: UIViewController) {
+    func selectNewNetwork() {
         self.runQRCodeReaderFlow(
-            presentingViewController: viewController,
+            presentingViewController: navigationController.getViewController(),
             handler: { [weak self] (result) in
                 
                 guard let self = self

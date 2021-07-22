@@ -495,9 +495,9 @@
 		0D2FA2ED2695CEAF0018B7D4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				0DDC5A6326A7EF030004D326 /* Workers */,
 				0DDC5A6926A99BA30004D326 /* Extensions */,
 				0D2FA2EE2695CF340018B7D4 /* Views */,
+				0DDC5A6326A7EF030004D326 /* Workers */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
