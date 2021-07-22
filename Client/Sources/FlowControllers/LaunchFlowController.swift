@@ -124,6 +124,7 @@ class LaunchFlowController: BaseFlowController {
             
             navigationController.setNavigationBarHidden(false, animated: true)
             self.startFrom(vcs: [vc], animated: animated)
+            vc.navigationController?.navigationBar.prefersLargeTitles = true
         }
     }
 }
@@ -282,6 +283,7 @@ private extension LaunchFlowController {
         
         navigationController.setNavigationBarHidden(false, animated: true)
         navigationController.pushViewController(vc, animated: true)
+        vc.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func initSignUp(
