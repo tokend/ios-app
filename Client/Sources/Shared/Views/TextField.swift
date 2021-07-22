@@ -8,13 +8,13 @@ final class TextField: UIView {
     
     private static var titleLeadingInset: CGFloat { 16.0 }
     private static var titleTrailingOffset: CGFloat { 16.0 }
-    private static var textFieldTopInset: CGFloat { 11.0 }
+    private static var textFieldTopInset: CGFloat { 13.0 }
     private static var textFieldLeadingInset: CGFloat { 116.0 }
     private static var imagesStackViewTopInset: CGFloat { 11.0 }
     private static var imagesStackViewLeadingOffset: CGFloat { 16.0 }
     private static var imagesStackViewTrailingInset: CGFloat { 16.0}
     private static var errorLabelTopOffset: CGFloat { 3.0 }
-    private static var emptyErrorLabelTopOffset: CGFloat { 11.0 }
+    private static var emptyErrorLabelTopOffset: CGFloat { 13.0 }
     private static var errorLeadingTrailingInset: CGFloat { 16.0 }
     private static var errorLabelBottomInset: CGFloat { 5.0 }
     
@@ -300,6 +300,7 @@ private extension TextField {
             make.top.equalToSuperview().inset(NameSpace.imagesStackViewTopInset)
             make.leading.equalTo(textField.snp.trailing).offset(NameSpace.imagesStackViewLeadingOffset)
             make.trailing.equalToSuperview().inset(NameSpace.imagesStackViewTrailingInset)
+            make.height.equalTo(20.0)
         }
         
         errorLabel.setContentHuggingPriority(.required, for: .horizontal)

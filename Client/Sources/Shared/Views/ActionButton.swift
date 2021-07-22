@@ -4,9 +4,11 @@ final class ActionButton: UIView {
     
     public typealias OnTouchUpInside = () -> Void
 
-    static let height: CGFloat = 40.0
-
+    static let height: CGFloat = 44.0
+    
     // MARK: - Private properties
+    
+    private var separatorHeight: CGFloat { CGFloat(1.0).convertToPixels() }
 
     private let topSeparatorView: UIView = .init()
     private let button: UIButton = .init()
@@ -87,25 +89,23 @@ private extension ActionButton {
     }
 
     func setupLayout() {
-        addSubview(topSeparatorView)
         addSubview(button)
+        addSubview(topSeparatorView)
         addSubview(bottomSeparatorView)
     
         topSeparatorView.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(1.0)
+            make.height.equalTo(separatorHeight)
         }
         
         button.snp.makeConstraints { (make) in
-            make.top.equalTo(topSeparatorView.snp.bottom)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(ActionButton.height - 2.0)
+            make.edges.equalToSuperview()
+            make.height.equalTo(ActionButton.height)
         }
         
         bottomSeparatorView.snp.makeConstraints { (make) in
-            make.top.equalTo(button.snp.bottom)
             make.bottom.leading.trailing.equalToSuperview()
-            make.height.equalTo(1.0)
+            make.height.equalTo(separatorHeight)
         }
     }
 }

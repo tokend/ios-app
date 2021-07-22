@@ -4,8 +4,10 @@ class TextFieldsContainer: UIView {
     
     // MARK: - Private properties
     
-    private var separatorSize: CGSize { .init(width: 16.0, height: 1.0) }
+    private var separatorHeight: CGFloat { CGFloat(1.0).convertToPixels() }
+    private var separatorSize: CGSize { .init(width: 16.0, height: separatorHeight) }
     private var separatorWidth: CGFloat { 116.0 }
+    
     private var separatorColor: UIColor { Theme.Colors.white }
     private var commonBackgroundColor: UIColor { Theme.Colors.mainSeparatorColor }
     
@@ -60,7 +62,7 @@ private extension TextFieldsContainer {
             
             if textFieldsList.indexOf(field) == 0 {
                 field.snp.makeConstraints { (make) in
-                    make.top.equalToSuperview().inset(1.0)
+                    make.top.equalToSuperview().inset(separatorHeight)
                     make.leading.trailing.equalToSuperview()
                 }
                 addSeparatorView(for: field)
@@ -68,15 +70,15 @@ private extension TextFieldsContainer {
             } else if textFieldsList.indexOf(field) == textFieldsList.count - 1 {
                 if let previousField = previousField {
                     field.snp.makeConstraints { (make) in
-                        make.top.equalTo(previousField.snp.bottom).offset(1.0)
+                        make.top.equalTo(previousField.snp.bottom).offset(separatorHeight)
                         make.leading.trailing.equalToSuperview()
-                        make.bottom.equalToSuperview().inset(1.0)
+                        make.bottom.equalToSuperview().inset(separatorHeight)
                     }
                 }
             } else {
                 if let previousField = previousField {
                     field.snp.makeConstraints { (make) in
-                        make.top.equalTo(previousField.snp.bottom).offset(1.0)
+                        make.top.equalTo(previousField.snp.bottom).offset(separatorHeight)
                         make.leading.trailing.equalToSuperview()
                     }
                 }
