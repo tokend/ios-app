@@ -142,7 +142,7 @@ class BaseFlowController: FlowControllerProtocol {
     func setupTFACodeScreen(
         onClosed: @escaping () -> Void,
         onCode: @escaping (String) -> Void
-    ) -> UIAlertController {
+    ) -> UIViewController {
 
         let alert = UIAlertController(
             title: Localized(.tfa_code_title),

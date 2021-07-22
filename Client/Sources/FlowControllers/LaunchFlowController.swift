@@ -105,9 +105,10 @@ class LaunchFlowController: BaseFlowController {
                 )
                 
             case .code(_, _):
-                self.navigationController.pushViewController(
+                self.navigationController.present(
                     viewController,
-                    animated: true
+                    animated: true,
+                    completion: nil
                 )
             }
         }
