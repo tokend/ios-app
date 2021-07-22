@@ -152,9 +152,9 @@ extension SignInScene.Interactor: SignInScene.BusinessLogic {
     
     public func onDidTapLoginButtonSync(request: Event.DidTapLoginButtonSync.Request) {
         
-        guard let login = sceneModel.login,
-              let password = sceneModel.password,
-              isAbleToLogin()
+        guard isAbleToLogin(),
+              let login = sceneModel.login,
+              let password = sceneModel.password
         else {
             presentSceneDidUpdateSync(animated: false)
             return

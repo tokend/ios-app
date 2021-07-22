@@ -177,9 +177,9 @@ extension SignUpScene.Interactor: SignUpScene.BusinessLogic {
     
     public func onDidTapCreateAccountButtonSync(request: Event.DidTapCreateAccountButtonSync.Request) {
         
-        guard let email = sceneModel.email,
-              let password = sceneModel.password,
-              isAbleToContinue()
+        guard isAbleToContinue(),
+              let email = sceneModel.email,
+              let password = sceneModel.password
         else {
             presentSceneDidUpdateSync(animated: false)
             return

@@ -16,7 +16,7 @@ extension Theme {
         
         static let mainBackgroundColor: UIColor = .init(hexString: "#EFEFF4")
         static let mainSeparatorColor: UIColor = UIColor.init(hexString: "#3C3C43").withAlphaComponent(0.36)
-        static let errorColor: UIColor = red
+        static let errorColor: UIColor = .systemRed
         
         static let textFieldTintColor: UIColor = dark
         static let textFieldPlaceholderColor: UIColor = grey

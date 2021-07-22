@@ -8,13 +8,18 @@ final class TextField: UIView {
     
     private static var titleLeadingInset: CGFloat { 16.0 }
     private static var titleTrailingOffset: CGFloat { 16.0 }
-    private static var textFieldTopBottomInset: CGFloat { 11.0 }
+    private static var textFieldTopInset: CGFloat { 11.0 }
     private static var textFieldLeadingInset: CGFloat { 116.0 }
-    private static var imagesStackViewTopBottomInset: CGFloat { 10.0 }
+    private static var imagesStackViewTopInset: CGFloat { 11.0 }
     private static var imagesStackViewLeadingOffset: CGFloat { 16.0 }
-    private static var imagesStackViewTrailingInset: CGFloat { 16.0 }
+    private static var imagesStackViewTrailingInset: CGFloat { 16.0}
+    private static var errorLabelTopOffset: CGFloat { 3.0 }
+    private static var emptyErrorLabelTopOffset: CGFloat { 11.0 }
+    private static var errorLeadingTrailingInset: CGFloat { 16.0 }
+    private static var errorLabelBottomInset: CGFloat { 5.0 }
     
     private static var titleFont: UIFont { Theme.Fonts.regularFont.withSize(14.0) }
+    private static var errorFont: UIFont { Theme.Fonts.mediumFont.withSize(10.0) }
     private static var commonBackgroundColor: UIColor { Theme.Colors.white }
     
     // MARK: - Private properties
@@ -25,7 +30,8 @@ final class TextField: UIView {
     private let imagesStackView: UIStackView = .init()
     private let passwordImageView: UIImageView = .init()
     private let passwordImageViewGestureRecognizer: UITapGestureRecognizer = .init()
-
+    private let errorLabel: UILabel = .init()
+    
     private static var maximumCharactersCount: Int { 64 }
     
     private var isTextVisible: Bool = false {
@@ -34,20 +40,28 @@ final class TextField: UIView {
         }
     }
     
-    private static func textFieldHeight() -> CGFloat {
+    // MARK: - Public properties
+    
+    public static func textFieldHeight(with error: String? = nil) -> CGFloat {
         
         let titleHeight: CGFloat = String.singleLineHeight(font: titleFont)
         
-        return textFieldTopBottomInset
+        let errorHeight: CGFloat
+        if error != nil {
+            errorHeight = errorLabelTopOffset
+                + String.singleLineHeight(font: errorFont)
+        } else {
+            errorHeight = emptyErrorLabelTopOffset
+        }
+        
+        return textFieldTopInset
         + titleHeight
-        + textFieldTopBottomInset
+        + errorHeight
+        + errorLabelBottomInset
     }
-    
-    // MARK: - Public properties
 
     public var onTextChanged: OnTextChanged?
     public var onReturnAction: OnReturnAction?
-    static let height: CGFloat = textFieldHeight()
     
     public var title: String? {
         get { titleLabel.text }
@@ -56,18 +70,12 @@ final class TextField: UIView {
     
     public var text: String? {
         get { textField.text }
-        set {
-            textField.text = newValue
-//            renderTextFieldState()
-        }
+        set { textField.text = newValue }
     }
     
     public var placeholder: String? {
         get { textField.placeholder }
-        set {
-            textField.placeholder = newValue
-//            renderTextFieldState()
-        }
+        set { textField.placeholder = newValue }
     }
     
     public var returnKeyType: UIReturnKeyType {
@@ -98,7 +106,12 @@ final class TextField: UIView {
     
     public var error: String? = nil {
         didSet {
-//            renderTextFieldState()
+            guard oldValue != error
+            else {
+                return
+            }
+            
+            renderError()
         }
     }
     
@@ -188,6 +201,7 @@ private extension TextField {
         setupTextField()
         setupImagesStackView()
         setupPasswordImageView()
+        setupErrorLabel()
         setupLayout()
     }
     
@@ -249,22 +263,32 @@ private extension TextField {
         isTextVisible = !isTextVisible
     }
     
+    func setupErrorLabel() {
+        errorLabel.textColor = Theme.Colors.errorColor
+        errorLabel.font = NameSpace.errorFont
+        errorLabel.numberOfLines = 1
+        errorLabel.textAlignment = .left
+        errorLabel.backgroundColor = .clear
+        errorLabel.lineBreakMode = .byTruncatingTail
+    }
+    
     func setupLayout() {
         addSubview(titleLabel)
         addSubview(textField)
         addSubview(imagesStackView)
         imagesStackView.addArrangedSubview(passwordImageView)
+        addSubview(errorLabel)
         
         titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
         titleLabel.snp.makeConstraints { (make) in
-            make.top.bottom.equalToSuperview().inset(NameSpace.textFieldTopBottomInset)
+            make.top.equalToSuperview().inset(NameSpace.textFieldTopInset)
             make.leading.equalToSuperview().inset(NameSpace.titleLeadingInset)
             make.trailing.lessThanOrEqualTo(textField.snp.leading).offset(-NameSpace.titleTrailingOffset)
         }
         
         textField.snp.makeConstraints { (make) in
-            make.top.bottom.equalToSuperview().inset(NameSpace.textFieldTopBottomInset)
+            make.top.equalToSuperview().inset(NameSpace.textFieldTopInset)
             make.leading.equalToSuperview().inset(NameSpace.textFieldLeadingInset)
         }
         
@@ -273,10 +297,16 @@ private extension TextField {
         imagesStackView.setContentHuggingPriority(.required, for: .horizontal)
         imagesStackView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imagesStackView.snp.makeConstraints { (make) in
-            make.top.bottom.equalToSuperview().inset(NameSpace.imagesStackViewTopBottomInset)
+            make.top.equalToSuperview().inset(NameSpace.imagesStackViewTopInset)
             make.leading.equalTo(textField.snp.trailing).offset(NameSpace.imagesStackViewLeadingOffset)
             make.trailing.equalToSuperview().inset(NameSpace.imagesStackViewTrailingInset)
         }
+        
+        errorLabel.setContentHuggingPriority(.required, for: .horizontal)
+        errorLabel.setContentHuggingPriority(.required, for: .vertical)
+        errorLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        errorLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        remakeErrorLabelConstraints()
     }
     
     func renderSecureTextEntry() {
@@ -293,22 +323,38 @@ private extension TextField {
         }
         textField.isSecureTextEntry = !isTextVisible
     }
+    
+    func renderError() {
+        errorLabel.text = error
+        remakeErrorLabelConstraints()
+    }
+    
+    func remakeErrorLabelConstraints() {
+        errorLabel.snp.remakeConstraints { (remake) in
+            remake.leading.trailing.equalToSuperview().inset(NameSpace.errorLeadingTrailingInset)
+            
+            if error == nil {
+                remake.top.equalTo(titleLabel.snp.bottom).offset(NameSpace.emptyErrorLabelTopOffset)
+                remake.top.equalTo(textField.snp.bottom).offset(NameSpace.emptyErrorLabelTopOffset)
+                remake.top.equalTo(imagesStackView.snp.bottom).offset(NameSpace.emptyErrorLabelTopOffset)
+                remake.height.equalTo(0.0)
+                remake.bottom.equalToSuperview()
+            } else {
+                remake.top.equalTo(titleLabel.snp.bottom).offset(NameSpace.errorLabelTopOffset)
+                remake.top.equalTo(textField.snp.bottom).offset(NameSpace.errorLabelTopOffset)
+                remake.top.equalTo(imagesStackView.snp.bottom).offset(NameSpace.errorLabelTopOffset)
+                remake.bottom.equalToSuperview().inset(NameSpace.errorLabelBottomInset)
+            }
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate
 
 extension TextField: UITextFieldDelegate {
-
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        renderTextFieldState()
-    }
     
     @objc public func textFieldDidChange() {
         onTextChanged?(text)
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-//        renderTextFieldState()
     }
     
     func textField(
@@ -328,9 +374,7 @@ extension TextField: UITextFieldDelegate {
             else {
                 return false
         }
-        
-//        renderTextFieldState()
-        
+                
         return true
     }
 }
