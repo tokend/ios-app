@@ -73,8 +73,6 @@ extension TabBarContainer {
             self.onDeinit = onDeinit
         }
         
-        // MARK: - Overridden
-        
         // MARK: - Private
         
         private func setupView() { }

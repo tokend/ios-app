@@ -94,12 +94,10 @@ private extension TabBar.Interactor {
 extension TabBar.Interactor: TabBar.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
-        
         observeTabs()
     }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
-        
         checkSelectedTab()
         presentSceneDidUpdateSync(animated: false)
     }
