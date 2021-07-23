@@ -26,6 +26,7 @@ extension MoreScene.Model {
     
     struct SceneModel {
         
+        var userData: UserData?
         var loadingStatus: LoadingStatus
     }
     
@@ -43,6 +44,14 @@ extension MoreScene.Model {
     public enum LoadingStatus {
         case loading
         case loaded
+    }
+    
+    public struct UserData {
+        
+        let avatarUrl: URL
+        let name: String?
+        let surname: String?
+        let accountType: AccountType
     }
 }
 

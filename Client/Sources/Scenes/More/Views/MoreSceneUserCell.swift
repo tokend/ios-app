@@ -120,6 +120,7 @@ private extension MoreScene.UserCell.View {
         selectionStyle = .none
         backgroundColor = .white
         contentView.backgroundColor = .white
+        accessoryType = .disclosureIndicator
     }
     
     func setupAvatarImageView() {

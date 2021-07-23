@@ -89,7 +89,8 @@ private extension MoreScene.ViewController {
         
         tableView.register(
             classes: [
-                MoreScene.UserCell.ViewModel.self
+                MoreScene.UserCell.ViewModel.self,
+                MoreScene.IconTitleDisclosureCell.ViewModel.self
             ]
         )
     }

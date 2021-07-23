@@ -221,7 +221,7 @@ private extension TabBarFlowController {
         let navigationController: UINavigationController = .init()
         
         let controller: MoreScene.ViewController = .init()
-        controller.navigationItem.title = "More"
+        controller.navigationItem.title = Localized(.more_scene_title)
         
         let routing: MoreScene.Routing = .init(
             onUserTap: { [weak self] in

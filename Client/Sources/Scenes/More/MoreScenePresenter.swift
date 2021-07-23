@@ -55,6 +55,48 @@ private extension MoreScene.Presenter {
                                 accountType: "Unverified"
                             )
                         ]
+                    ),
+                    .init(
+                        id: "features_section",
+                        header: nil,
+                        cells: [
+                            MoreScene.IconTitleDisclosureCell.ViewModel(
+                                id: "deposit",
+                                icon: .uiImage(Assets.arrow_back_icon.image),
+                                title: Localized(.more_deposit_title)
+                            ),
+                            MoreScene.IconTitleDisclosureCell.ViewModel(
+                                id: "withdraw",
+                                icon: .uiImage(Assets.arrow_back_icon.image),
+                                title: Localized(.more_withdraw_title)
+                            ),
+                            MoreScene.IconTitleDisclosureCell.ViewModel(
+                                id: "explore_sales",
+                                icon: .uiImage(Assets.arrow_down_icon.image),
+                                title: Localized(.more_explore_sales_title)
+                            ),
+                            MoreScene.IconTitleDisclosureCell.ViewModel(
+                                id: "trade",
+                                icon: .uiImage(Assets.arrow_up_icon.image),
+                                title: Localized(.more_trade_title)
+                            ),
+                            MoreScene.IconTitleDisclosureCell.ViewModel(
+                                id: "polls",
+                                icon: .uiImage(Assets.arrow_right_icon.image),
+                                title: Localized(.more_polls_title)
+                            )
+                        ]
+                    ),
+                    .init(
+                        id: "settings",
+                        header: nil,
+                        cells: [
+                            MoreScene.IconTitleDisclosureCell.ViewModel(
+                                id: "settings",
+                                icon: .uiImage(Assets.more_tab_icon.image),
+                                title: Localized(.more_settings_title)
+                            )
+                        ]
                     )
                 ]
             )

@@ -39,7 +39,7 @@ extension TabBar {
                     
                 case .more:
                     let moreTab: Model.TabItem = .init(
-                        title: "More",
+                        title: Localized(.more_tab_title),
                         image: Assets.more_tab_icon.image,
                         identifier: tab.rawValue
                     )

@@ -1,21 +1,29 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 protocol AccountTypeManagerProtocol: class {
 
-    func getType() -> AccountType
+    var accountType: AccountType { get }
+    
     func setType(_ type: AccountType)
     func resetType()
 }
 
 public class AccountTypeManager {
 
-    // MARK: - Public properties
-
     // MARK: - Private properties
 
     private let accountTypeKey: String = "accountType"
 
     private let userDefaults: UserDefaults = .standard
+    private lazy var accountTypeBehaviorRelay: BehaviorRelay<AccountType> = .init(value: getType())
+    
+    // MARK: - Public properties
+    
+    var accountType: AccountType {
+        accountTypeBehaviorRelay.value
+    }
 
     // MARK: -
 
@@ -37,39 +45,40 @@ private extension AccountTypeManager {
 //            Theme.Colors.applyDefaultTheme()
 //        }
     }
+    
+    func getType() -> AccountType {
+        
+        let defaultsType: AccountType = .general
+        
+        guard let value = userDefaults.value(forKey: accountTypeKey) as? String
+        else {
+            return defaultsType
+        }
+        
+        guard let type = AccountType(userDefaultsValue: value)
+        else {
+            return defaultsType
+        }
+        
+        return type
+    }
 }
 
 // MARK: - AccountTypeManagerProtocol
 
 extension AccountTypeManager: AccountTypeManagerProtocol {
 
-    func getType() -> AccountType {
-
-        let defaultsType: AccountType = .general
-
-        guard let value = userDefaults.value(forKey: accountTypeKey) as? String
-        else {
-            return defaultsType
-        }
-
-        guard let type = AccountType(userDefaultsValue: value)
-        else {
-            return defaultsType
-        }
-
-        return type
-    }
-
     func setType(_ type: AccountType) {
 
         self.userDefaults.setValue(type.userDefaultsValue, forKey: accountTypeKey)
-
+        accountTypeBehaviorRelay.accept(type)
         checkTheme()
     }
 
     func resetType() {
 
         self.userDefaults.removeObject(forKey: accountTypeKey)
+        accountTypeBehaviorRelay.accept(getType())
 
         checkTheme()
     }

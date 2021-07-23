@@ -52,3 +52,11 @@
 "tfa_code_placeholder" = "Code";
 "tfa_password_title" = "Please enter your password";
 "tfa_password_placeholder" = "Password";
+"more_tab_title" = "More";
+"more_scene_title" = "More";
+"more_deposit_title" = "Deposit";
+"more_withdraw_title" = "Withdraw";
+"more_explore_sales_title" = "Explore sales";
+"more_trade_title" = "Trade";
+"more_polls_title" = "Polls";
+"more_settings_title" = "Settings";
