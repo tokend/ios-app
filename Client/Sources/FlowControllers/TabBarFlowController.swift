@@ -10,6 +10,7 @@ class TabBarFlowController: BaseSignedInFlowController {
     enum Tab: String {
         case balances
         case movements
+        case more
     }
     
     // MARK: - Private properties
@@ -23,7 +24,8 @@ class TabBarFlowController: BaseSignedInFlowController {
     private let onPerformSignOut: OnSignOut
     private let tabsOrder: [Tab] = [
         .balances,
-        .movements
+        .movements,
+        .more
     ]
     
     private lazy var tabBar: TabBar.View = .init()
@@ -184,6 +186,13 @@ private extension TabBarFlowController {
                 showContent(controller, animation)
             })
             return true
+            
+        case .more:
+            selectedTab = tab
+            showMoreFlow(showRootScreen: { (controller) in
+                showContent(controller, animation)
+            })
+            return true
         }
     }
     
@@ -203,6 +212,32 @@ private extension TabBarFlowController {
         let controller: UIViewController = .init()
         controller.view.backgroundColor = .blue
         showRootScreen(controller)
+    }
+    
+    func showMoreFlow(
+        showRootScreen: @escaping (UIViewController) -> Void
+    ) {
+        
+        let navigationController: UINavigationController = .init()
+        
+        let controller: MoreScene.ViewController = .init()
+        controller.navigationItem.title = "More"
+        
+        let routing: MoreScene.Routing = .init(
+            onUserTap: { [weak self] in
+                // TODO: - Show AccountID
+            }
+        )
+        
+        MoreScene.Configurator.configure(
+            viewController: controller,
+            routing: routing
+        )
+        
+        navigationController.setViewControllers([controller], animated: false)
+        controller.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        showRootScreen(navigationController)
     }
 }
 

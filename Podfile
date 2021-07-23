@@ -25,7 +25,8 @@ def ui_pods
   pod 'SwiftKeychainWrapper',     '4.0.1'
   pod 'SnapKit',                  '5.0.1'
   pod 'DifferenceKit',            '1.1.5'
-  pod 'QRCodeReader.swift', 	  '10.1.0'
+  pod 'QRCodeReader.swift', 	    '10.1.0'
+  pod 'Nuke',                     '9.1.2'
 end
 
 def other_pods

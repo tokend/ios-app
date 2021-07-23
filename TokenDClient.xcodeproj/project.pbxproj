@@ -216,8 +216,15 @@
 		0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */; };
 		0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A6269EF8ED00B5CFB5 /* NetworkInfoParser.swift */; };
 		0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2A9269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift */; };
-		0DD5F2B0269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2AF269F158300B5CFB5 /* NetworkInfoProviderProtocol.swift */; };
-		0DD5F2B3269F158D00B5CFB5 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD5F2B2269F158D00B5CFB5 /* NetworkInfoProvider.swift */; };
+		0DDC5A6B26A99BC40004D326 /* CGFloat+ConvertToPixels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6A26A99BC40004D326 /* CGFloat+ConvertToPixels.swift */; };
+		0DDC5A6C26A9A0E50004D326 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6526A7EF380004D326 /* NetworkInfoProviderProtocol.swift */; };
+		0DDC5A6D26A9A0E70004D326 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6726A7EF520004D326 /* NetworkInfoProvider.swift */; };
+		0DDC5A6E26A9A0F50004D326 /* SignUpSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5826A7D8550004D326 /* SignUpSceneModels.swift */; };
+		0DDC5A6F26A9A0F50004D326 /* SignUpSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5926A7D8560004D326 /* SignUpSceneViewController.swift */; };
+		0DDC5A7026A9A0F50004D326 /* SignUpSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5B26A7D8560004D326 /* SignUpSceneConfigurator.swift */; };
+		0DDC5A7126A9A0F50004D326 /* SignUpSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5A26A7D8560004D326 /* SignUpSceneInteractor.swift */; };
+		0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5626A7D8550004D326 /* SignUpScenePresenter.swift */; };
+		0DDC5A7326A9A0F50004D326 /* SignUpSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5726A7D8550004D326 /* SignUpSceneRouting.swift */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
 		C39BB59126A85B4D00AC642B /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58626A85B4D00AC642B /* TabBarView.swift */; };
@@ -240,15 +247,14 @@
 		C39BB5B426A8600500AC642B /* TabContentContainerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5AE26A8600500AC642B /* TabContentContainerModels.swift */; };
 		C39BB5B526A8600500AC642B /* TabContentContainerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5AF26A8600500AC642B /* TabContentContainerInteractor.swift */; };
 		C39BB5B626A8600500AC642B /* TabContentContainerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5B026A8600500AC642B /* TabContentContainerPresenter.swift */; };
-		0DDC5A6B26A99BC40004D326 /* CGFloat+ConvertToPixels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6A26A99BC40004D326 /* CGFloat+ConvertToPixels.swift */; };
-		0DDC5A6C26A9A0E50004D326 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6526A7EF380004D326 /* NetworkInfoProviderProtocol.swift */; };
-		0DDC5A6D26A9A0E70004D326 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6726A7EF520004D326 /* NetworkInfoProvider.swift */; };
-		0DDC5A6E26A9A0F50004D326 /* SignUpSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5826A7D8550004D326 /* SignUpSceneModels.swift */; };
-		0DDC5A6F26A9A0F50004D326 /* SignUpSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5926A7D8560004D326 /* SignUpSceneViewController.swift */; };
-		0DDC5A7026A9A0F50004D326 /* SignUpSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5B26A7D8560004D326 /* SignUpSceneConfigurator.swift */; };
-		0DDC5A7126A9A0F50004D326 /* SignUpSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5A26A7D8560004D326 /* SignUpSceneInteractor.swift */; };
-		0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5626A7D8550004D326 /* SignUpScenePresenter.swift */; };
-		0DDC5A7326A9A0F50004D326 /* SignUpSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5726A7D8550004D326 /* SignUpSceneRouting.swift */; };
+		C39BB5BE26A9C97200AC642B /* MoreScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5B826A9C97200AC642B /* MoreScenePresenter.swift */; };
+		C39BB5BF26A9C97200AC642B /* MoreSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5B926A9C97200AC642B /* MoreSceneRouting.swift */; };
+		C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5BA26A9C97200AC642B /* MoreSceneModels.swift */; };
+		C39BB5C126A9C97200AC642B /* MoreSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5BB26A9C97200AC642B /* MoreSceneViewController.swift */; };
+		C39BB5C226A9C97200AC642B /* MoreSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5BC26A9C97200AC642B /* MoreSceneInteractor.swift */; };
+		C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5BD26A9C97200AC642B /* MoreSceneConfigurator.swift */; };
+		C39BB5C626A9D22A00AC642B /* MoreSceneUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C526A9D22A00AC642B /* MoreSceneUserCell.swift */; };
+		C39BB5C826A9D29C00AC642B /* UIImageView+TokenDUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -502,6 +508,14 @@
 		C39BB5AE26A8600500AC642B /* TabContentContainerModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabContentContainerModels.swift; sourceTree = "<group>"; };
 		C39BB5AF26A8600500AC642B /* TabContentContainerInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabContentContainerInteractor.swift; sourceTree = "<group>"; };
 		C39BB5B026A8600500AC642B /* TabContentContainerPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabContentContainerPresenter.swift; sourceTree = "<group>"; };
+		C39BB5B826A9C97200AC642B /* MoreScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreScenePresenter.swift; sourceTree = "<group>"; };
+		C39BB5B926A9C97200AC642B /* MoreSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneRouting.swift; sourceTree = "<group>"; };
+		C39BB5BA26A9C97200AC642B /* MoreSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneModels.swift; sourceTree = "<group>"; };
+		C39BB5BB26A9C97200AC642B /* MoreSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneViewController.swift; sourceTree = "<group>"; };
+		C39BB5BC26A9C97200AC642B /* MoreSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneInteractor.swift; sourceTree = "<group>"; };
+		C39BB5BD26A9C97200AC642B /* MoreSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneConfigurator.swift; sourceTree = "<group>"; };
+		C39BB5C526A9D22A00AC642B /* MoreSceneUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserCell.swift; sourceTree = "<group>"; };
+		C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+TokenDUIImage.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -519,6 +533,7 @@
 		0D2FA2DD2695CC350018B7D4 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				C39BB5B726A9C8F700AC642B /* More */,
 				0DDC5A5526A7D82D0004D326 /* SignUp */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
 				C39BB58326A85B4D00AC642B /* TabBar */,
@@ -636,6 +651,7 @@
 				0D59BC23269491C900B6658F /* ReviewableRequestState+IsToUpdate.swift */,
 				0D59BC24269491C900B6658F /* String+RemoveSpaces.swift */,
 				0D59BC25269491C900B6658F /* String+PhoneNumberValidation.swift */,
+				C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1378,6 +1394,28 @@
 			path = TabContentContainer;
 			sourceTree = "<group>";
 		};
+		C39BB5B726A9C8F700AC642B /* More */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB5BD26A9C97200AC642B /* MoreSceneConfigurator.swift */,
+				C39BB5BC26A9C97200AC642B /* MoreSceneInteractor.swift */,
+				C39BB5BA26A9C97200AC642B /* MoreSceneModels.swift */,
+				C39BB5B826A9C97200AC642B /* MoreScenePresenter.swift */,
+				C39BB5B926A9C97200AC642B /* MoreSceneRouting.swift */,
+				C39BB5BB26A9C97200AC642B /* MoreSceneViewController.swift */,
+				C39BB5C426A9D21C00AC642B /* Views */,
+			);
+			path = More;
+			sourceTree = "<group>";
+		};
+		C39BB5C426A9D21C00AC642B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB5C526A9D22A00AC642B /* MoreSceneUserCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1508,6 +1546,7 @@
 				0D59BD36269493BB00B6658F /* Array+Take.swift in Sources */,
 				0D59BD37269493BB00B6658F /* String+Extension.swift in Sources */,
 				0D59BD38269493BB00B6658F /* Hashable+Iterate.swift in Sources */,
+				C39BB5BF26A9C97200AC642B /* MoreSceneRouting.swift in Sources */,
 				0D59BD39269493BB00B6658F /* String+ValidateEmail.swift in Sources */,
 				C39BB5A426A85B7400AC642B /* TabBarContainerModels.swift in Sources */,
 				C39BB5B526A8600500AC642B /* TabContentContainerInteractor.swift in Sources */,
@@ -1519,11 +1558,13 @@
 				0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */,
 				0D59BD3E269493BB00B6658F /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				0D59BD3F269493BB00B6658F /* UploadedAttachment+Extensions.swift in Sources */,
+				C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */,
 				C39BB5A326A85B7400AC642B /* TabBarContainerConfigurator.swift in Sources */,
 				0D59BD40269493BB00B6658F /* NumberFormatter+Decimal.swift in Sources */,
 				0D59BD41269493BB00B6658F /* String+DateFormatters.swift in Sources */,
 				0D59BD42269493BB00B6658F /* LuhnAlgorithm.swift in Sources */,
 				0D59BD43269493BB00B6658F /* UIViewController+Nib.swift in Sources */,
+				C39BB5C626A9D22A00AC642B /* MoreSceneUserCell.swift in Sources */,
 				0D59BD44269493BB00B6658F /* TokenDWallet.PublicKey+base32EncodedString.swift in Sources */,
 				0D59BD45269493BB00B6658F /* UITapGestureRecognizer+Extension.swift in Sources */,
 				0D59BD46269493BB00B6658F /* ReviewableRequestState+IsToUpdate.swift in Sources */,
@@ -1538,6 +1579,7 @@
 				0D59BD4D269493BB00B6658F /* AccountKYCFormSender.swift in Sources */,
 				0D59BD4E269493BB00B6658F /* AccountKYCFormSenderProtocol.swift in Sources */,
 				0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */,
+				C39BB5C226A9C97200AC642B /* MoreSceneInteractor.swift in Sources */,
 				0D59BD4F269493BB00B6658F /* PasswordTFAProcessor.swift in Sources */,
 				0D59BD50269493BB00B6658F /* TFACodeProcessorProtocol.swift in Sources */,
 				0D59BD51269493BB00B6658F /* DefaultTFACodeProcessor.swift in Sources */,
@@ -1560,11 +1602,13 @@
 				0D59BD5E269493BB00B6658F /* WalletDataProviderProtocol.swift in Sources */,
 				0DDC5A6B26A99BC40004D326 /* CGFloat+ConvertToPixels.swift in Sources */,
 				0D59BD5F269493BB00B6658F /* ContoPassAccountTypeChecker.swift in Sources */,
+				C39BB5C826A9D29C00AC642B /* UIImageView+TokenDUIImage.swift in Sources */,
 				0DDC5A7326A9A0F50004D326 /* SignUpSceneRouting.swift in Sources */,
 				0D59BD60269493BB00B6658F /* AccountTypeCheckerProtocol.swift in Sources */,
 				0D59BD61269493BB00B6658F /* ContoFAAccountTypeChecker.swift in Sources */,
 				0D59BD62269493BB00B6658F /* AmountConverter.swift in Sources */,
 				0D59BD63269493BB00B6658F /* LocationProviderProtocol.swift in Sources */,
+				C39BB5BE26A9C97200AC642B /* MoreScenePresenter.swift in Sources */,
 				0D59BD64269493BB00B6658F /* LocationProvider.swift in Sources */,
 				0D59BD65269493BB00B6658F /* LoginWorkerProtocol.swift in Sources */,
 				0D59BD66269493BB00B6658F /* BaseLoginWorker.swift in Sources */,
@@ -1633,6 +1677,7 @@
 				0D59BD99269493BC00B6658F /* KYCRepo.swift in Sources */,
 				0D59BD9A269493BC00B6658F /* KeyValuesRepo.swift in Sources */,
 				0D59BD9B269493BC00B6658F /* ActiveKYCRepo.swift in Sources */,
+				C39BB5C126A9C97200AC642B /* MoreSceneViewController.swift in Sources */,
 				C39BB5B626A8600500AC642B /* TabContentContainerPresenter.swift in Sources */,
 				0D59BD9C269493BC00B6658F /* AccountRepo.swift in Sources */,
 				0D59BD9D269493BC00B6658F /* BalancesRepo.swift in Sources */,
@@ -1699,6 +1744,7 @@
 				0D59BDCF269493BC00B6658F /* PHPickerFlowController.swift in Sources */,
 				0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */,
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
+				C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
 				0D59BD132694930700B6658F /* KYCFlowController.swift in Sources */,
 				0D59BD172694930700B6658F /* LocalAuthFlowController.swift in Sources */,

@@ -36,6 +36,14 @@ extension TabBar {
                         identifier: tab.rawValue
                     )
                     tabs.append(movementsTab)
+                    
+                case .more:
+                    let moreTab: Model.TabItem = .init(
+                        title: "More",
+                        image: Assets.more_tab_icon.image,
+                        identifier: tab.rawValue
+                    )
+                    tabs.append(moreTab)
                 }
             }
             tabsBehaviorRelay.accept(tabs)
