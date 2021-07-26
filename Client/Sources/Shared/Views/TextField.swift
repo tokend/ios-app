@@ -4,6 +4,7 @@ final class TextField: UIView {
     
     private typealias NameSpace = TextField
     typealias OnTextChanged = (String?) -> Void
+    typealias OnShouldBeginEditing = () -> Bool
     typealias OnReturnAction = () -> Void
     
     private static var titleLeadingInset: CGFloat { 16.0 }
@@ -61,6 +62,7 @@ final class TextField: UIView {
     }
 
     public var onTextChanged: OnTextChanged?
+    public var onShouldBeginEditing: OnShouldBeginEditing?
     public var onReturnAction: OnReturnAction?
     
     public var title: String? {
@@ -353,6 +355,12 @@ private extension TextField {
 // MARK: - UITextFieldDelegate
 
 extension TextField: UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(
+        _ textField: UITextField
+    ) -> Bool {
+        onShouldBeginEditing?() ?? true
+    }
     
     @objc public func textFieldDidChange() {
         onTextChanged?(text)

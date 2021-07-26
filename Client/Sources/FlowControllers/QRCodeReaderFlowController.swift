@@ -66,10 +66,12 @@ class QRCodeReaderFlowController: BaseFlowController {
             $0.showSwitchCameraButton = false
             $0.showTorchButton = true
             $0.handleOrientationChange = false
-            $0.cancelButtonTitle = ""
+            $0.showCancelButton = true
+            $0.cancelButtonTitle = Localized(.cancel)
 
         })
         reader.delegate = self
+        reader.modalPresentationStyle = .fullScreen
         self.presentingViewController.present(reader, animated: true, completion: nil)
     }
 }

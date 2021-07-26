@@ -134,7 +134,10 @@ private extension SignInScene.ViewController {
     func setupNetworkTextField() {
         networkTextField.title = Localized(.sign_in_network_title)
         networkTextField.placeholder = "network.example.com"
-        networkTextField.setUserInteractionEnabled = false
+        networkTextField.onShouldBeginEditing = { [weak self] in
+            self?.onSelectNetwork()
+            return false
+        }
         
         let selectNetworkButton: UIButton = .init()
         selectNetworkButton.setImage(Assets.scan_qr_code_icon.image, for: .normal)
@@ -147,6 +150,10 @@ private extension SignInScene.ViewController {
     }
     
     @objc func selectNetworkButtonTouchUpInside() {
+        onSelectNetwork()
+    }
+    
+    func onSelectNetwork() {
         routing?.onSelectNetwork()
     }
     
