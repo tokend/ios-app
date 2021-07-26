@@ -15,7 +15,7 @@ extension MoreScene {
         private static var nameAvatarOffset: CGFloat { 15.0 }
         private static var nameTopInset: CGFloat { 13.5 }
         private static var nameTrailingInset: CGFloat { 15.0 }
-        private static var accountTypeAvatarOffset: CGFloat { 14.0 }
+        private static var accountTypeAvatarOffset: CGFloat { 15.0 }
         private static var accountTypeNameOffset: CGFloat { 4.5 }
         private static var accountTypeBottomInset: CGFloat { 17.0 }
         private static var accountTypeTrailingInset: CGFloat { 15.0 }

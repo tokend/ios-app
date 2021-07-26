@@ -6,11 +6,11 @@ extension MoreScene {
         
         private static var titleFont: UIFont { Theme.Fonts.regularFont.withSize(17.0) }
         
-        private static var iconSize: CGSize { .init(width: 29.0, height: 29.0) }
-        private static var iconLeadingInset: CGFloat { 15.0 }
-        private static var iconTopInset: CGFloat { 7.0 }
-        private static var iconBottomInset: CGFloat { 7.0 }
-        private static var titleIconOffset: CGFloat { 15.0 }
+        private static var iconSize: CGSize { .init(width: 23.0, height: 23.0) }
+        private static var iconLeadingInset: CGFloat { 18.0 }
+        private static var iconTopInset: CGFloat { 10.0 }
+        private static var iconBottomInset: CGFloat { 10.0 }
+        private static var titleIconOffset: CGFloat { 18.0 }
         private static var titleTopInset: CGFloat { 10.0 }
         private static var titleBottomInset: CGFloat { 11.0 }
         private static var titleTrailingInset: CGFloat { 15.0 }
@@ -25,6 +25,20 @@ extension MoreScene {
                 
                 cell.icon = icon
                 cell.title = title
+            }
+            
+            var hashValue: Int {
+                id.hashValue
+            }
+
+            func hash(into hasher: inout Hasher) {
+                hasher.combine(id)
+            }
+
+            public static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
+
+                return lhs.icon == rhs.icon
+                    && lhs.title == rhs.title
             }
         }
         
@@ -90,7 +104,7 @@ private extension MoreScene.IconTitleDisclosureCell.View {
     
     func setupIconImageView() {
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = .gray
+        iconImageView.tintColor = .lightGray
         iconImageView.backgroundColor = .white
     }
     

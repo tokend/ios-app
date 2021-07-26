@@ -64,4 +64,8 @@ enum LocKey: String {
     case more_trade_title
     case more_polls_title
     case more_settings_title
+    case more_user_blocked_status
+    case more_user_corporate_status
+    case more_user_general_status
+    case more_user_unverified_status
 }

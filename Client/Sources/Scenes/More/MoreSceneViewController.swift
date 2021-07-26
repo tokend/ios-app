@@ -7,6 +7,7 @@ public protocol MoreSceneDisplayLogic: AnyObject {
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
+    func displayItemTapSync(viewModel: Event.ItemTapSync.ViewModel)
 }
 
 extension MoreScene {
@@ -226,6 +227,13 @@ extension MoreScene.ViewController: UITableViewDelegate {
         
         if cell is MoreScene.UserCell.ViewModel {
             routing?.onUserTap()
+        } else if let item = cell as? MoreScene.IconTitleDisclosureCell.ViewModel {
+            let request: Event.ItemTapSync.Request = .init(
+                id: item.id
+            )
+            interactorDispatch?.sendSyncRequest(requestBlock: { businessLogic in
+                businessLogic.onItemTapSync(request: request)
+            })
         }
     }
     
@@ -271,5 +279,24 @@ extension MoreScene.ViewController: MoreScene.DisplayLogic {
     
     public func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
+    }
+    
+    public func displayItemTapSync(viewModel: Event.ItemTapSync.ViewModel) {
+        
+        switch viewModel.item {
+        
+        case .deposit:
+            routing?.onDepositTap()
+        case .withdraw:
+            routing?.onWithdrawTap()
+        case .exploreSales:
+            routing?.onExploreSalesTap()
+        case .trade:
+            routing?.onTradeTap()
+        case .polls:
+            routing?.onPollsTap()
+        case .settings:
+            routing?.onSettingsTap()
+        }
     }
 }

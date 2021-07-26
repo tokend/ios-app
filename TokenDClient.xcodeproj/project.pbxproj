@@ -257,6 +257,7 @@
 		C39BB5C826A9D29C00AC642B /* UIImageView+TokenDUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */; };
 		C39BB5CA26AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */; };
 		C39BB5CD26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */; };
+		C39BB5D026AEC08E00AC642B /* MoreSceneUserDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -520,6 +521,7 @@
 		C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+TokenDUIImage.swift"; sourceTree = "<group>"; };
 		C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneIconTitleDisclosureCell.swift; sourceTree = "<group>"; };
 		C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserDataProviderProtocol.swift; sourceTree = "<group>"; };
+		C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserDataProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1433,6 +1435,7 @@
 		C39BB5CE26AB122300AC642B /* UserDataProviderProtocol */ = {
 			isa = PBXGroup;
 			children = (
+				C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */,
 				C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */,
 			);
 			path = UserDataProviderProtocol;
@@ -1606,6 +1609,7 @@
 				0D59BD4F269493BB00B6658F /* PasswordTFAProcessor.swift in Sources */,
 				0D59BD50269493BB00B6658F /* TFACodeProcessorProtocol.swift in Sources */,
 				0D59BD51269493BB00B6658F /* DefaultTFACodeProcessor.swift in Sources */,
+				C39BB5D026AEC08E00AC642B /* MoreSceneUserDataProvider.swift in Sources */,
 				C39BB5A926A85EF200AC642B /* TabBarTabItem.swift in Sources */,
 				0D59BD52269493BB00B6658F /* SignOutWorker.swift in Sources */,
 				C39BB5A126A85B7400AC642B /* TabBarContainerInteractor.swift in Sources */,

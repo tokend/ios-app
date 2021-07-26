@@ -224,14 +224,21 @@ private extension TabBarFlowController {
         controller.navigationItem.title = Localized(.more_scene_title)
         
         let routing: MoreScene.Routing = .init(
-            onUserTap: { [weak self] in
-                // TODO: - Show AccountID
-            }
+            onUserTap: {},
+            onDepositTap: {},
+            onWithdrawTap: {},
+            onExploreSalesTap: {},
+            onTradeTap: {},
+            onPollsTap: {},
+            onSettingsTap: {}
         )
+        
+        let userDataProvider: MoreScene.UserDataProvider = .init()
         
         MoreScene.Configurator.configure(
             viewController: controller,
-            routing: routing
+            routing: routing,
+            userDataProvider: userDataProvider
         )
         
         navigationController.setViewControllers([controller], animated: false)

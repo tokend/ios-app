@@ -60,3 +60,7 @@
 "more_trade_title" = "Trade";
 "more_polls_title" = "Polls";
 "more_settings_title" = "Settings";
+"more_user_blocked_status" = "Blocked account";
+"more_user_corporate_status" = "Corporate account";
+"more_user_general_status" = "General account";
+"more_user_unverified_status" = "Unverified account";

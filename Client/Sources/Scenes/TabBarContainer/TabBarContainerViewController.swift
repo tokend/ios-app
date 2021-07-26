@@ -111,15 +111,8 @@ extension TabBarContainer {
             guard let viewController = self.content?.viewController else { return }
             
             self.view.sendSubviewToBack(viewController.view)
-            if let tabBar = self.tabBar?.view {
-                viewController.view.snp.remakeConstraints { (make) in
-                    make.leading.trailing.top.equalToSuperview()
-                    make.bottom.equalTo(tabBar.snp.top)
-                }
-            } else {
-                viewController.view.snp.remakeConstraints { (make) in
-                    make.edges.equalToSuperview()
-                }
+            viewController.view.snp.remakeConstraints { (make) in
+                make.edges.equalToSuperview()
             }
         }
     }

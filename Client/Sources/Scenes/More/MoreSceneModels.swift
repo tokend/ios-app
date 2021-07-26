@@ -28,6 +28,7 @@ extension MoreScene.Model {
         
         var userData: UserData?
         var loadingStatus: LoadingStatus
+        var items: [Item]
     }
     
     struct SceneViewModel {
@@ -49,9 +50,19 @@ extension MoreScene.Model {
     public struct UserData {
         
         let avatarUrl: URL
-        let name: String?
-        let surname: String?
+        let name: String
+        let surname: String
         let accountType: AccountType
+    }
+    
+    public enum Item: String {
+        
+        case deposit
+        case withdraw
+        case exploreSales
+        case trade
+        case polls
+        case settings
     }
 }
 
@@ -97,6 +108,20 @@ extension MoreScene.Event {
     
     public enum DidRefresh {
         public struct Request { }
+    }
+    
+    public enum ItemTapSync {
+        public struct Request {
+            let id: String
+        }
+        
+        public struct Response {
+            let item: Model.Item
+        }
+        
+        public struct ViewModel {
+            let item: Model.Item
+        }
     }
 }
 

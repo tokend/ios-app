@@ -7,7 +7,8 @@ extension MoreScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
-            onDeinit: DeinitCompletion = nil
+            onDeinit: DeinitCompletion = nil,
+            userDataProvider: UserDataProviderProtocol
             ) {
             
             let presenterDispatch = PresenterDispatch(displayLogic: viewController)
@@ -15,7 +16,8 @@ extension MoreScene {
                 presenterDispatch: presenterDispatch
             )
             let interactor = Interactor(
-                presenter: presenter
+                presenter: presenter,
+                userDataProvider: userDataProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

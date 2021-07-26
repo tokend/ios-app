@@ -6,6 +6,7 @@ public protocol MoreScenePresentationLogic {
     
     func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response)
     func presentSceneDidUpdateSync(response: Event.SceneDidUpdateSync.Response)
+    func presentItemTapSync(response: Event.ItemTapSync.Response)
 }
 
 extension MoreScene {
@@ -39,68 +40,120 @@ private extension MoreScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
         
+        var sections: [Model.Section] = []
+        
+        if let user = sceneModel.userData {
+            let userCell = MoreScene.UserCell.ViewModel(
+                id: "user_cell",
+                avatar: .url(user.avatarUrl),
+                abbreviation: [user.name.firstCharacterString ?? "", user.surname.firstCharacterString ?? ""].joined().uppercased(),
+                name: [user.name, user.surname].joined(separator: " "),
+                accountType: user.accountType.localizedTitle
+            )
+            
+            sections.append(
+                .init(
+                    id: "user_section",
+                    header: nil,
+                    cells: [userCell]
+                )
+            )
+        }
+        
+        var itemsCells: [CellViewAnyModel] = []
+        
+        for item in sceneModel.items {
+            
+            switch item {
+            
+            case .deposit:
+                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                    id: item.rawValue,
+                    icon: .uiImage(Assets.more_deposit_icon.image),
+                    title: Localized(.more_deposit_title)
+                ))
+                
+            case .withdraw:
+                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                    id: "withdraw",
+                    icon: .uiImage(Assets.more_withdraw_icon.image),
+                    title: Localized(.more_withdraw_title)
+                ))
+                
+            case .exploreSales:
+                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                    id: "explore_sales",
+                    icon: .uiImage(Assets.more_explore_sales_icon.image),
+                    title: Localized(.more_explore_sales_title)
+                ))
+                
+            case .trade:
+                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                    id: "trade",
+                    icon: .uiImage(Assets.more_trade_icon.image),
+                    title: Localized(.more_trade_title)
+                ))
+                
+            case .polls:
+                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                    id: "polls",
+                    icon: .uiImage(Assets.more_polls_icon.image),
+                    title: Localized(.more_polls_title)
+                ))
+                
+            case .settings:
+                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                    id: "settings",
+                    icon: .uiImage(Assets.more_settings_icon.image),
+                    title: Localized(.more_settings_title)
+                ))
+            }
+        }
+        
+        sections.append(contentsOf: [
+            .init(
+                id: "features_section",
+                header: nil,
+                cells: itemsCells
+            )
+        ])
+        
         return .init(
             isLoading: sceneModel.loadingStatus == .loading,
             content: .content(
-                sections: [
-                    .init(
-                        id: "user_section",
-                        header: nil,
-                        cells: [
-                            MoreScene.UserCell.ViewModel(
-                                id: "user",
-                                avatar: nil,
-                                abbreviation: "YM",
-                                name: "Yegor Miroshnychenko",
-                                accountType: "Unverified"
-                            )
-                        ]
-                    ),
-                    .init(
-                        id: "features_section",
-                        header: nil,
-                        cells: [
-                            MoreScene.IconTitleDisclosureCell.ViewModel(
-                                id: "deposit",
-                                icon: .uiImage(Assets.arrow_back_icon.image),
-                                title: Localized(.more_deposit_title)
-                            ),
-                            MoreScene.IconTitleDisclosureCell.ViewModel(
-                                id: "withdraw",
-                                icon: .uiImage(Assets.arrow_back_icon.image),
-                                title: Localized(.more_withdraw_title)
-                            ),
-                            MoreScene.IconTitleDisclosureCell.ViewModel(
-                                id: "explore_sales",
-                                icon: .uiImage(Assets.arrow_down_icon.image),
-                                title: Localized(.more_explore_sales_title)
-                            ),
-                            MoreScene.IconTitleDisclosureCell.ViewModel(
-                                id: "trade",
-                                icon: .uiImage(Assets.arrow_up_icon.image),
-                                title: Localized(.more_trade_title)
-                            ),
-                            MoreScene.IconTitleDisclosureCell.ViewModel(
-                                id: "polls",
-                                icon: .uiImage(Assets.arrow_right_icon.image),
-                                title: Localized(.more_polls_title)
-                            )
-                        ]
-                    ),
-                    .init(
-                        id: "settings",
-                        header: nil,
-                        cells: [
-                            MoreScene.IconTitleDisclosureCell.ViewModel(
-                                id: "settings",
-                                icon: .uiImage(Assets.more_tab_icon.image),
-                                title: Localized(.more_settings_title)
-                            )
-                        ]
-                    )
-                ]
+                sections: sections
             )
         )
+    }
+}
+
+// MARK: - Mappers
+
+extension AccountType {
+    
+    var localizedTitle: String {
+        
+        switch self {
+        case .blocked:
+            return Localized(.more_user_blocked_status)
+        case .corporate:
+            return Localized(.more_user_corporate_status)
+        case .general:
+            return Localized(.more_user_general_status)
+        case .unverified:
+            return Localized(.more_user_unverified_status)
+        }
+    }
+}
+
+private extension String {
+    
+    var firstCharacterString: String? {
+        if let first = first {
+            return String(first)
+        } else {
+            return nil
+        }
     }
 }
 
@@ -129,6 +182,15 @@ extension MoreScene.Presenter: MoreScene.PresentationLogic {
                     animated: response.animated
                 )
             )
+        }
+    }
+    
+    public func presentItemTapSync(response: Event.ItemTapSync.Response) {
+        let viewModel: Event.ItemTapSync.ViewModel = .init(
+            item: response.item
+        )
+        self.presenterDispatch.displaySync { displayLogic in
+            displayLogic.displayItemTapSync(viewModel: viewModel)
         }
     }
 }

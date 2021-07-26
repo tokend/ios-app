@@ -7,7 +7,7 @@ class BaseSignedInFlowController: BaseFlowController {
     let userDataProvider: UserDataProviderProtocol
     let keychainDataProvider: KeychainDataProviderProtocol
     var accountType: AccountType {
-        managersController.accountTypeManager.getType()
+        managersController.accountTypeManager.accountType
     }
     
     init(

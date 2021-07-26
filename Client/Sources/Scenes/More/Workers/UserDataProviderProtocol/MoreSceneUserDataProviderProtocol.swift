@@ -8,7 +8,7 @@ public protocol MoreSceneUserDataProviderProtocol {
     func observeUserData() -> Observable<MoreScene.Model.UserData?>
 }
 
-extension MoreScene {
+public extension MoreScene {
     
     typealias UserDataProviderProtocol = MoreSceneUserDataProviderProtocol
 }

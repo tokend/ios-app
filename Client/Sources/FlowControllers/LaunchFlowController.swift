@@ -179,7 +179,7 @@ private extension LaunchFlowController {
         animated: Bool
     ) {
 
-        accountTypeManager.setType(accountTypeManager.getType())
+        accountTypeManager.setType(accountTypeManager.accountType)
 
         let flow = LocalAuthFlowController(
             login: login,

@@ -40,7 +40,7 @@ class KYCFlowController: BaseSignedInFlowController {
         self.kycSender = managersController.accountKYCFormSender
         self.roleProvider = RegistrationKYCRoleProvider(
             keyValuesApi: flowControllerStack.apiV3.keyValuesApi,
-            accountType: managersController.accountTypeManager.getType(),
+            accountType: managersController.accountTypeManager.accountType,
             originalAccountId: userDataProvider.walletData.accountId
         )
 
