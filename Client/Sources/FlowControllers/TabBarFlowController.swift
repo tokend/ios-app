@@ -233,7 +233,10 @@ private extension TabBarFlowController {
             onSettingsTap: {}
         )
         
-        let userDataProvider: MoreScene.UserDataProvider = .init()
+        let userDataProvider: MoreScene.UserDataProvider = .init(
+            userDataProvider: userDataProvider,
+            accountTypeManager: managersController.accountTypeManager
+        )
         
         MoreScene.Configurator.configure(
             viewController: controller,

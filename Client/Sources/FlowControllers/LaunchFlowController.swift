@@ -244,31 +244,24 @@ private extension LaunchFlowController {
                     password: password,
                     completion: { [weak self] (result) in
                         
-                        self?.navigationController.hideProgress()
-                        
                         switch result {
                         
                         case .success(login: let login):
-                            self?.accountTypeChecker.checkAccountType(
+                            self?.checkAccountType(
                                 login: login,
-                                completion: { [weak self] (result) in
-                                    
-                                    switch result {
-                                    
-                                    case .success(let type):
+                                completion: { [weak self] (accountType) in
+                                    self?.navigationController.hideProgress()
+                                    if let type = accountType {
+                                        
+                                        self?.accountTypeManager.setType(type)
                                         self?.onAuthorized(login, type)
-
-                                    case .failure:
-                                        self?.navigationController.showErrorMessage(
-                                            Localized(.error_unknown),
-                                            completion: nil
-                                        )
                                     }
                                 }
                             )
                             
                         case .failure(let error):
                             
+                            self?.navigationController.hideProgress()
                             switch error {
                             
                             case KeyServerApi.GetWalletError.wrongPassword:
@@ -479,7 +472,15 @@ private extension LaunchFlowController {
     
     func initAccountTypeChecker() -> AccountTypeCheckerProtocol {
         
-        return TokenDAccountTypeChecker()
+        return TokenDAccountTypeChecker(
+            accountTypeFetcher: AccountTypeFetcher(
+                accountRoleFetcher: AccountRoleFetcher(
+                    identitiesApi: flowControllerStack.api.identitiesApi,
+                    accountsApi: flowControllerStack.apiV3.accountsApi
+                ),
+                keyValuesApi: flowControllerStack.apiV3.keyValuesApi
+            )
+        )
     }
     
     func initRegisterWorker() -> RegisterWorkerProtocol! {

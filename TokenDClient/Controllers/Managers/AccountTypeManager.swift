@@ -7,6 +7,7 @@ protocol AccountTypeManagerProtocol: class {
     var accountType: AccountType { get }
     
     func setType(_ type: AccountType)
+    func observeAccountType() -> Observable<AccountType>
     func resetType()
 }
 
@@ -73,6 +74,11 @@ extension AccountTypeManager: AccountTypeManagerProtocol {
         self.userDefaults.setValue(type.userDefaultsValue, forKey: accountTypeKey)
         accountTypeBehaviorRelay.accept(type)
         checkTheme()
+    }
+    
+    func observeAccountType() -> Observable<AccountType> {
+        
+        accountTypeBehaviorRelay.asObservable()
     }
 
     func resetType() {

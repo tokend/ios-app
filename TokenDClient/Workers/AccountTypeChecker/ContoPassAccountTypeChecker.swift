@@ -48,16 +48,7 @@ private extension ContoPassAccountTypeChecker {
                     
                 case .success(let type):
                     
-                    switch type {
-                    
-                    case .general,
-                         .unverified,
-                         .corporate:
-                        completion(.success(type))
-                        
-                    case .blocked:
-                        completion(.failure(.unsupportedAccountType))
-                    }
+                    completion(.success(type))
                 }
             }
         )

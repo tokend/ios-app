@@ -1,7 +1,7 @@
 import Foundation
 import TokenDSDK
 
-enum AccountType: CaseIterable {
+public enum AccountType: CaseIterable {
     
     case blocked
     case corporate

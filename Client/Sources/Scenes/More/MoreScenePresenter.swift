@@ -42,18 +42,37 @@ private extension MoreScene.Presenter {
         
         var sections: [Model.Section] = []
         
+        let userCellId: String = "user_cell"
+        let userSectionId: String = "user_section"
+        
         if let user = sceneModel.userData {
             let userCell = MoreScene.UserCell.ViewModel(
-                id: "user_cell",
+                id: userCellId,
                 avatar: .url(user.avatarUrl),
                 abbreviation: [user.name.firstCharacterString ?? "", user.surname.firstCharacterString ?? ""].joined().uppercased(),
                 name: [user.name, user.surname].joined(separator: " "),
-                accountType: user.accountType.localizedTitle
+                accountType: sceneModel.accountType.localizedTitle
             )
             
             sections.append(
                 .init(
-                    id: "user_section",
+                    id: userSectionId,
+                    header: nil,
+                    cells: [userCell]
+                )
+            )
+        } else {
+            let userCell = MoreScene.UserCell.ViewModel(
+                id: userCellId,
+                avatar: nil,
+                abbreviation: (sceneModel.login.firstCharacterString ?? "").uppercased(),
+                name: sceneModel.login,
+                accountType: sceneModel.accountType.localizedTitle
+            )
+            
+            sections.append(
+                .init(
+                    id: userSectionId,
                     header: nil,
                     cells: [userCell]
                 )

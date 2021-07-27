@@ -40,6 +40,8 @@ extension MoreScene {
             self.userDataProvider = userDataProvider
             
             self.sceneModel = .init(
+                login: userDataProvider.login,
+                accountType: userDataProvider.accountType,
                 userData: userDataProvider.userData,
                 loadingStatus: .loaded,
                 items: [
@@ -64,6 +66,22 @@ private extension MoreScene.Interactor {
             .observeUserData()
             .subscribe(onNext: { [weak self] (userData) in
                 self?.sceneModel.userData = userData
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        userDataProvider
+            .observeLogin()
+            .subscribe(onNext: { [weak self] (login) in
+                self?.sceneModel.login = login
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        userDataProvider
+            .observeAccountType()
+            .subscribe(onNext: { [weak self] (accountType) in
+                self?.sceneModel.accountType = accountType
                 self?.presentSceneDidUpdate(animated: true)
             })
             .disposed(by: disposeBag)
