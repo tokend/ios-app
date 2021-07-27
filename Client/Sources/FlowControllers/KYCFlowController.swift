@@ -110,7 +110,7 @@ private extension KYCFlowController {
         kycIdDocument: AccountKYCForm.KYCDocument
     ) {
 
-        let form: AccountKYCForm = ActiveKYCRepo.KYCForm()
+        let form: AccountKYCForm = ActiveKYCRepo.KYCForm(documents: .init(kycAvatar: nil))
 
         navigationController.showProgress()
         roleProvider.fetchRoleId({ [weak self] (result) in

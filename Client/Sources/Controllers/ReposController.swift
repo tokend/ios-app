@@ -78,7 +78,8 @@ private extension ReposController {
         let repo = ActiveKYCRepo(
             accountRepo: accountRepo,
             blobsApi: reposControllerStack.api.blobsApi,
-            latestChangeRoleRequestProvider: managersController.latestChangeRoleRequestProvider
+            latestChangeRoleRequestProvider: managersController.latestChangeRoleRequestProvider,
+            activeKYCStorageManager: managersController.activeKYCStorageManager
         )
         return repo
     }

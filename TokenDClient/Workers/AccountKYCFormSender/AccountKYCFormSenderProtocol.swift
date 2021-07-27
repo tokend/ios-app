@@ -9,7 +9,7 @@ enum AccountKYCFormSenderResult {
 
 protocol AccountKYCForm: Encodable {
     
-    var documents: [String: KYCDocument] { get }
+    var documentsKeyMap: [String: KYCDocument] { get }
     
     func update(
         with documents: [String: KYCDocument]

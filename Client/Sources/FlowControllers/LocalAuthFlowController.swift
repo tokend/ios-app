@@ -9,10 +9,11 @@ class LocalAuthFlowController: BaseFlowController {
     
     private let navigationController: NavigationControllerProtocol
     private let keychainManager: KeychainManagerProtocol
+    private let activeKYCStorageManager: ActiveKYCStorageManagerProtocol
+    private let localSignInWorker: LocalSignInWorkerProtocol
     private let onAuthorized: () -> Void
     private let onDidFinishForgotPassword: OnDidFinishForgotPassword
     private let onSignOut: () -> Void
-        
     private let login: String
     
     // MARK: -
@@ -22,11 +23,13 @@ class LocalAuthFlowController: BaseFlowController {
         appController: AppControllerProtocol,
         flowControllerStack: FlowControllerStack,
         rootNavigation: RootNavigationProtocol,
+        userDataManager: UserDataManagerProtocol,
         keychainManager: KeychainManagerProtocol,
         onAuthorized: @escaping () -> Void,
         onDidFinishForgotPassword: @escaping OnDidFinishForgotPassword,
         onSignOut: @escaping () -> Void,
-        navigationController: NavigationControllerProtocol
+        navigationController: NavigationControllerProtocol,
+        activeKYCStorageManager: ActiveKYCStorageManagerProtocol
     ) {
         
         self.login = login
@@ -35,7 +38,13 @@ class LocalAuthFlowController: BaseFlowController {
         self.onDidFinishForgotPassword = onDidFinishForgotPassword
         self.onSignOut = onSignOut
         self.navigationController = navigationController
-                
+        self.activeKYCStorageManager = activeKYCStorageManager
+        
+        self.localSignInWorker = LocalSignInWorker(
+            userDataManager: userDataManager,
+            keychainManager: keychainManager
+        )
+        
         super.init(
             appController: appController,
             flowControllerStack: flowControllerStack,
@@ -48,7 +57,12 @@ class LocalAuthFlowController: BaseFlowController {
 
 extension LocalAuthFlowController {
     
-    func run(showRootScreen: ((_ vc: UIViewController) -> Void)?) { }
+    func run(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
+        let vc: LocalSignInScene.ViewController = setupLocalSignIn()
+        self.navigationController.setNavigationBarHidden(false, animated: true)
+        self.navigationController.setViewControllers([vc], animated: true)
+        vc.navigationController?.navigationBar.prefersLargeTitles = true
+    }
 }
 
 // MARK: - Private
@@ -70,6 +84,76 @@ private extension LocalAuthFlowController {
         )
         navigationController.getViewController().definesPresentationContext = true
         navigationController.present(vc, animated: false, completion: nil)
+    }
+    
+    func setupLocalSignIn() -> LocalSignInScene.ViewController {
+        let vc = LocalSignInScene.ViewController()
+        
+        let routing: LocalSignInScene.Routing = .init(
+            onBiometrics: { [weak self] in
+                self?.presentBiometricsAuthScreen(
+                    completion: { (result) in
+                        // TODO: -
+                    }
+                )
+            },
+            onForgotPassword: { [weak self] in
+                self?.showForgotPassword()
+            },
+            onSignOut: { [weak self] in
+                self?.onSignOut()
+            },
+            onSignIn: { [weak self] (password) in
+                
+                guard let login = self?.login else {
+                    return
+                }
+                
+                self?.localSignInWorker.performSignIn(
+                    login: login,
+                    passcode: password,
+                    completion: { [weak self] (result) in
+                        self?.navigationController.hideProgress()
+
+                        switch result {
+                        
+                        case .success:
+                            self?.onAuthorized()
+
+                        case .error(error: let error):
+                            switch error {
+                            
+                            case .wrongPasscode:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.authorization_error_wrong_login),
+                                    completion: nil
+                                )
+                                
+                            case .noSavedAccount:
+                                // TODO: - Fix
+                            break
+                            }
+                        }
+                    }
+                )
+            }
+        )
+        
+        let userAvatarUrlProvider: LocalSignInScene.UserAvatarUrlProviderProtocol = LocalSignInScene.UserAvatarUrlProvider(
+            activeKYCStorageManager: self.activeKYCStorageManager
+        )
+        
+        let biometricsInfoProvider: BiometricsInfoProvider = .init()
+        
+        LocalSignInScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            login: self.login,
+            userAvatarUrlProvider: userAvatarUrlProvider,
+            biometricsInfoProvider: biometricsInfoProvider
+        )
+        
+        return vc
     }
     
     private func setupBiometricsAuthScreen(
@@ -113,9 +197,7 @@ private extension LocalAuthFlowController {
         return vc
     }
     
-    func showForgotPassword(
-        login: String
-    ) {
+    func showForgotPassword() {
         
         let lastViewController = navigationController.topViewController
         let flow = ForgotPasswordFlowController(

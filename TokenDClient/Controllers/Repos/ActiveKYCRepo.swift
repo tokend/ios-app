@@ -3,7 +3,7 @@ import RxSwift
 import RxCocoa
 import TokenDSDK
 
-class ActiveKYCRepo {
+public class ActiveKYCRepo {
 
     // MARK: - Private properties
 
@@ -12,6 +12,7 @@ class ActiveKYCRepo {
 
     private let latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider
     private let activeKycBehaviorRelay: BehaviorRelay<KYCForm?> = .init(value: nil)
+    private let activeKYCStorageManager: ActiveKYCStorageManagerProtocol
 
     private let disposeBag: DisposeBag = .init()
 
@@ -26,13 +27,15 @@ class ActiveKYCRepo {
     init(
         accountRepo: AccountRepo,
         blobsApi: BlobsApi,
-        latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider
+        latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider,
+        activeKYCStorageManager: ActiveKYCStorageManagerProtocol
     ) {
 
         self.accountRepo = accountRepo
         self.blobsApi = blobsApi
         self.latestChangeRoleRequestProvider = latestChangeRoleRequestProvider
-
+        self.activeKYCStorageManager = activeKYCStorageManager
+        
         observeAccountRepo()
     }
 }
@@ -54,14 +57,14 @@ private extension ActiveKYCRepo {
                             switch result {
 
                             case .failure:
-                                self?.activeKycBehaviorRelay.accept(nil)
+                                self?.acceptKYC(with: nil)
 
                             case .success(let form):
-                                self?.activeKycBehaviorRelay.accept(form.0)
+                                self?.acceptKYC(with: form.0)
                             }
                     })
                 } else {
-                    self?.activeKycBehaviorRelay.accept(nil)
+                    self?.acceptKYC(with: nil)
                 }
             })
             .disposed(by: disposeBag)
@@ -91,6 +94,11 @@ private extension ActiveKYCRepo {
                 }
             }
         )
+    }
+    
+    func acceptKYC(with value: KYCForm?) {
+        activeKycBehaviorRelay.accept(value)
+        activeKYCStorageManager.updateStorage(with: value)
     }
 }
 
@@ -175,13 +183,15 @@ private extension BlobResponse.BlobContent {
     }
 }
 
-extension ActiveKYCRepo {
+public extension ActiveKYCRepo {
 
     struct KYCForm: Decodable, AccountKYCForm {
                 
         // TODO: - Fill with fields
         
-        var documents: [String : KYCDocument] {
+        let documents: Documents
+        
+        var documentsKeyMap: [String : KYCDocument] {
             // TODO: - Implement
             return [:]
         }
@@ -192,7 +202,11 @@ extension ActiveKYCRepo {
             
             // TODO: - Implement
             
-            return .init()
+            return .init(documents: .init(kycAvatar: nil))
         }
+    }
+    
+    struct Documents: Codable {
+        let kycAvatar: Document<UIImage>?
     }
 }
