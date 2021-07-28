@@ -3,6 +3,7 @@ import RxSwift
 import RxCocoa
 import TokenDSDK
 
+/// Uses `integrations` API and should be used only if needed.
 class KYCRepo {
 
     public typealias AccountId = String

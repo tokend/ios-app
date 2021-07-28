@@ -19,6 +19,7 @@ class LaunchFlowController: BaseFlowController {
     private let onSignOut: () -> Void
 
     private let registrationChecker: RegistrationCheckerProtocol
+    private let accountTypeFetcher: AccountTypeFetcherProtocol
     private lazy var accountTypeChecker: AccountTypeCheckerProtocol = initAccountTypeChecker()
     private lazy var registerWorker: RegisterWorkerProtocol = initRegisterWorker()
     private lazy var networkInfoParser: NetworkInfoParserProtocol = NetworkInfoParser()
@@ -36,6 +37,7 @@ class LaunchFlowController: BaseFlowController {
         userDataManager: UserDataManagerProtocol,
         keychainManager: KeychainManagerProtocol,
         accountTypeManager: AccountTypeManagerProtocol,
+        accountTypeFetcher: AccountTypeFetcherProtocol,
         onAuthorized: @escaping OnAuthorized,
         onSignOut: @escaping  () -> Void,
         navigationController: NavigationControllerProtocol
@@ -44,6 +46,7 @@ class LaunchFlowController: BaseFlowController {
         self.userDataManager = userDataManager
         self.keychainManager = keychainManager
         self.accountTypeManager = accountTypeManager
+        self.accountTypeFetcher = accountTypeFetcher
         self.onAuthorized = onAuthorized
         self.onSignOut = onSignOut
         self.navigationController = navigationController
@@ -473,13 +476,7 @@ private extension LaunchFlowController {
     func initAccountTypeChecker() -> AccountTypeCheckerProtocol {
         
         return TokenDAccountTypeChecker(
-            accountTypeFetcher: AccountTypeFetcher(
-                accountRoleFetcher: AccountRoleFetcher(
-                    identitiesApi: flowControllerStack.api.identitiesApi,
-                    accountsApi: flowControllerStack.apiV3.accountsApi
-                ),
-                keyValuesApi: flowControllerStack.apiV3.keyValuesApi
-            )
+            accountTypeFetcher: accountTypeFetcher
         )
     }
     

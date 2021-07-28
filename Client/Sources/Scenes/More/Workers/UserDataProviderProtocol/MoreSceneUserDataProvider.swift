@@ -14,20 +14,24 @@ extension MoreScene {
         
         private let userDataProvider: Client.UserDataProviderProtocol
         private let accountTypeManager: AccountTypeManagerProtocol
+        private let activeKYCRepo: ActiveKYCRepo
         
         private let disposeBag: DisposeBag = .init()
         
         private var shouldObserveAccountType: Bool = true
+        private var shouldObserveActiveKYC: Bool = true
         
         // MARK:
 
         init(
             userDataProvider: Client.UserDataProviderProtocol,
-            accountTypeManager: AccountTypeManagerProtocol
+            accountTypeManager: AccountTypeManagerProtocol,
+            activeKYCRepo: ActiveKYCRepo
         ) {
             
             self.userDataProvider = userDataProvider
             self.accountTypeManager = accountTypeManager
+            self.activeKYCRepo = activeKYCRepo
             
             loginBehaviorRelay = .init(value: userDataProvider.userLogin)
             accountTypeBehaviorRelay = .init(value: accountTypeManager.accountType)
@@ -64,12 +68,31 @@ private extension MoreScene.UserDataProvider {
             })
             .disposed(by: disposeBag)
     }
+    
+    func observeActiveKYCRepoIfNeeded() {
+        
+        guard shouldObserveActiveKYC
+        else {
+            return
+        }
+        
+        shouldObserveActiveKYC = false
+        
+        activeKYCRepo
+            .observeActiveKYC()
+            .subscribe(onNext: { [weak self] (kyc) in
+                
+                self?.userDataBehaviorRelay.accept(kyc.mapToUserData())
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 extension MoreScene.UserDataProvider: MoreScene.UserDataProviderProtocol {
     
     var userData: MoreScene.Model.UserData? {
-        userDataBehaviorRelay.value
+        observeActiveKYCRepoIfNeeded()
+        return activeKYCRepo.activeKyc.mapToUserData()
     }
     
     var login: String {
@@ -78,7 +101,7 @@ extension MoreScene.UserDataProvider: MoreScene.UserDataProviderProtocol {
     
     var accountType: AccountType {
         observeAccountTypeManagerIfNeeded()
-        return accountTypeBehaviorRelay.value
+        return accountTypeManager.accountType
     }
     
     func observeLogin() -> Observable<String> {
@@ -86,11 +109,29 @@ extension MoreScene.UserDataProvider: MoreScene.UserDataProviderProtocol {
     }
     
     func observeUserData() -> Observable<MoreScene.Model.UserData?> {
-        userDataBehaviorRelay.asObservable()
+        observeActiveKYCRepoIfNeeded()
+        return userDataBehaviorRelay.asObservable()
     }
     
     func observeAccountType() -> Observable<AccountType> {
         observeAccountTypeManagerIfNeeded()
         return accountTypeBehaviorRelay.asObservable()
+    }
+}
+
+extension Optional where Wrapped == ActiveKYCRepo.KYC {
+    
+    func mapToUserData() -> MoreScene.Model.UserData? {
+        
+        switch self {
+        
+        case .missing,
+             .none:
+            return nil
+            
+        case .form(let form):
+            // TODO: - Implement
+            return nil
+        }
     }
 }

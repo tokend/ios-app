@@ -4,6 +4,8 @@ import RxCocoa
 import TokenDSDK
 
 class ActiveKYCRepo {
+    
+    typealias KYC = ActiveKYC
 
     // MARK: - Private properties
 
@@ -11,13 +13,14 @@ class ActiveKYCRepo {
     private let blobsApi: BlobsApi
 
     private let latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider
-    private let activeKycBehaviorRelay: BehaviorRelay<KYCForm?> = .init(value: nil)
+    private let accountTypeFetcher: AccountTypeFetcherProtocol
+    private let activeKycBehaviorRelay: BehaviorRelay<KYC?> = .init(value: nil)
 
     private let disposeBag: DisposeBag = .init()
 
     // MARK: - Public properties
 
-    public var activeKyc: KYCForm? {
+    public var activeKyc: KYC? {
         activeKycBehaviorRelay.value
     }
 
@@ -26,11 +29,13 @@ class ActiveKYCRepo {
     init(
         accountRepo: AccountRepo,
         blobsApi: BlobsApi,
-        latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider
+        latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider,
+        accountTypeFetcher: AccountTypeFetcherProtocol
     ) {
 
         self.accountRepo = accountRepo
         self.blobsApi = blobsApi
+        self.accountTypeFetcher = accountTypeFetcher
         self.latestChangeRoleRequestProvider = latestChangeRoleRequestProvider
 
         observeAccountRepo()
@@ -46,20 +51,36 @@ private extension ActiveKYCRepo {
         accountRepo
             .observeAccount()
             .subscribe(onNext: { [weak self] (account) in
-                if let kyc = account?.kycData {
-                    self?.requestKYCBlob(
-                        kyc.blobId,
+                if let account = account,
+                   let kyc = account.kycData {
+                    
+                    self?.accountTypeFetcher.fetchAccountType(
+                        roleId: account.roleId,
                         completion: { [weak self] (result) in
-
+                            
                             switch result {
-
+                            
+                            case .success(let accountType):
+                                self?.requestKYCBlob(
+                                    kyc.blobId,
+                                    accountType: accountType,
+                                    completion: { [weak self] (result) in
+                                        
+                                        switch result {
+                                        
+                                        case .failure:
+                                            self?.activeKycBehaviorRelay.accept(nil)
+                                            
+                                        case .success(let form):
+                                            self?.activeKycBehaviorRelay.accept(form.0)
+                                        }
+                                    })
+                                
                             case .failure:
                                 self?.activeKycBehaviorRelay.accept(nil)
-
-                            case .success(let form):
-                                self?.activeKycBehaviorRelay.accept(form.0)
                             }
-                    })
+                        }
+                    )
                 } else {
                     self?.activeKycBehaviorRelay.accept(nil)
                 }
@@ -69,7 +90,8 @@ private extension ActiveKYCRepo {
 
     func requestKYCBlob(
         _ id: String,
-        completion: @escaping (Result<(KYCForm, String), Swift.Error>) -> Void
+        accountType: AccountType,
+        completion: @escaping (Result<(KYC, String), Swift.Error>) -> Void
     ) {
 
         blobsApi.getBlob(
@@ -83,7 +105,9 @@ private extension ActiveKYCRepo {
 
                 case .success(let blob):
                     do {
-                        let kyc = try blob.getBlobContent().kyc()
+                        let kyc = try blob.getBlobContent().kyc(
+                            accountType: accountType
+                        )
                         completion(.success((kyc, blob.id)))
                     } catch (let error) {
                         completion(.failure(error))
@@ -98,33 +122,51 @@ private extension ActiveKYCRepo {
 
 extension ActiveKYCRepo {
 
-    func observeActiveKYC() -> Observable<KYCForm?> {
+    func observeActiveKYC() -> Observable<KYC?> {
         activeKycBehaviorRelay.asObservable()
     }
 
+    enum LoadLatestChangeRoleRequestKYCError: Swift.Error {
+        
+        case noBlobId
+    }
     func loadLatestChangeRoleRequestKYC(
-        completion: @escaping (Result<(KYCForm, String), Swift.Error>) -> Void
+        completion: @escaping (Result<(KYC, String), Swift.Error>) -> Void
     ) {
-
+        
         latestChangeRoleRequestProvider
             .fetchLatest({ [weak self] (result) in
-
+                
                 switch result {
-
+                
                 case .failure(let error):
                     completion(.failure(error))
-
+                    
                 case .success(let request):
-
+                    
                     guard let blobId = request.changeRoleRequest.creatorDetails["blobId"] as? String
-                        else {
-                            return
+                    else {
+                        completion(.failure(LoadLatestChangeRoleRequestKYCError.noBlobId))
+                        return
                     }
-
-                    self?.requestKYCBlob(
-                        blobId,
-                        completion: completion
-                    )
+                    
+                    self?.accountTypeFetcher.fetchAccountType(
+                        roleId: "\(request.changeRoleRequest.accountRoleToSet)",
+                        completion: { [weak self] (result) in
+                            
+                            switch result {
+                            
+                            case .success(let accountType):
+                                self?.requestKYCBlob(
+                                    blobId,
+                                    accountType: accountType,
+                                    completion: completion
+                                )
+                                
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
+                        })
                 }
             })
     }
@@ -154,10 +196,16 @@ private enum BlobContentMappingError: Swift.Error {
     case wrongBlobContentType
 }
 
+
+enum BlobResponseBlobContentKYCError: Swift.Error {
+    
+    case unknownKYCFormType
+}
 private extension BlobResponse.BlobContent {
 
     func kyc(
-    ) throws -> ActiveKYCRepo.KYCForm {
+        accountType: AccountType
+    ) throws -> ActiveKYCRepo.KYC {
 
         switch self {
 
@@ -170,14 +218,40 @@ private extension BlobResponse.BlobContent {
             throw BlobContentMappingError.wrongBlobContentType
 
         case .kycData(let data):
-            return try .decode(from: data, decoder: JSONCoders.snakeCaseDecoder)
+            
+            switch accountType {
+            
+            case .general:
+                return .form(try ActiveKYCRepo.GeneralKYCForm.decode(
+                    from: data,
+                    decoder: JSONCoders.snakeCaseDecoder
+                ))
+                
+            case .corporate:
+                return .form(try ActiveKYCRepo.CorporateKYCForm.decode(
+                    from: data,
+                    decoder: JSONCoders.snakeCaseDecoder
+                ))
+                
+            case .unverified:
+                return .missing
+                
+            case .blocked:
+                throw BlobResponseBlobContentKYCError.unknownKYCFormType
+            }
         }
     }
 }
 
 extension ActiveKYCRepo {
+    
+    enum ActiveKYC {
+        
+        case missing
+        case form(AccountKYCForm)
+    }
 
-    struct KYCForm: Decodable, AccountKYCForm {
+    struct GeneralKYCForm: Decodable, AccountKYCForm {
                 
         // TODO: - Fill with fields
         
@@ -188,7 +262,26 @@ extension ActiveKYCRepo {
         
         func update(
             with documents: [String : KYCDocument]
-        ) -> ActiveKYCRepo.KYCForm {
+        ) -> ActiveKYCRepo.GeneralKYCForm {
+            
+            // TODO: - Implement
+            
+            return .init()
+        }
+    }
+    
+    struct CorporateKYCForm: Decodable, AccountKYCForm {
+                
+        // TODO: - Fill with fields
+        
+        var documents: [String : KYCDocument] {
+            // TODO: - Implement
+            return [:]
+        }
+        
+        func update(
+            with documents: [String : KYCDocument]
+        ) -> ActiveKYCRepo.CorporateKYCForm {
             
             // TODO: - Implement
             

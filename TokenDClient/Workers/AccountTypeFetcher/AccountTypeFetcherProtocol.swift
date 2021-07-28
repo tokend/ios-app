@@ -29,4 +29,9 @@ protocol AccountTypeFetcherProtocol {
         login: String,
         completion: @escaping (Result<AccountType, Swift.Error>) -> Void
     )
+    
+    func fetchAccountType(
+        roleId: String,
+        completion: @escaping (Result<AccountType, Swift.Error>) -> Void
+    )
 }

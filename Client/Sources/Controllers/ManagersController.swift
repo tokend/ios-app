@@ -14,6 +14,7 @@ class ManagersController {
     public let latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider
     public let precisionProvider: PrecisionProvider
     public let accountTypeManager: AccountTypeManagerProtocol
+    public let accountTypeFetcher: AccountTypeFetcherProtocol
     public let notificationsRegisterer: FirebaseNotificationsRegistererProtocol?
     public let tfaManager: TFAManagerProtocol
     public private(set) lazy var accountKYCFormSender: AccountKYCFormSenderProtocol = {
@@ -61,6 +62,7 @@ class ManagersController {
         latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider,
         precisionProvider: PrecisionProvider,
         accountTypeManager: AccountTypeManagerProtocol,
+        accountTypeFetcher: AccountTypeFetcherProtocol,
         notificationsRegisterer: FirebaseNotificationsRegistererProtocol?,
         tfaManager: TFAManagerProtocol
         ) {
@@ -77,6 +79,7 @@ class ManagersController {
         self.latestChangeRoleRequestProvider = latestChangeRoleRequestProvider
         self.precisionProvider = precisionProvider
         self.accountTypeManager = accountTypeManager
+        self.accountTypeFetcher = accountTypeFetcher
         self.notificationsRegisterer = notificationsRegisterer
         self.tfaManager = tfaManager
     }

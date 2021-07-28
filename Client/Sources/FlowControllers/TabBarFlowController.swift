@@ -235,7 +235,8 @@ private extension TabBarFlowController {
         
         let userDataProvider: MoreScene.UserDataProvider = .init(
             userDataProvider: userDataProvider,
-            accountTypeManager: managersController.accountTypeManager
+            accountTypeManager: managersController.accountTypeManager,
+            activeKYCRepo: reposController.activeKycRepo
         )
         
         MoreScene.Configurator.configure(
