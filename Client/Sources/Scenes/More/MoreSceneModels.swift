@@ -28,7 +28,7 @@ extension MoreScene.Model {
         
         var login: String
         var accountType: AccountType
-        var userData: UserData?
+        var userData: UserType?
         var loadingStatus: LoadingStatus
         var items: [Item]
     }
@@ -49,11 +49,21 @@ extension MoreScene.Model {
         case loaded
     }
     
-    public struct UserData {
-        
-        let avatarUrl: URL
+    public enum UserType {
+        case general(GeneralUserInfo)
+        case corporate(CorporateUserInfo)
+    }
+    
+    public struct GeneralUserInfo {
+        let avatarUrl: URL?
         let name: String
         let surname: String
+    }
+    
+    public struct CorporateUserInfo {
+        let avatarUrl: URL?
+        let name: String
+        let company: String
     }
     
     public enum Item: String {

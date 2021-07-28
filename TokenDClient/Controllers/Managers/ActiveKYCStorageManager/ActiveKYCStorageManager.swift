@@ -47,35 +47,22 @@ extension ActiveKYCStorageManager: ActiveKYCStorageManagerProtocol {
     }
     
     func updateStorage(with form: AccountKYCForm?) {
-//        if let activeKYCForm = form as? ActiveKYCRepo.GeneralKYCForm {
-//            let avatarUrl = activeKYCForm.documents.kycAvatar?.imageUrl(imagesUtility: imagesUtility)
-//            self.setUserDefaultsAvatarUrl(avatarUrl?.absoluteString)
-//            avatarUrlBehaviorRelay.accept(avatarUrl)
-//        } else {
-//            self.setUserDefaultsAvatarUrl(nil)
-//            avatarUrlBehaviorRelay.accept(nil)
-//        }
+        if let generalKYCForm = form as? ActiveKYCRepo.GeneralKYCForm {
+            let avatarUrl = generalKYCForm.documents.kycAvatar?.imageUrl(imagesUtility: imagesUtility)
+            self.setUserDefaultsAvatarUrl(avatarUrl?.absoluteString)
+            avatarUrlBehaviorRelay.accept(avatarUrl)
+        } else if let corporateKYCForm = form as? ActiveKYCRepo.CorporateKYCForm {
+            let avatarUrl = corporateKYCForm.documents.kycAvatar?.imageUrl(imagesUtility: imagesUtility)
+            self.setUserDefaultsAvatarUrl(avatarUrl?.absoluteString)
+            avatarUrlBehaviorRelay.accept(avatarUrl)
+        } else {
+            self.setUserDefaultsAvatarUrl(nil)
+            avatarUrlBehaviorRelay.accept(nil)
+        }
     }
     
     func resetStorage() {
         userDefaults.removeObject(forKey: avatarUrlUserDefaultsKey)
         avatarUrlBehaviorRelay.accept(nil)
-    }
-}
-
-private extension Document {
-
-    func imageUrl(
-        imagesUtility: ImagesUtility
-    ) -> URL? {
-
-        switch self {
-
-        case .new:
-            return nil
-
-        case .uploaded(let attachment):
-            return imagesUtility.getImageURL(attachment)
-        }
     }
 }

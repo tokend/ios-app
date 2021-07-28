@@ -72,15 +72,15 @@ private extension ActiveKYCRepo {
                                         switch result {
                                         
                                         case .failure:
-                                            self?.activeKycBehaviorRelay.accept(nil)
+                                            self?.acceptKYC(with: nil)
                                             
                                         case .success(let form):
-                                            self?.activeKycBehaviorRelay.accept(form.0)
+                                            self?.acceptKYC(with: form.0)
                                         }
                                     })
                                 
                             case .failure:
-                                self?.activeKycBehaviorRelay.accept(nil)
+                                self?.acceptKYC(with: nil)
                             }
                         }
                     )
@@ -113,6 +113,8 @@ private extension ActiveKYCRepo {
                         )
                         completion(.success((kyc, blob.id)))
                     } catch (let error) {
+                        print(#function)
+                        print(error)
                         completion(.failure(error))
                     }
                 }
@@ -272,6 +274,10 @@ public extension ActiveKYCRepo {
                 
         // TODO: - Fill with fields
         
+        let firstName: String
+        let lastName: String
+        let documents: Documents
+        
         public var documentsKeyMap: [String : KYCDocument] {
             // TODO: - Implement
             return [:]
@@ -283,13 +289,17 @@ public extension ActiveKYCRepo {
             
             // TODO: - Implement
             
-            return .init()
+            return .init(firstName: self.firstName, lastName: self.lastName, documents: self.documents)
         }
     }
     
     struct CorporateKYCForm: Decodable, AccountKYCForm {
                 
         // TODO: - Fill with fields
+        
+        let name: String
+        let company: String
+        let documents: Documents
         
         public var documentsKeyMap: [String : KYCDocument] {
             // TODO: - Implement
@@ -302,7 +312,7 @@ public extension ActiveKYCRepo {
             
             // TODO: - Implement
             
-            return .init()
+            return .init(name: self.name, company: self.company, documents: self.documents)
         }
     }
     

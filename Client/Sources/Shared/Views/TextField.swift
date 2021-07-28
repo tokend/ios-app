@@ -25,6 +25,7 @@ final class TextField: UIView {
     
     // MARK: - Private properties
     
+    private let containerView: UIView = .init()
     private let gestureRecognizer: UITapGestureRecognizer = .init()
     private let titleLabel: UILabel = .init()
     private let textField: UITextField = .init()
@@ -199,6 +200,7 @@ private extension TextField {
     
     func commonInit() {
         setupView()
+        setupContainerView()
         setupTitleLabel()
         setupTextField()
         setupImagesStackView()
@@ -209,15 +211,18 @@ private extension TextField {
     
     func setupView() {
         backgroundColor = NameSpace.commonBackgroundColor
-        
-        gestureRecognizer.delegate = self
-        gestureRecognizer.cancelsTouchesInView = false
-        gestureRecognizer.addTarget(self, action: #selector(tapGestureAction))
-        addGestureRecognizer(gestureRecognizer)
     }
     
     @objc func tapGestureAction() {
         becomeFirstResponder()
+    }
+    
+    func setupContainerView() {
+        backgroundColor = NameSpace.commonBackgroundColor
+        gestureRecognizer.delegate = self
+        gestureRecognizer.cancelsTouchesInView = false
+        gestureRecognizer.addTarget(self, action: #selector(tapGestureAction))
+        containerView.addGestureRecognizer(gestureRecognizer)
     }
     
     func setupTitleLabel() {
@@ -275,11 +280,16 @@ private extension TextField {
     }
     
     func setupLayout() {
+        addSubview(containerView)
         addSubview(titleLabel)
         addSubview(textField)
         addSubview(imagesStackView)
         imagesStackView.addArrangedSubview(passwordImageView)
         addSubview(errorLabel)
+        
+        containerView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
         
         titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)

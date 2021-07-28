@@ -46,11 +46,39 @@ private extension MoreScene.Presenter {
         let userSectionId: String = "user_section"
         
         if let user = sceneModel.userData {
+            
+            let avatar: TokenDUIImage?
+            let abbreviation: String
+            let name: String
+            
+            switch user {
+            
+            case .general(let info):
+                if let avatarUrl = info.avatarUrl {
+                    avatar = .url(avatarUrl)
+                } else {
+                    avatar = nil
+                }
+                
+                abbreviation = [info.name.firstCharacterString ?? "", info.surname.firstCharacterString ?? ""].joined().uppercased()
+                name = [info.name, info.surname].joined(separator: " ")
+                
+            case .corporate(let info):
+                if let avatarUrl = info.avatarUrl {
+                    avatar = .url(avatarUrl)
+                } else {
+                    avatar = nil
+                }
+                
+                abbreviation = info.name.firstCharacterString ?? ""
+                name = info.name
+            }
+            
             let userCell = MoreScene.UserCell.ViewModel(
                 id: userCellId,
-                avatar: .url(user.avatarUrl),
-                abbreviation: [user.name.firstCharacterString ?? "", user.surname.firstCharacterString ?? ""].joined().uppercased(),
-                name: [user.name, user.surname].joined(separator: " "),
+                avatar: avatar,
+                abbreviation: abbreviation,
+                name: name,
                 accountType: sceneModel.accountType.localizedTitle
             )
             

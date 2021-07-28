@@ -8,13 +8,14 @@ extension MoreScene {
         
         // MARK: Private properties
         
-        private let userDataBehaviorRelay: BehaviorRelay<MoreScene.Model.UserData?>
+        private let userDataBehaviorRelay: BehaviorRelay<MoreScene.Model.UserType?>
         private let loginBehaviorRelay: BehaviorRelay<String>
         private let accountTypeBehaviorRelay: BehaviorRelay<AccountType>
         
         private let userDataProvider: Client.UserDataProviderProtocol
         private let accountTypeManager: AccountTypeManagerProtocol
         private let activeKYCRepo: ActiveKYCRepo
+        private let imagesUtility: ImagesUtility
         
         private let disposeBag: DisposeBag = .init()
         
@@ -26,12 +27,14 @@ extension MoreScene {
         init(
             userDataProvider: Client.UserDataProviderProtocol,
             accountTypeManager: AccountTypeManagerProtocol,
-            activeKYCRepo: ActiveKYCRepo
+            activeKYCRepo: ActiveKYCRepo,
+            imagesUtility: ImagesUtility
         ) {
             
             self.userDataProvider = userDataProvider
             self.accountTypeManager = accountTypeManager
             self.activeKYCRepo = activeKYCRepo
+            self.imagesUtility = imagesUtility
             
             loginBehaviorRelay = .init(value: userDataProvider.userLogin)
             accountTypeBehaviorRelay = .init(value: accountTypeManager.accountType)
@@ -77,7 +80,12 @@ private extension MoreScene.UserDataProvider {
             .observeActiveKYC()
             .subscribe(onNext: { [weak self] (kyc) in
                 
-                self?.userDataBehaviorRelay.accept(kyc.mapToUserData())
+                guard let imagesUtility = self?.imagesUtility
+                else {
+                    return
+                }
+                
+                self?.userDataBehaviorRelay.accept(kyc.mapToUserData(imagesUtility: imagesUtility))
             })
             .disposed(by: disposeBag)
     }
@@ -85,9 +93,9 @@ private extension MoreScene.UserDataProvider {
 
 extension MoreScene.UserDataProvider: MoreScene.UserDataProviderProtocol {
     
-    var userData: MoreScene.Model.UserData? {
+    var userData: MoreScene.Model.UserType? {
         observeActiveKYCRepoIfNeeded()
-        return activeKYCRepo.activeKyc.mapToUserData()
+        return activeKYCRepo.activeKyc.mapToUserData(imagesUtility: self.imagesUtility)
     }
     
     var login: String {
@@ -103,7 +111,7 @@ extension MoreScene.UserDataProvider: MoreScene.UserDataProviderProtocol {
         loginBehaviorRelay.asObservable()
     }
     
-    func observeUserData() -> Observable<MoreScene.Model.UserData?> {
+    func observeUserData() -> Observable<MoreScene.Model.UserType?> {
         observeActiveKYCRepoIfNeeded()
         return userDataBehaviorRelay.asObservable()
     }
@@ -116,7 +124,9 @@ extension MoreScene.UserDataProvider: MoreScene.UserDataProviderProtocol {
 
 extension Optional where Wrapped == ActiveKYCRepo.KYC {
     
-    func mapToUserData() -> MoreScene.Model.UserData? {
+    func mapToUserData(
+        imagesUtility: ImagesUtility
+    ) -> MoreScene.Model.UserType? {
         
         switch self {
         
@@ -125,7 +135,24 @@ extension Optional where Wrapped == ActiveKYCRepo.KYC {
             return nil
             
         case .form(let form):
-            // TODO: - Implement
+            if let generalForm = form as? ActiveKYCRepo.GeneralKYCForm {
+                return .general(
+                    .init(
+                        avatarUrl: generalForm.documents.kycAvatar?.imageUrl(imagesUtility: imagesUtility),
+                        name: generalForm.firstName,
+                        surname: generalForm.lastName
+                    )
+                )
+            } else if let corporateForm = form as? ActiveKYCRepo.CorporateKYCForm {
+                return .corporate(
+                    .init(
+                        avatarUrl: corporateForm.documents.kycAvatar?.imageUrl(imagesUtility: imagesUtility),
+                        name: corporateForm.name,
+                        company: corporateForm.company
+                    )
+                )
+            }
+            
             return nil
         }
     }

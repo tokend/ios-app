@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0D0CC83626A5AC29002B0543 /* TokenDAccountTypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */; };
+		0D26E82326B1AC1F008E1C9C /* Document+ImageUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */; };
 		0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */; };
 		0D2FA2E62695CC720018B7D4 /* SignInSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */; };
 		0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */; };
@@ -237,15 +238,6 @@
 		0DDC5A9026AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */; };
 		0DDC5A9426AF09BB0004D326 /* LocalSignInWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */; };
 		0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */; };
-		0DDC5A6B26A99BC40004D326 /* CGFloat+ConvertToPixels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6A26A99BC40004D326 /* CGFloat+ConvertToPixels.swift */; };
-		0DDC5A6C26A9A0E50004D326 /* NetworkInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6526A7EF380004D326 /* NetworkInfoProviderProtocol.swift */; };
-		0DDC5A6D26A9A0E70004D326 /* NetworkInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A6726A7EF520004D326 /* NetworkInfoProvider.swift */; };
-		0DDC5A6E26A9A0F50004D326 /* SignUpSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5826A7D8550004D326 /* SignUpSceneModels.swift */; };
-		0DDC5A6F26A9A0F50004D326 /* SignUpSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5926A7D8560004D326 /* SignUpSceneViewController.swift */; };
-		0DDC5A7026A9A0F50004D326 /* SignUpSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5B26A7D8560004D326 /* SignUpSceneConfigurator.swift */; };
-		0DDC5A7126A9A0F50004D326 /* SignUpSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5A26A7D8560004D326 /* SignUpSceneInteractor.swift */; };
-		0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5626A7D8550004D326 /* SignUpScenePresenter.swift */; };
-		0DDC5A7326A9A0F50004D326 /* SignUpSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A5726A7D8550004D326 /* SignUpSceneRouting.swift */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
 		C39BB59126A85B4D00AC642B /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58626A85B4D00AC642B /* TabBarView.swift */; };
@@ -284,6 +276,7 @@
 
 /* Begin PBXFileReference section */
 		0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDAccountTypeChecker.swift; sourceTree = "<group>"; };
+		0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Document+ImageUrl.swift"; sourceTree = "<group>"; };
 		0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInScenePresenter.swift; sourceTree = "<group>"; };
 		0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneRouting.swift; sourceTree = "<group>"; };
 		0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneModels.swift; sourceTree = "<group>"; };
@@ -1366,6 +1359,7 @@
 			isa = PBXGroup;
 			children = (
 				0DDC5A6A26A99BC40004D326 /* CGFloat+ConvertToPixels.swift */,
+				0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1870,6 +1864,7 @@
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
 				C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
+				0D26E82326B1AC1F008E1C9C /* Document+ImageUrl.swift in Sources */,
 				0D59BD132694930700B6658F /* KYCFlowController.swift in Sources */,
 				0D59BD172694930700B6658F /* LocalAuthFlowController.swift in Sources */,
 				0D59BD012694930700B6658F /* Theme.swift in Sources */,

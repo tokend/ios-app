@@ -4,11 +4,11 @@ import RxSwift
 public protocol MoreSceneUserDataProviderProtocol {
     
     var login: String { get }
-    var userData: MoreScene.Model.UserData? { get }
+    var userData: MoreScene.Model.UserType? { get }
     var accountType: AccountType { get }
     
     func observeLogin() -> Observable<String>
-    func observeUserData() -> Observable<MoreScene.Model.UserData?>
+    func observeUserData() -> Observable<MoreScene.Model.UserType?>
     func observeAccountType() -> Observable<AccountType>
 }
 
