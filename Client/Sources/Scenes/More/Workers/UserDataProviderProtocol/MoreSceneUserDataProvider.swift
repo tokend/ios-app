@@ -38,11 +38,6 @@ extension MoreScene {
             
             userDataBehaviorRelay = .init(
                 value: nil
-//                value: .init(
-//                    avatarUrl: URL(string: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hammond_Slides_Russia_20.jpg/305px-Hammond_Slides_Russia_20.jpg")!,
-//                    name: "Yehor",
-//                    surname: "Miroshnychenko"
-//                )
             )
         }
     }

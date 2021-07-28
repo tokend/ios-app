@@ -34,18 +34,6 @@ public class AccountTypeManager {
 // MARK: - Private methods
 
 private extension AccountTypeManager {
-
-    func checkTheme() {
-        // TODO: - Implement if needed
-//        switch getType() {
-//        case .guest:
-//            Theme.Colors.applyGuestTheme()
-//        case .host:
-//            Theme.Colors.applyHostTheme()
-//        case .general:
-//            Theme.Colors.applyDefaultTheme()
-//        }
-    }
     
     func getType() -> AccountType {
         
@@ -73,7 +61,6 @@ extension AccountTypeManager: AccountTypeManagerProtocol {
 
         self.userDefaults.setValue(type.userDefaultsValue, forKey: accountTypeKey)
         accountTypeBehaviorRelay.accept(type)
-        checkTheme()
     }
     
     func observeAccountType() -> Observable<AccountType> {
@@ -85,8 +72,6 @@ extension AccountTypeManager: AccountTypeManagerProtocol {
 
         self.userDefaults.removeObject(forKey: accountTypeKey)
         accountTypeBehaviorRelay.accept(getType())
-
-        checkTheme()
     }
 }
 
