@@ -125,4 +125,15 @@ extension AccountTypeFetcher: AccountTypeFetcherProtocol {
             completion: completion
         )
     }
+    
+    func fetchAccountType(
+        roleId: String,
+        completion: @escaping (Result<AccountType, Error>) -> Void
+    ) {
+        
+        getAccountType(
+            roleId: roleId,
+            completion: completion
+        )
+    }
 }

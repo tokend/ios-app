@@ -132,6 +132,7 @@ extension AccountRepo {
         let id: AccountIdentifier
         let balances: [Balance]
         let kycData: KYCData?
+        let roleId: String
     }
 }
 
@@ -174,7 +175,8 @@ extension Horizon.AccountResource {
     func mapToAccount() throws -> AccountRepo.Account {
 
         guard let id = self.id,
-            let rawBalances = self.balances
+            let rawBalances = self.balances,
+            let roleId = self.role?.id
             else {
                 throw AccountMapperError.notEnoughData
         }
@@ -197,7 +199,8 @@ extension Horizon.AccountResource {
         return .init(
             id: id,
             balances: balances,
-            kycData: kycData
+            kycData: kycData,
+            roleId: roleId
         )
     }
 }

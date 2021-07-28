@@ -10,6 +10,7 @@ class TabBarFlowController: BaseSignedInFlowController {
     enum Tab: String {
         case balances
         case movements
+        case more
     }
     
     // MARK: - Private properties
@@ -23,7 +24,8 @@ class TabBarFlowController: BaseSignedInFlowController {
     private let onPerformSignOut: OnSignOut
     private let tabsOrder: [Tab] = [
         .balances,
-        .movements
+        .movements,
+        .more
     ]
     
     private lazy var tabBar: TabBar.View = .init()
@@ -184,6 +186,13 @@ private extension TabBarFlowController {
                 showContent(controller, animation)
             })
             return true
+            
+        case .more:
+            selectedTab = tab
+            showMoreFlow(showRootScreen: { (controller) in
+                showContent(controller, animation)
+            })
+            return true
         }
     }
     
@@ -203,6 +212,43 @@ private extension TabBarFlowController {
         let controller: UIViewController = .init()
         controller.view.backgroundColor = .blue
         showRootScreen(controller)
+    }
+    
+    func showMoreFlow(
+        showRootScreen: @escaping (UIViewController) -> Void
+    ) {
+        
+        let navigationController: UINavigationController = .init()
+        
+        let controller: MoreScene.ViewController = .init()
+        controller.navigationItem.title = Localized(.more_scene_title)
+        
+        let routing: MoreScene.Routing = .init(
+            onUserTap: {},
+            onDepositTap: {},
+            onWithdrawTap: {},
+            onExploreSalesTap: {},
+            onTradeTap: {},
+            onPollsTap: {},
+            onSettingsTap: {}
+        )
+        
+        let userDataProvider: MoreScene.UserDataProvider = .init(
+            userDataProvider: userDataProvider,
+            accountTypeManager: managersController.accountTypeManager,
+            activeKYCRepo: reposController.activeKycRepo
+        )
+        
+        MoreScene.Configurator.configure(
+            viewController: controller,
+            routing: routing,
+            userDataProvider: userDataProvider
+        )
+        
+        navigationController.setViewControllers([controller], animated: false)
+        controller.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        showRootScreen(navigationController)
     }
 }
 

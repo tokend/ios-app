@@ -1,7 +1,7 @@
 import Foundation
 import TokenDSDK
 
-enum AccountType: CaseIterable {
+public enum AccountType: CaseIterable {
     
     case blocked
     case corporate
@@ -27,6 +27,11 @@ protocol AccountTypeFetcherProtocol {
     
     func fetchAccountType(
         login: String,
+        completion: @escaping (Result<AccountType, Swift.Error>) -> Void
+    )
+    
+    func fetchAccountType(
+        roleId: String,
         completion: @escaping (Result<AccountType, Swift.Error>) -> Void
     )
 }

@@ -19,6 +19,7 @@ class LaunchFlowController: BaseFlowController {
     private let onSignOut: () -> Void
 
     private let registrationChecker: RegistrationCheckerProtocol
+    private let accountTypeFetcher: AccountTypeFetcherProtocol
     private lazy var accountTypeChecker: AccountTypeCheckerProtocol = initAccountTypeChecker()
     private lazy var registerWorker: RegisterWorkerProtocol = initRegisterWorker()
     private lazy var networkInfoParser: NetworkInfoParserProtocol = NetworkInfoParser()
@@ -36,6 +37,7 @@ class LaunchFlowController: BaseFlowController {
         userDataManager: UserDataManagerProtocol,
         keychainManager: KeychainManagerProtocol,
         accountTypeManager: AccountTypeManagerProtocol,
+        accountTypeFetcher: AccountTypeFetcherProtocol,
         onAuthorized: @escaping OnAuthorized,
         onSignOut: @escaping  () -> Void,
         navigationController: NavigationControllerProtocol
@@ -44,6 +46,7 @@ class LaunchFlowController: BaseFlowController {
         self.userDataManager = userDataManager
         self.keychainManager = keychainManager
         self.accountTypeManager = accountTypeManager
+        self.accountTypeFetcher = accountTypeFetcher
         self.onAuthorized = onAuthorized
         self.onSignOut = onSignOut
         self.navigationController = navigationController
@@ -179,7 +182,7 @@ private extension LaunchFlowController {
         animated: Bool
     ) {
 
-        accountTypeManager.setType(accountTypeManager.getType())
+        accountTypeManager.setType(accountTypeManager.accountType)
 
         let flow = LocalAuthFlowController(
             login: login,
@@ -244,31 +247,24 @@ private extension LaunchFlowController {
                     password: password,
                     completion: { [weak self] (result) in
                         
-                        self?.navigationController.hideProgress()
-                        
                         switch result {
                         
                         case .success(login: let login):
-                            self?.accountTypeChecker.checkAccountType(
+                            self?.checkAccountType(
                                 login: login,
-                                completion: { [weak self] (result) in
-                                    
-                                    switch result {
-                                    
-                                    case .success(let type):
+                                completion: { [weak self] (accountType) in
+                                    self?.navigationController.hideProgress()
+                                    if let type = accountType {
+                                        
+                                        self?.accountTypeManager.setType(type)
                                         self?.onAuthorized(login, type)
-
-                                    case .failure:
-                                        self?.navigationController.showErrorMessage(
-                                            Localized(.error_unknown),
-                                            completion: nil
-                                        )
                                     }
                                 }
                             )
                             
                         case .failure(let error):
                             
+                            self?.navigationController.hideProgress()
                             switch error {
                             
                             case KeyServerApi.GetWalletError.wrongPassword:
@@ -479,7 +475,9 @@ private extension LaunchFlowController {
     
     func initAccountTypeChecker() -> AccountTypeCheckerProtocol {
         
-        return TokenDAccountTypeChecker()
+        return TokenDAccountTypeChecker(
+            accountTypeFetcher: accountTypeFetcher
+        )
     }
     
     func initRegisterWorker() -> RegisterWorkerProtocol! {

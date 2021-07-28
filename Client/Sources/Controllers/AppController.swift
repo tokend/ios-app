@@ -15,6 +15,7 @@ class AppController {
     var userDataManager: UserDataManagerProtocol & TFADataProviderProtocol
     var keychainManager: KeychainManagerProtocol
     let accountTypeManager: AccountTypeManagerProtocol
+    private lazy var accountTypeFetcher: AccountTypeFetcherProtocol = initAccountTypeFetcher()
     private let notificationsRegisterer: FirebaseNotificationsRegistererProtocol?
     private lazy var reposControllerStack: ReposControllerStack = {
         return self.setupReposControllerStack()
@@ -180,6 +181,7 @@ class AppController {
             userDataManager: self.userDataManager,
             keychainManager: self.keychainManager,
             accountTypeManager: accountTypeManager,
+            accountTypeFetcher: accountTypeFetcher,
             onAuthorized: { [weak self] (account, accountType) in
                 self?.runSignedInFlowController(account: account, accountType: accountType)
             },
@@ -262,6 +264,7 @@ class AppController {
             latestChangeRoleRequestProvider: latestChangeRoleProvider,
             precisionProvider: self.flowControllerStack.precisionProvider,
             accountTypeManager: accountTypeManager,
+            accountTypeFetcher: accountTypeFetcher,
             notificationsRegisterer: notificationsRegisterer,
             tfaManager: tfaManager
         )
@@ -295,6 +298,17 @@ class AppController {
         )
         self.currentFlowController = flowController
         flowController.run()
+    }
+    
+    func initAccountTypeFetcher() -> AccountTypeFetcherProtocol {
+        
+        return AccountTypeFetcher(
+            accountRoleFetcher: AccountRoleFetcher(
+                identitiesApi: flowControllerStack.api.identitiesApi,
+                accountsApi: flowControllerStack.apiV3.accountsApi
+            ),
+            keyValuesApi: flowControllerStack.apiV3.keyValuesApi
+        )
     }
     
     private func setupReposControllerStack() -> ReposControllerStack {
