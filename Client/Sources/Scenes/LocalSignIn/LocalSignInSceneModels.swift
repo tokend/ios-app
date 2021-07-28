@@ -17,7 +17,7 @@ public enum LocalSignInScene {
 extension LocalSignInScene.Model {
     
     struct SceneModel {
-        var avatarUrl: String?
+        var avatarUrl: URL?
         var login: String
         var password: String?
         var passwordError: PasswordError?
@@ -25,7 +25,7 @@ extension LocalSignInScene.Model {
     }
     
     struct SceneViewModel {
-        let avatarUrl: String?
+        let avatarUrl: URL?
         let avatarTitle: String
         let login: String
         let password: String?

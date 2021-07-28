@@ -4,8 +4,8 @@ import RxCocoa
 
 public protocol LocalSignInUserAvatarUrlProviderProtocol {
     
-    var avatarUrl: String? { get }
-    func observeAvatarUrl() -> Observable<String?>
+    var avatarUrl: URL? { get }
+    func observeAvatarUrl() -> Observable<URL?>
 }
 
 extension LocalSignInScene {

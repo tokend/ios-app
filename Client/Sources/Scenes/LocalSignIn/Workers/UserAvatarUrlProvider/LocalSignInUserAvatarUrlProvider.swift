@@ -8,7 +8,7 @@ extension LocalSignInScene {
         
         // MARK: - Private properties
         
-        private let avatarUrlBehaviorRelay: BehaviorRelay<String?>
+        private let avatarUrlBehaviorRelay: BehaviorRelay<URL?>
         private let activeKYCStorageManager: ActiveKYCStorageManagerProtocol
         
         private var shouldObserveManager: Bool = true
@@ -39,11 +39,11 @@ private extension LocalSignInScene.UserAvatarUrlProvider {
 }
 
 extension LocalSignInScene.UserAvatarUrlProvider: LocalSignInScene.UserAvatarUrlProviderProtocol {
-    var avatarUrl: String? {
+    var avatarUrl: URL? {
         avatarUrlBehaviorRelay.value
     }
     
-    func observeAvatarUrl() -> Observable<String?> {
+    func observeAvatarUrl() -> Observable<URL?> {
         if shouldObserveManager {
             observeStorageManager()
             shouldObserveManager = false

@@ -345,9 +345,7 @@ private extension LocalSignInScene.ViewController {
             biometricsButton.isHidden = true
         }
         
-        if avatarImageView.image == nil,
-           let stringUrl = sceneViewModel.avatarUrl,
-           let url = URL(string: stringUrl) {
+        if let url = sceneViewModel.avatarUrl {
             Nuke.loadImage(with: url, into: avatarImageView)
         }
     }

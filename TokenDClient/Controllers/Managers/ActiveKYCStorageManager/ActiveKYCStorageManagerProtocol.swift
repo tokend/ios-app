@@ -4,10 +4,10 @@ import RxCocoa
 
 public protocol ActiveKYCStorageManagerProtocol {
     
-    var avatarUrl: String? { get }
+    var avatarUrl: URL? { get }
     
-    func observeKYCAvatar() -> Observable<String?>
+    func observeKYCAvatar() -> Observable<URL?>
     
-    func updateStorage(with form: ActiveKYCRepo.KYCForm?)
+    func updateStorage(with form: AccountKYCForm?)
     func resetStorage()
 }

@@ -191,12 +191,12 @@ public extension ActiveKYCRepo {
         
         let documents: Documents
         
-        var documentsKeyMap: [String : KYCDocument] {
+        public var documentsKeyMap: [String : KYCDocument] {
             // TODO: - Implement
             return [:]
         }
         
-        func update(
+        public func update(
             with documents: [String : KYCDocument]
         ) -> ActiveKYCRepo.KYCForm {
             
