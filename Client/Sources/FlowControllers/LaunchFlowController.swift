@@ -15,6 +15,7 @@ class LaunchFlowController: BaseFlowController {
     private var userDataManager: UserDataManagerProtocol
     private var keychainManager: KeychainManagerProtocol
     private let accountTypeManager: AccountTypeManagerProtocol
+    private let activeKYCStorageManager: ActiveKYCStorageManagerProtocol
     private let onAuthorized: OnAuthorized
     private let onSignOut: () -> Void
 
@@ -40,7 +41,8 @@ class LaunchFlowController: BaseFlowController {
         accountTypeFetcher: AccountTypeFetcherProtocol,
         onAuthorized: @escaping OnAuthorized,
         onSignOut: @escaping  () -> Void,
-        navigationController: NavigationControllerProtocol
+        navigationController: NavigationControllerProtocol,
+        activeKYCStorageManager: ActiveKYCStorageManagerProtocol
     ) {
         
         self.userDataManager = userDataManager
@@ -50,6 +52,7 @@ class LaunchFlowController: BaseFlowController {
         self.onAuthorized = onAuthorized
         self.onSignOut = onSignOut
         self.navigationController = navigationController
+        self.activeKYCStorageManager = activeKYCStorageManager
         self.registrationChecker = RegistrationChecker(
             keyServerApi: flowControllerStack.keyServerApi
         )
@@ -148,26 +151,27 @@ class LaunchFlowController: BaseFlowController {
     }
     
     func start(animated: Bool) {
-//        var launchUrl: URL?
-//        if let launchOptions = self.appController.getLaunchOptions() {
-//            launchUrl = LaunchFlowController.canHandle(
-//                launchOptions: launchOptions,
-//                userDataManager: self.userDataManager
-//            )
-//        }
+        var launchUrl: URL?
+        if let launchOptions = self.appController.getLaunchOptions() {
+            launchUrl = LaunchFlowController.canHandle(
+                launchOptions: launchOptions,
+                userDataManager: self.userDataManager
+            )
+        }
 
-//        if let login = self.userDataManager.getMainAccount(),
-//            self.userDataManager.hasWalletDataForMainAccount(),
-//            !self.userDataManager.isSignedViaAuthenticator() {
-//
-//            self.runLocalAuthFlow(login: login, animated: animated)
-//        }  else {
+        if let login = self.userDataManager.getMainAccount(),
+            self.userDataManager.hasWalletDataForMainAccount(),
+            !self.userDataManager.isSignedViaAuthenticator() {
+
+            self.runLocalAuthFlow(login: login, animated: animated)
+        } else {
 
             let vc = initSignIn()
             
             navigationController.setNavigationBarHidden(false, animated: true)
             self.startFrom(vcs: [vc], animated: animated)
             vc.navigationController?.navigationBar.prefersLargeTitles = true
+        }
     }
 }
 
@@ -189,6 +193,7 @@ private extension LaunchFlowController {
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
             rootNavigation: self.rootNavigation,
+            userDataManager: self.userDataManager,
             keychainManager: self.keychainManager,
             onAuthorized: { [weak self] in
                 
@@ -214,7 +219,8 @@ private extension LaunchFlowController {
             onSignOut: { [weak self] in
                 self?.onSignOut()
             },
-            navigationController: navigationController
+            navigationController: navigationController,
+            activeKYCStorageManager: self.activeKYCStorageManager
         )
         self.currentFlowController = flow
         flow.run(

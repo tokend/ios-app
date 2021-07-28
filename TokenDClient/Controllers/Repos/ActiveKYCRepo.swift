@@ -3,9 +3,9 @@ import RxSwift
 import RxCocoa
 import TokenDSDK
 
-class ActiveKYCRepo {
+public class ActiveKYCRepo {
     
-    typealias KYC = ActiveKYC
+    public typealias KYC = ActiveKYC
 
     // MARK: - Private properties
 
@@ -15,6 +15,7 @@ class ActiveKYCRepo {
     private let latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider
     private let accountTypeFetcher: AccountTypeFetcherProtocol
     private let activeKycBehaviorRelay: BehaviorRelay<KYC?> = .init(value: nil)
+    private let activeKYCStorageManager: ActiveKYCStorageManagerProtocol
 
     private let disposeBag: DisposeBag = .init()
 
@@ -30,14 +31,16 @@ class ActiveKYCRepo {
         accountRepo: AccountRepo,
         blobsApi: BlobsApi,
         latestChangeRoleRequestProvider: LatestChangeRoleRequestProvider,
-        accountTypeFetcher: AccountTypeFetcherProtocol
+        accountTypeFetcher: AccountTypeFetcherProtocol,
+        activeKYCStorageManager: ActiveKYCStorageManagerProtocol
     ) {
 
         self.accountRepo = accountRepo
         self.blobsApi = blobsApi
         self.accountTypeFetcher = accountTypeFetcher
         self.latestChangeRoleRequestProvider = latestChangeRoleRequestProvider
-
+        self.activeKYCStorageManager = activeKYCStorageManager
+        
         observeAccountRepo()
     }
 }
@@ -82,7 +85,7 @@ private extension ActiveKYCRepo {
                         }
                     )
                 } else {
-                    self?.activeKycBehaviorRelay.accept(nil)
+                    self?.acceptKYC(with: nil)
                 }
             })
             .disposed(by: disposeBag)
@@ -115,6 +118,20 @@ private extension ActiveKYCRepo {
                 }
             }
         )
+    }
+    
+    func acceptKYC(with value: KYC?) {
+        activeKycBehaviorRelay.accept(value)
+        
+        switch value {
+        
+        case .missing,
+             .none:
+            activeKYCStorageManager.resetStorage()
+            
+        case .form(let form):
+            activeKYCStorageManager.updateStorage(with: form)
+        }
     }
 }
 
@@ -243,7 +260,7 @@ private extension BlobResponse.BlobContent {
     }
 }
 
-extension ActiveKYCRepo {
+public extension ActiveKYCRepo {
     
     enum ActiveKYC {
         
@@ -255,12 +272,12 @@ extension ActiveKYCRepo {
                 
         // TODO: - Fill with fields
         
-        var documents: [String : KYCDocument] {
+        public var documentsKeyMap: [String : KYCDocument] {
             // TODO: - Implement
             return [:]
         }
         
-        func update(
+        public func update(
             with documents: [String : KYCDocument]
         ) -> ActiveKYCRepo.GeneralKYCForm {
             
@@ -274,12 +291,12 @@ extension ActiveKYCRepo {
                 
         // TODO: - Fill with fields
         
-        var documents: [String : KYCDocument] {
+        public var documentsKeyMap: [String : KYCDocument] {
             // TODO: - Implement
             return [:]
         }
         
-        func update(
+        public func update(
             with documents: [String : KYCDocument]
         ) -> ActiveKYCRepo.CorporateKYCForm {
             
@@ -287,5 +304,9 @@ extension ActiveKYCRepo {
             
             return .init()
         }
+    }
+    
+    struct Documents: Codable {
+        let kycAvatar: Document<UIImage>?
     }
 }

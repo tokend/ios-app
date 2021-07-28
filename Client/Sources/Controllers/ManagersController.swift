@@ -17,11 +17,10 @@ class ManagersController {
     public let accountTypeFetcher: AccountTypeFetcherProtocol
     public let notificationsRegisterer: FirebaseNotificationsRegistererProtocol?
     public let tfaManager: TFAManagerProtocol
+    public let activeKYCStorageManager: ActiveKYCStorageManagerProtocol
+    public let imagesUtility: ImagesUtility
     public private(set) lazy var accountKYCFormSender: AccountKYCFormSenderProtocol = {
         createAccountKYCFormSender()
-    }()
-    public private(set) lazy var imagesUtility: ImagesUtility = {
-        createImagesUtility()
     }()
     public private(set) lazy var notificationsSettingsManager: NotificationsSettingsManagerProtocol = {
         createNotificationsSettingsManagerProtocol()
@@ -64,7 +63,9 @@ class ManagersController {
         accountTypeManager: AccountTypeManagerProtocol,
         accountTypeFetcher: AccountTypeFetcherProtocol,
         notificationsRegisterer: FirebaseNotificationsRegistererProtocol?,
-        tfaManager: TFAManagerProtocol
+        tfaManager: TFAManagerProtocol,
+        activeKYCStorageManager: ActiveKYCStorageManagerProtocol,
+        imagesUtility: ImagesUtility
         ) {
 
         self.managersControllerStack = managersControllerStack
@@ -82,6 +83,8 @@ class ManagersController {
         self.accountTypeFetcher = accountTypeFetcher
         self.notificationsRegisterer = notificationsRegisterer
         self.tfaManager = tfaManager
+        self.activeKYCStorageManager = activeKYCStorageManager
+        self.imagesUtility = imagesUtility
     }
 }
 
@@ -104,13 +107,6 @@ private extension ManagersController {
             changeRoleRequestSender: changeRoleRequestSender,
             originalAccountId: userDataProvider.walletData.accountId
         )
-    }
-
-    private func createImagesUtility() -> ImagesUtility {
-        let repo = ImagesUtility(
-            storageUrl: managersControllerStack.storageUrl
-        )
-        return repo
     }
 
     private func createNotificationsSettingsManagerProtocol() -> NotificationsSettingsManagerProtocol {

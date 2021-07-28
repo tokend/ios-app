@@ -116,10 +116,6 @@ private extension SignUpScene.ViewController {
         navigationItem.title = Localized(.sign_up_title)
     }
     
-    @objc func didTapNavigationItem() {
-        routing?.onBackAction()
-    }
-    
     func setupScrollView() {
         scrollView.backgroundColor = Theme.Colors.mainBackgroundColor
         scrollView.alwaysBounceVertical = false

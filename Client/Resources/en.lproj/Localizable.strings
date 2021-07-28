@@ -52,6 +52,9 @@
 "tfa_code_placeholder" = "Code";
 "tfa_password_title" = "Please enter your password";
 "tfa_password_placeholder" = "Password";
+"touch_id_title" = "Touch ID";
+"face_id_title" = "Face ID";
+"sign_out_button" = "Sign Out";
 "more_tab_title" = "More";
 "more_scene_title" = "More";
 "more_deposit_title" = "Deposit";

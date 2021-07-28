@@ -7,9 +7,9 @@ enum AccountKYCFormSenderResult {
     case failure(Swift.Error)
 }
 
-protocol AccountKYCForm: Encodable {
+public protocol AccountKYCForm: Encodable {
     
-    var documents: [String: KYCDocument] { get }
+    var documentsKeyMap: [String: KYCDocument] { get }
     
     func update(
         with documents: [String: KYCDocument]
@@ -25,11 +25,11 @@ protocol AccountKYCFormSenderProtocol {
     )
 }
 
-enum Document<Data: Equatable>: Codable, Equatable {
+public enum Document<Data: Equatable>: Codable, Equatable {
     case uploaded(BlobResponse.BlobContent.Attachment)
     case new(Data, uploadPolicy: String)
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         
         let attachment: BlobResponse.BlobContent.Attachment = try .init(from: decoder)
         self = .uploaded(attachment)
@@ -38,7 +38,7 @@ enum Document<Data: Equatable>: Codable, Equatable {
     enum EncodingError: Swift.Error {
         case cannotEncodeData(Data)
     }
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         
         switch self {
         
@@ -64,7 +64,7 @@ extension BlobResponse.BlobContent.Attachment: Equatable {
     }
 }
 
-extension AccountKYCForm {
+public extension AccountKYCForm {
     
     typealias KYCDocument = Document<UIImage>
 }

@@ -56,6 +56,9 @@ enum LocKey: String {
     case tfa_code_placeholder
     case tfa_password_title
     case tfa_password_placeholder
+    case touch_id_title
+    case face_id_title
+    case sign_out_button
     case more_tab_title
     case more_scene_title
     case more_deposit_title

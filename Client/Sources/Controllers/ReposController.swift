@@ -79,7 +79,8 @@ private extension ReposController {
             accountRepo: accountRepo,
             blobsApi: reposControllerStack.api.blobsApi,
             latestChangeRoleRequestProvider: managersController.latestChangeRoleRequestProvider,
-            accountTypeFetcher: managersController.accountTypeFetcher
+            accountTypeFetcher: managersController.accountTypeFetcher,
+            activeKYCStorageManager: managersController.activeKYCStorageManager
         )
         return repo
     }

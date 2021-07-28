@@ -38,7 +38,7 @@ extension AccountKYCFormEncoder {
         
         group.enter()
         
-        var newDocuments: [String: AccountKYCForm.KYCDocument] = form.documents
+        var newDocuments: [String: AccountKYCForm.KYCDocument] = form.documentsKeyMap
         
         for documentKey in newDocuments.keys {
             

@@ -15,6 +15,12 @@ class AppController {
     var userDataManager: UserDataManagerProtocol & TFADataProviderProtocol
     var keychainManager: KeychainManagerProtocol
     let accountTypeManager: AccountTypeManagerProtocol
+    private lazy var imagesUtility: ImagesUtility = .init(
+        storageUrl: managersControllerStack.storageUrl
+    )
+    private lazy var activeKYCStorageManager: ActiveKYCStorageManagerProtocol = ActiveKYCStorageManager(
+        imagesUtility: imagesUtility
+    )
     private lazy var accountTypeFetcher: AccountTypeFetcherProtocol = initAccountTypeFetcher()
     private let notificationsRegisterer: FirebaseNotificationsRegistererProtocol?
     private lazy var reposControllerStack: ReposControllerStack = {
@@ -188,7 +194,8 @@ class AppController {
             onSignOut: { [weak self] in
                 self?.initiateSignOut()
             },
-            navigationController: navigationController
+            navigationController: navigationController,
+            activeKYCStorageManager: self.activeKYCStorageManager
         )
         self.currentFlowController = launchFlowController
         launchFlowController.start(animated: animated)
@@ -266,7 +273,9 @@ class AppController {
             accountTypeManager: accountTypeManager,
             accountTypeFetcher: accountTypeFetcher,
             notificationsRegisterer: notificationsRegisterer,
-            tfaManager: tfaManager
+            tfaManager: tfaManager,
+            activeKYCStorageManager: self.activeKYCStorageManager,
+            imagesUtility: self.imagesUtility
         )
         let reposController = ReposController(
             reposControllerStack: self.reposControllerStack,
@@ -368,6 +377,7 @@ class AppController {
 
             self?.notificationsRegisterer?.unregisterFromNotifications()
             self?.accountTypeManager.resetType()
+            self?.activeKYCStorageManager.resetStorage()
             self?.runLaunchFlow(animated: true)
             completion?()
         })
@@ -390,6 +400,7 @@ class AppController {
             handler: { [weak self] _ in
                 self?.performSignOut(completion: { [weak self] in
                     self?.accountTypeManager.resetType()
+                    self?.activeKYCStorageManager.resetStorage()
                     self?.rootNavigation.hideBackgroundCover()
                     completion?()
                 })
