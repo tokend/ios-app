@@ -26,12 +26,12 @@ protocol AccountKYCFormSenderProtocol {
 }
 
 public enum Document<Data: Equatable>: Codable, Equatable {
-    case uploaded(BlobResponse.BlobContent.Attachment)
+    case uploaded(BlobResponse.Attachment)
     case new(Data, uploadPolicy: String)
     
     public init(from decoder: Decoder) throws {
         
-        let attachment: BlobResponse.BlobContent.Attachment = try .init(from: decoder)
+        let attachment: BlobResponse.Attachment = try .init(from: decoder)
         self = .uploaded(attachment)
     }
     
@@ -52,9 +52,9 @@ public enum Document<Data: Equatable>: Codable, Equatable {
     }
 }
 
-extension BlobResponse.BlobContent.Attachment: Equatable {
+extension BlobResponse.Attachment: Equatable {
 
-    public typealias SelfType = BlobResponse.BlobContent.Attachment
+    public typealias SelfType = BlobResponse.Attachment
 
     public static func ==(left: SelfType, right: SelfType) -> Bool {
 

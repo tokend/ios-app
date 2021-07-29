@@ -4,7 +4,7 @@ import TokenDSDK
 extension ImagesUtility {
     
     public func getImageURL(
-        _ attachment: BlobResponse.BlobContent.Attachment?
+        _ attachment: BlobResponse.Attachment?
     ) -> URL? {
         
         guard let attachment = attachment

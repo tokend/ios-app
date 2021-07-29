@@ -11,7 +11,7 @@ PODS:
   - DLJSONAPI (1.0.9):
     - DLJSONAPI/Default (= 1.0.9)
   - DLJSONAPI/Default (1.0.9)
-  - DLOpenSSL (1.0.2)
+  - DLOpenSSL (1.1.1100)
   - Nuke (9.1.2)
   - QRCodeReader.swift (10.1.0)
   - RxCocoa (6.0.0-rc.1):
@@ -22,23 +22,23 @@ PODS:
   - RxSwift (6.0.0-rc.1)
   - SnapKit (5.0.1)
   - SwiftKeychainWrapper (4.0.1)
-  - TokenDSDK (4.0.1):
-    - TokenDSDK/API (= 4.0.1)
-    - TokenDSDK/JSONAPI (= 4.0.1)
-    - TokenDSDK/KeyServer (= 4.0.1)
+  - TokenDSDK (4.0.2):
+    - TokenDSDK/API (= 4.0.2)
+    - TokenDSDK/JSONAPI (= 4.0.2)
+    - TokenDSDK/KeyServer (= 4.0.2)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/AlamofireNetwork (4.0.1):
+  - TokenDSDK/AlamofireNetwork (4.0.2):
     - Alamofire (= 5.3.0)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (4.0.1):
+  - TokenDSDK/AlamofireNetworkJSONAPI (4.0.2):
     - Alamofire (= 5.3.0)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/API (4.0.1):
+  - TokenDSDK/API (4.0.2):
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/JSONAPI (4.0.1):
+  - TokenDSDK/JSONAPI (4.0.2):
     - DLJSONAPI (>= 1.0.9)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/KeyServer (4.0.1):
+  - TokenDSDK/KeyServer (4.0.2):
     - TokenDWallet (= 3.1.1)
   - TokenDWallet (3.1.1):
     - DLCryptoKit (>= 2.0.2)
@@ -51,11 +51,11 @@ DEPENDENCIES:
   - RxSwift (= 6.0.0-rc.1)
   - SnapKit (= 5.0.1)
   - SwiftKeychainWrapper (= 4.0.1)
-  - TokenDSDK (= 4.0.1)
-  - TokenDSDK/AlamofireNetwork (= 4.0.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (= 4.0.1)
-  - TokenDSDK/JSONAPI (= 4.0.1)
-  - TokenDSDK/KeyServer (= 4.0.1)
+  - TokenDSDK (= 4.0.2)
+  - TokenDSDK/AlamofireNetwork (= 4.0.2)
+  - TokenDSDK/AlamofireNetworkJSONAPI (= 4.0.2)
+  - TokenDSDK/JSONAPI (= 4.0.2)
+  - TokenDSDK/KeyServer (= 4.0.2)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -80,7 +80,7 @@ SPEC CHECKSUMS:
   DifferenceKit: 516f12e336ed65a3a0665847b5c3cb5cad4bd4ea
   DLCryptoKit: 89c9b51260db5a08ca73b81eba2dd5a6a9792ce1
   DLJSONAPI: 6cccdea7276f50ed127b90b95a402b3eacdb0704
-  DLOpenSSL: 78d928228cb6d95fcaa354f4f9aba041ccf95457
+  DLOpenSSL: 30059698d6b4fb7554f6e063b4df55dbaa48a4cf
   Nuke: dd2e6be6a34c042a7861e190632781d11f253026
   QRCodeReader.swift: 373a389fe9a22d513c879a32a6f647c58f4ef572
   RxCocoa: a28d75145c07b7547b85faf1e1ad8b25af88a752
@@ -88,9 +88,9 @@ SPEC CHECKSUMS:
   RxSwift: dae1a32c48148897494b9e2a6b00a68b40694236
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
-  TokenDSDK: 9131c1e925f536b4f2104b5fe2494592b1fcfdd6
+  TokenDSDK: b95311f8039ba74b8d3ee8753c0c4f146eace211
   TokenDWallet: d13f6dfd420e9258ff4734e2d52e57bcdfc60eb3
 
-PODFILE CHECKSUM: 65e29684c7f1e28c97eb1fe45e2640003b9ccf7c
+PODFILE CHECKSUM: f075a4ed72aae52ba8f612d18f719f326d0c3223
 
 COCOAPODS: 1.10.1

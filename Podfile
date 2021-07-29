@@ -9,11 +9,11 @@ source 'https://github.com/tokend/ios-specs.git'
 
 def token_d_pods
   
-  pod 'TokenDSDK',                          '4.0.1'
-  pod 'TokenDSDK/AlamofireNetwork',         '4.0.1'
-  pod 'TokenDSDK/JSONAPI',                  '4.0.1'
-  pod 'TokenDSDK/AlamofireNetworkJSONAPI',  '4.0.1'
-  pod 'TokenDSDK/KeyServer',                '4.0.1'
+  pod 'TokenDSDK',                          '4.0.2'
+  pod 'TokenDSDK/AlamofireNetwork',         '4.0.2'
+  pod 'TokenDSDK/JSONAPI',                  '4.0.2'
+  pod 'TokenDSDK/AlamofireNetworkJSONAPI',  '4.0.2'
+  pod 'TokenDSDK/KeyServer',                '4.0.2'
   
 end
 

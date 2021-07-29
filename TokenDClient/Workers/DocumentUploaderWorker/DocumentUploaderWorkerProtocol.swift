@@ -43,4 +43,4 @@ public protocol DocumentUploaderWorkerProtocol {
     )
 }
 
-public typealias UploadedAttachment = BlobResponse.BlobContent.Attachment
+public typealias UploadedAttachment = BlobResponse.Attachment

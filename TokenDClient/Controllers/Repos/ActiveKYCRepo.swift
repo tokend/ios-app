@@ -108,13 +108,11 @@ private extension ActiveKYCRepo {
 
                 case .success(let blob):
                     do {
-                        let kyc = try blob.getBlobContent().kyc(
+                        let kyc = try blob.kyc(
                             accountType: accountType
                         )
                         completion(.success((kyc, blob.id)))
                     } catch (let error) {
-                        print(#function)
-                        print(error)
                         completion(.failure(error))
                     }
                 }
@@ -220,44 +218,25 @@ enum BlobResponseBlobContentKYCError: Swift.Error {
     
     case unknownKYCFormType
 }
-private extension BlobResponse.BlobContent {
+private extension BlobResponse {
 
     func kyc(
         accountType: AccountType
     ) throws -> ActiveKYCRepo.KYC {
-
-        switch self {
-
-        case .assetDescription,
-             .fundDocument,
-             .fundOverview,
-             .fundUpdate,
-             .tokenMetrics,
-             .unknown:
-            throw BlobContentMappingError.wrongBlobContentType
-
-        case .kycData(let data):
+        
+        switch accountType {
+        
+        case .general:
+            return .form(try getValue() as ActiveKYCRepo.GeneralKYCForm)
             
-            switch accountType {
+        case .corporate:
+            return .form(try getValue() as ActiveKYCRepo.CorporateKYCForm)
             
-            case .general:
-                return .form(try ActiveKYCRepo.GeneralKYCForm.decode(
-                    from: data,
-                    decoder: JSONCoders.snakeCaseDecoder
-                ))
-                
-            case .corporate:
-                return .form(try ActiveKYCRepo.CorporateKYCForm.decode(
-                    from: data,
-                    decoder: JSONCoders.snakeCaseDecoder
-                ))
-                
-            case .unverified:
-                return .missing
-                
-            case .blocked:
-                throw BlobResponseBlobContentKYCError.unknownKYCFormType
-            }
+        case .unverified:
+            return .missing
+            
+        case .blocked:
+            throw BlobResponseBlobContentKYCError.unknownKYCFormType
         }
     }
 }

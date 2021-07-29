@@ -54,22 +54,14 @@ private extension MoreScene.Presenter {
             switch user {
             
             case .general(let info):
-                if let avatarUrl = info.avatarUrl {
-                    avatar = .url(avatarUrl)
-                } else {
-                    avatar = nil
-                }
                 
+                avatar = .init(url: info.avatarUrl)
                 abbreviation = [info.name.firstCharacterString ?? "", info.surname.firstCharacterString ?? ""].joined().uppercased()
                 name = [info.name, info.surname].joined(separator: " ")
                 
             case .corporate(let info):
-                if let avatarUrl = info.avatarUrl {
-                    avatar = .url(avatarUrl)
-                } else {
-                    avatar = nil
-                }
                 
+                avatar = .init(url: info.avatarUrl)
                 abbreviation = info.name.firstCharacterString ?? ""
                 name = info.name
             }
