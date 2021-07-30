@@ -16,6 +16,7 @@ class TabBarFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
 
     private let navigationController: NavigationControllerProtocol = NavigationController()
+    private lazy var moreTabNavigationController: NavigationControllerProtocol = initMoreFlow()
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
     private var selectedTab: Tab?
@@ -218,13 +219,21 @@ private extension TabBarFlowController {
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
         
-        let navigationController: UINavigationController = .init()
+        showRootScreen(moreTabNavigationController.getViewController())
+    }
+    
+    func initMoreFlow(
+    ) -> NavigationControllerProtocol {
+        
+        let navigationController: NavigationControllerProtocol = NavigationController()
         
         let controller: MoreScene.ViewController = .init()
         controller.navigationItem.title = Localized(.more_scene_title)
         
         let routing: MoreScene.Routing = .init(
-            onUserTap: {},
+            onUserTap: { [weak self] in
+                self?.showAccountId(in: navigationController)
+            },
             onDepositTap: {},
             onWithdrawTap: {},
             onExploreSalesTap: {},
@@ -249,7 +258,62 @@ private extension TabBarFlowController {
         navigationController.setViewControllers([controller], animated: false)
         controller.navigationController?.navigationBar.prefersLargeTitles = true
         
-        showRootScreen(navigationController)
+        return navigationController
+    }
+    
+    func showAccountId(in navigationController: NavigationControllerProtocol) {
+        
+        navigationController.pushViewController(
+            initAccountId(
+                onBack: {
+                    navigationController.popViewController(true)
+                }
+            ),
+            animated: true
+        )
+    }
+    
+    func initAccountId(
+        onBack: @escaping () -> Void
+    ) -> UIViewController {
+        
+        let viewController: AccountIDScene.ViewController = .init()
+        viewController.hidesBottomBarWhenPushed = true
+        
+        let routing: AccountIDScene.Routing = .init(
+            onBackAction: onBack,
+            onShare: { [weak self] (valueToShare) in
+                self?.shareValue(valueToShare)
+            }
+        )
+        
+        let accountIdProvider: AccountIDScene.AccountIDProvider = .init(
+            userDataProvider: userDataProvider
+        )
+        
+        AccountIDScene.Configurator.configure(
+            viewController: viewController,
+            routing: routing,
+            accountIdProvider: accountIdProvider
+        )
+        
+        return viewController
+    }
+    
+    func shareValue(
+        _ value: String
+    ) {
+        
+        let activity: UIActivityViewController = .init(
+            activityItems: [value],
+            applicationActivities: nil
+        )
+        
+        navigationController.present(
+            activity,
+            animated: true,
+            completion: nil
+        )
     }
 }
 
