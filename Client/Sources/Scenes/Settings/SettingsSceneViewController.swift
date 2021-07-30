@@ -1,24 +1,23 @@
 import UIKit
 import DifferenceKit
 
-public protocol MoreSceneDisplayLogic: AnyObject {
+public protocol SettingsSceneDisplayLogic: AnyObject {
     
-    typealias Event = MoreScene.Event
+    typealias Event = SettingsScene.Event
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
-    func displayItemTapSync(viewModel: Event.ItemTapSync.ViewModel)
 }
 
-extension MoreScene {
+extension SettingsScene {
     
-    public typealias DisplayLogic = MoreSceneDisplayLogic
+    public typealias DisplayLogic = SettingsSceneDisplayLogic
     
-    @objc(MoreSceneViewController)
+    @objc(SettingsSceneViewController)
     public class ViewController: BaseViewController {
         
-        public typealias Event = MoreScene.Event
-        public typealias Model = MoreScene.Model
+        public typealias Event = SettingsScene.Event
+        public typealias Model = SettingsScene.Model
         
         // MARK: -
         
@@ -72,13 +71,18 @@ extension MoreScene {
 
 // MARK: - Private methods
 
-private extension MoreScene.ViewController {
+private extension SettingsScene.ViewController {
     
     func setup() {
+        setupView()
         setupTableView()
         setupRefreshControl()
-        
         setupLayout()
+    }
+    
+    func setupView() {
+        navigationItem.title = Localized(.settings_title)
+        view.backgroundColor = Theme.Colors.mainBackgroundColor
     }
     
     func setupTableView() {
@@ -88,9 +92,10 @@ private extension MoreScene.ViewController {
         tableView.estimatedSectionFooterHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
         
+//        tableView.refreshControl = refreshControl
+        
         tableView.register(
             classes: [
-                MoreScene.UserCell.ViewModel.self,
                 IconTitleDisclosureCell.ViewModel.self
             ]
         )
@@ -112,11 +117,11 @@ private extension MoreScene.ViewController {
     }
     
     func setupLayout() {
-        
         view.addSubview(tableView)
         
-        tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        tableView.snp.makeConstraints { (make) in
+            make.top.equalTo(view.safeArea.top)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
     
@@ -172,7 +177,7 @@ private extension MoreScene.ViewController {
 
 // MARK: UITableViewDataSource
 
-extension MoreScene.ViewController: UITableViewDataSource {
+extension SettingsScene.ViewController: UITableViewDataSource {
     
     public func numberOfSections(
         in tableView: UITableView
@@ -203,7 +208,7 @@ extension MoreScene.ViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate
 
-extension MoreScene.ViewController: UITableViewDelegate {
+extension SettingsScene.ViewController: UITableViewDelegate {
     
     public func tableView(
         _ tableView: UITableView,
@@ -225,15 +230,12 @@ extension MoreScene.ViewController: UITableViewDelegate {
         
         let cell = self.cell(for: indexPath)
         
-        if cell is MoreScene.UserCell.ViewModel {
-            routing?.onUserTap()
-        } else if let item = cell as? IconTitleDisclosureCell.ViewModel {
-            let request: Event.ItemTapSync.Request = .init(
-                id: item.id
-            )
-            interactorDispatch?.sendSyncRequest(requestBlock: { businessLogic in
-                businessLogic.onItemTapSync(request: request)
-            })
+        if let disclosureCell = cell as? IconTitleDisclosureCell.ViewModel {
+            
+            let request: Event.DidTapItemSync.Request = .init(id: disclosureCell.id)
+            interactorDispatch?.sendSyncRequest { (businessLogic) in
+                businessLogic.onDidTapItemSync(request: request)
+            }
         }
     }
     
@@ -271,7 +273,7 @@ extension MoreScene.ViewController: UITableViewDelegate {
 
 // MARK: - DisplayLogic
 
-extension MoreScene.ViewController: MoreScene.DisplayLogic {
+extension SettingsScene.ViewController: SettingsScene.DisplayLogic {
     
     public func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
@@ -279,24 +281,5 @@ extension MoreScene.ViewController: MoreScene.DisplayLogic {
     
     public func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
-    }
-    
-    public func displayItemTapSync(viewModel: Event.ItemTapSync.ViewModel) {
-        
-        switch viewModel.item {
-        
-        case .deposit:
-            routing?.onDepositTap()
-        case .withdraw:
-            routing?.onWithdrawTap()
-        case .exploreSales:
-            routing?.onExploreSalesTap()
-        case .trade:
-            routing?.onTradeTap()
-        case .polls:
-            routing?.onPollsTap()
-        case .settings:
-            routing?.onSettingsTap()
-        }
     }
 }

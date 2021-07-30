@@ -230,7 +230,9 @@ private extension TabBarFlowController {
             onExploreSalesTap: {},
             onTradeTap: {},
             onPollsTap: {},
-            onSettingsTap: {}
+            onSettingsTap: { [weak self] in
+                self?.showSettings()
+            }
         )
         
         let userDataProvider: MoreScene.UserDataProvider = .init(
@@ -250,6 +252,40 @@ private extension TabBarFlowController {
         controller.navigationController?.navigationBar.prefersLargeTitles = true
         
         showRootScreen(navigationController)
+    }
+    
+    func showSettings() {
+        let vc: SettingsScene.ViewController = initSettings()
+        navigationController.setNavigationBarHidden(false, animated: true)
+        self.navigationController.pushViewController(vc, animated: true)
+        vc.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    func initSettings(
+    ) -> SettingsScene.ViewController {
+        
+        let vc: SettingsScene.ViewController = .init()
+        
+        let routing: SettingsScene.Routing = .init(
+            onLanguageTap: { [weak self] in },
+            onAccountIdTap: { [weak self] in },
+            onVerificationTap: { [weak self] in },
+            onSecretSeedTap: { [weak self] in },
+            onSignOutTap: { [weak self] in
+                self?.onAskSignOut()
+            },
+            onChangePasswordTap: { [weak self] in }
+        )
+        
+        let biometricsInfoProvider: BiometricsInfoProviderProtocol = BiometricsInfoProvider()
+        
+        SettingsScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            biometricsInfoProvider: biometricsInfoProvider
+        )
+        
+        return vc
     }
 }
 

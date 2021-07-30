@@ -3,12 +3,21 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0D0CC83626A5AC29002B0543 /* TokenDAccountTypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */; };
 		0D26E82326B1AC1F008E1C9C /* Document+ImageUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */; };
+		0D26E82B26B2D6C5008E1C9C /* SettingsScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82526B2D6C5008E1C9C /* SettingsScenePresenter.swift */; };
+		0D26E82C26B2D6C5008E1C9C /* SettingsSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82626B2D6C5008E1C9C /* SettingsSceneRouting.swift */; };
+		0D26E82D26B2D6C5008E1C9C /* SettingsSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82726B2D6C5008E1C9C /* SettingsSceneModels.swift */; };
+		0D26E82E26B2D6C5008E1C9C /* SettingsSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82826B2D6C5008E1C9C /* SettingsSceneViewController.swift */; };
+		0D26E82F26B2D6C5008E1C9C /* SettingsSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82926B2D6C5008E1C9C /* SettingsSceneInteractor.swift */; };
+		0D26E83026B2D6C5008E1C9C /* SettingsSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E82A26B2D6C5008E1C9C /* SettingsSceneConfigurator.swift */; };
+		0D26E83326B2DA47008E1C9C /* IconTitleDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E83226B2DA47008E1C9C /* IconTitleDisclosureCell.swift */; };
+		0D26E83726B2F0F1008E1C9C /* SettingsSceneUserSecurityItemsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E83626B2F0F1008E1C9C /* SettingsSceneUserSecurityItemsProviderProtocol.swift */; };
+		0D26E83926B2F0F9008E1C9C /* SettingsSceneUserSecurityItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26E83826B2F0F9008E1C9C /* SettingsSceneUserSecurityItemsProvider.swift */; };
 		0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */; };
 		0D2FA2E62695CC720018B7D4 /* SignInSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */; };
 		0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */; };
@@ -268,7 +277,6 @@
 		C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5BD26A9C97200AC642B /* MoreSceneConfigurator.swift */; };
 		C39BB5C626A9D22A00AC642B /* MoreSceneUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C526A9D22A00AC642B /* MoreSceneUserCell.swift */; };
 		C39BB5C826A9D29C00AC642B /* UIImageView+TokenDUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */; };
-		C39BB5CA26AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */; };
 		C39BB5CD26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */; };
 		C39BB5D026AEC08E00AC642B /* MoreSceneUserDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
@@ -277,6 +285,15 @@
 /* Begin PBXFileReference section */
 		0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDAccountTypeChecker.swift; sourceTree = "<group>"; };
 		0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Document+ImageUrl.swift"; sourceTree = "<group>"; };
+		0D26E82526B2D6C5008E1C9C /* SettingsScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScenePresenter.swift; sourceTree = "<group>"; };
+		0D26E82626B2D6C5008E1C9C /* SettingsSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneRouting.swift; sourceTree = "<group>"; };
+		0D26E82726B2D6C5008E1C9C /* SettingsSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneModels.swift; sourceTree = "<group>"; };
+		0D26E82826B2D6C5008E1C9C /* SettingsSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneViewController.swift; sourceTree = "<group>"; };
+		0D26E82926B2D6C5008E1C9C /* SettingsSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneInteractor.swift; sourceTree = "<group>"; };
+		0D26E82A26B2D6C5008E1C9C /* SettingsSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneConfigurator.swift; sourceTree = "<group>"; };
+		0D26E83226B2DA47008E1C9C /* IconTitleDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTitleDisclosureCell.swift; sourceTree = "<group>"; };
+		0D26E83626B2F0F1008E1C9C /* SettingsSceneUserSecurityItemsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneUserSecurityItemsProviderProtocol.swift; sourceTree = "<group>"; };
+		0D26E83826B2F0F9008E1C9C /* SettingsSceneUserSecurityItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneUserSecurityItemsProvider.swift; sourceTree = "<group>"; };
 		0D2FA2DF2695CC720018B7D4 /* SignInScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInScenePresenter.swift; sourceTree = "<group>"; };
 		0D2FA2E02695CC720018B7D4 /* SignInSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneRouting.swift; sourceTree = "<group>"; };
 		0D2FA2E12695CC720018B7D4 /* SignInSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSceneModels.swift; sourceTree = "<group>"; };
@@ -545,7 +562,6 @@
 		C39BB5BD26A9C97200AC642B /* MoreSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneConfigurator.swift; sourceTree = "<group>"; };
 		C39BB5C526A9D22A00AC642B /* MoreSceneUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserCell.swift; sourceTree = "<group>"; };
 		C39BB5C726A9D29C00AC642B /* UIImageView+TokenDUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+TokenDUIImage.swift"; sourceTree = "<group>"; };
-		C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneIconTitleDisclosureCell.swift; sourceTree = "<group>"; };
 		C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserDataProviderProtocol.swift; sourceTree = "<group>"; };
 		C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserDataProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -562,13 +578,53 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D26E82426B2D69C008E1C9C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				0D26E82A26B2D6C5008E1C9C /* SettingsSceneConfigurator.swift */,
+				0D26E82926B2D6C5008E1C9C /* SettingsSceneInteractor.swift */,
+				0D26E82726B2D6C5008E1C9C /* SettingsSceneModels.swift */,
+				0D26E82526B2D6C5008E1C9C /* SettingsScenePresenter.swift */,
+				0D26E82626B2D6C5008E1C9C /* SettingsSceneRouting.swift */,
+				0D26E82826B2D6C5008E1C9C /* SettingsSceneViewController.swift */,
+				0D26E83426B2F09A008E1C9C /* Workers */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		0D26E83126B2DA32008E1C9C /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				0D26E83226B2DA47008E1C9C /* IconTitleDisclosureCell.swift */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		0D26E83426B2F09A008E1C9C /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				0D26E83526B2F0A5008E1C9C /* UserSecurityItemsProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		0D26E83526B2F0A5008E1C9C /* UserSecurityItemsProvider */ = {
+			isa = PBXGroup;
+			children = (
+				0D26E83826B2F0F9008E1C9C /* SettingsSceneUserSecurityItemsProvider.swift */,
+				0D26E83626B2F0F1008E1C9C /* SettingsSceneUserSecurityItemsProviderProtocol.swift */,
+			);
+			path = UserSecurityItemsProvider;
+			sourceTree = "<group>";
+		};
 		0D2FA2DD2695CC350018B7D4 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				C39BB5B726A9C8F700AC642B /* More */,
 				0DDC5A7426A9D0500004D326 /* LocalSignIn */,
-				0DDC5A5526A7D82D0004D326 /* SignUp */,
+				C39BB5B726A9C8F700AC642B /* More */,
+				0D26E82426B2D69C008E1C9C /* Settings */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
+				0DDC5A5526A7D82D0004D326 /* SignUp */,
 				C39BB58326A85B4D00AC642B /* TabBar */,
 				C39BB59826A85B7400AC642B /* TabBarContainer */,
 				C39BB5AA26A8600500AC642B /* TabContentContainer */,
@@ -603,9 +659,10 @@
 			isa = PBXGroup;
 			children = (
 				0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */,
+				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 				0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */,
-				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
+				0D26E83126B2DA32008E1C9C /* TableView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1497,7 +1554,6 @@
 		C39BB5C426A9D21C00AC642B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */,
 				C39BB5C526A9D22A00AC642B /* MoreSceneUserCell.swift */,
 			);
 			path = Views;
@@ -1669,6 +1725,7 @@
 				0D59BD35269493BB00B6658F /* BehaviorRelay+EmitValue.swift in Sources */,
 				0D59BD36269493BB00B6658F /* Array+Take.swift in Sources */,
 				0D59BD37269493BB00B6658F /* String+Extension.swift in Sources */,
+				0D26E82F26B2D6C5008E1C9C /* SettingsSceneInteractor.swift in Sources */,
 				0D59BD38269493BB00B6658F /* Hashable+Iterate.swift in Sources */,
 				C39BB5BF26A9C97200AC642B /* MoreSceneRouting.swift in Sources */,
 				0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */,
@@ -1685,6 +1742,7 @@
 				0D59BD3D269493BB00B6658F /* UIKit+SetIfNeeded.swift in Sources */,
 				0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */,
 				0D59BD3E269493BB00B6658F /* UISegmentedControl+FillWithSegments.swift in Sources */,
+				0D26E83926B2F0F9008E1C9C /* SettingsSceneUserSecurityItemsProvider.swift in Sources */,
 				0D59BD3F269493BB00B6658F /* UploadedAttachment+Extensions.swift in Sources */,
 				C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */,
 				C39BB5A326A85B7400AC642B /* TabBarContainerConfigurator.swift in Sources */,
@@ -1786,10 +1844,12 @@
 				0DDC5A7B26A9D0730004D326 /* LocalSignInScenePresenter.swift in Sources */,
 				0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */,
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
+				0D26E82E26B2D6C5008E1C9C /* SettingsSceneViewController.swift in Sources */,
 				0D59BD86269493BB00B6658F /* ChangeRoleRequestSender.swift in Sources */,
 				0D59BD87269493BB00B6658F /* ChangeRoleRequestSenderProtocol.swift in Sources */,
 				0D59BD88269493BB00B6658F /* RegisterWorkerProtocol.swift in Sources */,
 				0D59BD89269493BB00B6658F /* BaseRegisterWorker.swift in Sources */,
+				0D26E83026B2D6C5008E1C9C /* SettingsSceneConfigurator.swift in Sources */,
 				C39BB5A026A85B7400AC642B /* TabBarContainerPresenter.swift in Sources */,
 				0D59BD8A269493BB00B6658F /* AccountKYCFormEncoder.swift in Sources */,
 				0D59BD8B269493BB00B6658F /* BiometricsInfoProviderProtocol.swift in Sources */,
@@ -1809,6 +1869,7 @@
 				0D59BD97269493BC00B6658F /* ImagesUtility+TokenDSDK.swift in Sources */,
 				0D59BD98269493BC00B6658F /* MovementsRepo.swift in Sources */,
 				0D59BD99269493BC00B6658F /* KYCRepo.swift in Sources */,
+				0D26E83726B2F0F1008E1C9C /* SettingsSceneUserSecurityItemsProviderProtocol.swift in Sources */,
 				0D59BD9A269493BC00B6658F /* KeyValuesRepo.swift in Sources */,
 				0D59BD9B269493BC00B6658F /* ActiveKYCRepo.swift in Sources */,
 				C39BB5C126A9C97200AC642B /* MoreSceneViewController.swift in Sources */,
@@ -1833,6 +1894,7 @@
 				0D59BDAB269493BC00B6658F /* KeychainDataProvider.swift in Sources */,
 				0D59BDAC269493BC00B6658F /* KeyboardController.swift in Sources */,
 				0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */,
+				0D26E83326B2DA47008E1C9C /* IconTitleDisclosureCell.swift in Sources */,
 				0D59BDAD269493BC00B6658F /* LocalizationManager.swift in Sources */,
 				0D59BDAE269493BC00B6658F /* AccountTypeManager.swift in Sources */,
 				0D59BDAF269493BC00B6658F /* TransactionSender.swift in Sources */,
@@ -1843,6 +1905,7 @@
 				0D59BDB4269493BC00B6658F /* KeychainKeyDataModel.swift in Sources */,
 				0D59BDB5269493BC00B6658F /* AuthKeychainManager.swift in Sources */,
 				0D59BDB6269493BC00B6658F /* KeychainManager.swift in Sources */,
+				0D26E82B26B2D6C5008E1C9C /* SettingsScenePresenter.swift in Sources */,
 				0D59BDB7269493BC00B6658F /* KeychainCodableKeyDataV1.swift in Sources */,
 				0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */,
 				0D59BDB8269493BC00B6658F /* KeychainCodableAccountsV1.swift in Sources */,
@@ -1879,12 +1942,14 @@
 				0D59BDCE269493BC00B6658F /* ImagePickerFlowController.swift in Sources */,
 				0D59BDCF269493BC00B6658F /* PHPickerFlowController.swift in Sources */,
 				0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */,
+				0D26E82D26B2D6C5008E1C9C /* SettingsSceneModels.swift in Sources */,
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
 				C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
 				0D26E82326B1AC1F008E1C9C /* Document+ImageUrl.swift in Sources */,
 				0D59BD132694930700B6658F /* KYCFlowController.swift in Sources */,
 				0D59BD172694930700B6658F /* LocalAuthFlowController.swift in Sources */,
+				0D26E82C26B2D6C5008E1C9C /* SettingsSceneRouting.swift in Sources */,
 				0D59BD012694930700B6658F /* Theme.swift in Sources */,
 				0D59BD042694930700B6658F /* AppController+UserActivitySubscribers.swift in Sources */,
 				C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */,
@@ -1899,7 +1964,6 @@
 				0D59BD152694930700B6658F /* SignedInFlowController.swift in Sources */,
 				0D59BD0C2694930700B6658F /* ReposController.swift in Sources */,
 				0D59BD192694930700B6658F /* ForgotPasswordFlowController.swift in Sources */,
-				C39BB5CA26AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift in Sources */,
 				0D59BCFC2694930700B6658F /* AppDelegate.swift in Sources */,
 				0D59BD1B2694930700B6658F /* ChangeLoginFlowController.swift in Sources */,
 				0D59BD1D2694930700B6658F /* LocKey.swift in Sources */,

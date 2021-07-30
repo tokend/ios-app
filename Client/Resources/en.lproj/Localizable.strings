@@ -67,3 +67,17 @@
 "more_user_corporate_status" = "Corporate account";
 "more_user_general_status" = "General account";
 "more_user_unverified_status" = "Unverified account";
+"settings_title" = "Settings";
+"settings_app_title" = "App";
+"settings_app_language" = "Language";
+"settings_account_title" = "Account";
+"settings_account_account_id" = "Account ID";
+"settings_account_verification" = "Verification";
+"settings_account_verification_description" = "In order to verify your account data use web client";
+"settings_account_secret_seed" = "Secret seed";
+"settings_account_secret_seed_description" = "Secret seed is a private information that proves you own your account";
+"settings_account_sign_out" = "Sign out";
+"settings_security_title" = "Security";
+"settings_security_lock_app" = "Lock app in background";
+"settings_security_tfa" = "Two-factor authentication";
+"settings_security_change_password" = "Change password";

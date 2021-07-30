@@ -20,6 +20,14 @@ enum Assets: String {
     case more_settings_icon
     case more_trade_icon
     case more_withdraw_icon
+    case settings_language_icon
+    case settings_account_id_icon
+    case settings_verification_icon
+    case settings_secret_seed_icon
+    case settings_sign_out_icon
+    case settings_lock_app_icon
+    case settings_tfa_icon
+    case settings_change_password_icon
 
     private var name: String {
         switch self {
@@ -42,6 +50,14 @@ enum Assets: String {
         case .more_settings_icon: return "more_settings_icon"
         case .more_trade_icon: return "more_trade_icon"
         case .more_withdraw_icon: return "more_withdraw_icon"
+        case .settings_language_icon: return "settings_language_icon"
+        case .settings_account_id_icon: return "settings_account_id_icon"
+        case .settings_verification_icon: return "settings_verification_icon"
+        case .settings_secret_seed_icon: return "settings_secret_seed_icon"
+        case .settings_sign_out_icon: return "settings_sign_out_icon"
+        case .settings_lock_app_icon: return "settings_lock_app_icon"
+        case .settings_tfa_icon: return "settings_tfa_icon"
+        case .settings_change_password_icon: return "settings_change_password_icon"
         }
     }
 }

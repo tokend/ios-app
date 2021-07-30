@@ -71,4 +71,18 @@ enum LocKey: String {
     case more_user_corporate_status
     case more_user_general_status
     case more_user_unverified_status
+    case settings_title
+    case settings_app_title
+    case settings_app_language
+    case settings_account_title
+    case settings_account_account_id
+    case settings_account_verification
+    case settings_account_verification_description
+    case settings_account_secret_seed
+    case settings_account_secret_seed_description
+    case settings_account_sign_out
+    case settings_security_title
+    case settings_security_lock_app
+    case settings_security_tfa
+    case settings_security_change_password
 }

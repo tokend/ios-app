@@ -1,89 +1,86 @@
 import UIKit
 
-extension MoreScene {
+enum IconTitleDisclosureCell {
     
-    enum IconTitleDisclosureCell {
+    private static var titleFont: UIFont { Theme.Fonts.regularFont.withSize(17.0) }
+    
+    private static var iconSize: CGSize { .init(width: 23.0, height: 23.0) }
+    private static var iconLeadingInset: CGFloat { 18.0 }
+    private static var iconTopInset: CGFloat { 10.0 }
+    private static var iconBottomInset: CGFloat { 10.0 }
+    private static var titleIconOffset: CGFloat { 18.0 }
+    private static var titleTopInset: CGFloat { 10.0 }
+    private static var titleBottomInset: CGFloat { 11.0 }
+    private static var titleTrailingInset: CGFloat { 15.0 }
+    
+    struct ViewModel: CellViewModel {
         
-        private static var titleFont: UIFont { Theme.Fonts.regularFont.withSize(17.0) }
+        let id: String
+        let icon: TokenDUIImage
+        let title: String
         
-        private static var iconSize: CGSize { .init(width: 23.0, height: 23.0) }
-        private static var iconLeadingInset: CGFloat { 18.0 }
-        private static var iconTopInset: CGFloat { 10.0 }
-        private static var iconBottomInset: CGFloat { 10.0 }
-        private static var titleIconOffset: CGFloat { 18.0 }
-        private static var titleTopInset: CGFloat { 10.0 }
-        private static var titleBottomInset: CGFloat { 11.0 }
-        private static var titleTrailingInset: CGFloat { 15.0 }
+        func setup(cell: View) {
+            
+            cell.icon = icon
+            cell.title = title
+        }
         
-        struct ViewModel: CellViewModel {
+        var hashValue: Int {
+            id.hashValue
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        public static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
             
-            let id: String
-            let icon: TokenDUIImage
-            let title: String
-            
-            func setup(cell: View) {
-                
-                cell.icon = icon
-                cell.title = title
-            }
-            
-            var hashValue: Int {
-                id.hashValue
-            }
-
-            func hash(into hasher: inout Hasher) {
-                hasher.combine(id)
-            }
-
-            public static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
-
-                return lhs.icon == rhs.icon
-                    && lhs.title == rhs.title
+            return lhs.icon == rhs.icon
+                && lhs.title == rhs.title
+        }
+    }
+    
+    class View: UITableViewCell {
+        
+        // MARK: Private properties
+        
+        private let iconImageView: UIImageView = .init()
+        private let titleLabel: UILabel = .init()
+        
+        // MARK: Public properties
+        
+        public var icon: TokenDUIImage? {
+            didSet {
+                iconImageView.setTokenDUIImage(icon)
             }
         }
         
-        class View: UITableViewCell {
+        public var title: String? {
+            get { titleLabel.text }
+            set { titleLabel.text = newValue }
+        }
+        
+        // MARK:
+        
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
             
-            // MARK: Private properties
+            commonInit()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
             
-            private let iconImageView: UIImageView = .init()
-            private let titleLabel: UILabel = .init()
-            
-            // MARK: Public properties
-            
-            public var icon: TokenDUIImage? {
-                didSet {
-                    iconImageView.setTokenDUIImage(icon)
-                }
-            }
-            
-            public var title: String? {
-                get { titleLabel.text }
-                set { titleLabel.text = newValue }
-            }
-            
-            // MARK:
-            
-            override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-                super.init(style: style, reuseIdentifier: reuseIdentifier)
-                
-                commonInit()
-            }
-            
-            required init?(coder: NSCoder) {
-                super.init(coder: coder)
-                
-                commonInit()
-            }
+            commonInit()
         }
     }
 }
 
 // MARK: Private methods
 
-private extension MoreScene.IconTitleDisclosureCell.View {
+private extension IconTitleDisclosureCell.View {
     
-    private typealias NameSpace = MoreScene.IconTitleDisclosureCell
+    private typealias NameSpace = IconTitleDisclosureCell
     
     func commonInit() {
         setupView()
@@ -142,9 +139,9 @@ private extension MoreScene.IconTitleDisclosureCell.View {
 
 // MARK:
 
-extension MoreScene.IconTitleDisclosureCell.ViewModel: UITableViewCellHeightProvider {
+extension IconTitleDisclosureCell.ViewModel: UITableViewCellHeightProvider {
     
-    private typealias NameSpace = MoreScene.IconTitleDisclosureCell
+    private typealias NameSpace = IconTitleDisclosureCell
     
     func height(
         with tableViewWidth: CGFloat
