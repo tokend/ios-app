@@ -75,9 +75,7 @@ extension AccountIDScene.Presenter: AccountIDScene.PresentationLogic {
     }
     
     public func presentDidTapShareSync(response: Event.DidTapShareSync.Response) {
-        let viewModel: Event.DidTapShareSync.ViewModel = .init(
-            value: response.value
-        )
+        let viewModel: Event.DidTapShareSync.ViewModel = response
         self.presenterDispatch.displaySync { displayLogic in
             displayLogic.displayDidTapShareSync(viewModel: viewModel)
         }

@@ -70,8 +70,6 @@ extension AccountIDScene.Event {
         public struct Response {
             let value: String
         }
-        public struct ViewModel {
-            let value: String
-        }
+        public typealias ViewModel = Response
     }
 }

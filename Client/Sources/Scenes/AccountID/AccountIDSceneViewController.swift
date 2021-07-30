@@ -91,12 +91,6 @@ private extension AccountIDScene.ViewController {
                 target: self,
                 action: #selector(shareButtonAction)
             ),
-            //                .init(
-            //                    image: <#T##UIImage?#>,
-            //                    style: <#T##UIBarButtonItem.Style#>,
-            //                    target: <#T##Any?#>,
-            //                    action: <#T##Selector?#>
-            //                ),
             animated: false
         )
         
