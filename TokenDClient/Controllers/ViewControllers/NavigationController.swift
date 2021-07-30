@@ -107,9 +107,7 @@ private extension NavigationController {
         setupNavigationBar()
     }
 
-    func setupNavigationBar() {
-        setNavigationBarHidden(true, animated: false)
-    }
+    func setupNavigationBar() { }
 }
 
 extension NavigationController: NavigationControllerProtocol {

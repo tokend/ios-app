@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -271,6 +271,15 @@
 		C39BB5CA26AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */; };
 		C39BB5CD26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */; };
 		C39BB5D026AEC08E00AC642B /* MoreSceneUserDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */; };
+		C39BB5E526B2FEE200AC642B /* QRCodeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5E426B2FEE200AC642B /* QRCodeImageView.swift */; };
+		C39BB5ED26B2FFFF00AC642B /* AccountIDScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5E726B2FFFF00AC642B /* AccountIDScenePresenter.swift */; };
+		C39BB5EE26B2FFFF00AC642B /* AccountIDSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5E826B2FFFF00AC642B /* AccountIDSceneRouting.swift */; };
+		C39BB5EF26B2FFFF00AC642B /* AccountIDSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5E926B2FFFF00AC642B /* AccountIDSceneModels.swift */; };
+		C39BB5F026B2FFFF00AC642B /* AccountIDSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5EA26B2FFFF00AC642B /* AccountIDSceneViewController.swift */; };
+		C39BB5F126B2FFFF00AC642B /* AccountIDSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5EB26B2FFFF00AC642B /* AccountIDSceneInteractor.swift */; };
+		C39BB5F226B2FFFF00AC642B /* AccountIDSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5EC26B2FFFF00AC642B /* AccountIDSceneConfigurator.swift */; };
+		C39BB5F626B3057D00AC642B /* AccountIDSceneAccountIDProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5F526B3057D00AC642B /* AccountIDSceneAccountIDProviderProtocol.swift */; };
+		C39BB5F826B305AD00AC642B /* AccountIDSceneAccountIDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5F726B305AD00AC642B /* AccountIDSceneAccountIDProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -548,6 +557,15 @@
 		C39BB5C926AB027800AC642B /* MoreSceneIconTitleDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneIconTitleDisclosureCell.swift; sourceTree = "<group>"; };
 		C39BB5CC26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserDataProviderProtocol.swift; sourceTree = "<group>"; };
 		C39BB5CF26AEC08E00AC642B /* MoreSceneUserDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSceneUserDataProvider.swift; sourceTree = "<group>"; };
+		C39BB5E426B2FEE200AC642B /* QRCodeImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeImageView.swift; sourceTree = "<group>"; };
+		C39BB5E726B2FFFF00AC642B /* AccountIDScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDScenePresenter.swift; sourceTree = "<group>"; };
+		C39BB5E826B2FFFF00AC642B /* AccountIDSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneRouting.swift; sourceTree = "<group>"; };
+		C39BB5E926B2FFFF00AC642B /* AccountIDSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneModels.swift; sourceTree = "<group>"; };
+		C39BB5EA26B2FFFF00AC642B /* AccountIDSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneViewController.swift; sourceTree = "<group>"; };
+		C39BB5EB26B2FFFF00AC642B /* AccountIDSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneInteractor.swift; sourceTree = "<group>"; };
+		C39BB5EC26B2FFFF00AC642B /* AccountIDSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneConfigurator.swift; sourceTree = "<group>"; };
+		C39BB5F526B3057D00AC642B /* AccountIDSceneAccountIDProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneAccountIDProviderProtocol.swift; sourceTree = "<group>"; };
+		C39BB5F726B305AD00AC642B /* AccountIDSceneAccountIDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountIDSceneAccountIDProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -565,10 +583,11 @@
 		0D2FA2DD2695CC350018B7D4 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				C39BB5B726A9C8F700AC642B /* More */,
+				C39BB5E626B2FF0B00AC642B /* AccountID */,
 				0DDC5A7426A9D0500004D326 /* LocalSignIn */,
-				0DDC5A5526A7D82D0004D326 /* SignUp */,
+				C39BB5B726A9C8F700AC642B /* More */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
+				0DDC5A5526A7D82D0004D326 /* SignUp */,
 				C39BB58326A85B4D00AC642B /* TabBar */,
 				C39BB59826A85B7400AC642B /* TabBarContainer */,
 				C39BB5AA26A8600500AC642B /* TabContentContainer */,
@@ -603,9 +622,10 @@
 			isa = PBXGroup;
 			children = (
 				0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */,
+				C39BB5E426B2FEE200AC642B /* QRCodeImageView.swift */,
+				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 				0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */,
-				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1520,6 +1540,37 @@
 			path = UserDataProviderProtocol;
 			sourceTree = "<group>";
 		};
+		C39BB5E626B2FF0B00AC642B /* AccountID */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB5EC26B2FFFF00AC642B /* AccountIDSceneConfigurator.swift */,
+				C39BB5EB26B2FFFF00AC642B /* AccountIDSceneInteractor.swift */,
+				C39BB5E926B2FFFF00AC642B /* AccountIDSceneModels.swift */,
+				C39BB5E726B2FFFF00AC642B /* AccountIDScenePresenter.swift */,
+				C39BB5E826B2FFFF00AC642B /* AccountIDSceneRouting.swift */,
+				C39BB5EA26B2FFFF00AC642B /* AccountIDSceneViewController.swift */,
+				C39BB5F326B3056600AC642B /* Workers */,
+			);
+			path = AccountID;
+			sourceTree = "<group>";
+		};
+		C39BB5F326B3056600AC642B /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB5F426B3056900AC642B /* AccountIDProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		C39BB5F426B3056900AC642B /* AccountIDProvider */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB5F726B305AD00AC642B /* AccountIDSceneAccountIDProvider.swift */,
+				C39BB5F526B3057D00AC642B /* AccountIDSceneAccountIDProviderProtocol.swift */,
+			);
+			path = AccountIDProvider;
+			sourceTree = "<group>";
+		};
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1657,6 +1708,7 @@
 				0D59BD2B269493BB00B6658F /* UIImage+ButtonImage.swift in Sources */,
 				0D59BD2C269493BB00B6658F /* SnapKit+Extension.swift in Sources */,
 				0D59BD2D269493BB00B6658F /* UIColor+Hex.swift in Sources */,
+				C39BB5F026B2FFFF00AC642B /* AccountIDSceneViewController.swift in Sources */,
 				0D59BD2E269493BB00B6658F /* String+QueueLabel.swift in Sources */,
 				0D59BD2F269493BB00B6658F /* UIView+FirstResponder.swift in Sources */,
 				0D59BD30269493BB00B6658F /* UITextField+Placeholder.swift in Sources */,
@@ -1752,6 +1804,7 @@
 				0D59BD6B269493BB00B6658F /* ActiveKYCChecker.swift in Sources */,
 				0D59BD6C269493BB00B6658F /* AccountTypeFetcherProtocol.swift in Sources */,
 				0D59BD6D269493BB00B6658F /* AccountTypeFetcher.swift in Sources */,
+				C39BB5F226B2FFFF00AC642B /* AccountIDSceneConfigurator.swift in Sources */,
 				0D59BD6E269493BB00B6658F /* AccountKYCRoleProviderProtocol.swift in Sources */,
 				0D59BD6F269493BB00B6658F /* RegistrationKYCRoleProvider.swift in Sources */,
 				0D59BD70269493BB00B6658F /* EditKYCRoleProvider.swift in Sources */,
@@ -1762,6 +1815,7 @@
 				0DDC5A8826AAED530004D326 /* ActiveKYCStorageManagerProtocol.swift in Sources */,
 				0D59BD74269493BB00B6658F /* ContoFARegisterKeysProvider.swift in Sources */,
 				0D59BD75269493BB00B6658F /* ContoPassForgotPasswordKeysProvider.swift in Sources */,
+				C39BB5F826B305AD00AC642B /* AccountIDSceneAccountIDProvider.swift in Sources */,
 				0D59BD76269493BB00B6658F /* ContoFAForgotPasswordKeysProvider.swift in Sources */,
 				0D59BD77269493BB00B6658F /* ContoFAPasswordChangerKeysProvider.swift in Sources */,
 				C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */,
@@ -1777,6 +1831,7 @@
 				0D59BD7F269493BB00B6658F /* UserPhoneContactsFetcher.swift in Sources */,
 				0D59BD80269493BB00B6658F /* BasePasswordChanger.swift in Sources */,
 				0D59BD81269493BB00B6658F /* PasswordChangerProtocol.swift in Sources */,
+				C39BB5F126B2FFFF00AC642B /* AccountIDSceneInteractor.swift in Sources */,
 				0DDC5A9026AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift in Sources */,
 				0D59BD82269493BB00B6658F /* DocumentsDownloader.swift in Sources */,
 				0D59BD83269493BB00B6658F /* DocumentsDownloaderProtocol.swift in Sources */,
@@ -1808,6 +1863,7 @@
 				0D59BD96269493BC00B6658F /* AppControllerProtocol.swift in Sources */,
 				0D59BD97269493BC00B6658F /* ImagesUtility+TokenDSDK.swift in Sources */,
 				0D59BD98269493BC00B6658F /* MovementsRepo.swift in Sources */,
+				C39BB5F626B3057D00AC642B /* AccountIDSceneAccountIDProviderProtocol.swift in Sources */,
 				0D59BD99269493BC00B6658F /* KYCRepo.swift in Sources */,
 				0D59BD9A269493BC00B6658F /* KeyValuesRepo.swift in Sources */,
 				0D59BD9B269493BC00B6658F /* ActiveKYCRepo.swift in Sources */,
@@ -1851,6 +1907,7 @@
 				0D59BDBB269493BC00B6658F /* UserDataManager.swift in Sources */,
 				0D59BDBC269493BC00B6658F /* KDFParamsSerializable.swift in Sources */,
 				C39BB5A226A85B7400AC642B /* TabBarContainerViewController.swift in Sources */,
+				C39BB5EE26B2FFFF00AC642B /* AccountIDSceneRouting.swift in Sources */,
 				0D59BDBD269493BC00B6658F /* TFAManager.swift in Sources */,
 				0D59BDBE269493BC00B6658F /* TFAManagerProtocol.swift in Sources */,
 				C39BB59F26A85B7400AC642B /* TabBarContainerRouting.swift in Sources */,
@@ -1863,10 +1920,12 @@
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,
+				C39BB5E526B2FEE200AC642B /* QRCodeImageView.swift in Sources */,
 				C39BB59426A85B4D00AC642B /* TabBarTabProvider.swift in Sources */,
 				0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */,
 				0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */,
 				C39BB5B426A8600500AC642B /* TabContentContainerModels.swift in Sources */,
+				C39BB5EF26B2FFFF00AC642B /* AccountIDSceneModels.swift in Sources */,
 				0D59BDC6269493BC00B6658F /* BaseSignedInFlowController.swift in Sources */,
 				0D59BDC7269493BC00B6658F /* PermissionRequestFlowController.swift in Sources */,
 				0D59BDC8269493BC00B6658F /* MediaPickerFlowController.swift in Sources */,
@@ -1879,6 +1938,7 @@
 				0D59BDCE269493BC00B6658F /* ImagePickerFlowController.swift in Sources */,
 				0D59BDCF269493BC00B6658F /* PHPickerFlowController.swift in Sources */,
 				0DD5F2AA269EF8FA00B5CFB5 /* NetworkInfoParserProtocol.swift in Sources */,
+				C39BB5ED26B2FFFF00AC642B /* AccountIDScenePresenter.swift in Sources */,
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
 				C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,

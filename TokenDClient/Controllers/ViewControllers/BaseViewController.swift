@@ -24,6 +24,15 @@ public class BaseViewController: UIViewController {
     deinit {
         print(.deinit(object: self))
     }
+    
+    public override var hidesBottomBarWhenPushed: Bool {
+        get {
+            navigationController?.viewControllers.first != self
+        }
+        set {
+            super.hidesBottomBarWhenPushed = newValue
+        }
+    }
 }
 
 extension BaseViewController: UIGestureRecognizerDelegate { }
