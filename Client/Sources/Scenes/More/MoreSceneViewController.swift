@@ -215,6 +215,10 @@ extension MoreScene.ViewController: UITableViewDelegate {
         guard let height = (cell(for: indexPath) as? UITableViewCellHeightProvider)?.height(with: tableViewWidth)
             else { return UITableView.automaticDimension }
         
+        if tableView.separatorStyle != .none && tableView.style == .grouped {
+            return height + 1.0 / UIScreen.main.scale
+        }
+        
         return height
     }
     

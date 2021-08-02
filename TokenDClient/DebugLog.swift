@@ -115,7 +115,7 @@ private struct DebugOutput {
         column: Int = #column,
         functionName: String = #function) {
         
-        #if APPSTOREDEBUG // Set correct Scheme names
+        #if DEBUG // Set correct Scheme names
             //let date = Date().toDebugOutputString()
             let debugType = debugOutputTypeString.padding(toLength: 9, withPad: " ", startingAt: 0)
             let outputEmoji = debugOutputEmoji
@@ -129,7 +129,7 @@ private struct DebugOutput {
             }
             
             logger?.log(stringToPrint)
-            #if APPSTOREDEBUG
+            #if DEBUG
                 Swift.print(stringToPrint)
                 
                 switch debugOutputType {

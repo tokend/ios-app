@@ -21,7 +21,8 @@ extension SettingsScene.Model {
         
         let id: String
         let header: HeaderFooterViewAnyModel?
-        let cells: [CellViewAnyModel]
+        let footer: HeaderFooterViewAnyModel?
+        var cells: [CellViewAnyModel]
     }
     
     struct SceneModel {
@@ -32,7 +33,7 @@ extension SettingsScene.Model {
         var lockAppIsEnabled: Bool
         var biometricsType: BiometricsType
         var biometricsIsEnabled: Bool
-        var tfaIsInabled: Bool
+        var tfaIsEnabled: Bool
     }
     
     struct SceneViewModel {
@@ -122,6 +123,13 @@ extension SettingsScene.Event {
         public typealias ViewModel = Response
     }
     
+    public enum SwitcherValueDidChangeSync {
+        public struct Request {
+            let id: String
+            let newValue: Bool
+        }
+    }
+    
     public enum DidRefresh {
         public struct Request { }
     }
@@ -142,6 +150,7 @@ extension SettingsScene.Model.Section: DifferentiableSection {
         
         self.id = source.id
         self.header = source.header
+        self.footer = source.footer
         self.cells = elements
     }
 }

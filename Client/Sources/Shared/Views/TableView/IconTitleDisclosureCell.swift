@@ -123,15 +123,14 @@ private extension IconTitleDisclosureCell.View {
             make.size.equalTo(NameSpace.iconSize)
             make.leading.equalToSuperview().inset(NameSpace.iconLeadingInset)
             make.top.equalToSuperview().inset(NameSpace.iconTopInset)
-            make.bottom.lessThanOrEqualToSuperview().inset(NameSpace.iconBottomInset)
+//            make.bottom.lessThanOrEqualToSuperview().inset(NameSpace.iconBottomInset)
         }
         
-        titleLabel.setContentHuggingPriority(.required, for: .vertical)
         titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(iconImageView.snp.trailing).offset(NameSpace.titleIconOffset)
             make.top.equalToSuperview().inset(NameSpace.titleTopInset)
-            make.bottom.equalToSuperview().inset(NameSpace.titleBottomInset)
+//            make.bottom.equalToSuperview().inset(NameSpace.titleBottomInset)
             make.trailing.equalToSuperview().inset(NameSpace.titleTrailingInset)
         }
     }

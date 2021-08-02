@@ -218,7 +218,7 @@ private extension TabBarFlowController {
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
         
-        let navigationController: UINavigationController = .init()
+        let navigationController: NavigationController = .init()
         
         let controller: MoreScene.ViewController = .init()
         controller.navigationItem.title = Localized(.more_scene_title)
@@ -231,7 +231,9 @@ private extension TabBarFlowController {
             onTradeTap: {},
             onPollsTap: {},
             onSettingsTap: { [weak self] in
-                self?.showSettings()
+                self?.showSettings(
+                    navigationController: navigationController
+                )
             }
         )
         
@@ -254,10 +256,12 @@ private extension TabBarFlowController {
         showRootScreen(navigationController)
     }
     
-    func showSettings() {
+    func showSettings(
+        navigationController: NavigationControllerProtocol
+    ) {
+        
         let vc: SettingsScene.ViewController = initSettings()
-        navigationController.setNavigationBarHidden(false, animated: true)
-        self.navigationController.pushViewController(vc, animated: true)
+        navigationController.pushViewController(vc, animated: true)
         vc.navigationController?.navigationBar.prefersLargeTitles = true
     }
     

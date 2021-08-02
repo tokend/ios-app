@@ -21,6 +21,9 @@ extension Theme {
         static let textFieldTintColor: UIColor = dark
         static let textFieldPlaceholderColor: UIColor = grey
         static let toolbarTintColor: UIColor = dark
+        
+        static let switchOnTintColor: UIColor = .systemGreen
+        static let switchOffTintColor: UIColor = .systemGray
     }
 }
 

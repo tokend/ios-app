@@ -7,6 +7,7 @@ public protocol SettingsSceneDisplayLogic: AnyObject {
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
+    func displayDidTapItemSync(viewModel: Event.DidTapItemSync.ViewModel)
 }
 
 extension SettingsScene {
@@ -96,9 +97,15 @@ private extension SettingsScene.ViewController {
         
         tableView.register(
             classes: [
-                IconTitleDisclosureCell.ViewModel.self
+                IconTitleDisclosureCell.ViewModel.self,
+                SettingsScene.SwitcherCell.ViewModel.self
             ]
         )
+        
+        tableView.register(
+            classes: [
+                HeaderFooterView.ViewModel.self
+        ])
     }
     
     func setupRefreshControl() {
@@ -173,6 +180,32 @@ private extension SettingsScene.ViewController {
         
         sections[indexPath.section].cells[indexPath.row]
     }
+    
+    func setTableViewCell(
+        _ cell: SettingsScene.SwitcherCell.ViewModel,
+        with id: String
+    ) {
+
+        if let indexPath = indexPathForSwitcherCell(with: cell.id) {
+            sections[indexPath.section].cells[indexPath.row] = cell
+        }
+    }
+    
+    func indexPathForSwitcherCell(with id: String) -> IndexPath? {
+
+        for section in 0..<sections.count {
+            for row in 0..<sections[section].cells.count {
+
+                if let oldViewModel = sections[section].cells[row] as? SettingsScene.SwitcherCell.ViewModel,
+                   oldViewModel.id == id {
+
+                    return .init(row: row, section: section)
+                }
+            }
+        }
+
+        return nil
+    }
 }
 
 // MARK: UITableViewDataSource
@@ -197,10 +230,26 @@ extension SettingsScene.ViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         
+        let model = self.cell(for: indexPath)
         let cell = tableView.dequeueReusableCell(
             with: self.cell(for: indexPath),
             for: indexPath
         )
+        
+        if let switcherCell = cell as? SettingsScene.SwitcherCell.View,
+           var switcherModel = model as? SettingsScene.SwitcherCell.ViewModel {
+            
+            switcherCell.onSwitched = { [weak self] (value) in
+                
+                switcherModel.switcherStatus = value
+                self?.setTableViewCell(switcherModel, with: switcherModel.id)
+
+                let request: Event.SwitcherValueDidChangeSync.Request = .init(id: switcherModel.id, newValue: value)
+                self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                    businessLogic.onSwitcherValueDidChangeSync(request: request)
+                }
+            }
+        }
         
         return cell
     }
@@ -219,6 +268,10 @@ extension SettingsScene.ViewController: UITableViewDelegate {
         
         guard let height = (cell(for: indexPath) as? UITableViewCellHeightProvider)?.height(with: tableViewWidth)
             else { return UITableView.automaticDimension }
+        
+        if tableView.separatorStyle != .none && tableView.style == .grouped {
+            return height + 1.0 / UIScreen.main.scale
+        }
         
         return height
     }
@@ -269,6 +322,31 @@ extension SettingsScene.ViewController: UITableViewDelegate {
         
         return height
     }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        guard let viewModel = sections[section].footer
+            else { return nil }
+        
+        return tableView.dequeueReusableHeaderFooterView(
+            with: viewModel
+        )
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        
+        let tableViewWidth = tableView.bounds.width
+        
+        guard let viewModel = sections[section].footer
+            else { return .leastNormalMagnitude }
+        
+        let heightProvider = viewModel as? UITableViewHeaderFooterViewHeightProvider
+        
+        guard let height = heightProvider?.height(with: tableViewWidth)
+            else { return UITableView.automaticDimension }
+        
+        return height
+    }
 }
 
 // MARK: - DisplayLogic
@@ -281,5 +359,29 @@ extension SettingsScene.ViewController: SettingsScene.DisplayLogic {
     
     public func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
+    }
+    
+    public func displayDidTapItemSync(viewModel: Event.DidTapItemSync.ViewModel) {
+        
+        switch viewModel.item {
+        
+        case .language:
+            routing?.onLanguageTap()
+        case .accountId:
+            routing?.onAccountIdTap()
+        case .verification:
+            routing?.onVerificationTap()
+        case .secretSeed:
+            routing?.onSecretSeedTap()
+        case .signOut:
+            routing?.onSignOutTap()
+        case .changePassword:
+            routing?.onChangePasswordTap()
+            
+        case .lockApp,
+             .biometrics,
+             .tfa:
+            break
+        }
     }
 }

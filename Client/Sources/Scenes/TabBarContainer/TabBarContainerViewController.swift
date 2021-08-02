@@ -33,6 +33,7 @@ extension TabBarContainer {
                     oldValue?.viewController.removeFromParent()
                     self.setupContent()
                     setNeedsStatusBarAppearanceUpdate()
+                    updateAdditionalSafeAreaInsets()
                 }
             }
         }
@@ -42,12 +43,19 @@ extension TabBarContainer {
                 if oldValue?.view != self.tabBar?.view {
                     oldValue?.view.removeFromSuperview()
                     self.setupTabBar()
+                    updateAdditionalSafeAreaInsets()
                 }
             }
         }
         
         public override var childForStatusBarStyle: UIViewController? {
             content?.viewController
+        }
+        
+        public override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            
+            updateAdditionalSafeAreaInsets()
         }
         
         // MARK: -
@@ -113,6 +121,14 @@ extension TabBarContainer {
             self.view.sendSubviewToBack(viewController.view)
             viewController.view.snp.remakeConstraints { (make) in
                 make.edges.equalToSuperview()
+            }
+        }
+        
+        func updateAdditionalSafeAreaInsets() {
+            if let tabBar = tabBar {
+                content?.viewController.additionalSafeAreaInsets.bottom = tabBar.height - view.safeAreaInsets.bottom
+            } else {
+                content?.viewController.additionalSafeAreaInsets.bottom = 0
             }
         }
     }

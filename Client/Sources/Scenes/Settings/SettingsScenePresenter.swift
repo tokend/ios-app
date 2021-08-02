@@ -6,6 +6,7 @@ public protocol SettingsScenePresentationLogic {
     
     func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response)
     func presentSceneDidUpdateSync(response: Event.SceneDidUpdateSync.Response)
+    func presentDidTapItemSync(response: Event.DidTapItemSync.Response)
 }
 
 extension SettingsScene {
@@ -60,7 +61,11 @@ private extension SettingsScene.Presenter {
                     sections.append(
                         Model.Section(
                             id: section.id,
-                            header: nil,
+                            header: HeaderFooterView.ViewModel(
+                                id: section.id,
+                                title: Localized(.settings_app_title).uppercased()
+                            ),
+                            footer: nil,
                             cells: cells
                         )
                     )
@@ -83,8 +88,21 @@ private extension SettingsScene.Presenter {
                             title: Localized(.settings_account_verification)
                         )
                     )
-                    // TODO: - add footer and add section
-//                  cells = []
+                    sections.append(
+                        Model.Section(
+                            id: section.id,
+                            header: HeaderFooterView.ViewModel(
+                                id: section.id,
+                                title: Localized(.settings_account_title).uppercased()
+                            ),
+                            footer: HeaderFooterView.ViewModel(
+                                id: section.id,
+                                title: Localized(.settings_account_verification_description)
+                            ),
+                            cells: cells
+                        )
+                    )
+                    cells = []
                 
                 case .secretSeed:
                     cells.append(
@@ -94,8 +112,18 @@ private extension SettingsScene.Presenter {
                             title: Localized(.settings_account_secret_seed)
                         )
                     )
-                    // TODO: - create new section and add footer
-//                  cells = []
+                    sections.append(
+                        Model.Section(
+                            id: section.id,
+                            header: nil,
+                            footer: HeaderFooterView.ViewModel(
+                                id: section.id,
+                                title: Localized(.settings_account_secret_seed_description)
+                            ),
+                            cells: cells
+                        )
+                    )
+                    cells = []
 
                 case .signOut:
                     cells.append(
@@ -109,6 +137,7 @@ private extension SettingsScene.Presenter {
                         Model.Section(
                             id: section.id,
                             header: nil,
+                            footer: nil,
                             cells: cells
                         )
                     )
@@ -116,10 +145,11 @@ private extension SettingsScene.Presenter {
                     
                 case .lockApp:
                     cells.append(
-                        IconTitleDisclosureCell.ViewModel(
+                        SettingsScene.SwitcherCell.ViewModel(
                             id: item.rawValue,
                             icon: .uiImage(Assets.settings_lock_app_icon.image),
-                            title: Localized(.settings_security_lock_app)
+                            title: Localized(.settings_security_lock_app),
+                            switcherStatus: sceneModel.lockAppIsEnabled
                         )
                     )
                     
@@ -129,19 +159,21 @@ private extension SettingsScene.Presenter {
                     
                     case .faceId:
                         cells.append(
-                            IconTitleDisclosureCell.ViewModel(
+                            SettingsScene.SwitcherCell.ViewModel(
                                 id: item.rawValue,
                                 icon: .uiImage(Assets.face_id_icon.image),
-                                title: Localized(.face_id_title)
+                                title: Localized(.face_id_title),
+                                switcherStatus: sceneModel.biometricsIsEnabled
                             )
                         )
                         
                     case .touchId:
                         cells.append(
-                            IconTitleDisclosureCell.ViewModel(
+                            SettingsScene.SwitcherCell.ViewModel(
                                 id: item.rawValue,
                                 icon: .uiImage(Assets.touch_id_icon.image),
-                                title: Localized(.touch_id_title)
+                                title: Localized(.touch_id_title),
+                                switcherStatus: sceneModel.biometricsIsEnabled
                             )
                         )
                     case .none:
@@ -150,10 +182,11 @@ private extension SettingsScene.Presenter {
                     
                 case .tfa:
                     cells.append(
-                        IconTitleDisclosureCell.ViewModel(
+                        SettingsScene.SwitcherCell.ViewModel(
                             id: item.rawValue,
                             icon: .uiImage(Assets.settings_tfa_icon.image),
-                            title: Localized(.settings_security_tfa)
+                            title: Localized(.settings_security_tfa),
+                            switcherStatus: sceneModel.tfaIsEnabled
                         )
                     )
                     
@@ -169,7 +202,11 @@ private extension SettingsScene.Presenter {
                     sections.append(
                         Model.Section(
                             id: section.id,
-                            header: nil,
+                            header: HeaderFooterView.ViewModel(
+                                id: section.id,
+                                title: Localized(.settings_security_title).uppercased()
+                            ),
+                            footer: nil,
                             cells: cells
                         )
                     )
@@ -210,6 +247,12 @@ extension SettingsScene.Presenter: SettingsScene.PresentationLogic {
                     animated: response.animated
                 )
             )
+        }
+    }
+    
+    public func presentDidTapItemSync(response: Event.DidTapItemSync.Response) {
+        presenterDispatch.displaySync { (displayLogic) in
+            displayLogic.displayDidTapItemSync(viewModel: response)
         }
     }
 }

@@ -7,6 +7,7 @@ public protocol SettingsSceneBusinessLogic {
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
     func onDidTapItemSync(request: Event.DidTapItemSync.Request)
+    func onSwitcherValueDidChangeSync(request: Event.SwitcherValueDidChangeSync.Request)
     func onDidRefresh(request: Event.DidRefresh.Request)
 }
 
@@ -25,15 +26,23 @@ extension SettingsScene {
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
         private let biometricsInfoProvider: BiometricsInfoProviderProtocol
+        private let tfaManager: TFAManagerProtocol
+        private let settingsManager: SettingsManagerProtocol
+        
         // MARK: -
         
         public init(
             presenter: PresentationLogic,
-            biometricsInfoProvider: BiometricsInfoProviderProtocol
+            biometricsInfoProvider: BiometricsInfoProviderProtocol,
+            tfaManager: TFAManagerProtocol,
+            settingsManager: SettingsManagerProtocol
         ) {
             
             self.presenter = presenter
             self.biometricsInfoProvider = biometricsInfoProvider
+            self.tfaManager = tfaManager
+            self.settingsManager = settingsManager
+            
             self.sceneModel = .init(
                 loadingStatus: .loaded,
                 sections: [
@@ -63,7 +72,8 @@ extension SettingsScene {
                 lockAppIsEnabled: false,
                 biometricsType: biometricsInfoProvider.biometricsType,
                 biometricsIsEnabled: biometricsInfoProvider.isAvailable,
-                tfaIsInabled: false)
+                tfaIsEnabled: false
+            )
         }
     }
 }
@@ -101,6 +111,46 @@ extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
     
     public func onDidTapItemSync(request: Event.DidTapItemSync.Request) {
         
+        guard let item = Model.Item(rawValue: request.id)
+        else {
+            return
+        }
+        
+        let response: Event.DidTapItemSync.Response = .init(item: item)
+        presenter.presentDidTapItemSync(response: response)
+    }
+    
+    public func onSwitcherValueDidChangeSync(request: Event.SwitcherValueDidChangeSync.Request) {
+        
+        guard let item = Model.Item(rawValue: request.id)
+        else {
+            return
+        }
+        
+        switch item {
+        
+        case .language,
+             .accountId,
+             .verification,
+             .secretSeed,
+             .signOut,
+             .changePassword:
+            return
+            
+        case .lockApp:
+            // TODO: -
+            break
+            
+        case .biometrics:
+            settingsManager.biometricsAuthEnabled = request.newValue
+            
+        case .tfa:
+            if request.newValue {
+                tfaManager.enableTFA(completion: completion)
+            } else {
+                tfaManager.disableTFA(completion: completion)
+            }
+        }
     }
     
     public func onDidRefresh(request: Event.DidRefresh.Request) { }
