@@ -8,6 +8,7 @@ public protocol SettingsSceneDisplayLogic: AnyObject {
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
     func displayDidTapItemSync(viewModel: Event.DidTapItemSync.ViewModel)
+    func displayErrorOccuredSync(viewModel: Event.ErrorOccuredSync.ViewModel)
 }
 
 extension SettingsScene {
@@ -84,6 +85,20 @@ private extension SettingsScene.ViewController {
     func setupView() {
         navigationItem.title = Localized(.settings_title)
         view.backgroundColor = Theme.Colors.mainBackgroundColor
+        
+        navigationItem.setLeftBarButton(
+            .init(
+                image: Assets.arrow_back_icon.image,
+                style: .plain,
+                target: self,
+                action: #selector(backButtonAction)
+            ),
+            animated: false
+        )
+    }
+    
+    @objc func backButtonAction() {
+        routing?.onBackAction()
     }
     
     func setupTableView() {
@@ -92,11 +107,12 @@ private extension SettingsScene.ViewController {
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
-        
+        tableView.contentInset.bottom = 24.0
 //        tableView.refreshControl = refreshControl
         
         tableView.register(
             classes: [
+                IconTitleDescriptionDisclosureCell.ViewModel.self,
                 IconTitleDisclosureCell.ViewModel.self,
                 SettingsScene.SwitcherCell.ViewModel.self
             ]
@@ -104,7 +120,8 @@ private extension SettingsScene.ViewController {
         
         tableView.register(
             classes: [
-                HeaderFooterView.ViewModel.self
+                CommonHeaderView.ViewModel.self,
+                CommonFooterView.ViewModel.self
         ])
     }
     
@@ -127,8 +144,7 @@ private extension SettingsScene.ViewController {
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(view.safeArea.top)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
     
@@ -383,5 +399,9 @@ extension SettingsScene.ViewController: SettingsScene.DisplayLogic {
              .tfa:
             break
         }
+    }
+    
+    public func displayErrorOccuredSync(viewModel: Event.ErrorOccuredSync.ViewModel) {
+        routing?.onShowError(viewModel.error)
     }
 }

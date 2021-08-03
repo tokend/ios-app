@@ -7,6 +7,7 @@ public protocol SettingsScenePresentationLogic {
     func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response)
     func presentSceneDidUpdateSync(response: Event.SceneDidUpdateSync.Response)
     func presentDidTapItemSync(response: Event.DidTapItemSync.Response)
+    func presentErrorOccuredSync(response: Event.ErrorOccuredSync.Response)
 }
 
 extension SettingsScene {
@@ -51,18 +52,19 @@ private extension SettingsScene.Presenter {
                 
                 case .language:
                     cells.append(
-                        IconTitleDisclosureCell.ViewModel(
+                        IconTitleDescriptionDisclosureCell.ViewModel(
                             id: item.rawValue,
                             icon: .uiImage( Assets.settings_language_icon.image),
-                            title: Localized(.settings_app_language)
+                            title: Localized(.settings_app_language),
+                            description: sceneModel.preferredLanguage
                         )
                     )
                     
                     sections.append(
                         Model.Section(
                             id: section.id,
-                            header: HeaderFooterView.ViewModel(
-                                id: section.id,
+                            header: CommonHeaderView.ViewModel(
+                                id: "\(section.id)Header",
                                 title: Localized(.settings_app_title).uppercased()
                             ),
                             footer: nil,
@@ -91,12 +93,12 @@ private extension SettingsScene.Presenter {
                     sections.append(
                         Model.Section(
                             id: section.id,
-                            header: HeaderFooterView.ViewModel(
-                                id: section.id,
+                            header: CommonHeaderView.ViewModel(
+                                id: "\(section.id)Header",
                                 title: Localized(.settings_account_title).uppercased()
                             ),
-                            footer: HeaderFooterView.ViewModel(
-                                id: section.id,
+                            footer: CommonFooterView.ViewModel(
+                                id: "\(section.id)Footer",
                                 title: Localized(.settings_account_verification_description)
                             ),
                             cells: cells
@@ -116,8 +118,8 @@ private extension SettingsScene.Presenter {
                         Model.Section(
                             id: section.id,
                             header: nil,
-                            footer: HeaderFooterView.ViewModel(
-                                id: section.id,
+                            footer: CommonFooterView.ViewModel(
+                                id: "\(section.id)Footer",
                                 title: Localized(.settings_account_secret_seed_description)
                             ),
                             cells: cells
@@ -181,14 +183,23 @@ private extension SettingsScene.Presenter {
                     }
                     
                 case .tfa:
-                    cells.append(
-                        SettingsScene.SwitcherCell.ViewModel(
-                            id: item.rawValue,
-                            icon: .uiImage(Assets.settings_tfa_icon.image),
-                            title: Localized(.settings_security_tfa),
-                            switcherStatus: sceneModel.tfaIsEnabled
+                    
+                    switch sceneModel.tfaStatus {
+                    
+                    case .loaded(enabled: let enabled):
+                        cells.append(
+                            SettingsScene.SwitcherCell.ViewModel(
+                                id: item.rawValue,
+                                icon: .uiImage(Assets.settings_tfa_icon.image),
+                                title: Localized(.settings_security_tfa),
+                                switcherStatus: enabled
+                            )
                         )
-                    )
+                    case .loading,
+                         .undetermined,
+                        .failed:
+                        break
+                    }
                     
                 case .changePassword:
                     cells.append(
@@ -202,8 +213,8 @@ private extension SettingsScene.Presenter {
                     sections.append(
                         Model.Section(
                             id: section.id,
-                            header: HeaderFooterView.ViewModel(
-                                id: section.id,
+                            header: CommonHeaderView.ViewModel(
+                                id: "\(section.id)Header",
                                 title: Localized(.settings_security_title).uppercased()
                             ),
                             footer: nil,
@@ -253,6 +264,13 @@ extension SettingsScene.Presenter: SettingsScene.PresentationLogic {
     public func presentDidTapItemSync(response: Event.DidTapItemSync.Response) {
         presenterDispatch.displaySync { (displayLogic) in
             displayLogic.displayDidTapItemSync(viewModel: response)
+        }
+    }
+    
+    public func presentErrorOccuredSync(response: Event.ErrorOccuredSync.Response) {
+        let viewModel: Event.ErrorOccuredSync.ViewModel = response
+        presenterDispatch.displaySync { (displayLogic) in
+            displayLogic.displayErrorOccuredSync(viewModel: viewModel)
         }
     }
 }

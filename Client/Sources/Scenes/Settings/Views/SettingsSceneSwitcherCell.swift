@@ -134,8 +134,6 @@ private extension SettingsScene.SwitcherCell.View {
     }
     
     func setupSwitcher() {
-        switcher.tintColor = Theme.Colors.switchOffTintColor
-        switcher.onTintColor = Theme.Colors.switchOnTintColor
         switcher.addTarget(
             self,
             action: #selector(switcherValueChanged),

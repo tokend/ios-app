@@ -1,4 +1,6 @@
 import Foundation
+import RxSwift
+import TokenDSDK
 
 public protocol SettingsSceneBusinessLogic {
     
@@ -28,6 +30,8 @@ extension SettingsScene {
         private let biometricsInfoProvider: BiometricsInfoProviderProtocol
         private let tfaManager: TFAManagerProtocol
         private let settingsManager: SettingsManagerProtocol
+        
+        private let disposeBag: DisposeBag = .init()
         
         // MARK: -
         
@@ -69,10 +73,11 @@ extension SettingsScene {
                         ]
                     )
                 ],
+                preferredLanguage: "English",
                 lockAppIsEnabled: false,
                 biometricsType: biometricsInfoProvider.biometricsType,
-                biometricsIsEnabled: biometricsInfoProvider.isAvailable,
-                tfaIsEnabled: false
+                biometricsIsEnabled: settingsManager.biometricsAuthEnabled,
+                tfaStatus: tfaManager.status.mapToTFAState()
             )
         }
     }
@@ -97,13 +102,25 @@ private extension SettingsScene.Interactor {
         )
         presenter.presentSceneDidUpdateSync(response: response)
     }
+    
+    func observeTFA() {
+        tfaManager
+            .observeTfaStatus()
+            .subscribe(onNext: { [weak self] (status) in
+                self?.sceneModel.tfaStatus = status.mapToTFAState()
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - BusinessLogic
 
 extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
     
-    public func onViewDidLoad(request: Event.ViewDidLoad.Request) { }
+    public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        observeTFA()
+    }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
         presentSceneDidUpdateSync(animated: false)
@@ -138,13 +155,41 @@ extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
             return
             
         case .lockApp:
-            // TODO: -
+            // TODO: - Implement
             break
             
         case .biometrics:
             settingsManager.biometricsAuthEnabled = request.newValue
+            sceneModel.biometricsIsEnabled = settingsManager.biometricsAuthEnabled
+            presentSceneDidUpdateSync(animated: true)
             
         case .tfa:
+            let completion: (Result<Void, Swift.Error>) -> Void = { (result) in
+                
+                switch result {
+                
+                case .success:
+                    break
+                    
+                case .failure(error: let error):
+                    
+                    if case TFAApi.CreateFactorError.tfaCancelled = error {
+                        return
+                    }
+                    
+                    if case TFAApi.UpdateFactorError.tfaCancelled = error {
+                        return
+                    }
+                    
+                    if case TFAApi.DeleteFactorError.tfaCancelled = error {
+                        return
+                    }
+                    
+                    let response: Event.ErrorOccuredSync.Response = .init(error: error)
+                    self.presenter.presentErrorOccuredSync(response: response)
+                }
+            }
+            
             if request.newValue {
                 tfaManager.enableTFA(completion: completion)
             } else {
@@ -154,4 +199,22 @@ extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
     }
     
     public func onDidRefresh(request: Event.DidRefresh.Request) { }
+}
+
+private extension TFAStatus {
+    
+    func mapToTFAState() -> SettingsScene.Model.TFAState {
+        
+        switch self {
+        
+        case .undetermined:
+            return .undetermined
+        case .loading:
+            return .loading
+        case .failed:
+            return .failed
+        case .loaded(enabled: let enabled):
+            return .loaded(enabled: enabled)
+        }
+    }
 }

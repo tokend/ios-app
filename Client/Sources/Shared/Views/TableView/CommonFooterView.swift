@@ -1,8 +1,8 @@
 import UIKit
 
-enum HeaderFooterView {
+enum CommonFooterView {
     
-    private static var titleTopInset: CGFloat { 8.0 }
+    private static var titleTopInset: CGFloat { 7.0 }
     private static var titleLeadingInset: CGFloat { 18.0 }
     private static var titleTrailingInset: CGFloat { 18.0 }
     private static var titleBottomInset: CGFloat { 8.0 }
@@ -16,8 +16,21 @@ enum HeaderFooterView {
         let id: String
         let title: String
         
-        func setup(headerFooter: HeaderFooterView.View) {
+        func setup(headerFooter: CommonFooterView.View) {
             headerFooter.title = title
+        }
+        
+        var hashValue: Int {
+            id.hashValue
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        public static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
+            
+            return lhs.title == rhs.title
         }
     }
     
@@ -52,8 +65,8 @@ enum HeaderFooterView {
 
 // MARK: - Private methods
 
-private extension HeaderFooterView.View {
-    typealias NameSpace = HeaderFooterView
+private extension CommonFooterView.View {
+    typealias NameSpace = CommonFooterView
 
     func customInit() {
         setupView()
@@ -86,8 +99,8 @@ private extension HeaderFooterView.View {
     }
 }
 
-extension HeaderFooterView.ViewModel: UITableViewHeaderFooterViewHeightProvider {
-    typealias NameSpace = HeaderFooterView
+extension CommonFooterView.ViewModel: UITableViewHeaderFooterViewHeightProvider {
+    typealias NameSpace = CommonFooterView
     
     func height(with tableViewWidth: CGFloat) -> CGFloat {
         

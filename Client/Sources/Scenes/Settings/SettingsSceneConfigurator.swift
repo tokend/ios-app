@@ -8,6 +8,8 @@ extension SettingsScene {
             viewController: ViewController,
             routing: Routing?,
             biometricsInfoProvider: BiometricsInfoProviderProtocol,
+            tfaManager: TFAManagerProtocol,
+            settingsManager: SettingsManagerProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -17,7 +19,9 @@ extension SettingsScene {
             )
             let interactor = Interactor(
                 presenter: presenter,
-                biometricsInfoProvider: biometricsInfoProvider
+                biometricsInfoProvider: biometricsInfoProvider,
+                tfaManager: tfaManager,
+                settingsManager: settingsManager
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

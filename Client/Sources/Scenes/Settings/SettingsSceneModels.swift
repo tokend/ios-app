@@ -29,11 +29,11 @@ extension SettingsScene.Model {
         
         var loadingStatus: LoadingStatus
         var sections: [SectionModel]
-//        var preferredLanguage:
+        var preferredLanguage: String
         var lockAppIsEnabled: Bool
         var biometricsType: BiometricsType
         var biometricsIsEnabled: Bool
-        var tfaIsEnabled: Bool
+        var tfaStatus: TFAState
     }
     
     struct SceneViewModel {
@@ -68,6 +68,13 @@ extension SettingsScene.Model {
         case biometrics
         case tfa
         case changePassword
+    }
+    
+    public enum TFAState {
+        case loaded(enabled: Bool)
+        case loading
+        case undetermined
+        case failed
     }
 }
 
@@ -128,6 +135,14 @@ extension SettingsScene.Event {
             let id: String
             let newValue: Bool
         }
+    }
+    
+    public enum ErrorOccuredSync {
+        public struct Response {
+            let error: Swift.Error
+        }
+        
+        public typealias ViewModel = Response
     }
     
     public enum DidRefresh {

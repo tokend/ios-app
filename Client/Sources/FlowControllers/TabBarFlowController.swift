@@ -260,9 +260,11 @@ private extension TabBarFlowController {
         navigationController: NavigationControllerProtocol
     ) {
         
-        let vc: SettingsScene.ViewController = initSettings()
-        navigationController.pushViewController(vc, animated: true)
-        vc.navigationController?.navigationBar.prefersLargeTitles = true
+        let flow = initSettingsFlow(navigationController: navigationController)
+        self.currentFlowController = flow
+        flow.run(showRootScreen: { (controller) in
+            showRootScreen(controller)
+        })
     }
     
     func initSettings(
@@ -278,7 +280,17 @@ private extension TabBarFlowController {
             onSignOutTap: { [weak self] in
                 self?.onAskSignOut()
             },
-            onChangePasswordTap: { [weak self] in }
+            onChangePasswordTap: { [weak self] in },
+            onShowError: { [weak self] (error) in
+                if case TFAApi.UpdateFactorError.tfaFailed = error {
+                    self?.navigationController.showErrorMessage(Localized(.settings_tfa_wrong_code_error), completion: nil)
+                } else {
+                    self?.navigationController.showErrorMessage(
+                        Localized(.error_unknown),
+                        completion: nil
+                    )
+                }
+            }
         )
         
         let biometricsInfoProvider: BiometricsInfoProviderProtocol = BiometricsInfoProvider()
@@ -286,10 +298,39 @@ private extension TabBarFlowController {
         SettingsScene.Configurator.configure(
             viewController: vc,
             routing: routing,
-            biometricsInfoProvider: biometricsInfoProvider
+            biometricsInfoProvider: biometricsInfoProvider,
+            tfaManager: managersController.tfaManager,
+            settingsManager: managersController.settingsManager
         )
         
         return vc
+    }
+    
+    func initSettingsFlow(
+        navigationController: NavigationControllerProtocol
+    ) -> SettingsFlowController {
+        
+        return .init(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            navigationController: navigationController,
+            onAskSignOut: { [weak self] in
+                self?.onAskSignOut()
+            },
+            onPerformSignOut: { [weak self] in
+                self?.onPerformSignOut()
+            },
+            onBackAction: { [weak self] in
+                // TODO
+                navigationController.popViewController(true)
+                self?.currentFlowController = nil
+            }
+        )
     }
 }
 

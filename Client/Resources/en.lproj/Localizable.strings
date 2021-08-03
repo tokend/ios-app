@@ -81,3 +81,4 @@
 "settings_security_lock_app" = "Lock app in background";
 "settings_security_tfa" = "Two-factor authentication";
 "settings_security_change_password" = "Change password";
+"settings_tfa_wrong_code_error" = "You have entered wrong code";
