@@ -71,4 +71,12 @@ enum LocKey: String {
     case more_user_corporate_status
     case more_user_general_status
     case more_user_unverified_status
+    case change_password_title
+    case change_password_current_password_title
+    case change_password_new_password_title
+    case change_password_confirm_new_password_title
+    case change_password_password_placeholder
+    case change_password_button
+    case change_password_passwords_do_not_match
+    case change_password_wrong_old_password_error
 }

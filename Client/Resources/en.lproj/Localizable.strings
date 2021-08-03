@@ -67,3 +67,11 @@
 "more_user_corporate_status" = "Corporate account";
 "more_user_general_status" = "General account";
 "more_user_unverified_status" = "Unverified account";
+"change_password_title" = "Change Password";
+"change_password_current_password_title" = "Current";
+"change_password_new_password_title" = "New";
+"change_password_confirm_new_password_title" = "Confirm";
+"change_password_password_placeholder" = "Password";
+"change_password_button" = "Change Password";
+"change_password_passwords_do_not_match" = "Passwords do not match";
+"change_password_wrong_old_password_error" = "Wrong old password";
