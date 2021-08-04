@@ -310,7 +310,10 @@ private extension TabBarFlowController {
     func showSecretSeed() {
         
         let seedData = self.keychainDataProvider.getKeyData()
-        let seed = Base32Check.encode(version: .seedEd25519, data: seedData.getSeedData())
+        let seed = Base32Check.encode(
+            version: .seedEd25519,
+            data: seedData.getSeedData()
+        )
         
         let alert: UIAlertController = .init(
             title: Localized(.secret_seed_title),
