@@ -98,6 +98,7 @@ private extension ChangePasswordScene.ViewController {
     
     func setup() {
         setupView()
+        setupNavigationBar()
         setupScrollView()
         setupScrollViewContentView()
         setupTextFieldsContainer()
@@ -110,7 +111,24 @@ private extension ChangePasswordScene.ViewController {
     
     func setupView() {
         view.backgroundColor = Theme.Colors.mainBackgroundColor
+    }
+    
+    func setupNavigationBar() {
+        navigationItem.setLeftBarButton(
+            .init(
+                image: Assets.arrow_back_icon.image,
+                style: .plain,
+                target: self,
+                action: #selector(backButtonAction)
+            ),
+            animated: false
+        )
+        
         navigationItem.title = Localized(.change_password_title)
+    }
+    
+    @objc func backButtonAction() {
+        routing?.onBackAction()
     }
     
     func setupScrollView() {
