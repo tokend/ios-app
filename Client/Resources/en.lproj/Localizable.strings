@@ -67,3 +67,9 @@
 "more_user_corporate_status" = "Corporate account";
 "more_user_general_status" = "General account";
 "more_user_unverified_status" = "Unverified account";
+"no" = "No";
+"yes" = "Yes";
+"secret_seed_confirmation_title" = "Do you want to continue?";
+"secret_seed_confirmation_message" = "You are about to show sensitive data. Anyone who knows the secret seed can gain access to youe account.";
+"secret_seed_title" = "Secret Seed";
+"copy" = "Copy";

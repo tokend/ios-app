@@ -71,4 +71,10 @@ enum LocKey: String {
     case more_user_corporate_status
     case more_user_general_status
     case more_user_unverified_status
+    case no
+    case yes
+    case secret_seed_confirmation_title
+    case secret_seed_confirmation_message
+    case secret_seed_title
+    case copy
 }

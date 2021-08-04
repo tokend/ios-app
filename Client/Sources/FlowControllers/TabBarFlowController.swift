@@ -1,6 +1,7 @@
 import UIKit
 import TokenDSDK
 import RxSwift
+import TokenDWallet
 
 class TabBarFlowController: BaseSignedInFlowController {
     
@@ -270,6 +271,78 @@ private extension TabBarFlowController {
                 }
             ),
             animated: true
+        )
+    }
+    
+    func showSecretSeedConfirmation() {
+        
+        let alert: UIAlertController = .init(
+            title: Localized(.secret_seed_confirmation_title),
+            message: Localized(.secret_seed_confirmation_message),
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(
+            .init(
+                title: Localized(.no),
+                style: .cancel,
+                handler: nil
+            )
+        )
+        
+        alert.addAction(
+            .init(
+                title: Localized(.yes),
+                style: .destructive,
+                handler: { [weak self] (_) in
+                    self?.showSecretSeed()
+                }
+            )
+        )
+        
+        navigationController.present(
+            alert,
+            animated: true,
+            completion: nil
+        )
+    }
+    
+    func showSecretSeed() {
+        
+        let seedData = self.keychainDataProvider.getKeyData()
+        let seed = Base32Check.encode(
+            version: .seedEd25519,
+            data: seedData.getSeedData()
+        )
+        
+        let alert: UIAlertController = .init(
+            title: Localized(.secret_seed_title),
+            message: seed,
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(
+            .init(
+                title: Localized(.copy),
+                style: .default,
+                handler: { (_) in
+                    UIPasteboard.general.string = seed
+                }
+            )
+        )
+        
+        alert.addAction(
+            .init(
+                title: Localized(.ok_alert_action),
+                style: .cancel,
+                handler: nil
+            )
+        )
+        
+        navigationController.present(
+            alert,
+            animated: true,
+            completion: nil
         )
     }
     
