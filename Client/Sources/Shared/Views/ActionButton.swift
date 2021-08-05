@@ -11,7 +11,7 @@ final class ActionButton: UIView {
     private var separatorHeight: CGFloat { CGFloat(1.0).convertToPixels() }
 
     private let topSeparatorView: UIView = .init()
-    private let button: UIButton = .init()
+    private let button: UIButton = .init(type: .system)
     private let bottomSeparatorView: UIView = .init()
     
     // MARK: - Public properties

@@ -73,3 +73,11 @@
 "secret_seed_confirmation_message" = "You are about to show sensitive data. Anyone who knows the secret seed can gain access to youe account.";
 "secret_seed_title" = "Secret Seed";
 "copy" = "Copy";
+"change_password_title" = "Change Password";
+"change_password_current_password_title" = "Current";
+"change_password_new_password_title" = "New";
+"change_password_confirm_new_password_title" = "Confirm";
+"change_password_password_placeholder" = "Password";
+"change_password_button" = "Change Password";
+"change_password_passwords_do_not_match" = "Passwords do not match";
+"change_password_wrong_old_password_error" = "Wrong old password";

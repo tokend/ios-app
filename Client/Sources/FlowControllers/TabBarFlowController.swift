@@ -346,6 +346,44 @@ private extension TabBarFlowController {
         )
     }
     
+    func showChangePassword(
+        in navigationController: NavigationControllerProtocol
+    ) {
+        
+        let currentViewController: UIViewController? = navigationController.topViewController
+        let flow: ChangePasswordFlowController = .init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation,
+            onBack: { [weak self] in
+                if let current = currentViewController {
+                    navigationController.popToViewController(current, animated: true)
+                } else {
+                    navigationController.popViewController(true)
+                }
+                self?.currentFlowController = nil
+            },
+            onDidChangePassword: { [weak self] in
+                if let current = currentViewController {
+                    navigationController.popToViewController(current, animated: true)
+                } else {
+                    navigationController.popViewController(true)
+                }
+                self?.currentFlowController = nil
+            },
+            navigationController: navigationController
+        )
+        
+        currentFlowController = flow
+        flow.run({ (controller) in
+            navigationController.pushViewController(controller, animated: true)
+        })
+    }
+    
     func initAccountId(
         onBack: @escaping () -> Void
     ) -> UIViewController {
