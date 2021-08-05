@@ -136,7 +136,6 @@ class AppController {
     // MARK: - Public
 
     func onRootDidAppear() {
-        rootNavigation.setRootContent(navigationController, transition: .fade, animated: false)
         self.runLaunchFlow(animated: false)
     }
     
@@ -167,6 +166,8 @@ class AppController {
     // MARK: - Private
     
     private func runLaunchFlow(animated: Bool) {
+        rootNavigation.setRootContent(navigationController, transition: .fade, animated: false)
+        
         if let mainAccount = self.userDataManager.getMainAccount(),
             let walletData = self.userDataManager.getWalletData(account: mainAccount) {
             
@@ -175,7 +176,8 @@ class AppController {
                 apiEndpoint: walletData.network.rootUrl,
                 termsAddress: self.flowControllerStack.apiConfigurationModel.termsAddress,
                 webClient: nil,
-                downloadUrl: nil
+                downloadUrl: nil,
+                verificationUrl: self.flowControllerStack.apiConfigurationModel.verificationUrl
             )
             self.updateFlowControllerStack(apiConfigurationModel, self.keychainManager)
         }

@@ -82,3 +82,8 @@
 "settings_security_tfa" = "Two-factor authentication";
 "settings_security_change_password" = "Change password";
 "settings_tfa_wrong_code_error" = "You have entered wrong code";
+"tfa_setup_tfa" = "Setup 2FA";
+"to_enable_two_factor_authentication" = "To enable Two-factor authentication open Google Authenticator or similar app with the button below or copy and manually enter this key:\n\n$(secret)";
+"to_enable_two_factor_authentication_replace_secret" = "secret";
+"copy" = "Copy";
+"open_app" = "Open App";

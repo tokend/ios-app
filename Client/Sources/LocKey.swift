@@ -86,4 +86,9 @@ enum LocKey: String {
     case settings_security_tfa
     case settings_security_change_password
     case settings_tfa_wrong_code_error
+    case tfa_setup_tfa
+    case to_enable_two_factor_authentication
+    case to_enable_two_factor_authentication_replace_secret
+    case copy
+    case open_app
 }

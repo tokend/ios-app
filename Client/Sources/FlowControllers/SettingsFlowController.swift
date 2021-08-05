@@ -48,7 +48,6 @@ class SettingsFlowController: BaseSignedInFlowController {
 
     public func run(showRootScreen: ((_ vc: UIViewController) -> Void)?) {
         showRootScreen?(rootViewController)
-        rootViewController.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
@@ -97,6 +96,16 @@ class SettingsFlowController: BaseSignedInFlowController {
             }
         }
     }
+    
+    override func handleTFASecret(_ secret: String, seed: String, completion: @escaping (Bool) -> Void) {
+        
+        if let currentFlowController = currentFlowController {
+            currentFlowController.handleTFASecret(secret, seed: seed, completion: completion)
+        } else {
+            let alert = self.setupTFASecretAlert(secret, seed: seed, completion: completion)
+            self.navigationController.present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 // MARK: - Private methods
@@ -114,7 +123,17 @@ private extension SettingsFlowController {
             },
             onLanguageTap: { [weak self] in },
             onAccountIdTap: { [weak self] in },
-            onVerificationTap: { [weak self] in },
+            onVerificationTap: { [weak self] in
+                                
+                guard let string = self?.flowControllerStack.apiConfigurationModel.verificationUrl,
+                      let link = URL(string: string),
+                      UIApplication.shared.canOpenURL(link)
+                else {
+                    return
+                }
+                
+                UIApplication.shared.open(link, options: [:], completionHandler: nil)
+            },
             onSecretSeedTap: { [weak self] in },
             onSignOutTap: { [weak self] in
                 self?.onAskSignOut()

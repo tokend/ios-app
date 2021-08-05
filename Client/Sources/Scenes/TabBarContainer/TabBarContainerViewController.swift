@@ -135,3 +135,9 @@ extension TabBarContainer {
 }
 
 extension TabBarContainer.ViewController: TabBarContainer.DisplayLogic { }
+
+extension TabBarContainer.ViewController: RootContentProtocol {
+    func getRootContentViewController() -> UIViewController {
+        return self
+    }
+}

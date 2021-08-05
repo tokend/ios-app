@@ -57,13 +57,15 @@ struct WalletDataSerializable: Codable {
         public let passphrase: String
         public let rootUrl: String
         public let storageUrl: String
+        public let verificationUrl: String
         
         init(
             masterAccountId: String,
             name: String,
             passphrase: String,
             rootUrl: String,
-            storageUrl: String
+            storageUrl: String,
+            verificationUrl: String
             ) {
             
             self.masterAccountId = masterAccountId
@@ -71,6 +73,7 @@ struct WalletDataSerializable: Codable {
             self.passphrase = passphrase
             self.rootUrl = rootUrl
             self.storageUrl = storageUrl
+            self.verificationUrl = verificationUrl
         }
     }
     

@@ -15,7 +15,6 @@ class TabBarFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
 
-    private let navigationController: NavigationControllerProtocol = NavigationController()
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
     private var selectedTab: Tab?
@@ -56,6 +55,10 @@ class TabBarFlowController: BaseSignedInFlowController {
     
     override func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
         self.currentFlowController?.performTFA(tfaInput: tfaInput, cancel: cancel)
+    }
+    
+    override func handleTFASecret(_ secret: String, seed: String, completion: @escaping (Bool) -> Void) {
+        self.currentFlowController?.handleTFASecret(secret, seed: seed, completion: completion)
     }
 }
 
@@ -114,10 +117,7 @@ private extension TabBarFlowController {
             viewController: container,
             routing: tabBarContainerRouting
         )
-
-        self.navigationController.setViewControllers([container], animated: false)
-        navigationController.setNavigationBarHidden(true, animated: false)
-
+        
         showSelectedTab(
             selectedTabIdentifier,
             order: self.tabsOrder,
@@ -126,9 +126,9 @@ private extension TabBarFlowController {
         )
 
         if let showRoot = showRootScreen {
-            showRoot(self.navigationController)
+            showRoot(container)
         } else {
-            self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
+            self.rootNavigation.setRootContent(container, transition: .fade, animated: false)
         }
     }
     
@@ -231,7 +231,7 @@ private extension TabBarFlowController {
             onTradeTap: {},
             onPollsTap: {},
             onSettingsTap: { [weak self] in
-                self?.showSettings(
+                self?.showSettingsFlow(
                     navigationController: navigationController
                 )
             }
@@ -256,54 +256,16 @@ private extension TabBarFlowController {
         showRootScreen(navigationController)
     }
     
-    func showSettings(
+    func showSettingsFlow(
         navigationController: NavigationControllerProtocol
     ) {
         
         let flow = initSettingsFlow(navigationController: navigationController)
         self.currentFlowController = flow
         flow.run(showRootScreen: { (controller) in
-            showRootScreen(controller)
+            navigationController.pushViewController(controller, animated: true)
+            controller.navigationController?.navigationBar.prefersLargeTitles = true
         })
-    }
-    
-    func initSettings(
-    ) -> SettingsScene.ViewController {
-        
-        let vc: SettingsScene.ViewController = .init()
-        
-        let routing: SettingsScene.Routing = .init(
-            onLanguageTap: { [weak self] in },
-            onAccountIdTap: { [weak self] in },
-            onVerificationTap: { [weak self] in },
-            onSecretSeedTap: { [weak self] in },
-            onSignOutTap: { [weak self] in
-                self?.onAskSignOut()
-            },
-            onChangePasswordTap: { [weak self] in },
-            onShowError: { [weak self] (error) in
-                if case TFAApi.UpdateFactorError.tfaFailed = error {
-                    self?.navigationController.showErrorMessage(Localized(.settings_tfa_wrong_code_error), completion: nil)
-                } else {
-                    self?.navigationController.showErrorMessage(
-                        Localized(.error_unknown),
-                        completion: nil
-                    )
-                }
-            }
-        )
-        
-        let biometricsInfoProvider: BiometricsInfoProviderProtocol = BiometricsInfoProvider()
-        
-        SettingsScene.Configurator.configure(
-            viewController: vc,
-            routing: routing,
-            biometricsInfoProvider: biometricsInfoProvider,
-            tfaManager: managersController.tfaManager,
-            settingsManager: managersController.settingsManager
-        )
-        
-        return vc
     }
     
     func initSettingsFlow(
