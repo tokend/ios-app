@@ -5,6 +5,8 @@ class FlowControllerStack {
     
     // MARK: - APIs
     
+    private let apiConfigurationProvider: ApiConfigurationProvider
+    
     var api: TokenDSDK.API
     var apiV3: TokenDSDK.APIv3
     var verifyApi: TokenDSDK.TFAVerifyApi
@@ -33,8 +35,10 @@ class FlowControllerStack {
         settingsManager: SettingsManagerProtocol
         ) {
         
-        let apiConfiguration = ApiConfiguration(
-            urlString: apiConfigurationModel.apiEndpoint
+        let apiConfigurationProvider: ApiConfigurationProvider = .init(
+            apiConfiguration: .init(
+                urlString: apiConfigurationModel.apiEndpoint
+            )
         )
         
         let requestSigner = RequestSigner(
@@ -47,27 +51,27 @@ class FlowControllerStack {
         )
         
         let api = TokenDSDK.API(
-            configuration: apiConfiguration,
+            configurationProvider: apiConfigurationProvider,
             callbacks: apiCallbacks,
             network: network,
             requestSigner: requestSigner
         )
         
         let apiV3 = TokenDSDK.APIv3(
-            configuration: apiConfiguration,
+            configurationProvider: apiConfigurationProvider,
             callbacks: apiCallbacksV3,
             network: networkV3,
             requestSigner: requestSignerV3
         )
         
         let verifyApi = TokenDSDK.TFAVerifyApi(
-            apiConfiguration: apiConfiguration,
+            apiConfigurationProvider: apiConfigurationProvider,
             requestSigner: requestSigner,
             network: network
         )
         
         let keyServerApi = KeyServerApi(
-            apiConfiguration: apiConfiguration,
+            apiConfigurationProvider: apiConfigurationProvider,
             callbacks: apiCallbacks,
             verifyApi: verifyApi,
             requestSigner: requestSignerV3,
@@ -76,6 +80,8 @@ class FlowControllerStack {
         )
         
         self.networkInfoRepo = NetworkInfoRepo(api: apiV3.infoApi)
+        
+        self.apiConfigurationProvider = apiConfigurationProvider
         
         self.api = api
         self.apiV3 = apiV3
@@ -101,7 +107,7 @@ class FlowControllerStack {
         settingsManager: SettingsManagerProtocol
         ) {
         
-        let apiConfiguration = ApiConfiguration(
+        self.apiConfigurationProvider.apiConfiguration = .init(
             urlString: apiConfigurationModel.apiEndpoint
         )
         
@@ -115,27 +121,27 @@ class FlowControllerStack {
         )
         
         let api = TokenDSDK.API(
-            configuration: apiConfiguration,
+            configurationProvider: apiConfigurationProvider,
             callbacks: apiCallbacks,
             network: network,
             requestSigner: requestSigner
         )
         
         let apiV3 = TokenDSDK.APIv3(
-            configuration: apiConfiguration,
+            configurationProvider: apiConfigurationProvider,
             callbacks: apiCallbacksV3,
             network: networkV3,
             requestSigner: requestSignerV3
         )
         
         let verifyApi = TokenDSDK.TFAVerifyApi(
-            apiConfiguration: apiConfiguration,
+            apiConfigurationProvider: apiConfigurationProvider,
             requestSigner: requestSigner,
             network: network
         )
         
         let keyServerApi = KeyServerApi(
-            apiConfiguration: apiConfiguration,
+            apiConfigurationProvider: apiConfigurationProvider,
             callbacks: apiCallbacks,
             verifyApi: verifyApi,
             requestSigner: requestSignerV3,
@@ -156,3 +162,20 @@ class FlowControllerStack {
         self.settingsManager = settingsManager
     }
 }
+
+private extension FlowControllerStack {
+    
+    class ApiConfigurationProvider {
+        
+        var apiConfiguration: ApiConfiguration
+        
+        init(
+            apiConfiguration: ApiConfiguration
+        ) {
+            
+            self.apiConfiguration = apiConfiguration
+        }
+    }
+}
+
+extension FlowControllerStack.ApiConfigurationProvider: ApiConfigurationProviderProtocol { }
