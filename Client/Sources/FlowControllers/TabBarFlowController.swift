@@ -1,7 +1,6 @@
 import UIKit
 import TokenDSDK
 import RxSwift
-import TokenDWallet
 
 class TabBarFlowController: BaseSignedInFlowController {
     
@@ -16,7 +15,6 @@ class TabBarFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
 
-    private let navigationController: NavigationControllerProtocol = NavigationController()
     private lazy var moreTabNavigationController: NavigationControllerProtocol = initMoreFlow()
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
@@ -58,6 +56,10 @@ class TabBarFlowController: BaseSignedInFlowController {
     
     override func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
         self.currentFlowController?.performTFA(tfaInput: tfaInput, cancel: cancel)
+    }
+    
+    override func handleTFASecret(_ secret: String, seed: String, completion: @escaping (Bool) -> Void) {
+        self.currentFlowController?.handleTFASecret(secret, seed: seed, completion: completion)
     }
 }
 
@@ -116,10 +118,7 @@ private extension TabBarFlowController {
             viewController: container,
             routing: tabBarContainerRouting
         )
-
-        self.navigationController.setViewControllers([container], animated: false)
-        navigationController.setNavigationBarHidden(true, animated: false)
-
+        
         showSelectedTab(
             selectedTabIdentifier,
             order: self.tabsOrder,
@@ -128,9 +127,9 @@ private extension TabBarFlowController {
         )
 
         if let showRoot = showRootScreen {
-            showRoot(self.navigationController)
+            showRoot(container)
         } else {
-            self.rootNavigation.setRootContent(self.navigationController, transition: .fade, animated: false)
+            self.rootNavigation.setRootContent(container, transition: .fade, animated: false)
         }
     }
     
@@ -240,7 +239,11 @@ private extension TabBarFlowController {
             onExploreSalesTap: {},
             onTradeTap: {},
             onPollsTap: {},
-            onSettingsTap: {}
+            onSettingsTap: { [weak self] in
+                self?.showSettingsFlow(
+                    navigationController: navigationController
+                )
+            }
         )
         
         let userDataProvider: MoreScene.UserDataProvider = .init(
@@ -274,116 +277,6 @@ private extension TabBarFlowController {
         )
     }
     
-    func showSecretSeedConfirmation() {
-        
-        let alert: UIAlertController = .init(
-            title: Localized(.secret_seed_confirmation_title),
-            message: Localized(.secret_seed_confirmation_message),
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(
-            .init(
-                title: Localized(.no),
-                style: .cancel,
-                handler: nil
-            )
-        )
-        
-        alert.addAction(
-            .init(
-                title: Localized(.yes),
-                style: .destructive,
-                handler: { [weak self] (_) in
-                    self?.showSecretSeed()
-                }
-            )
-        )
-        
-        navigationController.present(
-            alert,
-            animated: true,
-            completion: nil
-        )
-    }
-    
-    func showSecretSeed() {
-        
-        let seedData = self.keychainDataProvider.getKeyData()
-        let seed = Base32Check.encode(
-            version: .seedEd25519,
-            data: seedData.getSeedData()
-        )
-        
-        let alert: UIAlertController = .init(
-            title: Localized(.secret_seed_title),
-            message: seed,
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(
-            .init(
-                title: Localized(.copy),
-                style: .default,
-                handler: { (_) in
-                    UIPasteboard.general.string = seed
-                }
-            )
-        )
-        
-        alert.addAction(
-            .init(
-                title: Localized(.ok_alert_action),
-                style: .cancel,
-                handler: nil
-            )
-        )
-        
-        navigationController.present(
-            alert,
-            animated: true,
-            completion: nil
-        )
-    }
-    
-    func showChangePassword(
-        in navigationController: NavigationControllerProtocol
-    ) {
-        
-        let currentViewController: UIViewController? = navigationController.topViewController
-        let flow: ChangePasswordFlowController = .init(
-            appController: appController,
-            flowControllerStack: flowControllerStack,
-            reposController: reposController,
-            managersController: managersController,
-            userDataProvider: userDataProvider,
-            keychainDataProvider: keychainDataProvider,
-            rootNavigation: rootNavigation,
-            onBack: { [weak self] in
-                if let current = currentViewController {
-                    navigationController.popToViewController(current, animated: true)
-                } else {
-                    navigationController.popViewController(true)
-                }
-                self?.currentFlowController = nil
-            },
-            onDidChangePassword: { [weak self] in
-                if let current = currentViewController {
-                    navigationController.popToViewController(current, animated: true)
-                } else {
-                    navigationController.popViewController(true)
-                }
-                self?.currentFlowController = nil
-            },
-            navigationController: navigationController
-        )
-        
-        currentFlowController = flow
-        flow.run({ (controller) in
-            navigationController.pushViewController(controller, animated: true)
-        })
-    }
-    
     func initAccountId(
         onBack: @escaping () -> Void
     ) -> UIViewController {
@@ -394,7 +287,10 @@ private extension TabBarFlowController {
         let routing: AccountIDScene.Routing = .init(
             onBackAction: onBack,
             onShare: { [weak self] (valueToShare) in
-                self?.shareValue(valueToShare)
+                self?.shareValue(
+                    valueToShare,
+                    on: viewController
+                )
             }
         )
         
@@ -412,7 +308,8 @@ private extension TabBarFlowController {
     }
     
     func shareValue(
-        _ value: String
+        _ value: String,
+        on viewController: UIViewController
     ) {
         
         let activity: UIActivityViewController = .init(
@@ -420,10 +317,45 @@ private extension TabBarFlowController {
             applicationActivities: nil
         )
         
-        navigationController.present(
+        viewController.present(
             activity,
             animated: true,
             completion: nil
+        )
+    }
+    
+    func showSettingsFlow(
+        navigationController: NavigationControllerProtocol
+    ) {
+        
+        let flow = initSettingsFlow(navigationController: navigationController)
+        self.currentFlowController = flow
+        flow.run(showRootScreen: { (controller) in
+            navigationController.pushViewController(controller, animated: true)
+            controller.navigationController?.navigationBar.prefersLargeTitles = true
+        })
+    }
+    
+    func initSettingsFlow(
+        navigationController: NavigationControllerProtocol
+    ) -> SettingsFlowController {
+        
+        return .init(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            navigationController: navigationController,
+            onAskSignOut: { [weak self] in
+                self?.onAskSignOut()
+            },
+            onBackAction: { [weak self] in
+                navigationController.popViewController(true)
+                self?.currentFlowController = nil
+            }
         )
     }
 }

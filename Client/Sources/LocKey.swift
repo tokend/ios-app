@@ -85,4 +85,23 @@ enum LocKey: String {
     case change_password_button
     case change_password_passwords_do_not_match
     case change_password_wrong_old_password_error
+    case settings_title
+    case settings_app_title
+    case settings_app_language
+    case settings_account_title
+    case settings_account_account_id
+    case settings_account_verification
+    case settings_account_verification_description
+    case settings_account_secret_seed
+    case settings_account_secret_seed_description
+    case settings_account_sign_out
+    case settings_security_title
+    case settings_security_lock_app
+    case settings_security_tfa
+    case settings_security_change_password
+    case settings_tfa_wrong_code_error
+    case tfa_setup_tfa
+    case to_enable_two_factor_authentication
+    case to_enable_two_factor_authentication_replace_secret
+    case open_app
 }

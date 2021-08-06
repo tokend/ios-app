@@ -133,7 +133,8 @@ private extension WalletDataProvider {
             name: network.masterExchangeName,
             passphrase: network.networkParams.passphrase,
             rootUrl: flowControllerStack.apiConfigurationModel.apiEndpoint,
-            storageUrl: flowControllerStack.apiConfigurationModel.storageEndpoint
+            storageUrl: flowControllerStack.apiConfigurationModel.storageEndpoint,
+            verificationUrl: flowControllerStack.apiConfigurationModel.verificationUrl
         )
 
         guard let walletData = WalletDataSerializable.fromWalletData(

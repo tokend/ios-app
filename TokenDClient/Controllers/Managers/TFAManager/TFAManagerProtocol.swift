@@ -2,14 +2,14 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-enum TFAStatus {
+public enum TFAStatus {
     case undetermined
     case loading
     case failed(Swift.Error)
     case loaded(enabled: Bool)
 }
 
-protocol TFAManagerProtocol {
+public protocol TFAManagerProtocol {
     
     var status: TFAStatus { get }
     

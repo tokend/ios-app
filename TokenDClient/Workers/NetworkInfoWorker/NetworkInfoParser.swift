@@ -31,7 +31,8 @@ private extension NetworkInfoParser {
             apiEndpoint: model.api,
             termsAddress: model.terms,
             webClient: model.web,
-            downloadUrl: model.download
+            downloadUrl: model.download,
+            verificationUrl: model.kyc
         )
         
         return apiConfigurationModel

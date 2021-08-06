@@ -106,42 +106,42 @@ private extension MoreScene.Presenter {
             switch item {
             
             case .deposit:
-                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                itemsCells.append(IconTitleDisclosureCell.ViewModel(
                     id: item.rawValue,
                     icon: .uiImage(Assets.more_deposit_icon.image),
                     title: Localized(.more_deposit_title)
                 ))
                 
             case .withdraw:
-                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                itemsCells.append(IconTitleDisclosureCell.ViewModel(
                     id: "withdraw",
                     icon: .uiImage(Assets.more_withdraw_icon.image),
                     title: Localized(.more_withdraw_title)
                 ))
                 
             case .exploreSales:
-                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                itemsCells.append(IconTitleDisclosureCell.ViewModel(
                     id: "explore_sales",
                     icon: .uiImage(Assets.more_explore_sales_icon.image),
                     title: Localized(.more_explore_sales_title)
                 ))
                 
             case .trade:
-                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                itemsCells.append(IconTitleDisclosureCell.ViewModel(
                     id: "trade",
                     icon: .uiImage(Assets.more_trade_icon.image),
                     title: Localized(.more_trade_title)
                 ))
                 
             case .polls:
-                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                itemsCells.append(IconTitleDisclosureCell.ViewModel(
                     id: "polls",
                     icon: .uiImage(Assets.more_polls_icon.image),
                     title: Localized(.more_polls_title)
                 ))
                 
             case .settings:
-                itemsCells.append(MoreScene.IconTitleDisclosureCell.ViewModel(
+                itemsCells.append(IconTitleDisclosureCell.ViewModel(
                     id: "settings",
                     icon: .uiImage(Assets.more_settings_icon.image),
                     title: Localized(.more_settings_title)

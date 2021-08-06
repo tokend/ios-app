@@ -170,7 +170,7 @@ private extension MoreScene.UserCell.View {
             make.size.equalTo(NameSpace.avatarSize)
             make.leading.equalToSuperview().inset(NameSpace.avatarLeadingInset)
             make.top.equalToSuperview().inset(NameSpace.avatarTopInset)
-            make.bottom.equalToSuperview().inset(NameSpace.avatarBottomInset)
+            // FIXME: - Add bottom constraint
         }
         
         abbreviationLabel.snp.makeConstraints { make in
@@ -185,13 +185,12 @@ private extension MoreScene.UserCell.View {
             make.trailing.equalToSuperview().inset(NameSpace.nameTrailingInset)
         }
         
-        accountTypeLabel.setContentHuggingPriority(.required, for: .vertical)
         accountTypeLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         accountTypeLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImageView.snp.trailing).offset(NameSpace.accountTypeAvatarOffset)
             make.top.equalTo(nameLabel.snp.bottom).offset(NameSpace.accountTypeNameOffset)
-            make.bottom.equalToSuperview().inset(NameSpace.accountTypeBottomInset)
             make.trailing.equalToSuperview().inset(NameSpace.accountTypeTrailingInset)
+            // FIXME: - Add bottom constraint
         }
     }
 }

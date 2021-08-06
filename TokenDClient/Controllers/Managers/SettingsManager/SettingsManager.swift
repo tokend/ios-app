@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol SettingsManagerProtocol: class {
+public protocol SettingsManagerProtocol: AnyObject {
     var biometricsAuthEnabled: Bool { get set }
 }
 

@@ -114,6 +114,14 @@ class SignedInFlowController: BaseSignedInFlowController {
             self.currentFlowController?.applicationDidBecomeActive()
         }
     }
+    
+    override func performTFA(tfaInput: ApiCallbacks.TFAInput, cancel: @escaping () -> Void) {
+        self.currentFlowController?.performTFA(tfaInput: tfaInput, cancel: cancel)
+    }
+    
+    override func handleTFASecret(_ secret: String, seed: String, completion: @escaping (Bool) -> Void) {
+        self.currentFlowController?.handleTFASecret(secret, seed: seed, completion: completion)
+    }
 }
 
 // MARK: - Private methods

@@ -121,6 +121,10 @@ class LaunchFlowController: BaseFlowController {
         }
     }
     
+    override func handleTFASecret(_ secret: String, seed: String, completion: @escaping (Bool) -> Void) {
+        self.currentFlowController?.handleTFASecret(secret, seed: seed, completion: completion)
+    }
+    
     // MARK: - Public
     
     class func canHandle(

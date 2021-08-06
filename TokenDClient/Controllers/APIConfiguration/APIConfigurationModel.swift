@@ -6,4 +6,5 @@ public struct APIConfigurationModel: Decodable {
     let termsAddress: String?
     let webClient: String?
     let downloadUrl: String?
+    let verificationUrl: String
 }

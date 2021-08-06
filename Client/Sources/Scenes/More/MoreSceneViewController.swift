@@ -91,7 +91,7 @@ private extension MoreScene.ViewController {
         tableView.register(
             classes: [
                 MoreScene.UserCell.ViewModel.self,
-                MoreScene.IconTitleDisclosureCell.ViewModel.self
+                IconTitleDisclosureCell.ViewModel.self
             ]
         )
     }
@@ -215,6 +215,10 @@ extension MoreScene.ViewController: UITableViewDelegate {
         guard let height = (cell(for: indexPath) as? UITableViewCellHeightProvider)?.height(with: tableViewWidth)
             else { return UITableView.automaticDimension }
         
+        if tableView.separatorStyle != .none && tableView.style == .grouped {
+            return height + 1.0 / UIScreen.main.scale
+        }
+        
         return height
     }
     
@@ -227,7 +231,7 @@ extension MoreScene.ViewController: UITableViewDelegate {
         
         if cell is MoreScene.UserCell.ViewModel {
             routing?.onUserTap()
-        } else if let item = cell as? MoreScene.IconTitleDisclosureCell.ViewModel {
+        } else if let item = cell as? IconTitleDisclosureCell.ViewModel {
             let request: Event.ItemTapSync.Request = .init(
                 id: item.id
             )

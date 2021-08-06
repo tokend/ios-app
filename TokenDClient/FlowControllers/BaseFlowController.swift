@@ -237,6 +237,64 @@ class BaseFlowController: FlowControllerProtocol {
         
         return alert
     }
+    
+    func setupTFASecretAlert(
+        _ secret: String,
+        seed: String,
+        completion: @escaping (Bool) -> Void
+    ) -> UIAlertController {
+        
+        let alert = UIAlertController(
+            title: Localized(.tfa_setup_tfa),
+            message: Localized(
+                .to_enable_two_factor_authentication,
+                replace: [
+                    .to_enable_two_factor_authentication_replace_secret: secret
+                ]
+            ),
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(
+            UIAlertAction(
+                title: Localized(.copy),
+                style: .default,
+                handler: { _ in
+                    UIPasteboard.general.string = secret
+                    
+                    completion(true)
+                }
+            )
+        )
+        
+        if let url = URL(string: seed),
+           UIApplication.shared.canOpenURL(url) {
+            alert.addAction(
+                UIAlertAction(
+                    title: Localized(.open_app),
+                    style: .default,
+                    handler: { _ in
+                        UIPasteboard.general.string = secret
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        
+                        completion(true)
+                    }
+                )
+            )
+        }
+        
+        alert.addAction(
+            UIAlertAction(
+                title: Localized(.cancel),
+                style: .cancel,
+                handler: { _ in
+                    completion(false)
+                }
+            )
+        )
+        
+        return alert
+    }
 }
 
 // MARK: - Private methods

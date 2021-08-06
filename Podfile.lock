@@ -22,23 +22,23 @@ PODS:
   - RxSwift (6.0.0-rc.1)
   - SnapKit (5.0.1)
   - SwiftKeychainWrapper (4.0.1)
-  - TokenDSDK (4.0.2):
-    - TokenDSDK/API (= 4.0.2)
-    - TokenDSDK/JSONAPI (= 4.0.2)
-    - TokenDSDK/KeyServer (= 4.0.2)
+  - TokenDSDK (4.0.4):
+    - TokenDSDK/API (= 4.0.4)
+    - TokenDSDK/JSONAPI (= 4.0.4)
+    - TokenDSDK/KeyServer (= 4.0.4)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/AlamofireNetwork (4.0.2):
+  - TokenDSDK/AlamofireNetwork (4.0.4):
     - Alamofire (= 5.3.0)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/AlamofireNetworkJSONAPI (4.0.2):
+  - TokenDSDK/AlamofireNetworkJSONAPI (4.0.4):
     - Alamofire (= 5.3.0)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/API (4.0.2):
+  - TokenDSDK/API (4.0.4):
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/JSONAPI (4.0.2):
+  - TokenDSDK/JSONAPI (4.0.4):
     - DLJSONAPI (>= 1.0.9)
     - TokenDWallet (= 3.1.1)
-  - TokenDSDK/KeyServer (4.0.2):
+  - TokenDSDK/KeyServer (4.0.4):
     - TokenDWallet (= 3.1.1)
   - TokenDWallet (3.1.1):
     - DLCryptoKit (>= 2.0.2)
@@ -51,11 +51,11 @@ DEPENDENCIES:
   - RxSwift (= 6.0.0-rc.1)
   - SnapKit (= 5.0.1)
   - SwiftKeychainWrapper (= 4.0.1)
-  - TokenDSDK (= 4.0.2)
-  - TokenDSDK/AlamofireNetwork (= 4.0.2)
-  - TokenDSDK/AlamofireNetworkJSONAPI (= 4.0.2)
-  - TokenDSDK/JSONAPI (= 4.0.2)
-  - TokenDSDK/KeyServer (= 4.0.2)
+  - TokenDSDK (= 4.0.4)
+  - TokenDSDK/AlamofireNetwork (= 4.0.4)
+  - TokenDSDK/AlamofireNetworkJSONAPI (= 4.0.4)
+  - TokenDSDK/JSONAPI (= 4.0.4)
+  - TokenDSDK/KeyServer (= 4.0.4)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -88,9 +88,9 @@ SPEC CHECKSUMS:
   RxSwift: dae1a32c48148897494b9e2a6b00a68b40694236
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
-  TokenDSDK: b95311f8039ba74b8d3ee8753c0c4f146eace211
+  TokenDSDK: cfc7ff9953679645249679db00e621f8e43c4123
   TokenDWallet: d13f6dfd420e9258ff4734e2d52e57bcdfc60eb3
 
-PODFILE CHECKSUM: f075a4ed72aae52ba8f612d18f719f326d0c3223
+PODFILE CHECKSUM: 4fd225156bcc6174b89065c073e02b268fce28da
 
 COCOAPODS: 1.10.1
