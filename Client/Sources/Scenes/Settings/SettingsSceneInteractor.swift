@@ -9,7 +9,7 @@ public protocol SettingsSceneBusinessLogic {
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
     func onDidTapItemSync(request: Event.DidTapItemSync.Request)
-    func onSwitcherValueDidChangeSync(request: Event.SwitcherValueDidChangeSync.Request)
+    func onSwitcherValueDidChange(request: Event.SwitcherValueDidChange.Request)
     func onDidRefresh(request: Event.DidRefresh.Request)
 }
 
@@ -73,11 +73,12 @@ extension SettingsScene {
                         ]
                     )
                 ],
+                // TODO: - Add localization
                 preferredLanguage: "English",
                 lockAppIsEnabled: false,
                 biometricsType: biometricsInfoProvider.biometricsType,
                 biometricsIsEnabled: settingsManager.biometricsAuthEnabled,
-                tfaStatus: tfaManager.status.mapToTFAState()
+                tfaStatus: tfaManager.state
             )
         }
     }
@@ -105,9 +106,9 @@ private extension SettingsScene.Interactor {
     
     func observeTFA() {
         tfaManager
-            .observeTfaStatus()
-            .subscribe(onNext: { [weak self] (status) in
-                self?.sceneModel.tfaStatus = status.mapToTFAState()
+            .observeTfaState()
+            .subscribe(onNext: { [weak self] (state) in
+                self?.sceneModel.tfaStatus = state
                 self?.presentSceneDidUpdate(animated: true)
             })
             .disposed(by: disposeBag)
@@ -137,7 +138,7 @@ extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
         presenter.presentDidTapItemSync(response: response)
     }
     
-    public func onSwitcherValueDidChangeSync(request: Event.SwitcherValueDidChangeSync.Request) {
+    public func onSwitcherValueDidChange(request: Event.SwitcherValueDidChange.Request) {
         
         guard let item = Model.Item(rawValue: request.id)
         else {
@@ -185,8 +186,8 @@ extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
                         return
                     }
                     
-                    let response: Event.ErrorOccuredSync.Response = .init(error: error)
-                    self.presenter.presentErrorOccuredSync(response: response)
+                    let response: Event.ErrorOccured.Response = .init(error: error)
+                    self.presenter.presentErrorOccured(response: response)
                 }
             }
             
@@ -199,22 +200,4 @@ extension SettingsScene.Interactor: SettingsScene.BusinessLogic {
     }
     
     public func onDidRefresh(request: Event.DidRefresh.Request) { }
-}
-
-private extension TFAStatus {
-    
-    func mapToTFAState() -> SettingsScene.Model.TFAState {
-        
-        switch self {
-        
-        case .undetermined:
-            return .undetermined
-        case .loading:
-            return .loading
-        case .failed:
-            return .failed
-        case .loaded(enabled: let enabled):
-            return .loaded(enabled: enabled)
-        }
-    }
 }

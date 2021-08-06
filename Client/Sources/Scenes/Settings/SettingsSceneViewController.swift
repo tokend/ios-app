@@ -8,7 +8,7 @@ public protocol SettingsSceneDisplayLogic: AnyObject {
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
     func displayDidTapItemSync(viewModel: Event.DidTapItemSync.ViewModel)
-    func displayErrorOccuredSync(viewModel: Event.ErrorOccuredSync.ViewModel)
+    func displayErrorOccured(viewModel: Event.ErrorOccured.ViewModel)
 }
 
 extension SettingsScene {
@@ -260,9 +260,9 @@ extension SettingsScene.ViewController: UITableViewDataSource {
                 switcherModel.switcherStatus = value
                 self?.setTableViewCell(switcherModel, with: switcherModel.id)
 
-                let request: Event.SwitcherValueDidChangeSync.Request = .init(id: switcherModel.id, newValue: value)
-                self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
-                    businessLogic.onSwitcherValueDidChangeSync(request: request)
+                let request: Event.SwitcherValueDidChange.Request = .init(id: switcherModel.id, newValue: value)
+                self?.interactorDispatch?.sendRequest { (businessLogic) in
+                    businessLogic.onSwitcherValueDidChange(request: request)
                 }
             }
         }
@@ -401,7 +401,7 @@ extension SettingsScene.ViewController: SettingsScene.DisplayLogic {
         }
     }
     
-    public func displayErrorOccuredSync(viewModel: Event.ErrorOccuredSync.ViewModel) {
+    public func displayErrorOccured(viewModel: Event.ErrorOccured.ViewModel) {
         routing?.onShowError(viewModel.error)
     }
 }

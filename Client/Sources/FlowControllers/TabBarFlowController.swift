@@ -284,11 +284,7 @@ private extension TabBarFlowController {
             onAskSignOut: { [weak self] in
                 self?.onAskSignOut()
             },
-            onPerformSignOut: { [weak self] in
-                self?.onPerformSignOut()
-            },
             onBackAction: { [weak self] in
-                // TODO
                 navigationController.popViewController(true)
                 self?.currentFlowController = nil
             }

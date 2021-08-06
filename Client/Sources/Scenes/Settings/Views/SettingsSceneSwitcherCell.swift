@@ -27,11 +27,13 @@ extension SettingsScene {
             let icon: TokenDUIImage
             let title: String
             var switcherStatus: Bool
+            let isLoading: Bool
             
             func setup(cell: View) {
                 cell.icon = icon
                 cell.title = title
                 cell.value = switcherStatus
+                cell.isLoading = isLoading
             }
             
             var hashValue: Int {
@@ -47,6 +49,7 @@ extension SettingsScene {
                 return lhs.icon == rhs.icon
                     && lhs.title == rhs.title
                     && lhs.switcherStatus == rhs.switcherStatus
+                    && lhs.isLoading == rhs.isLoading
             }
         }
         
@@ -59,6 +62,7 @@ extension SettingsScene {
             private let iconView: UIImageView = .init()
             private let titleLabel: UILabel = .init()
             private let switcher: UISwitch = .init()
+            private let activityIndicator: UIActivityIndicatorView = .init()
             
             // MARK: - Public Properties
             
@@ -78,6 +82,12 @@ extension SettingsScene {
             public var value: Bool {
                 get { switcher.isOn }
                 set { switcher.isOn = newValue }
+            }
+            
+            public var isLoading: Bool = false {
+                didSet {
+                    renderIsLoading()
+                }
             }
             
             // MARK: -
@@ -107,7 +117,10 @@ private extension SettingsScene.SwitcherCell.View {
         setupIconImageView()
         setupTitleLabel()
         setupSwitcher()
+        setupActivityIndicatorView()
         setupLayout()
+        
+        renderIsLoading()
     }
     
     func setupView() {
@@ -141,6 +154,11 @@ private extension SettingsScene.SwitcherCell.View {
         )
     }
     
+    func setupActivityIndicatorView() {
+        activityIndicator.style = .gray
+        activityIndicator.color = .systemGray
+    }
+    
     @objc func switcherValueChanged() {
         onSwitched?(switcher.isOn)
     }
@@ -149,6 +167,7 @@ private extension SettingsScene.SwitcherCell.View {
         contentView.addSubview(iconView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(switcher)
+        contentView.addSubview(activityIndicator)
         
         iconView.snp.makeConstraints { (make) in
             make.size.equalTo(NameSpace.iconSize)
@@ -172,6 +191,24 @@ private extension SettingsScene.SwitcherCell.View {
             make.bottom.lessThanOrEqualToSuperview().inset(NameSpace.switcherBottomInset)
             make.size.equalTo(NameSpace.switcherSize)
             make.centerY.equalToSuperview()
+        }
+        
+        activityIndicator.snp.makeConstraints { (make) in
+            make.center.equalTo(switcher)
+            make.top.bottom.equalToSuperview().inset(5.0)
+            make.height.equalTo(activityIndicator.snp.width)
+        }
+    }
+    
+    func renderIsLoading() {
+        if isLoading {
+            switcher.isHidden = true
+            activityIndicator.isHidden = false
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+            activityIndicator.isHidden = true
+            switcher.isHidden = false
         }
     }
 }

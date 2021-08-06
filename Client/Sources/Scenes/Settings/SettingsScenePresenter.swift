@@ -7,7 +7,7 @@ public protocol SettingsScenePresentationLogic {
     func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response)
     func presentSceneDidUpdateSync(response: Event.SceneDidUpdateSync.Response)
     func presentDidTapItemSync(response: Event.DidTapItemSync.Response)
-    func presentErrorOccuredSync(response: Event.ErrorOccuredSync.Response)
+    func presentErrorOccured(response: Event.ErrorOccured.Response)
 }
 
 extension SettingsScene {
@@ -151,7 +151,8 @@ private extension SettingsScene.Presenter {
                             id: item.rawValue,
                             icon: .uiImage(Assets.settings_lock_app_icon.image),
                             title: Localized(.settings_security_lock_app),
-                            switcherStatus: sceneModel.lockAppIsEnabled
+                            switcherStatus: sceneModel.lockAppIsEnabled,
+                            isLoading: false
                         )
                     )
                     
@@ -165,7 +166,8 @@ private extension SettingsScene.Presenter {
                                 id: item.rawValue,
                                 icon: .uiImage(Assets.face_id_icon.image),
                                 title: Localized(.face_id_title),
-                                switcherStatus: sceneModel.biometricsIsEnabled
+                                switcherStatus: sceneModel.biometricsIsEnabled,
+                                isLoading: false
                             )
                         )
                         
@@ -175,7 +177,8 @@ private extension SettingsScene.Presenter {
                                 id: item.rawValue,
                                 icon: .uiImage(Assets.touch_id_icon.image),
                                 title: Localized(.touch_id_title),
-                                switcherStatus: sceneModel.biometricsIsEnabled
+                                switcherStatus: sceneModel.biometricsIsEnabled,
+                                isLoading: false
                             )
                         )
                     case .none:
@@ -192,11 +195,23 @@ private extension SettingsScene.Presenter {
                                 id: item.rawValue,
                                 icon: .uiImage(Assets.settings_tfa_icon.image),
                                 title: Localized(.settings_security_tfa),
-                                switcherStatus: enabled
+                                switcherStatus: enabled,
+                                isLoading: false
                             )
                         )
-                    case .loading,
-                         .undetermined,
+                        
+                    case .loading:
+                        cells.append(
+                            SettingsScene.SwitcherCell.ViewModel(
+                                id: item.rawValue,
+                                icon: .uiImage(Assets.settings_tfa_icon.image),
+                                title: Localized(.settings_security_tfa),
+                                switcherStatus: false,
+                                isLoading: true
+                            )
+                        )
+                        
+                    case .undetermined,
                         .failed:
                         break
                     }
@@ -267,10 +282,10 @@ extension SettingsScene.Presenter: SettingsScene.PresentationLogic {
         }
     }
     
-    public func presentErrorOccuredSync(response: Event.ErrorOccuredSync.Response) {
-        let viewModel: Event.ErrorOccuredSync.ViewModel = response
-        presenterDispatch.displaySync { (displayLogic) in
-            displayLogic.displayErrorOccuredSync(viewModel: viewModel)
+    public func presentErrorOccured(response: Event.ErrorOccured.Response) {
+        let viewModel: Event.ErrorOccured.ViewModel = response
+        presenterDispatch.display { (displayLogic) in
+            displayLogic.displayErrorOccured(viewModel: viewModel)
         }
     }
 }

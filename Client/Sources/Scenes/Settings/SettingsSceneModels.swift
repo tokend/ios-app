@@ -47,6 +47,13 @@ extension SettingsScene.Model {
         }
     }
     
+    public enum BiometricsType {
+        
+        case faceId
+        case touchId
+        case none
+    }
+    
     public struct SectionModel {
         let id: String
         var items: [Item]
@@ -130,14 +137,14 @@ extension SettingsScene.Event {
         public typealias ViewModel = Response
     }
     
-    public enum SwitcherValueDidChangeSync {
+    public enum SwitcherValueDidChange {
         public struct Request {
             let id: String
             let newValue: Bool
         }
     }
     
-    public enum ErrorOccuredSync {
+    public enum ErrorOccured {
         public struct Response {
             let error: Swift.Error
         }

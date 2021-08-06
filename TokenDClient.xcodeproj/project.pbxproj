@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		0D0CC83626A5AC29002B0543 /* TokenDAccountTypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */; };
+		0D15DB8026BD7325001D40EF /* SettingsSceneTFAManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB7F26BD7325001D40EF /* SettingsSceneTFAManagerProtocol.swift */; };
+		0D15DB8226BD7337001D40EF /* SettingsSceneTFAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8126BD7337001D40EF /* SettingsSceneTFAManager.swift */; };
+		0D15DB8526BD739D001D40EF /* SettingsSceneSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8426BD739D001D40EF /* SettingsSceneSettingsManager.swift */; };
+		0D15DB8726BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8626BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift */; };
+		0D15DB8A26BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8926BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift */; };
+		0D15DB8C26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8B26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift */; };
 		0D22AD3926B97191000CDC61 /* CommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3826B97191000CDC61 /* CommonFooterView.swift */; };
 		0D22AD3B26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */; };
 		0D22AD3D26B9A6FE000CDC61 /* SettingsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */; };
@@ -287,6 +293,12 @@
 
 /* Begin PBXFileReference section */
 		0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDAccountTypeChecker.swift; sourceTree = "<group>"; };
+		0D15DB7F26BD7325001D40EF /* SettingsSceneTFAManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsSceneTFAManagerProtocol.swift; path = TokenDClient/Controllers/Managers/SettingsManager/SettingsSceneTFAManagerProtocol.swift; sourceTree = SOURCE_ROOT; };
+		0D15DB8126BD7337001D40EF /* SettingsSceneTFAManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneTFAManager.swift; sourceTree = "<group>"; };
+		0D15DB8426BD739D001D40EF /* SettingsSceneSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneSettingsManager.swift; sourceTree = "<group>"; };
+		0D15DB8626BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneSettingsManagerProtocol.swift; sourceTree = "<group>"; };
+		0D15DB8926BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneBiometricsInfoProvider.swift; sourceTree = "<group>"; };
+		0D15DB8B26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneBiometricsInfoProviderProtocol.swift; sourceTree = "<group>"; };
 		0D22AD3826B97191000CDC61 /* CommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFooterView.swift; sourceTree = "<group>"; };
 		0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTitleDescriptionDisclosureCell.swift; sourceTree = "<group>"; };
 		0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFlowController.swift; sourceTree = "<group>"; };
@@ -584,6 +596,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D15DB7A26BD6228001D40EF /* SettingsManager */ = {
+			isa = PBXGroup;
+			children = (
+				0D59BCC3269491C900B6658F /* SettingsManager.swift */,
+			);
+			path = SettingsManager;
+			sourceTree = "<group>";
+		};
+		0D15DB7D26BD7308001D40EF /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				0D15DB8826BD73B2001D40EF /* BiometricsInfoProvider */,
+				0D15DB8326BD738D001D40EF /* SettingsManager */,
+				0D15DB7E26BD730E001D40EF /* TFAManager */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		0D15DB7E26BD730E001D40EF /* TFAManager */ = {
+			isa = PBXGroup;
+			children = (
+				0D15DB8126BD7337001D40EF /* SettingsSceneTFAManager.swift */,
+				0D15DB7F26BD7325001D40EF /* SettingsSceneTFAManagerProtocol.swift */,
+			);
+			path = TFAManager;
+			sourceTree = "<group>";
+		};
+		0D15DB8326BD738D001D40EF /* SettingsManager */ = {
+			isa = PBXGroup;
+			children = (
+				0D15DB8426BD739D001D40EF /* SettingsSceneSettingsManager.swift */,
+				0D15DB8626BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift */,
+			);
+			path = SettingsManager;
+			sourceTree = "<group>";
+		};
+		0D15DB8826BD73B2001D40EF /* BiometricsInfoProvider */ = {
+			isa = PBXGroup;
+			children = (
+				0D15DB8926BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift */,
+				0D15DB8B26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift */,
+			);
+			path = BiometricsInfoProvider;
+			sourceTree = "<group>";
+		};
 		0D26E82426B2D69C008E1C9C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -594,7 +651,7 @@
 				0D26E82626B2D6C5008E1C9C /* SettingsSceneRouting.swift */,
 				0D26E82826B2D6C5008E1C9C /* SettingsSceneViewController.swift */,
 				0D26E83C26B812C9008E1C9C /* Views */,
-				0D26E83426B2F09A008E1C9C /* Workers */,
+				0D15DB7D26BD7308001D40EF /* Workers */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -608,13 +665,6 @@
 				0D26E83226B2DA47008E1C9C /* IconTitleDisclosureCell.swift */,
 			);
 			path = TableView;
-			sourceTree = "<group>";
-		};
-		0D26E83426B2F09A008E1C9C /* Workers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Workers;
 			sourceTree = "<group>";
 		};
 		0D26E83C26B812C9008E1C9C /* Views */ = {
@@ -1172,11 +1222,11 @@
 		0D59BCAD269491C900B6658F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				0D15DB7A26BD6228001D40EF /* SettingsManager */,
 				0D59BCB0269491C900B6658F /* AccountTypeManager.swift */,
 				0D59BCC0269491C900B6658F /* ApplicationEventsController.swift */,
 				0D59BCAE269491C900B6658F /* KeyboardController.swift */,
 				0D59BCAF269491C900B6658F /* LocalizationManager.swift */,
-				0D59BCC3269491C900B6658F /* SettingsManager.swift */,
 				0D59BCC1269491C900B6658F /* TransactionCreator.swift */,
 				0D59BCB8269491C900B6658F /* TransactionSender.swift */,
 				0D59BCC2269491C900B6658F /* TransactionSigner.swift */,
@@ -1715,6 +1765,7 @@
 				0D2FA30F269C92BF0018B7D4 /* TextFieldsContainer.swift in Sources */,
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D59BD26269493BB00B6658F /* Array+IndexOf.swift in Sources */,
+				0D15DB8726BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift in Sources */,
 				0D59BD27269493BB00B6658F /* String+Index.swift in Sources */,
 				0D59BD28269493BB00B6658F /* UITextfield+SetText.swift in Sources */,
 				0D59BD29269493BB00B6658F /* UIColor+Interpolation.swift in Sources */,
@@ -1761,6 +1812,7 @@
 				0D59BD42269493BB00B6658F /* LuhnAlgorithm.swift in Sources */,
 				0D59BD43269493BB00B6658F /* UIViewController+Nib.swift in Sources */,
 				C39BB5C626A9D22A00AC642B /* MoreSceneUserCell.swift in Sources */,
+				0D15DB8026BD7325001D40EF /* SettingsSceneTFAManagerProtocol.swift in Sources */,
 				0D59BD44269493BB00B6658F /* TokenDWallet.PublicKey+base32EncodedString.swift in Sources */,
 				0D59BD45269493BB00B6658F /* UITapGestureRecognizer+Extension.swift in Sources */,
 				0D59BD46269493BB00B6658F /* ReviewableRequestState+IsToUpdate.swift in Sources */,
@@ -1768,6 +1820,7 @@
 				0D59BD48269493BB00B6658F /* String+PhoneNumberValidation.swift in Sources */,
 				0D59BD49269493BB00B6658F /* BalanceCreator.swift in Sources */,
 				0D59BD4A269493BB00B6658F /* LatestChangeRoleRequestProvider.swift in Sources */,
+				0D15DB8226BD7337001D40EF /* SettingsSceneTFAManager.swift in Sources */,
 				0D59BD4B269493BB00B6658F /* AccountRoleFetcher.swift in Sources */,
 				0D59BD4C269493BB00B6658F /* AccountRoleFetcherProtocol.swift in Sources */,
 				0DDC5A6E26A9A0F50004D326 /* SignUpSceneModels.swift in Sources */,
@@ -1834,6 +1887,7 @@
 				0D59BD77269493BB00B6658F /* ContoFAPasswordChangerKeysProvider.swift in Sources */,
 				C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */,
 				0D59BD78269493BB00B6658F /* IdentityFetcherProtocol.swift in Sources */,
+				0D15DB8A26BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift in Sources */,
 				0D59BD79269493BB00B6658F /* IdentityFetcher.swift in Sources */,
 				0D59BD7A269493BB00B6658F /* ForgotPasswordWorkerProtocol.swift in Sources */,
 				0D59BD7B269493BB00B6658F /* BaseForgotPasswordWorker.swift in Sources */,
@@ -1878,6 +1932,7 @@
 				0D59BD95269493BC00B6658F /* AppInfoUtils.swift in Sources */,
 				0D59BD96269493BC00B6658F /* AppControllerProtocol.swift in Sources */,
 				0D59BD97269493BC00B6658F /* ImagesUtility+TokenDSDK.swift in Sources */,
+				0D15DB8526BD739D001D40EF /* SettingsSceneSettingsManager.swift in Sources */,
 				0D59BD98269493BC00B6658F /* MovementsRepo.swift in Sources */,
 				0D59BD99269493BC00B6658F /* KYCRepo.swift in Sources */,
 				0D59BD9A269493BC00B6658F /* KeyValuesRepo.swift in Sources */,
@@ -1963,6 +2018,7 @@
 				0D26E82C26B2D6C5008E1C9C /* SettingsSceneRouting.swift in Sources */,
 				0D59BD012694930700B6658F /* Theme.swift in Sources */,
 				0D59BD042694930700B6658F /* AppController+UserActivitySubscribers.swift in Sources */,
+				0D15DB8C26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift in Sources */,
 				C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */,
 				C39BB5A626A85BA600AC642B /* TabBarFlowController.swift in Sources */,
 				0D59BD0F2694930700B6658F /* RecoveryFlowController.swift in Sources */,

@@ -9,7 +9,6 @@ class SettingsFlowController: BaseSignedInFlowController {
 
     private let navigationController: NavigationControllerProtocol
     private let onAskSignOut: () -> Void
-    private let onPerformSignOut: () -> Void
     private let onBackAction: () -> Void
     
     // MARK: -
@@ -24,13 +23,11 @@ class SettingsFlowController: BaseSignedInFlowController {
         rootNavigation: RootNavigationProtocol,
         navigationController: NavigationControllerProtocol,
         onAskSignOut: @escaping () -> Void,
-        onPerformSignOut: @escaping () -> Void,
         onBackAction: @escaping () -> Void
     ) {
 
         self.navigationController = navigationController
         self.onAskSignOut = onAskSignOut
-        self.onPerformSignOut = onPerformSignOut
         self.onBackAction = onBackAction
         
         super.init(
@@ -150,15 +147,25 @@ private extension SettingsFlowController {
                 }
             }
         )
-
-        let biometricsInfoProvider: BiometricsInfoProviderProtocol = BiometricsInfoProvider()
+        
+        let biometricsInfoProvider: SettingsScene.BiometricsInfoProviderProtocol = SettingsScene.BiometricsInfoProvider(
+            biometricsInfoProvider: BiometricsInfoProvider()
+        )
+        
+        let tfaManager: SettingsScene.TFAManagerProtocol = SettingsScene.TFAManager(
+            tfaManager: managersController.tfaManager
+        )
+        
+        let settingsManager: SettingsScene.SettingsManagerProtocol = SettingsScene.SettingsManager(
+            settingsManager: managersController.settingsManager
+        )
 
         SettingsScene.Configurator.configure(
             viewController: vc,
             routing: routing,
             biometricsInfoProvider: biometricsInfoProvider,
-            tfaManager: managersController.tfaManager,
-            settingsManager: managersController.settingsManager
+            tfaManager: tfaManager,
+            settingsManager: settingsManager
         )
 
         return vc
