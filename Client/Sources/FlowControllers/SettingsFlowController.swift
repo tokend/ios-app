@@ -119,7 +119,9 @@ private extension SettingsFlowController {
             onBackAction: { [weak self] in
                 self?.onBackAction()
             },
-            onLanguageTap: { [weak self] in },
+            onLanguageTap: {
+                // TODO: - Implement
+            },
             onAccountIdTap: { [weak self] in
                 self?.showAccountId()
             },

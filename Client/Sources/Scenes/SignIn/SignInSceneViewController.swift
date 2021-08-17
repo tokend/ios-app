@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol SignInSceneDisplayLogic: class {
+public protocol SignInSceneDisplayLogic: AnyObject {
     
     typealias Event = SignInScene.Event
     

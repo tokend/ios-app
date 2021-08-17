@@ -1,6 +1,6 @@
 import UIKit
 
-protocol BiometricsAuthDisplayLogic: class {
+protocol BiometricsAuthDisplayLogic: AnyObject {
     func displayViewDidAppear(viewModel: BiometricsAuth.Event.ViewDidAppear.ViewModel)
 }
 

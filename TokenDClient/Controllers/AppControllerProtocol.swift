@@ -1,6 +1,6 @@
 import UIKit
 
-protocol AppControllerProtocol: class {
+protocol AppControllerProtocol: AnyObject {
     func updateFlowControllerStack(_ configuration: APIConfigurationModel, _ keychainManager: KeychainManagerProtocol)
     
     func addUserAcivity(subscriber: UserActivitySubscriber)

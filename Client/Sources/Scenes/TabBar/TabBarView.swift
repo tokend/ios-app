@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol TabBarDisplayLogic: class {
+public protocol TabBarDisplayLogic: AnyObject {
     typealias Event = TabBar.Event
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)

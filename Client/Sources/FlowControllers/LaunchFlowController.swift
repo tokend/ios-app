@@ -302,8 +302,8 @@ private extension LaunchFlowController {
             onSelectNetwork: { [weak self] in
                 self?.selectNewNetwork()
             },
-            onForgotPassword: { [weak self]  in
-                
+            onForgotPassword: {
+                // TODO: - Implement
             },
             onSignUp: { [weak self] in
                 self?.showSignUp()
@@ -477,7 +477,7 @@ private extension LaunchFlowController {
     func initWalletDataProvider() -> WalletDataProviderProtocol {
         return WalletDataProvider(
             flowControllerStack: self.flowControllerStack,
-            onVerifyWallet: { [weak self] (_, _) in
+            onVerifyWallet: { (_, _) in
                 // TODO: - Implement
             }
         )

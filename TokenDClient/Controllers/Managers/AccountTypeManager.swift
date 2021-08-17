@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-protocol AccountTypeManagerProtocol: class {
+protocol AccountTypeManagerProtocol: AnyObject {
 
     var accountType: AccountType { get }
     

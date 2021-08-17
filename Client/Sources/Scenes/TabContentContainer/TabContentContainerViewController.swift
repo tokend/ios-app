@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol TabContentContainerDisplayLogic: class {
+public protocol TabContentContainerDisplayLogic: AnyObject {
     
     typealias Event = TabContentContainer.Event
 }
