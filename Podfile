@@ -30,9 +30,12 @@ def ui_pods
 end
 
 def other_pods
+  
+  pod 'Charts',   '3.6.0'
 end
 
 target 'Client' do
   token_d_pods
   ui_pods
+  other_pods
 end
