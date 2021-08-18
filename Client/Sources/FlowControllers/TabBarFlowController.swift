@@ -176,9 +176,24 @@ private extension TabBarFlowController {
         
         case .balances:
             selectedTab = tab
-            showBalancesFlow(showRootScreen: { (controller) in
-                showContent(controller, animation)
-            })
+            
+            let balanceId: String = reposController.balancesRepo.balancesDetails.compactMap({ (balanceState) -> String? in
+                switch balanceState {
+                
+                case .creating:
+                    return nil
+                    
+                case .created(let balance):
+                    return balance.id
+                }
+            }).first ?? ""
+            
+            showBalancesFlow(
+                balanceId: balanceId,
+                showRootScreen: { (controller) in
+                    showContent(controller, animation)
+                }
+            )
             return true
             
         case .movements:
@@ -198,12 +213,31 @@ private extension TabBarFlowController {
     }
     
     func showBalancesFlow(
+        balanceId: String,
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
         
-        let controller: UIViewController = .init()
-        controller.view.backgroundColor = .red
-        showRootScreen(controller)
+        let navigationController: NavigationControllerProtocol = NavigationController()
+        
+        let flow: BalanceDetailsFlowController = .init(
+            appController: appController,
+            flowControllerStack: flowControllerStack,
+            reposController: reposController,
+            managersController: managersController,
+            userDataProvider: userDataProvider,
+            keychainDataProvider: keychainDataProvider,
+            rootNavigation: rootNavigation,
+            balanceId: balanceId,
+            navigationController: navigationController,
+            onClose: {
+                _ = navigationController.popToRootViewController(animated: true)
+            }
+        )
+        
+        flow.run(showRootScreen: { (controller) in
+            navigationController.setViewControllers([controller], animated: false)
+            showRootScreen(navigationController.getViewController())
+        })
     }
     
     func showMovementsFlow(

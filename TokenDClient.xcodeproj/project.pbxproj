@@ -304,6 +304,14 @@
 		C39BB60526B9763B00AC642B /* ChangePasswordSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5FF26B9763B00AC642B /* ChangePasswordSceneViewController.swift */; };
 		C39BB60626B9763B00AC642B /* ChangePasswordSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB60026B9763B00AC642B /* ChangePasswordSceneInteractor.swift */; };
 		C39BB60726B9763B00AC642B /* ChangePasswordSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */; };
+		C39BB94C26CD353B00AC642B /* BalanceDetailsScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94626CD353A00AC642B /* BalanceDetailsScenePresenter.swift */; };
+		C39BB94D26CD353B00AC642B /* BalanceDetailsSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94726CD353A00AC642B /* BalanceDetailsSceneRouting.swift */; };
+		C39BB94E26CD353B00AC642B /* BalanceDetailsSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94826CD353A00AC642B /* BalanceDetailsSceneModels.swift */; };
+		C39BB94F26CD353B00AC642B /* BalanceDetailsSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94926CD353A00AC642B /* BalanceDetailsSceneViewController.swift */; };
+		C39BB95026CD353B00AC642B /* BalanceDetailsSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94A26CD353A00AC642B /* BalanceDetailsSceneInteractor.swift */; };
+		C39BB95126CD353B00AC642B /* BalanceDetailsSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94B26CD353A00AC642B /* BalanceDetailsSceneConfigurator.swift */; };
+		C39BB95326CD35D600AC642B /* BalanceDetailsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95226CD35D600AC642B /* BalanceDetailsFlowController.swift */; };
+		C39BB95626CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95526CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -614,6 +622,14 @@
 		C39BB5FF26B9763B00AC642B /* ChangePasswordSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneViewController.swift; sourceTree = "<group>"; };
 		C39BB60026B9763B00AC642B /* ChangePasswordSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneInteractor.swift; sourceTree = "<group>"; };
 		C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneConfigurator.swift; sourceTree = "<group>"; };
+		C39BB94626CD353A00AC642B /* BalanceDetailsScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsScenePresenter.swift; sourceTree = "<group>"; };
+		C39BB94726CD353A00AC642B /* BalanceDetailsSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneRouting.swift; sourceTree = "<group>"; };
+		C39BB94826CD353A00AC642B /* BalanceDetailsSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneModels.swift; sourceTree = "<group>"; };
+		C39BB94926CD353A00AC642B /* BalanceDetailsSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneViewController.swift; sourceTree = "<group>"; };
+		C39BB94A26CD353A00AC642B /* BalanceDetailsSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneInteractor.swift; sourceTree = "<group>"; };
+		C39BB94B26CD353A00AC642B /* BalanceDetailsSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneConfigurator.swift; sourceTree = "<group>"; };
+		C39BB95226CD35D600AC642B /* BalanceDetailsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsFlowController.swift; sourceTree = "<group>"; };
+		C39BB95526CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -711,9 +727,9 @@
 			isa = PBXGroup;
 			children = (
 				C39BB5E626B2FF0B00AC642B /* AccountID */,
+				C39BB94426CD351B00AC642B /* BalanceDetails */,
 				C39BB5FB26B9761D00AC642B /* ChangePassword */,
 				0DDC5A7426A9D0500004D326 /* LocalSignIn */,
-				C39BB5B726A9C8F700AC642B /* More */,
 				C39BB5B726A9C8F700AC642B /* More */,
 				0D26E82426B2D69C008E1C9C /* Settings */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
@@ -753,7 +769,6 @@
 			children = (
 				0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */,
 				C39BB5E426B2FEE200AC642B /* QRCodeImageView.swift */,
-				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 				0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */,
@@ -1454,6 +1469,7 @@
 		0D59BD0D2694930700B6658F /* FlowControllers */ = {
 			isa = PBXGroup;
 			children = (
+				C39BB95226CD35D600AC642B /* BalanceDetailsFlowController.swift */,
 				0D59BD1A2694930700B6658F /* ChangeLoginFlowController.swift */,
 				C39BB5F926B9627F00AC642B /* ChangePasswordFlowController.swift */,
 				0D59BD182694930700B6658F /* ForgotPasswordFlowController.swift */,
@@ -1462,9 +1478,9 @@
 				0D59BD162694930700B6658F /* LocalAuthFlowController.swift */,
 				0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */,
 				0D59BD0E2694930700B6658F /* RecoveryFlowController.swift */,
+				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 				0D59BD142694930700B6658F /* SignedInFlowController.swift */,
 				C39BB5A526A85BA600AC642B /* TabBarFlowController.swift */,
-				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 			);
 			path = FlowControllers;
 			sourceTree = "<group>";
@@ -1717,6 +1733,28 @@
 			path = ChangePassword;
 			sourceTree = "<group>";
 		};
+		C39BB94426CD351B00AC642B /* BalanceDetails */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB94B26CD353A00AC642B /* BalanceDetailsSceneConfigurator.swift */,
+				C39BB94A26CD353A00AC642B /* BalanceDetailsSceneInteractor.swift */,
+				C39BB94826CD353A00AC642B /* BalanceDetailsSceneModels.swift */,
+				C39BB94626CD353A00AC642B /* BalanceDetailsScenePresenter.swift */,
+				C39BB94726CD353A00AC642B /* BalanceDetailsSceneRouting.swift */,
+				C39BB94926CD353A00AC642B /* BalanceDetailsSceneViewController.swift */,
+				C39BB95426CD429600AC642B /* Views */,
+			);
+			path = BalanceDetails;
+			sourceTree = "<group>";
+		};
+		C39BB95426CD429600AC642B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB95526CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1847,6 +1885,7 @@
 				0D2FA30F269C92BF0018B7D4 /* TextFieldsContainer.swift in Sources */,
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D59BD26269493BB00B6658F /* Array+IndexOf.swift in Sources */,
+				C39BB95626CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift in Sources */,
 				0D15DB8726BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift in Sources */,
 				0D59BD27269493BB00B6658F /* String+Index.swift in Sources */,
 				0D59BD28269493BB00B6658F /* UITextfield+SetText.swift in Sources */,
@@ -1890,6 +1929,7 @@
 				C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */,
 				C39BB5A326A85B7400AC642B /* TabBarContainerConfigurator.swift in Sources */,
 				0D59BD40269493BB00B6658F /* NumberFormatter+Decimal.swift in Sources */,
+				C39BB94F26CD353B00AC642B /* BalanceDetailsSceneViewController.swift in Sources */,
 				0DDC5A7F26A9D0730004D326 /* LocalSignInSceneInteractor.swift in Sources */,
 				0D59BD41269493BB00B6658F /* String+DateFormatters.swift in Sources */,
 				0D59BD42269493BB00B6658F /* LuhnAlgorithm.swift in Sources */,
@@ -1944,6 +1984,7 @@
 				0D59BD62269493BB00B6658F /* AmountConverter.swift in Sources */,
 				0D59BD63269493BB00B6658F /* LocationProviderProtocol.swift in Sources */,
 				C39BB5BE26A9C97200AC642B /* MoreScenePresenter.swift in Sources */,
+				C39BB94C26CD353B00AC642B /* BalanceDetailsScenePresenter.swift in Sources */,
 				0D59BD64269493BB00B6658F /* LocationProvider.swift in Sources */,
 				0D59BD65269493BB00B6658F /* LoginWorkerProtocol.swift in Sources */,
 				0D59BD66269493BB00B6658F /* BaseLoginWorker.swift in Sources */,
@@ -1984,6 +2025,7 @@
 				0D59BD7D269493BB00B6658F /* RegistrationChecker.swift in Sources */,
 				0D59BD7E269493BB00B6658F /* UserPhoneContactsFetcherProtocol.swift in Sources */,
 				0D59BD7F269493BB00B6658F /* UserPhoneContactsFetcher.swift in Sources */,
+				C39BB95326CD35D600AC642B /* BalanceDetailsFlowController.swift in Sources */,
 				0D59BD80269493BB00B6658F /* BasePasswordChanger.swift in Sources */,
 				0D59BD81269493BB00B6658F /* PasswordChangerProtocol.swift in Sources */,
 				C39BB5F126B2FFFF00AC642B /* AccountIDSceneInteractor.swift in Sources */,
@@ -2002,6 +2044,7 @@
 				0D59BD88269493BB00B6658F /* RegisterWorkerProtocol.swift in Sources */,
 				0D59BD89269493BB00B6658F /* BaseRegisterWorker.swift in Sources */,
 				C39BB5FA26B9628000AC642B /* ChangePasswordFlowController.swift in Sources */,
+				C39BB95026CD353B00AC642B /* BalanceDetailsSceneInteractor.swift in Sources */,
 				0D26E83026B2D6C5008E1C9C /* SettingsSceneConfigurator.swift in Sources */,
 				C39BB5A026A85B7400AC642B /* TabBarContainerPresenter.swift in Sources */,
 				0D59BD8A269493BB00B6658F /* AccountKYCFormEncoder.swift in Sources */,
@@ -2085,10 +2128,12 @@
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,
+				C39BB94D26CD353B00AC642B /* BalanceDetailsSceneRouting.swift in Sources */,
 				C39BB5E526B2FEE200AC642B /* QRCodeImageView.swift in Sources */,
 				C39BB59426A85B4D00AC642B /* TabBarTabProvider.swift in Sources */,
 				0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */,
 				0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */,
+				C39BB95126CD353B00AC642B /* BalanceDetailsSceneConfigurator.swift in Sources */,
 				C39BB5B426A8600500AC642B /* TabContentContainerModels.swift in Sources */,
 				C39BB5EF26B2FFFF00AC642B /* AccountIDSceneModels.swift in Sources */,
 				0D59BDC6269493BC00B6658F /* BaseSignedInFlowController.swift in Sources */,
@@ -2119,6 +2164,7 @@
 				C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */,
 				C39BB5A626A85BA600AC642B /* TabBarFlowController.swift in Sources */,
 				0D59BD0F2694930700B6658F /* RecoveryFlowController.swift in Sources */,
+				C39BB94E26CD353B00AC642B /* BalanceDetailsSceneModels.swift in Sources */,
 				0D59BD062694930700B6658F /* ManagersController.swift in Sources */,
 				C39BB59526A85B4D00AC642B /* TabBarConfigurator.swift in Sources */,
 				0DDC5A6D26A9A0E70004D326 /* NetworkInfoProvider.swift in Sources */,
@@ -2231,7 +2277,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2308,7 +2353,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
