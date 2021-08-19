@@ -16,6 +16,7 @@ class TabBarFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
 
     private lazy var moreTabNavigationController: NavigationControllerProtocol = initMoreFlow()
+    private lazy var balancesTabNavigarionController: NavigationControllerProtocol = NavigationController()
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
     private var selectedTab: Tab?
@@ -200,11 +201,28 @@ private extension TabBarFlowController {
     func showBalancesFlow(
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
-        let navigationController: NavigationControllerProtocol = NavigationController()
-        let controller: DashboardScene.ViewController = initDashboard()
-        navigationController.setViewControllers([controller], animated: false)
-        showRootScreen(navigationController.getViewController())
-        controller.navigationController?.navigationBar.prefersLargeTitles = true
+        let flow = initBalancesFlow()
+        self.currentFlowController = flow
+        flow.run(showRootScreen: { (controller) in
+            self.balancesTabNavigarionController.setViewControllers([controller], animated: true)
+            controller.navigationController?.navigationBar.prefersLargeTitles = true
+        })
+        showRootScreen(balancesTabNavigarionController.getViewController())
+    }
+    
+    func initBalancesFlow(
+    ) -> BalancesFlowController {
+        
+        return .init(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            navigationController: balancesTabNavigarionController
+        )
     }
     
     func showMovementsFlow(
@@ -276,30 +294,6 @@ private extension TabBarFlowController {
             ),
             animated: true
         )
-    }
-    
-    func initDashboard(
-    ) -> DashboardScene.ViewController {
-        let vc: DashboardScene.ViewController = .init()
-        
-        let routing: DashboardScene.Routing = .init(
-            onAddAsset: { },
-            onBalanceTap: { (id) in }
-        )
-        
-        let balancesProvider: DashboardScene.BalancesProviderProtocol = DashboardScene.BalancesProvider(
-            assetsRepo: reposController.assetsRepo,
-            balancesRepo: reposController.balancesRepo,
-            imagesUtility: reposController.imagesUtility
-        )
-        
-        DashboardScene.Configurator.configure(
-            viewController: vc,
-            routing: routing,
-            balancesProvider: balancesProvider
-        )
-        
-        return vc
     }
     
     func initAccountId(

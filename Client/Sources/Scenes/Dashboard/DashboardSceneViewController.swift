@@ -81,11 +81,12 @@ private extension DashboardScene.ViewController {
     }
     
     func setupView() {
-        navigationItem.title = "Dashboard"
+        navigationItem.title = Localized(.dashboard_title)
         view.backgroundColor = Theme.Colors.mainBackgroundColor
         
         navigationItem.setRightBarButton(
             .init(
+                // TODO: - set appropriate image
                 image: Assets.more_withdraw_icon.image,
                 style: .plain,
                 target: self,

@@ -24,6 +24,7 @@
 		0D1B056E26CBEF180011CC4C /* DashboardSceneAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */; };
 		0D1B057126CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */; };
 		0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */; };
+		0D1B057526CEA3890011CC4C /* DashboardFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */; };
 		0D22AD3926B97191000CDC61 /* CommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3826B97191000CDC61 /* CommonFooterView.swift */; };
 		0D22AD3B26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */; };
 		0D22AD3D26B9A6FE000CDC61 /* SettingsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */; };
@@ -335,6 +336,7 @@
 		0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneAssetCell.swift; sourceTree = "<group>"; };
 		0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneBalancesProviderProtocol.swift; sourceTree = "<group>"; };
 		0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneBalancesProvider.swift; sourceTree = "<group>"; };
+		0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFlowController.swift; sourceTree = "<group>"; };
 		0D22AD3826B97191000CDC61 /* CommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFooterView.swift; sourceTree = "<group>"; };
 		0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTitleDescriptionDisclosureCell.swift; sourceTree = "<group>"; };
 		0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFlowController.swift; sourceTree = "<group>"; };
@@ -1516,15 +1518,16 @@
 			children = (
 				0D59BD1A2694930700B6658F /* ChangeLoginFlowController.swift */,
 				C39BB5F926B9627F00AC642B /* ChangePasswordFlowController.swift */,
+				0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */,
 				0D59BD182694930700B6658F /* ForgotPasswordFlowController.swift */,
 				0D59BD122694930700B6658F /* KYCFlowController.swift */,
 				0D59BD102694930700B6658F /* LaunchFlowController.swift */,
 				0D59BD162694930700B6658F /* LocalAuthFlowController.swift */,
 				0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */,
 				0D59BD0E2694930700B6658F /* RecoveryFlowController.swift */,
+				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 				0D59BD142694930700B6658F /* SignedInFlowController.swift */,
 				C39BB5A526A85BA600AC642B /* TabBarFlowController.swift */,
-				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 			);
 			path = FlowControllers;
 			sourceTree = "<group>";
@@ -2089,6 +2092,7 @@
 				0D59BD95269493BC00B6658F /* AppInfoUtils.swift in Sources */,
 				0D59BD96269493BC00B6658F /* AppControllerProtocol.swift in Sources */,
 				0D59BD97269493BC00B6658F /* ImagesUtility+TokenDSDK.swift in Sources */,
+				0D1B057526CEA3890011CC4C /* DashboardFlowController.swift in Sources */,
 				0D15DB8526BD739D001D40EF /* SettingsSceneSettingsManager.swift in Sources */,
 				0D59BD98269493BC00B6658F /* MovementsRepo.swift in Sources */,
 				0D1B056426CBDD560011CC4C /* DashboardSceneViewController.swift in Sources */,
