@@ -27,7 +27,7 @@ extension DashboardScene {
         
         // MARK: - Private properties
         
-        private let tableView: UITableView = .init()
+        private let tableView: UITableView = .init(frame: .zero, style: .grouped)
         private let refreshControl: UIRefreshControl = .init()
         
         private var sections: [Model.Section] = []
@@ -74,8 +74,29 @@ extension DashboardScene {
 private extension DashboardScene.ViewController {
     
     func setup() {
+        setupView()
         setupTableView()
         setupRefreshControl()
+        setupLayout()
+    }
+    
+    func setupView() {
+        navigationItem.title = "Dashboard"
+        view.backgroundColor = Theme.Colors.mainBackgroundColor
+        
+        navigationItem.setRightBarButton(
+            .init(
+                image: Assets.more_withdraw_icon.image,
+                style: .plain,
+                target: self,
+                action: #selector(addAssetButtonAction)
+            ),
+            animated: false
+        )
+    }
+    
+    @objc func addAssetButtonAction() {
+        routing?.onAddAsset()
     }
     
     func setupTableView() {
@@ -84,12 +105,21 @@ private extension DashboardScene.ViewController {
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
+        tableView.backgroundColor = Theme.Colors.mainBackgroundColor
         
 //        tableView.refreshControl = refreshControl
         
-//        tableView.register(
-//            classes: []
-//        )
+        tableView.register(
+            classes: [
+                DashboardScene.AssetCell.ViewModel.self
+            ]
+        )
+        
+        tableView.register(
+            classes: [
+                DashboardScene.HeaderView.ViewModel.self
+            ]
+        )
     }
     
     func setupRefreshControl() {
@@ -105,6 +135,14 @@ private extension DashboardScene.ViewController {
             let request: Event.DidRefresh.Request = .init()
             businessLogic.onDidRefresh(request: request)
         })
+    }
+    
+    func setupLayout() {
+        view.addSubview(tableView)
+        
+        tableView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
     }
     
     func setup(
@@ -211,6 +249,10 @@ extension DashboardScene.ViewController: UITableViewDelegate {
     ) {
         
         let cell = self.cell(for: indexPath)
+        
+        if let assetCell = cell as? DashboardScene.AssetCell.ViewModel {
+            routing?.onBalanceTap(assetCell.id)
+        }
     }
     
     public func tableView(

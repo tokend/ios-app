@@ -27,6 +27,7 @@ extension DashboardScene.Model {
     struct SceneModel {
         
         var loadingStatus: LoadingStatus
+        var balancesList: [Balance]
     }
     
     struct SceneViewModel {
@@ -43,6 +44,14 @@ extension DashboardScene.Model {
     public enum LoadingStatus {
         case loading
         case loaded
+    }
+    
+    public struct Balance {
+        let id: String
+        let name: String
+        let code: String
+        let avatar: TokenDUIImage?
+        let available: Decimal
     }
 }
 

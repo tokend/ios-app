@@ -4,6 +4,7 @@ extension DashboardScene {
     
     public struct Routing {
         
-//        public let onBackAction: () -> Void
+        public let onAddAsset: () -> Void
+        public let onBalanceTap: (_ id: String) -> Void
     }
 }

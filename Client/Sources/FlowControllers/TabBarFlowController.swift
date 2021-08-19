@@ -200,10 +200,11 @@ private extension TabBarFlowController {
     func showBalancesFlow(
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
-        
-        let controller: UIViewController = .init()
-        controller.view.backgroundColor = .red
-        showRootScreen(controller)
+        let navigationController: NavigationControllerProtocol = NavigationController()
+        let controller: DashboardScene.ViewController = initDashboard()
+        navigationController.setViewControllers([controller], animated: false)
+        showRootScreen(navigationController.getViewController())
+        controller.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func showMovementsFlow(
@@ -275,6 +276,30 @@ private extension TabBarFlowController {
             ),
             animated: true
         )
+    }
+    
+    func initDashboard(
+    ) -> DashboardScene.ViewController {
+        let vc: DashboardScene.ViewController = .init()
+        
+        let routing: DashboardScene.Routing = .init(
+            onAddAsset: { },
+            onBalanceTap: { (id) in }
+        )
+        
+        let balancesProvider: DashboardScene.BalancesProviderProtocol = DashboardScene.BalancesProvider(
+            assetsRepo: reposController.assetsRepo,
+            balancesRepo: reposController.balancesRepo,
+            imagesUtility: reposController.imagesUtility
+        )
+        
+        DashboardScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            balancesProvider: balancesProvider
+        )
+        
+        return vc
     }
     
     func initAccountId(

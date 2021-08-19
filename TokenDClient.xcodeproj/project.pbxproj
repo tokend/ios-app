@@ -20,6 +20,10 @@
 		0D1B056426CBDD560011CC4C /* DashboardSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055E26CBDD560011CC4C /* DashboardSceneViewController.swift */; };
 		0D1B056526CBDD560011CC4C /* DashboardSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055F26CBDD560011CC4C /* DashboardSceneInteractor.swift */; };
 		0D1B056626CBDD560011CC4C /* DashboardSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056026CBDD560011CC4C /* DashboardSceneConfigurator.swift */; };
+		0D1B056C26CBE7950011CC4C /* DashboardSceneHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056B26CBE7950011CC4C /* DashboardSceneHeaderView.swift */; };
+		0D1B056E26CBEF180011CC4C /* DashboardSceneAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */; };
+		0D1B057126CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */; };
+		0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */; };
 		0D22AD3926B97191000CDC61 /* CommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3826B97191000CDC61 /* CommonFooterView.swift */; };
 		0D22AD3B26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */; };
 		0D22AD3D26B9A6FE000CDC61 /* SettingsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */; };
@@ -327,6 +331,10 @@
 		0D1B055E26CBDD560011CC4C /* DashboardSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneViewController.swift; sourceTree = "<group>"; };
 		0D1B055F26CBDD560011CC4C /* DashboardSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneInteractor.swift; sourceTree = "<group>"; };
 		0D1B056026CBDD560011CC4C /* DashboardSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneConfigurator.swift; sourceTree = "<group>"; };
+		0D1B056B26CBE7950011CC4C /* DashboardSceneHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneHeaderView.swift; sourceTree = "<group>"; };
+		0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneAssetCell.swift; sourceTree = "<group>"; };
+		0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneBalancesProviderProtocol.swift; sourceTree = "<group>"; };
+		0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneBalancesProvider.swift; sourceTree = "<group>"; };
 		0D22AD3826B97191000CDC61 /* CommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFooterView.swift; sourceTree = "<group>"; };
 		0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTitleDescriptionDisclosureCell.swift; sourceTree = "<group>"; };
 		0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFlowController.swift; sourceTree = "<group>"; };
@@ -694,8 +702,36 @@
 				0D1B055B26CBDD560011CC4C /* DashboardScenePresenter.swift */,
 				0D1B055C26CBDD560011CC4C /* DashboardSceneRouting.swift */,
 				0D1B055E26CBDD560011CC4C /* DashboardSceneViewController.swift */,
+				0D1B056726CBE7360011CC4C /* Views */,
+				0D1B056926CBE74D0011CC4C /* Workers */,
 			);
 			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		0D1B056726CBE7360011CC4C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B056B26CBE7950011CC4C /* DashboardSceneHeaderView.swift */,
+				0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0D1B056926CBE74D0011CC4C /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B056F26CD29BD0011CC4C /* BalancesProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		0D1B056F26CD29BD0011CC4C /* BalancesProvider */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */,
+				0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */,
+			);
+			path = BalancesProvider;
 			sourceTree = "<group>";
 		};
 		0D26E82426B2D69C008E1C9C /* Settings */ = {
@@ -1912,6 +1948,7 @@
 				0D59BD3C269493BB00B6658F /* UIView+Image.swift in Sources */,
 				0D59BD3D269493BB00B6658F /* UIKit+SetIfNeeded.swift in Sources */,
 				0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */,
+				0D1B057126CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift in Sources */,
 				0D59BD3E269493BB00B6658F /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				0D59BD3F269493BB00B6658F /* UploadedAttachment+Extensions.swift in Sources */,
 				C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */,
@@ -2005,6 +2042,7 @@
 				0D1B056526CBDD560011CC4C /* DashboardSceneInteractor.swift in Sources */,
 				0D15DB8A26BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift in Sources */,
 				0D59BD79269493BB00B6658F /* IdentityFetcher.swift in Sources */,
+				0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */,
 				0D59BD7A269493BB00B6658F /* ForgotPasswordWorkerProtocol.swift in Sources */,
 				0D59BD7B269493BB00B6658F /* BaseForgotPasswordWorker.swift in Sources */,
 				0DDC5A8A26AAED5A0004D326 /* ActiveKYCStorageManager.swift in Sources */,
@@ -2064,9 +2102,11 @@
 				0D59BD9D269493BC00B6658F /* BalancesRepo.swift in Sources */,
 				0DDC5A6C26A9A0E50004D326 /* NetworkInfoProviderProtocol.swift in Sources */,
 				0D59BD9E269493BC00B6658F /* NetworkInfoRepo.swift in Sources */,
+				0D1B056C26CBE7950011CC4C /* DashboardSceneHeaderView.swift in Sources */,
 				0D59BD9F269493BC00B6658F /* AssetsRepo.swift in Sources */,
 				0D59BDA0269493BC00B6658F /* IdentitiesRepo.swift in Sources */,
 				0D59BDA1269493BC00B6658F /* BiometricsAuthPresenter.swift in Sources */,
+				0D1B056E26CBEF180011CC4C /* DashboardSceneAssetCell.swift in Sources */,
 				C39BB59226A85B4D00AC642B /* TabBarModels.swift in Sources */,
 				0D59BDA2269493BC00B6658F /* BiometricsAuthViewController.swift in Sources */,
 				0D59BDA3269493BC00B6658F /* BiometricsAuthInteractor.swift in Sources */,

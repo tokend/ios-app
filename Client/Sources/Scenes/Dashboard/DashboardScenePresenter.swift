@@ -38,10 +38,37 @@ extension DashboardScene {
 private extension DashboardScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
+        let content: Model.SceneViewModel.Content
+        
+        if sceneModel.balancesList.isEmpty {
+            content = .empty
+        } else {
+            let cells: [CellViewAnyModel] = sceneModel.balancesList.map { (balance) in
+                return DashboardScene.AssetCell.ViewModel(
+                    id: balance.id,
+                    icon: balance.avatar,
+                    abbreviation: String(balance.name.prefix(1)),
+                    title: balance.name,
+                    value: "\(balance.available) \(balance.code)"
+                )
+            }
+            
+            let section: Model.Section = .init(
+                id: "Section",
+                header: DashboardScene.HeaderView.ViewModel(
+                    id: "Header",
+                    title: "527,686.627127 USD"
+                ),
+                cells: cells
+            )
+            
+            content = .content(sections: [section])
+        }
+        
         
         return .init(
             isLoading: sceneModel.loadingStatus == .loading,
-            content: .empty
+            content: content
         )
     }
 }

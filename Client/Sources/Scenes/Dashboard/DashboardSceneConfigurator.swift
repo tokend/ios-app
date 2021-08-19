@@ -7,6 +7,7 @@ extension DashboardScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
+            balancesProvider: BalancesProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -15,7 +16,8 @@ extension DashboardScene {
                 presenterDispatch: presenterDispatch
             )
             let interactor = Interactor(
-                presenter: presenter
+                presenter: presenter,
+                balancesProvider: balancesProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(
