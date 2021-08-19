@@ -47,8 +47,10 @@ private extension DashboardScene.Presenter {
                 return DashboardScene.AssetCell.ViewModel(
                     id: balance.id,
                     icon: balance.avatar,
+                    // TODO: - Add balance name formatter
                     abbreviation: String(balance.name.prefix(1)),
                     title: balance.name,
+                    // TODO: - Add amount formatter
                     value: "\(balance.available) \(balance.code)"
                 )
             }

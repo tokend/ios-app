@@ -16,7 +16,7 @@ class TabBarFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
 
     private lazy var moreTabNavigationController: NavigationControllerProtocol = initMoreFlow()
-    private lazy var balancesTabNavigarionController: NavigationControllerProtocol = NavigationController()
+    private lazy var balancesTabNavigationController: NavigationControllerProtocol = NavigationController()
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
     private var selectedTab: Tab?
@@ -202,16 +202,17 @@ private extension TabBarFlowController {
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
         let flow = initBalancesFlow()
+        // FIXME: -
         self.currentFlowController = flow
         flow.run(showRootScreen: { (controller) in
-            self.balancesTabNavigarionController.setViewControllers([controller], animated: true)
+            self.balancesTabNavigationController.setViewControllers([controller], animated: true)
             controller.navigationController?.navigationBar.prefersLargeTitles = true
         })
-        showRootScreen(balancesTabNavigarionController.getViewController())
+        showRootScreen(balancesTabNavigationController.getViewController())
     }
     
     func initBalancesFlow(
-    ) -> BalancesFlowController {
+    ) -> DashboardFlowController {
         
         return .init(
             appController: self.appController,
@@ -221,7 +222,7 @@ private extension TabBarFlowController {
             userDataProvider: self.userDataProvider,
             keychainDataProvider: self.keychainDataProvider,
             rootNavigation: self.rootNavigation,
-            navigationController: balancesTabNavigarionController
+            navigationController: balancesTabNavigationController
         )
     }
     

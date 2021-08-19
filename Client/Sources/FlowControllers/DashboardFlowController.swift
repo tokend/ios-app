@@ -1,7 +1,7 @@
 import Foundation
 import TokenDSDK
 
-class BalancesFlowController: BaseSignedInFlowController {
+class DashboardFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
 
@@ -43,7 +43,7 @@ class BalancesFlowController: BaseSignedInFlowController {
 
 // MARK: - Private methods
 
-private extension BalancesFlowController {
+private extension DashboardFlowController {
     
     func initDashboard(
     ) -> DashboardScene.ViewController {

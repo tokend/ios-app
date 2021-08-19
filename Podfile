@@ -29,9 +29,7 @@ def ui_pods
   pod 'Nuke',                     '9.1.2'
 end
 
-def other_pods
-  
-  pod 'Charts',   '3.6.0'
+def other_pods  
 end
 
 target 'Client' do
