@@ -1,4 +1,6 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 public protocol DashboardSceneBusinessLogic {
     
@@ -23,16 +25,23 @@ extension DashboardScene {
         
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
+        private let balancesProvider: BalancesProviderProtocol
+        
+        private let disposeBag: DisposeBag = .init()
         
         // MARK: -
         
         public init(
-            presenter: PresentationLogic
+            presenter: PresentationLogic,
+            balancesProvider: BalancesProviderProtocol
         ) {
             
             self.presenter = presenter
+            self.balancesProvider = balancesProvider
+            
             self.sceneModel = .init(
-                loadingStatus: .loaded
+                loadingStatus: .loaded,
+                balancesList: balancesProvider.balances
             )
         }
     }
@@ -57,17 +66,31 @@ private extension DashboardScene.Interactor {
         )
         presenter.presentSceneDidUpdateSync(response: response)
     }
+    
+    func observeBalancesList() {
+        balancesProvider
+            .observeBalances()
+            .subscribe(onNext: { [weak self] (balances) in
+                self?.sceneModel.balancesList = balances
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - BusinessLogic
 
 extension DashboardScene.Interactor: DashboardScene.BusinessLogic {
     
-    public func onViewDidLoad(request: Event.ViewDidLoad.Request) { }
+    public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        observeBalancesList()
+    }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
         presentSceneDidUpdateSync(animated: false)
     }
     
-    public func onDidRefresh(request: Event.DidRefresh.Request) { }
+    public func onDidRefresh(request: Event.DidRefresh.Request) {
+        balancesProvider.initiateReload()
+    }
 }

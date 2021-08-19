@@ -182,10 +182,14 @@ private extension DashboardScene.ViewController {
             }
         }
         
+        // TODO: - handle refreshControl
+        
         if sceneViewModel.isLoading {
-            refreshControl.beginRefreshing()
+            view.showLoading()
+            view.isUserInteractionEnabled = false
         } else {
-            refreshControl.endRefreshing()
+            view.hideLoading()
+            view.isUserInteractionEnabled = true
         }
     }
     

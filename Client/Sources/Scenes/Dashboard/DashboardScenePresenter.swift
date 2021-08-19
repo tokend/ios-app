@@ -55,10 +55,7 @@ private extension DashboardScene.Presenter {
             
             let section: Model.Section = .init(
                 id: "Section",
-                header: DashboardScene.HeaderView.ViewModel(
-                    id: "Header",
-                    title: "527,686.627127 USD"
-                ),
+                header: nil,
                 cells: cells
             )
             
