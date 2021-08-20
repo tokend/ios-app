@@ -14,6 +14,17 @@
 		0D15DB8726BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8626BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift */; };
 		0D15DB8A26BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8926BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift */; };
 		0D15DB8C26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D15DB8B26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift */; };
+		0D1B056126CBDD560011CC4C /* DashboardScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055B26CBDD560011CC4C /* DashboardScenePresenter.swift */; };
+		0D1B056226CBDD560011CC4C /* DashboardSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055C26CBDD560011CC4C /* DashboardSceneRouting.swift */; };
+		0D1B056326CBDD560011CC4C /* DashboardSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055D26CBDD560011CC4C /* DashboardSceneModels.swift */; };
+		0D1B056426CBDD560011CC4C /* DashboardSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055E26CBDD560011CC4C /* DashboardSceneViewController.swift */; };
+		0D1B056526CBDD560011CC4C /* DashboardSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B055F26CBDD560011CC4C /* DashboardSceneInteractor.swift */; };
+		0D1B056626CBDD560011CC4C /* DashboardSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056026CBDD560011CC4C /* DashboardSceneConfigurator.swift */; };
+		0D1B056C26CBE7950011CC4C /* DashboardSceneHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056B26CBE7950011CC4C /* DashboardSceneHeaderView.swift */; };
+		0D1B056E26CBEF180011CC4C /* DashboardSceneAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */; };
+		0D1B057126CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */; };
+		0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */; };
+		0D1B057526CEA3890011CC4C /* DashboardFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */; };
 		0D22AD3926B97191000CDC61 /* CommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3826B97191000CDC61 /* CommonFooterView.swift */; };
 		0D22AD3B26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */; };
 		0D22AD3D26B9A6FE000CDC61 /* SettingsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */; };
@@ -315,6 +326,17 @@
 		0D15DB8626BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneSettingsManagerProtocol.swift; sourceTree = "<group>"; };
 		0D15DB8926BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneBiometricsInfoProvider.swift; sourceTree = "<group>"; };
 		0D15DB8B26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneBiometricsInfoProviderProtocol.swift; sourceTree = "<group>"; };
+		0D1B055B26CBDD560011CC4C /* DashboardScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardScenePresenter.swift; sourceTree = "<group>"; };
+		0D1B055C26CBDD560011CC4C /* DashboardSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneRouting.swift; sourceTree = "<group>"; };
+		0D1B055D26CBDD560011CC4C /* DashboardSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneModels.swift; sourceTree = "<group>"; };
+		0D1B055E26CBDD560011CC4C /* DashboardSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneViewController.swift; sourceTree = "<group>"; };
+		0D1B055F26CBDD560011CC4C /* DashboardSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneInteractor.swift; sourceTree = "<group>"; };
+		0D1B056026CBDD560011CC4C /* DashboardSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneConfigurator.swift; sourceTree = "<group>"; };
+		0D1B056B26CBE7950011CC4C /* DashboardSceneHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneHeaderView.swift; sourceTree = "<group>"; };
+		0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneAssetCell.swift; sourceTree = "<group>"; };
+		0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneBalancesProviderProtocol.swift; sourceTree = "<group>"; };
+		0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSceneBalancesProvider.swift; sourceTree = "<group>"; };
+		0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFlowController.swift; sourceTree = "<group>"; };
 		0D22AD3826B97191000CDC61 /* CommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFooterView.swift; sourceTree = "<group>"; };
 		0D22AD3A26B97DB8000CDC61 /* IconTitleDescriptionDisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTitleDescriptionDisclosureCell.swift; sourceTree = "<group>"; };
 		0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFlowController.swift; sourceTree = "<group>"; };
@@ -673,6 +695,47 @@
 			path = BiometricsInfoProvider;
 			sourceTree = "<group>";
 		};
+		0D1B055A26CBDD2C0011CC4C /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B056026CBDD560011CC4C /* DashboardSceneConfigurator.swift */,
+				0D1B055F26CBDD560011CC4C /* DashboardSceneInteractor.swift */,
+				0D1B055D26CBDD560011CC4C /* DashboardSceneModels.swift */,
+				0D1B055B26CBDD560011CC4C /* DashboardScenePresenter.swift */,
+				0D1B055C26CBDD560011CC4C /* DashboardSceneRouting.swift */,
+				0D1B055E26CBDD560011CC4C /* DashboardSceneViewController.swift */,
+				0D1B056726CBE7360011CC4C /* Views */,
+				0D1B056926CBE74D0011CC4C /* Workers */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		0D1B056726CBE7360011CC4C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B056B26CBE7950011CC4C /* DashboardSceneHeaderView.swift */,
+				0D1B056D26CBEF180011CC4C /* DashboardSceneAssetCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0D1B056926CBE74D0011CC4C /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B056F26CD29BD0011CC4C /* BalancesProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		0D1B056F26CD29BD0011CC4C /* BalancesProvider */ = {
+			isa = PBXGroup;
+			children = (
+				0D1B057026CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift */,
+				0D1B057226CD29E80011CC4C /* DashboardSceneBalancesProvider.swift */,
+			);
+			path = BalancesProvider;
+			sourceTree = "<group>";
+		};
 		0D26E82426B2D69C008E1C9C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -712,8 +775,8 @@
 			children = (
 				C39BB5E626B2FF0B00AC642B /* AccountID */,
 				C39BB5FB26B9761D00AC642B /* ChangePassword */,
+				0D1B055A26CBDD2C0011CC4C /* Dashboard */,
 				0DDC5A7426A9D0500004D326 /* LocalSignIn */,
-				C39BB5B726A9C8F700AC642B /* More */,
 				C39BB5B726A9C8F700AC642B /* More */,
 				0D26E82426B2D69C008E1C9C /* Settings */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
@@ -753,7 +816,6 @@
 			children = (
 				0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */,
 				C39BB5E426B2FEE200AC642B /* QRCodeImageView.swift */,
-				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 				0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */,
@@ -1456,15 +1518,16 @@
 			children = (
 				0D59BD1A2694930700B6658F /* ChangeLoginFlowController.swift */,
 				C39BB5F926B9627F00AC642B /* ChangePasswordFlowController.swift */,
+				0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */,
 				0D59BD182694930700B6658F /* ForgotPasswordFlowController.swift */,
 				0D59BD122694930700B6658F /* KYCFlowController.swift */,
 				0D59BD102694930700B6658F /* LaunchFlowController.swift */,
 				0D59BD162694930700B6658F /* LocalAuthFlowController.swift */,
 				0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */,
 				0D59BD0E2694930700B6658F /* RecoveryFlowController.swift */,
+				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 				0D59BD142694930700B6658F /* SignedInFlowController.swift */,
 				C39BB5A526A85BA600AC642B /* TabBarFlowController.swift */,
-				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 			);
 			path = FlowControllers;
 			sourceTree = "<group>";
@@ -1841,6 +1904,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D1B056126CBDD560011CC4C /* DashboardScenePresenter.swift in Sources */,
 				0D2FA2FC269893720018B7D4 /* TextField.swift in Sources */,
 				0D59BD23269493BB00B6658F /* DebugLog.swift in Sources */,
 				0D59BD24269493BB00B6658F /* VerificationCodeTextField.swift in Sources */,
@@ -1848,6 +1912,7 @@
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D59BD26269493BB00B6658F /* Array+IndexOf.swift in Sources */,
 				0D15DB8726BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift in Sources */,
+				0D1B056626CBDD560011CC4C /* DashboardSceneConfigurator.swift in Sources */,
 				0D59BD27269493BB00B6658F /* String+Index.swift in Sources */,
 				0D59BD28269493BB00B6658F /* UITextfield+SetText.swift in Sources */,
 				0D59BD29269493BB00B6658F /* UIColor+Interpolation.swift in Sources */,
@@ -1855,6 +1920,7 @@
 				0D59BD2B269493BB00B6658F /* UIImage+ButtonImage.swift in Sources */,
 				0D59BD2C269493BB00B6658F /* SnapKit+Extension.swift in Sources */,
 				0D59BD2D269493BB00B6658F /* UIColor+Hex.swift in Sources */,
+				0D1B056226CBDD560011CC4C /* DashboardSceneRouting.swift in Sources */,
 				C39BB5F026B2FFFF00AC642B /* AccountIDSceneViewController.swift in Sources */,
 				0D59BD2E269493BB00B6658F /* String+QueueLabel.swift in Sources */,
 				0D59BD2F269493BB00B6658F /* UIView+FirstResponder.swift in Sources */,
@@ -1885,6 +1951,7 @@
 				0D59BD3C269493BB00B6658F /* UIView+Image.swift in Sources */,
 				0D59BD3D269493BB00B6658F /* UIKit+SetIfNeeded.swift in Sources */,
 				0D2FA2E82695CC720018B7D4 /* SignInSceneViewController.swift in Sources */,
+				0D1B057126CD29DD0011CC4C /* DashboardSceneBalancesProviderProtocol.swift in Sources */,
 				0D59BD3E269493BB00B6658F /* UISegmentedControl+FillWithSegments.swift in Sources */,
 				0D59BD3F269493BB00B6658F /* UploadedAttachment+Extensions.swift in Sources */,
 				C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */,
@@ -1934,6 +2001,7 @@
 				0D59BD5B269493BB00B6658F /* DocumentUploaderWorkerProtocol.swift in Sources */,
 				0D59BD5C269493BB00B6658F /* DocumentUploaderWorker.swift in Sources */,
 				0D59BD5D269493BB00B6658F /* WalletDataProvider.swift in Sources */,
+				0D1B056326CBDD560011CC4C /* DashboardSceneModels.swift in Sources */,
 				0D59BD5E269493BB00B6658F /* WalletDataProviderProtocol.swift in Sources */,
 				0DDC5A6B26A99BC40004D326 /* CGFloat+ConvertToPixels.swift in Sources */,
 				0D59BD5F269493BB00B6658F /* ContoPassAccountTypeChecker.swift in Sources */,
@@ -1974,8 +2042,10 @@
 				0D59BD77269493BB00B6658F /* ContoFAPasswordChangerKeysProvider.swift in Sources */,
 				C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */,
 				0D59BD78269493BB00B6658F /* IdentityFetcherProtocol.swift in Sources */,
+				0D1B056526CBDD560011CC4C /* DashboardSceneInteractor.swift in Sources */,
 				0D15DB8A26BD73C8001D40EF /* SettingsSceneBiometricsInfoProvider.swift in Sources */,
 				0D59BD79269493BB00B6658F /* IdentityFetcher.swift in Sources */,
+				0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */,
 				0D59BD7A269493BB00B6658F /* ForgotPasswordWorkerProtocol.swift in Sources */,
 				0D59BD7B269493BB00B6658F /* BaseForgotPasswordWorker.swift in Sources */,
 				0DDC5A8A26AAED5A0004D326 /* ActiveKYCStorageManager.swift in Sources */,
@@ -2022,8 +2092,10 @@
 				0D59BD95269493BC00B6658F /* AppInfoUtils.swift in Sources */,
 				0D59BD96269493BC00B6658F /* AppControllerProtocol.swift in Sources */,
 				0D59BD97269493BC00B6658F /* ImagesUtility+TokenDSDK.swift in Sources */,
+				0D1B057526CEA3890011CC4C /* DashboardFlowController.swift in Sources */,
 				0D15DB8526BD739D001D40EF /* SettingsSceneSettingsManager.swift in Sources */,
 				0D59BD98269493BC00B6658F /* MovementsRepo.swift in Sources */,
+				0D1B056426CBDD560011CC4C /* DashboardSceneViewController.swift in Sources */,
 				C39BB5F626B3057D00AC642B /* AccountIDSceneAccountIDProviderProtocol.swift in Sources */,
 				0D59BD99269493BC00B6658F /* KYCRepo.swift in Sources */,
 				0D59BD9A269493BC00B6658F /* KeyValuesRepo.swift in Sources */,
@@ -2034,9 +2106,11 @@
 				0D59BD9D269493BC00B6658F /* BalancesRepo.swift in Sources */,
 				0DDC5A6C26A9A0E50004D326 /* NetworkInfoProviderProtocol.swift in Sources */,
 				0D59BD9E269493BC00B6658F /* NetworkInfoRepo.swift in Sources */,
+				0D1B056C26CBE7950011CC4C /* DashboardSceneHeaderView.swift in Sources */,
 				0D59BD9F269493BC00B6658F /* AssetsRepo.swift in Sources */,
 				0D59BDA0269493BC00B6658F /* IdentitiesRepo.swift in Sources */,
 				0D59BDA1269493BC00B6658F /* BiometricsAuthPresenter.swift in Sources */,
+				0D1B056E26CBEF180011CC4C /* DashboardSceneAssetCell.swift in Sources */,
 				C39BB59226A85B4D00AC642B /* TabBarModels.swift in Sources */,
 				0D59BDA2269493BC00B6658F /* BiometricsAuthViewController.swift in Sources */,
 				0D59BDA3269493BC00B6658F /* BiometricsAuthInteractor.swift in Sources */,

@@ -161,7 +161,7 @@ public extension AssetsRepo.Asset {
 
     struct Details: Decodable {
 
-        let name: String
+        let name: String?
         let description: String?
         let logo: Logo?
     }
@@ -170,9 +170,10 @@ public extension AssetsRepo.Asset {
 extension AssetsRepo.Asset.Details {
 
     public struct Logo: Decodable {
-
+        
+        // FIXME: - make mimeType non optional
         public let key: String
-        public let mimeType: String
+        public let mimeType: String?
     }
 }
 
@@ -182,8 +183,8 @@ private extension Array where Element == Horizon.AssetResource {
 
     func mapToAssets() throws -> [AssetsRepo.Asset] {
 
-        try map { (asset) in
-            try asset.mapToAsset()
+        compactMap { (asset) in
+            try? asset.mapToAsset()
         }
     }
 }

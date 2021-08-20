@@ -100,3 +100,4 @@
 "to_enable_two_factor_authentication" = "To enable Two-factor authentication open Google Authenticator or similar app with the button below or copy and manually enter this key:\n\n$(secret)";
 "to_enable_two_factor_authentication_replace_secret" = "secret";
 "open_app" = "Open App";
+"dashboard_title" = "Dashboard";
