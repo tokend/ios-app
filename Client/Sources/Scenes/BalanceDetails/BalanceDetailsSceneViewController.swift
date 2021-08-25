@@ -27,8 +27,12 @@ extension BalanceDetailsScene {
         
         // MARK: - Private properties
         
+        private var toolbarHeight: CGFloat { 44.0 }
+        
+        private let balanceView: BalanceView = .init()
         private let tableView: UITableView = .init()
         private let refreshControl: UIRefreshControl = .init()
+        private let toolbar: UIToolbar = .init()
         
         private var sections: [Model.Section] = []
         
@@ -66,6 +70,12 @@ extension BalanceDetailsScene {
                 businessLogic.onViewDidLoadSync(request: requestSync)
             }
         }
+        
+        public override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            
+            updateTableHeaderViewHeight()
+        }
     }
 }
 
@@ -76,8 +86,10 @@ private extension BalanceDetailsScene.ViewController {
     func setup() {
         setupView()
         setupNavigationBar()
+        setupBalanceView()
         setupTableView()
         setupRefreshControl()
+        setupToolbar()
         
         setupLayout()
     }
@@ -87,7 +99,15 @@ private extension BalanceDetailsScene.ViewController {
     }
     
     func setupNavigationBar() {
-        
+        navigationController?.navigationBar.setBackgroundImage(.init(), for: .default)
+        navigationController?.navigationBar.shadowImage = .init()
+    }
+    
+    func setupBalanceView() {
+        balanceView.balance = "10.248 BTC"
+        balanceView.title = "Bitcoin"
+        balanceView.icon = .uiImage(Assets.arrow_down_icon.image)
+        balanceView.exchangeValue = "~514,200 USD"
     }
     
     func setupTableView() {
@@ -97,6 +117,8 @@ private extension BalanceDetailsScene.ViewController {
         tableView.estimatedSectionFooterHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
         
+        tableView.contentInset.bottom = toolbarHeight
+        tableView.scrollIndicatorInsets.bottom = toolbarHeight
         tableView.tableFooterView = .init(frame: .init(x: 0.0, y: 0.0, width: 0.0, height: 1.0))
         
         tableView.refreshControl = refreshControl
@@ -123,11 +145,84 @@ private extension BalanceDetailsScene.ViewController {
         })
     }
     
+    func setupToolbar() {
+        
+        let buyItem: UIBarButtonItem = .init(
+            image: Assets.buy_toolbar_icon.image,
+            style: .plain,
+            target: self,
+            action: #selector(toolbarDisabledAction)
+        )
+//        buyItem.tintColor = .lightGray
+        buyItem.isEnabled = false
+        let receiveItem: UIBarButtonItem = .init(
+            image: Assets.receive_toolbar_icon.image,
+            style: .plain,
+            target: self,
+            action: #selector(toolbarReceiveAction)
+        )
+        let sendItem: UIBarButtonItem = .init(
+            image: Assets.send_toolbar_icon.image,
+            style: .plain,
+            target: self,
+            action: #selector(toolbarSendAction)
+        )
+        let depositItem: UIBarButtonItem = .init(
+            image: Assets.deposit_toolbar_icon.image,
+            style: .plain,
+            target: self,
+            action: #selector(toolbarDisabledAction)
+        )
+        depositItem.isEnabled = false
+//        depositItem.tintColor = .lightGray
+        let withdrawItem: UIBarButtonItem = .init(
+            image: Assets.withdraw_toolbar_icon.image,
+            style: .plain,
+            target: self,
+            action: #selector(toolbarDisabledAction)
+        )
+//        withdrawItem.tintColor = .lightGray
+        withdrawItem.isEnabled = false
+        
+        toolbar.items = [
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            buyItem,
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            receiveItem,
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            sendItem,
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            depositItem,
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            withdrawItem,
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+        ]
+    }
+    
+    @objc func toolbarDisabledAction() { }
+    
+    @objc func toolbarReceiveAction() {
+        routing?.onReceive()
+    }
+    
+    @objc func toolbarSendAction() {
+        routing?.onSend()
+    }
+    
     func setupLayout() {
+        tableView.tableHeaderView = balanceView
         view.addSubview(tableView)
+        view.addSubview(toolbar)
         
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        toolbar.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeArea.bottom)
+            make.height.equalTo(toolbarHeight)
         }
     }
     
@@ -173,11 +268,28 @@ private extension BalanceDetailsScene.ViewController {
         } else {
             refreshControl.endRefreshing()
         }
+        
+        updateTableHeaderViewHeight()
     }
     
     func cell(for indexPath: IndexPath) -> CellViewAnyModel {
         
         sections[indexPath.section].cells[indexPath.row]
+    }
+    
+    func updateTableHeaderViewHeight() {
+        guard let headerView = tableView.tableHeaderView else {
+            return
+        }
+        
+        let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        
+        if headerView.frame.size.height != size.height {
+            headerView.frame.size.height = size.height
+            
+            tableView.tableHeaderView = headerView
+            tableView.layoutIfNeeded()
+        }
     }
 }
 
@@ -235,6 +347,10 @@ extension BalanceDetailsScene.ViewController: UITableViewDelegate {
     ) {
         
         let cell = self.cell(for: indexPath)
+        
+        if let transaction = cell as? BalanceDetailsScene.TransactionCell.ViewModel {
+            routing?.onDidSelectTransaction(transaction.id)
+        }
     }
     
     public func tableView(

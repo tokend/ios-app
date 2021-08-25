@@ -34,6 +34,8 @@ class ReposController {
     public let networkInfoRepo: NetworkInfoRepo
 
     // MARK: - Private properties
+    
+    private var movementsBalanceRepos: [String: MovementsRepo] = [:]
 
     private let reposControllerStack: ReposControllerStack
     private let userDataProvider: UserDataProviderProtocol
@@ -59,6 +61,28 @@ class ReposController {
         self.keychainDataProvider = keychainDataProvider
         self.apiConfigurationModel = apiConfigurationModel
         self.managersController = managersController
+    }
+}
+
+// MARK: - Public methods
+
+extension ReposController {
+    
+    func movementsRepo(
+        for balanceId: String
+    ) -> MovementsRepo {
+        
+        if let repo = movementsBalanceRepos[balanceId] {
+            return repo
+        }
+        
+        let repo: MovementsRepo = .init(
+            api: reposControllerStack.apiV3.historyApi,
+            originalAccountId: userDataProvider.walletData.accountId,
+            balanceId: balanceId
+        )
+        movementsBalanceRepos[balanceId] = repo
+        return repo
     }
 }
 
@@ -125,7 +149,7 @@ private extension ReposController {
     private func createMovementsRepo() -> MovementsRepo {
         let repo = MovementsRepo(
             api: reposControllerStack.apiV3.historyApi,
-            accountId: userDataProvider.walletData.accountId
+            originalAccountId: userDataProvider.walletData.accountId
         )
         return repo
     }

@@ -7,6 +7,7 @@ extension BalanceDetailsScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
+            transactionsProvider: TransactionsProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -15,7 +16,8 @@ extension BalanceDetailsScene {
                 presenterDispatch: presenterDispatch
             )
             let interactor = Interactor(
-                presenter: presenter
+                presenter: presenter,
+                transactionsProvider: transactionsProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

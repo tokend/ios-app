@@ -28,6 +28,11 @@ enum Assets: String {
     case settings_lock_app_icon
     case settings_tfa_icon
     case settings_change_password_icon
+    case buy_toolbar_icon
+    case deposit_toolbar_icon
+    case withdraw_toolbar_icon
+    case receive_toolbar_icon
+    case send_toolbar_icon
 
     private var name: String {
         switch self {
@@ -58,6 +63,11 @@ enum Assets: String {
         case .settings_lock_app_icon: return "settings_lock_app_icon"
         case .settings_tfa_icon: return "settings_tfa_icon"
         case .settings_change_password_icon: return "settings_change_password_icon"
+        case .buy_toolbar_icon: return "buy"
+        case .deposit_toolbar_icon: return "deposit"
+        case .withdraw_toolbar_icon: return "withdraw"
+        case .receive_toolbar_icon: return "receive"
+        case .send_toolbar_icon: return "send"
         }
     }
 }

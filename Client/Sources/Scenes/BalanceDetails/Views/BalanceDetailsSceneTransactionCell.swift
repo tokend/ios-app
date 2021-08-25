@@ -33,7 +33,7 @@ extension BalanceDetailsScene {
             let type: String
             let amount: String
             let amountColor: UIColor
-            let counterparty: String
+            let counterparty: String?
             let date: String
             
             func setup(cell: View) {

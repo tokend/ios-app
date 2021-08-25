@@ -1,4 +1,6 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 public protocol BalanceDetailsSceneBusinessLogic {
     
@@ -24,16 +26,23 @@ extension BalanceDetailsScene {
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
         
+        private let transactionsProvider: TransactionsProviderProtocol
+        private let disposeBag: DisposeBag = .init()
+        
         // MARK: -
         
         public init(
-            presenter: PresentationLogic
+            presenter: PresentationLogic,
+            transactionsProvider: TransactionsProviderProtocol
         ) {
             
             self.presenter = presenter
             self.sceneModel = .init(
-                loadingStatus: .loaded
+                loadingStatus: transactionsProvider.loadingStatus,
+                transactions: transactionsProvider.transactions
             )
+            
+            self.transactionsProvider = transactionsProvider
         }
     }
 }
@@ -41,6 +50,25 @@ extension BalanceDetailsScene {
 // MARK: - Private methods
 
 private extension BalanceDetailsScene.Interactor {
+    
+    func observeTransactionsProvider() {
+        
+        transactionsProvider
+            .observeLoadingStatus()
+            .subscribe(onNext: { [weak self] (loadingStatus) in
+                self?.sceneModel.loadingStatus = loadingStatus
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        transactionsProvider
+            .observeTransactions()
+            .subscribe(onNext: { [weak self] (transactions) in
+                self?.sceneModel.transactions = transactions
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
     
     func presentSceneDidUpdate(animated: Bool) {
         let response: Event.SceneDidUpdate.Response = .init(
@@ -63,11 +91,15 @@ private extension BalanceDetailsScene.Interactor {
 
 extension BalanceDetailsScene.Interactor: BalanceDetailsScene.BusinessLogic {
     
-    public func onViewDidLoad(request: Event.ViewDidLoad.Request) { }
+    public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        observeTransactionsProvider()
+    }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
         presentSceneDidUpdateSync(animated: false)
     }
     
-    public func onDidRefresh(request: Event.DidRefresh.Request) { }
+    public func onDidRefresh(request: Event.DidRefresh.Request) {
+        transactionsProvider.reloadTransactions()
+    }
 }

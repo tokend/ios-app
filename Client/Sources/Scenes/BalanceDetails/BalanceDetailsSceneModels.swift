@@ -27,6 +27,7 @@ extension BalanceDetailsScene.Model {
     struct SceneModel {
         
         var loadingStatus: LoadingStatus
+        var transactions: [Transaction]
     }
     
     struct SceneViewModel {
@@ -43,6 +44,43 @@ extension BalanceDetailsScene.Model {
     public enum LoadingStatus {
         case loading
         case loaded
+    }
+    
+    public struct Transaction {
+        
+        enum Action {
+            
+            case locked
+            case chargedFromLocked
+            case unlocked
+            case charged
+            case withdrawn
+            case matched
+            case issued
+            case funded
+        }
+        
+        enum TransactionType {
+            
+            case amlAlert
+            case offer
+            case matchedOffer
+            case investment
+            case saleCancellation
+            case offerCancellation
+            case issuance
+            case payment(counterpartyAccountId: String, counterpartyName: String?)
+            case withdrawalRequest(destinationAccountId: String)
+            case assetPairUpdate
+            case atomicSwapAskCreation
+            case atomicSwapBidCreation
+        }
+        
+        let id: String
+        let amount: Decimal
+        let asset: String
+        let action: Action
+        let transactionType: TransactionType
     }
 }
 

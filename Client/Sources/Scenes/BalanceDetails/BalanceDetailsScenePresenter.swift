@@ -39,49 +39,16 @@ private extension BalanceDetailsScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
         
+        let cells = sceneModel.transactions.map {
+            $0.mapToViewModel()
+        }
+        
         let content: Model.SceneViewModel.Content = .content(
             sections: [
                 .init(
                     id: "section",
                     header: nil,
-                    cells: [
-                        BalanceDetailsScene.TransactionCell.ViewModel(
-                            id: "1",
-                            icon: .uiImage(Assets.arrow_back_icon.image),
-                            type: "Sent",
-                            amount: "-0.016 BTC",
-                            amountColor: .red,
-                            counterparty: "To bob@mail.com",
-                            date: "28 Jul"
-                        ),
-                        BalanceDetailsScene.TransactionCell.ViewModel(
-                            id: "2",
-                            icon: .uiImage(Assets.arrow_back_icon.image),
-                            type: "Sent",
-                            amount: "-1 BTC",
-                            amountColor: .systemRed,
-                            counterparty: "To bg@distributedlab.com",
-                            date: "14 Apr"
-                        ),
-                        BalanceDetailsScene.TransactionCell.ViewModel(
-                            id: "3",
-                            icon: .uiImage(Assets.arrow_back_icon.image),
-                            type: "Received",
-                            amount: "10 BTC",
-                            amountColor: .systemGreen,
-                            counterparty: "From bg@distributedlab.com",
-                            date: "14 Apr"
-                        ),
-                        BalanceDetailsScene.TransactionCell.ViewModel(
-                            id: "4",
-                            icon: .uiImage(Assets.arrow_back_icon.image),
-                            type: "Received",
-                            amount: "1.3 BTC",
-                            amountColor: .systemGreen,
-                            counterparty: "Issuance/deposit",
-                            date: "09 Mar"
-                        )
-                    ]
+                    cells: cells
                 )
             ]
         )
@@ -90,6 +57,79 @@ private extension BalanceDetailsScene.Presenter {
             isLoading: sceneModel.loadingStatus == .loading,
             content: content
         )
+    }
+}
+
+// MARK: - Mappers
+
+extension BalanceDetailsScene.Model.Transaction {
+    
+    func mapToViewModel(
+    ) -> BalanceDetailsScene.TransactionCell.ViewModel {
+        
+        let counterparty: String?
+        
+        switch action {
+        
+        case .locked,
+             .unlocked:
+            counterparty = nil
+            
+        case .charged,
+             .chargedFromLocked,
+             .funded,
+             .issued,
+             .matched,
+             .withdrawn:
+        
+            switch transactionType {
+            
+            case .payment(let accountId, let name):
+                counterparty = name ?? accountId.formattedAccountId()
+            case .withdrawalRequest(let accountId):
+                counterparty = accountId.formattedAccountId()
+                
+            case .amlAlert,
+                 .assetPairUpdate,
+                 .atomicSwapAskCreation,
+                 .atomicSwapBidCreation,
+                 .investment,
+                 .issuance,
+                 .matchedOffer,
+                 .offer,
+                 .offerCancellation,
+                 .saleCancellation:
+                counterparty = nil
+            }
+        }
+        
+        return .init(
+            id: id,
+            icon: .uiImage(Assets.buy_toolbar_icon.image),
+            type: "Received",
+            amount: "\(amount) \(asset)",
+            amountColor: .systemGreen,
+            counterparty: counterparty,
+            date: "Date"
+        )
+    }
+}
+
+private extension String {
+    
+    func formattedAccountId() -> String {
+        [self[0..<4], "...", self[count - 4..<count]].joined()
+    }
+}
+
+extension String {
+    
+    subscript(_ range: Range<Int>) -> String {
+        
+        let start: Index = index(startIndex, offsetBy: range.startIndex)
+        let end: Index = index(start, offsetBy: range.count)
+        
+        return String(self[start...end])
     }
 }
 
