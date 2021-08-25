@@ -104,4 +104,5 @@ enum LocKey: String {
     case to_enable_two_factor_authentication
     case to_enable_two_factor_authentication_replace_secret
     case open_app
+    case dashboard_title
 }

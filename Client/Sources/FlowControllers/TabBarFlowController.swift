@@ -16,6 +16,7 @@ class TabBarFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
 
     private lazy var moreTabNavigationController: NavigationControllerProtocol = initMoreFlow()
+    private lazy var balancesTabNavigationController: NavigationControllerProtocol = NavigationController()
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
     private var selectedTab: Tab?
@@ -216,28 +217,29 @@ private extension TabBarFlowController {
         balanceId: String,
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
-        
-        let navigationController: NavigationControllerProtocol = NavigationController()
-        
-        let flow: BalanceDetailsFlowController = .init(
-            appController: appController,
-            flowControllerStack: flowControllerStack,
-            reposController: reposController,
-            managersController: managersController,
-            userDataProvider: userDataProvider,
-            keychainDataProvider: keychainDataProvider,
-            rootNavigation: rootNavigation,
-            balanceId: balanceId,
-            navigationController: navigationController,
-            onClose: {
-                _ = navigationController.popToRootViewController(animated: true)
-            }
-        )
-        
+        let flow = initBalancesFlow()
+        // FIXME: -
+        self.currentFlowController = flow
         flow.run(showRootScreen: { (controller) in
-            navigationController.setViewControllers([controller], animated: false)
-            showRootScreen(navigationController.getViewController())
+            self.balancesTabNavigationController.setViewControllers([controller], animated: true)
+            controller.navigationController?.navigationBar.prefersLargeTitles = true
         })
+        showRootScreen(balancesTabNavigationController.getViewController())
+    }
+    
+    func initBalancesFlow(
+    ) -> DashboardFlowController {
+        
+        return .init(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            navigationController: balancesTabNavigationController
+        )
     }
     
     func showMovementsFlow(

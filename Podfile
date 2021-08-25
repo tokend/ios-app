@@ -29,10 +29,11 @@ def ui_pods
   pod 'Nuke',                     '9.1.2'
 end
 
-def other_pods
+def other_pods  
 end
 
 target 'Client' do
   token_d_pods
   ui_pods
+  other_pods
 end
