@@ -101,3 +101,7 @@
 "to_enable_two_factor_authentication_replace_secret" = "secret";
 "open_app" = "Open App";
 "dashboard_title" = "Dashboard";
+"send_asset_title" = "Send";
+"send_asset_continue" = "Continue";
+"send_asset_recipient_title" = "Recipient";
+"send_asset_recipient_placeholder" = "Recipient's email or account";

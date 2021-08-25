@@ -56,6 +56,24 @@ private extension TextFieldsContainer {
         
         var previousField: TextField?
         separatorsList = []
+        
+        if textFieldsList.count == 1 {
+            guard let field = textFieldsList.first
+            else {
+                return
+            }
+            
+            addSubview(field)
+            
+            field.snp.makeConstraints { (make) in
+                make.top.equalToSuperview().inset(separatorHeight)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalToSuperview().inset(separatorHeight)
+            }
+            
+            return
+        }
+        
         for field in textFieldsList {
             
             addSubview(field)

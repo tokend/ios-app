@@ -105,4 +105,8 @@ enum LocKey: String {
     case to_enable_two_factor_authentication_replace_secret
     case open_app
     case dashboard_title
+    case send_asset_title
+    case send_asset_continue
+    case send_asset_recipient_title
+    case send_asset_recipient_placeholder
 }
