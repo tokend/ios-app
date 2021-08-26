@@ -16,7 +16,10 @@ class TabBarFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
 
     private lazy var moreTabNavigationController: NavigationControllerProtocol = initMoreFlow()
-    private lazy var balancesTabNavigationController: NavigationControllerProtocol = NavigationController()
+    
+    private var dashboardFlow: DashboardFlowController?
+    private lazy var balancesTabNavigationController: NavigationControllerProtocol = initBalancesNavigationController()
+    
     private var tabBarScene: TabBarContainer.ViewController?
     private var contentContainer: TabContentContainer.ViewController?
     private var selectedTab: Tab?
@@ -177,28 +180,15 @@ private extension TabBarFlowController {
         
         case .balances:
             selectedTab = tab
-            
-            let balanceId: String = reposController.balancesRepo.balancesDetails.compactMap({ (balanceState) -> String? in
-                switch balanceState {
-                
-                case .creating:
-                    return nil
-                    
-                case .created(let balance):
-                    return balance.id
-                }
-            }).first ?? ""
-            
-            showBalancesFlow(
-                balanceId: balanceId,
-                showRootScreen: { (controller) in
-                    showContent(controller, animation)
-                }
-            )
+            currentFlowController = dashboardFlow
+            showDashboard(showRootScreen: { (controller) in
+                showContent(controller, animation)
+            })
             return true
             
         case .movements:
             selectedTab = tab
+            currentFlowController = nil
             showMovementsFlow(showRootScreen: { (controller) in
                 showContent(controller, animation)
             })
@@ -206,6 +196,7 @@ private extension TabBarFlowController {
             
         case .more:
             selectedTab = tab
+            currentFlowController = nil
             showMoreFlow(showRootScreen: { (controller) in
                 showContent(controller, animation)
             })
@@ -213,24 +204,18 @@ private extension TabBarFlowController {
         }
     }
     
-    func showBalancesFlow(
-        balanceId: String,
+    func showDashboard(
         showRootScreen: @escaping (UIViewController) -> Void
     ) {
-        let flow = initBalancesFlow()
-        // FIXME: -
-        self.currentFlowController = flow
-        flow.run(showRootScreen: { (controller) in
-            self.balancesTabNavigationController.setViewControllers([controller], animated: true)
-            controller.navigationController?.navigationBar.prefersLargeTitles = true
-        })
+        
         showRootScreen(balancesTabNavigationController.getViewController())
     }
     
-    func initBalancesFlow(
+    func initDashboardFlow(
+        navigationController: NavigationControllerProtocol
     ) -> DashboardFlowController {
         
-        return .init(
+        .init(
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
             reposController: self.reposController,
@@ -238,8 +223,22 @@ private extension TabBarFlowController {
             userDataProvider: self.userDataProvider,
             keychainDataProvider: self.keychainDataProvider,
             rootNavigation: self.rootNavigation,
-            navigationController: balancesTabNavigationController
+            navigationController: navigationController
         )
+    }
+    
+    func initBalancesNavigationController(
+    ) -> NavigationControllerProtocol {
+        
+        let navigationController: NavigationControllerProtocol = NavigationController()
+        dashboardFlow = initDashboardFlow(
+            navigationController: navigationController
+        )
+        
+        dashboardFlow?.run(showRootScreen: { (viewController) in
+            navigationController.setViewControllers([viewController], animated: false)
+        })
+        return navigationController
     }
     
     func showMovementsFlow(

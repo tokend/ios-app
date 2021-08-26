@@ -7,6 +7,7 @@ extension BalanceDetailsScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
+            balanceProvider: BalanceProviderProtocol,
             transactionsProvider: TransactionsProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
@@ -17,6 +18,7 @@ extension BalanceDetailsScene {
             )
             let interactor = Interactor(
                 presenter: presenter,
+                balanceProvider: balanceProvider,
                 transactionsProvider: transactionsProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)

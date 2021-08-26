@@ -7,6 +7,7 @@ extension BalanceDetailsScene {
         // MARK: Private properties
         
         private let iconImageView: UIImageView = .init()
+        private let abbreviationLabel: UILabel = .init()
         private let titleLabel: UILabel = .init()
         private let balanceLabel: UILabel = .init()
         private let exchangeValueLabel: UILabel = .init()
@@ -19,6 +20,11 @@ extension BalanceDetailsScene {
             didSet {
                 iconImageView.setTokenDUIImage(icon)
             }
+        }
+        
+        public var abbreviation: String? {
+            get { abbreviationLabel.text }
+            set { abbreviationLabel.text = newValue }
         }
         
         public var title: String? {
@@ -59,6 +65,7 @@ private extension BalanceDetailsScene.BalanceView {
     func commonInit() {
         setupView()
         setupIconImageView()
+        setupAbbreviationLabel()
         setupTitleLabel()
         setupBalanceLabel()
         setupExchangeValueLabel()
@@ -71,7 +78,29 @@ private extension BalanceDetailsScene.BalanceView {
     
     func setupIconImageView() {
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.backgroundColor = .white
+        iconImageView.layer.cornerRadius = iconSize.height / 2.0
+        iconImageView.layer.masksToBounds = true
+        iconImageView.backgroundColor = .clear
+    }
+    
+    func setupAbbreviationLabel() {
+        abbreviationLabel.font = Theme.Fonts.regularFont.withSize(24.0)
+        abbreviationLabel.textColor = .white
+        abbreviationLabel.numberOfLines = 1
+        abbreviationLabel.textAlignment = .center
+        abbreviationLabel.backgroundColor = { () -> UIColor in
+            
+            let colors: [UIColor] = [.systemRed, .systemGreen, .systemOrange, .systemBlue, .systemPink]
+            
+            guard let color = colors.randomElement()
+            else {
+                return .systemGray
+            }
+            return color.withAlphaComponent(0.7)
+        }()
+        abbreviationLabel.lineBreakMode = .byWordWrapping
+        abbreviationLabel.layer.cornerRadius = iconSize.height / 2.0
+        abbreviationLabel.layer.masksToBounds = true
     }
     
     func setupTitleLabel() {
@@ -102,10 +131,15 @@ private extension BalanceDetailsScene.BalanceView {
     }
     
     func setupLayout() {
+        addSubview(abbreviationLabel)
         addSubview(iconImageView)
         addSubview(titleLabel)
         addSubview(balanceLabel)
         addSubview(exchangeValueLabel)
+        
+        abbreviationLabel.snp.makeConstraints { (make) in
+            make.edges.equalTo(iconImageView)
+        }
         
         iconImageView.snp.makeConstraints { make in
             make.size.equalTo(iconSize)

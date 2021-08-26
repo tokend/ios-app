@@ -103,12 +103,7 @@ private extension BalanceDetailsScene.ViewController {
         navigationController?.navigationBar.shadowImage = .init()
     }
     
-    func setupBalanceView() {
-        balanceView.balance = "10.248 BTC"
-        balanceView.title = "Bitcoin"
-        balanceView.icon = .uiImage(Assets.arrow_down_icon.image)
-        balanceView.exchangeValue = "~514,200 USD"
-    }
+    func setupBalanceView() { }
     
     func setupTableView() {
         tableView.delegate = self
@@ -153,7 +148,6 @@ private extension BalanceDetailsScene.ViewController {
             target: self,
             action: #selector(toolbarDisabledAction)
         )
-//        buyItem.tintColor = .lightGray
         buyItem.isEnabled = false
         let receiveItem: UIBarButtonItem = .init(
             image: Assets.receive_toolbar_icon.image,
@@ -174,14 +168,12 @@ private extension BalanceDetailsScene.ViewController {
             action: #selector(toolbarDisabledAction)
         )
         depositItem.isEnabled = false
-//        depositItem.tintColor = .lightGray
         let withdrawItem: UIBarButtonItem = .init(
             image: Assets.withdraw_toolbar_icon.image,
             style: .plain,
             target: self,
             action: #selector(toolbarDisabledAction)
         )
-//        withdrawItem.tintColor = .lightGray
         withdrawItem.isEnabled = false
         
         toolbar.items = [
@@ -262,6 +254,12 @@ private extension BalanceDetailsScene.ViewController {
                 tableView.reloadData()
             }
         }
+        
+        balanceView.balance = sceneViewModel.balance
+        balanceView.exchangeValue = sceneViewModel.rate
+        balanceView.icon = sceneViewModel.balanceIcon
+        balanceView.abbreviation = sceneViewModel.balanceNameAbbreviation
+        balanceView.title = sceneViewModel.assetName
         
         if sceneViewModel.isLoading {
             refreshControl.beginRefreshing()

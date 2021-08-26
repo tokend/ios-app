@@ -328,6 +328,8 @@
 		C39BB95E26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95D26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift */; };
 		C39BB96226D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB96126D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift */; };
 		C39BB96426D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */; };
+		C3CB3A8026D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */; };
+		C3CB3A8226D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */; };
 		CC15AD5ACE9630579643EE01 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A386E26B5D2991E3157FFB8C /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -662,6 +664,8 @@
 		C39BB95D26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovementsRepo.Movements+MovementType.swift"; sourceTree = "<group>"; };
 		C39BB96126D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionsProvider.swift; sourceTree = "<group>"; };
 		C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionsProviderProtocol.swift; sourceTree = "<group>"; };
+		C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceProviderProtocol.swift; sourceTree = "<group>"; };
+		C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1845,6 +1849,7 @@
 		C39BB95F26D3A1A000AC642B /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				C3CB3A7E26D67F59009A771C /* BalanceDetailsSceneBalanceProvider */,
 				C39BB96026D3A1CA00AC642B /* BalanceDetailsSceneTransactionsProvider */,
 			);
 			path = Workers;
@@ -1857,6 +1862,15 @@
 				C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */,
 			);
 			path = BalanceDetailsSceneTransactionsProvider;
+			sourceTree = "<group>";
+		};
+		C3CB3A7E26D67F59009A771C /* BalanceDetailsSceneBalanceProvider */ = {
+			isa = PBXGroup;
+			children = (
+				C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */,
+				C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */,
+			);
+			path = BalanceDetailsSceneBalanceProvider;
 			sourceTree = "<group>";
 		};
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
@@ -2005,6 +2019,7 @@
 				0D59BD2E269493BB00B6658F /* String+QueueLabel.swift in Sources */,
 				0D59BD2F269493BB00B6658F /* UIView+FirstResponder.swift in Sources */,
 				0D59BD30269493BB00B6658F /* UITextField+Placeholder.swift in Sources */,
+				C3CB3A8026D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift in Sources */,
 				0D59BD31269493BB00B6658F /* Array+IndexInBounds.swift in Sources */,
 				C39BB5CD26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift in Sources */,
 				0DDC5A7C26A9D0730004D326 /* LocalSignInSceneRouting.swift in Sources */,
@@ -2218,6 +2233,7 @@
 				0D59BDAE269493BC00B6658F /* AccountTypeManager.swift in Sources */,
 				0D59BDAF269493BC00B6658F /* TransactionSender.swift in Sources */,
 				0D59BDB0269493BC00B6658F /* ApplicationEventsController.swift in Sources */,
+				C3CB3A8226D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift in Sources */,
 				0D59BDB1269493BC00B6658F /* TransactionCreator.swift in Sources */,
 				0D59BDB2269493BC00B6658F /* TransactionSigner.swift in Sources */,
 				0D59BDB3269493BC00B6658F /* SettingsManager.swift in Sources */,

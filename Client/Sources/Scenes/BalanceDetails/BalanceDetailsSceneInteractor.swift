@@ -26,6 +26,7 @@ extension BalanceDetailsScene {
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
         
+        private let balanceProvider: BalanceProviderProtocol
         private let transactionsProvider: TransactionsProviderProtocol
         private let disposeBag: DisposeBag = .init()
         
@@ -33,15 +34,18 @@ extension BalanceDetailsScene {
         
         public init(
             presenter: PresentationLogic,
+            balanceProvider: BalanceProviderProtocol,
             transactionsProvider: TransactionsProviderProtocol
         ) {
             
             self.presenter = presenter
             self.sceneModel = .init(
+                balance: balanceProvider.balance,
                 loadingStatus: transactionsProvider.loadingStatus,
                 transactions: transactionsProvider.transactions
             )
             
+            self.balanceProvider = balanceProvider
             self.transactionsProvider = transactionsProvider
         }
     }
@@ -54,20 +58,40 @@ private extension BalanceDetailsScene.Interactor {
     func observeTransactionsProvider() {
         
         transactionsProvider
-            .observeLoadingStatus()
-            .subscribe(onNext: { [weak self] (loadingStatus) in
-                self?.sceneModel.loadingStatus = loadingStatus
-                self?.presentSceneDidUpdate(animated: true)
-            })
-            .disposed(by: disposeBag)
-        
-        transactionsProvider
             .observeTransactions()
             .subscribe(onNext: { [weak self] (transactions) in
                 self?.sceneModel.transactions = transactions
                 self?.presentSceneDidUpdate(animated: true)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func observeBalanceProvider() {
+        
+        balanceProvider
+            .observeBalance()
+            .subscribe(onNext: { [weak self] (balance) in
+                self?.sceneModel.balance = balance
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func observeLoadingStatus() {
+        
+        Observable.combineLatest(
+            transactionsProvider.observeLoadingStatus(),
+            balanceProvider.observeLoadingStatus()
+        ).subscribe(onNext: { [weak self] (tuple) in
+            
+            if tuple.0 == .loaded && tuple.1 == .loaded {
+                self?.sceneModel.loadingStatus = .loaded
+            } else {
+                self?.sceneModel.loadingStatus = .loading
+            }
+            self?.presentSceneDidUpdate(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
     func presentSceneDidUpdate(animated: Bool) {
@@ -93,6 +117,8 @@ extension BalanceDetailsScene.Interactor: BalanceDetailsScene.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
         observeTransactionsProvider()
+        observeBalanceProvider()
+        observeLoadingStatus()
     }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
@@ -101,5 +127,6 @@ extension BalanceDetailsScene.Interactor: BalanceDetailsScene.BusinessLogic {
     
     public func onDidRefresh(request: Event.DidRefresh.Request) {
         transactionsProvider.reloadTransactions()
+        balanceProvider.reloadBalance()
     }
 }

@@ -208,6 +208,7 @@ private extension BalanceDetailsScene.TransactionCell.View {
         }
         
         typeLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        typeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         typeLabel.snp.makeConstraints { make in
             make.leading.equalTo(iconImageView.snp.trailing).offset(NameSpace.typeIconOffset)
             make.top.equalToSuperview().inset(NameSpace.typeTopInset)
@@ -230,6 +231,7 @@ private extension BalanceDetailsScene.TransactionCell.View {
         }
         
         dateLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        dateLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         dateLabel.snp.makeConstraints { make in
             make.leading.equalTo(counterpartyLabel.snp.trailing).offset(NameSpace.dateCounterpartyOffset)
             make.top.equalTo(amountLabel.snp.bottom).offset(NameSpace.dateAmountOffset)

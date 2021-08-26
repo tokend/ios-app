@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 public protocol BalanceDetailsScenePresentationLogic {
     
@@ -53,7 +54,37 @@ private extension BalanceDetailsScene.Presenter {
             ]
         )
         
+        let icon: TokenDUIImage?
+        let balanceNameAbbreviation: String?
+        let assetName: String?
+        let balance: String?
+        let rate: String?
+        
+        if let balanceModel = sceneModel.balance {
+            icon = balanceModel.icon
+            balanceNameAbbreviation = String(balanceModel.name.prefix(1))
+            assetName = balanceModel.name
+            balance = ["\(balanceModel.balance)", balanceModel.asset].joined(separator: " ")
+            if let rateAmount = balanceModel.rate,
+               let asset = balanceModel.rateAsset {
+                rate = ["\(rateAmount)", asset].joined(separator: " ")
+            } else {
+                rate = nil
+            }
+        } else {
+            icon = nil
+            balanceNameAbbreviation = nil
+            assetName = nil
+            balance = nil
+            rate = nil
+        }
+        
         return .init(
+            balanceIcon: icon,
+            balanceNameAbbreviation: balanceNameAbbreviation,
+            assetName: assetName,
+            balance: balance,
+            rate: rate,
             isLoading: sceneModel.loadingStatus == .loading,
             content: content
         )
@@ -68,26 +99,24 @@ extension BalanceDetailsScene.Model.Transaction {
     ) -> BalanceDetailsScene.TransactionCell.ViewModel {
         
         let counterparty: String?
+        let type: String
         
+        // TODO: - Localize
         switch action {
         
-        case .locked,
-             .unlocked:
-            counterparty = nil
+        case .locked:
+            type = "Locked"
+        case .unlocked:
+            type = "Unlocked"
             
-        case .charged,
-             .chargedFromLocked,
-             .funded,
-             .issued,
-             .matched,
-             .withdrawn:
-        
+        case .charged:
+            
             switch transactionType {
             
-            case .payment(let accountId, let name):
-                counterparty = name ?? accountId.formattedAccountId()
-            case .withdrawalRequest(let accountId):
-                counterparty = accountId.formattedAccountId()
+            case .payment:
+                type = "Sent"
+            case .withdrawalRequest:
+                type = "Charged"
                 
             case .amlAlert,
                  .assetPairUpdate,
@@ -99,24 +128,91 @@ extension BalanceDetailsScene.Model.Transaction {
                  .offer,
                  .offerCancellation,
                  .saleCancellation:
-                counterparty = nil
+                type = "Charged"
             }
+        case .chargedFromLocked:
+            type = "Charged"
+        case .funded:
+            type = "Received"
+        case .issued:
+            type = "Issued"
+        case .matched:
+            type = "Matched"
+        case .withdrawn:
+            type = "Withdrawn"
+        }
+        
+        // TODO: - Localize
+        switch transactionType {
+        
+        case .payment(let accountId, let name):
+            
+            if let isReceived = isReceived {
+                counterparty = [(isReceived == true ? "From" : "To"), name ?? accountId.formattedAccountId()].joined(separator: " ")
+            } else {
+                counterparty = "Payment"
+            }
+            
+        case .withdrawalRequest(let accountId):
+            
+            if let isReceived = isReceived {
+                counterparty = [(isReceived == true ? "From" : "To"), accountId.formattedAccountId()].joined(separator: " ")
+            } else {
+                counterparty = "Withdrawal request"
+            }
+        case .amlAlert:
+            counterparty = "AML alert"
+        case .assetPairUpdate:
+            counterparty = "Asset pair update"
+        case .atomicSwapAskCreation:
+            counterparty = "Direct buy offer creation"
+        case .atomicSwapBidCreation:
+            counterparty = "Direct buy"
+        case .investment:
+            counterparty = "Investment"
+        case .issuance:
+            counterparty = "Issuance/deposit"
+        case .matchedOffer:
+            counterparty = "Order"
+        case .offer(let isInvestment):
+            if isInvestment {
+                counterparty = "Pending investment"
+            } else {
+                counterparty = "Pending order"
+            }
+        case .offerCancellation:
+            counterparty = "Order cancellation"
+        case .saleCancellation:
+            counterparty = "Sale cancellation"
+        }
+        
+        let amountColor: UIColor
+        
+        if isReceived == true {
+            amountColor = .systemGreen
+        } else if isReceived == false {
+            amountColor = .systemRed
+        } else {
+            amountColor = .darkGray
         }
         
         return .init(
             id: id,
             icon: .uiImage(Assets.buy_toolbar_icon.image),
-            type: "Received",
-            amount: "\(amount) \(asset)",
-            amountColor: .systemGreen,
+            type: type,
+            // TODO: - Add formatter
+            amount: [(isReceived == false ? "-" : ""), "\(amount) \(asset)"].joined(),
+            amountColor: amountColor,
             counterparty: counterparty,
-            date: "Date"
+            // TODO: - Add formatter
+            date: "\(date)"
         )
     }
 }
 
 private extension String {
     
+    // TODO: - Add formatter
     func formattedAccountId() -> String {
         [self[0..<4], "...", self[count - 4..<count]].joined()
     }
@@ -129,7 +225,7 @@ extension String {
         let start: Index = index(startIndex, offsetBy: range.startIndex)
         let end: Index = index(start, offsetBy: range.count)
         
-        return String(self[start...end])
+        return String(self[start..<end])
     }
 }
 

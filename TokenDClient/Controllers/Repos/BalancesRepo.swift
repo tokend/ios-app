@@ -117,6 +117,10 @@ extension BalancesRepo {
             completion: completion
         )
     }
+    
+    func reloadBalances() {
+        reloadBalancesDetails()
+    }
 }
 
 // MARK: - Private methods

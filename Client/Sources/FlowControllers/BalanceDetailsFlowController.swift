@@ -55,6 +55,7 @@ private extension BalanceDetailsFlowController {
     ) -> UIViewController {
         
         let controller: BalanceDetailsScene.ViewController = .init()
+        controller.navigationItem.largeTitleDisplayMode = .never
         
         if let target = backTarget,
            let action = backAction {
@@ -74,6 +75,13 @@ private extension BalanceDetailsFlowController {
             onSend: { }
         )
         
+        let balanceProvider: BalanceDetailsScene.BalanceProvider = .init(
+            balanceId: balanceId,
+            assetsRepo: reposController.assetsRepo,
+            balancesRepo: reposController.balancesRepo,
+            imagesUtility: managersController.imagesUtility
+        )
+        
         let transactionsProvider: BalanceDetailsScene.TransactionsProvider = .init(
             movementsRepo: reposController.movementsRepo(
                 for: balanceId
@@ -84,6 +92,7 @@ private extension BalanceDetailsFlowController {
         BalanceDetailsScene.Configurator.configure(
             viewController: controller,
             routing: routing,
+            balanceProvider: balanceProvider,
             transactionsProvider: transactionsProvider
         )
         

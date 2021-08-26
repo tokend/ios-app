@@ -82,11 +82,13 @@ extension MovementsRepo.Movement {
         return .init(
             id: self.id,
             amount: self.amount,
+            isReceived: action.mapToIsReceived(movementType: movementType, assetId: assetId),
             asset: self.assetId,
             action: self.action.mapToTransactionAction(),
             transactionType: self.movementType.mapToTransactionType(
                 receiverAccountId: receiverAccountId
-            )
+            ),
+            date: self.appliedAt
         )
     }
 }
@@ -108,6 +110,32 @@ extension MovementsRepo.Movement.Action {
         case .funded: return .funded
         }
     }
+    
+    func mapToIsReceived(
+        movementType: MovementsRepo.Movement.MovementType,
+        assetId: String
+    ) -> Bool? {
+        
+        switch self {
+        
+        case .locked: return false
+        case .chargedFromLocked: return false
+        case .unlocked: return true
+        case .charged: return false
+        case .withdrawn: return false
+        case .matched:
+            switch movementType {
+            
+            case .matchedOffer(let offer):
+                return offer.funded.assetId == assetId
+                
+            default:
+                return nil
+            }
+        case .issued: return true
+        case .funded: return true
+        }
+    }
 }
 
 extension MovementsRepo.Movement.MovementType {
@@ -119,7 +147,8 @@ extension MovementsRepo.Movement.MovementType {
         switch self {
         
         case .amlAlert: return .amlAlert
-        case .offer: return .offer
+        case .offer(let offer):
+            return .offer(isInvestment: offer.orderBookId != 0)
         case .matchedOffer: return .matchedOffer
         case .investment: return .investment
         case .saleCancellation: return .saleCancellation

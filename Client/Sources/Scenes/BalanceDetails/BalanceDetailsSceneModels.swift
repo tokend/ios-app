@@ -26,12 +26,18 @@ extension BalanceDetailsScene.Model {
     
     struct SceneModel {
         
+        var balance: Balance?
         var loadingStatus: LoadingStatus
         var transactions: [Transaction]
     }
     
     struct SceneViewModel {
         
+        let balanceIcon: TokenDUIImage?
+        let balanceNameAbbreviation: String?
+        let assetName: String?
+        let balance: String?
+        let rate: String?
         let isLoading: Bool
         let content: Content
         
@@ -44,6 +50,17 @@ extension BalanceDetailsScene.Model {
     public enum LoadingStatus {
         case loading
         case loaded
+    }
+    
+    public struct Balance {
+        
+        let icon: TokenDUIImage?
+        let name: String
+        let balance: Decimal
+        let asset: String
+        
+        let rate: Decimal?
+        let rateAsset: String?
     }
     
     public struct Transaction {
@@ -63,7 +80,7 @@ extension BalanceDetailsScene.Model {
         enum TransactionType {
             
             case amlAlert
-            case offer
+            case offer(isInvestment: Bool)
             case matchedOffer
             case investment
             case saleCancellation
@@ -78,9 +95,11 @@ extension BalanceDetailsScene.Model {
         
         let id: String
         let amount: Decimal
+        let isReceived: Bool?
         let asset: String
         let action: Action
         let transactionType: TransactionType
+        let date: Date
     }
 }
 
