@@ -179,6 +179,42 @@ extension IdentitiesRepo {
         }
     }
     
+    func requestIdentity(
+        withEmail identifier: String,
+        completion: ((Result<Identity?, Swift.Error>) -> Void)? = nil
+    ) {
+
+        internalQueue.async { [weak self] in
+            if let identity = self?.identitiesValue.first(where: {
+                $0.value.email == identifier
+            }) {
+                completion?(.success(identity.value))
+                return
+            }
+
+            self?.updateValue(for: identifier, value: .loading)
+            self?.loadIdentity(
+                for: .login(identifier),
+                completion: { [weak self] (result) in
+
+                    self?.internalQueue.async { [weak self] in
+                        switch result {
+
+                        case .success(let identity):
+                            if let identity = identity {
+                                self?.updateValue(for: identity.accountId, value: .loaded(identity))
+                            }
+
+                        case .failure:
+                            break
+                        }
+
+                        completion?(result)
+                    }
+            })
+        }
+    }
+    
     public enum AddIdentityResult {
         case success(Identity)
         case failure(Error)
@@ -234,6 +270,7 @@ extension IdentitiesRepo {
     public struct Identity: Hashable {
         
         let accountId: String
+        let email: String
         let phoneNumber: String
         
         public func hash(into hasher: inout Hasher) {
@@ -260,6 +297,7 @@ extension IdentityResponse {
         
         let identity: IdentitiesRepo.Identity = .init(
             accountId: attributes.address,
+            email: self.attributes.email,
             phoneNumber: number
         )
         

@@ -119,6 +119,7 @@ private extension SendAssetScene.ViewController {
         recipientTextField.title = Localized(.send_asset_recipient_title)
         recipientTextField.placeholder = Localized(.send_asset_recipient_placeholder)
         recipientTextField.keyboardType = .emailAddress
+        recipientTextField.capitalizationType = .none
         recipientTextField.onTextChanged = { [weak self] (text) in
             let request: Event.DidEnterRecipientSync.Request = .init(value: text)
             self?.interactorDispatch?.sendSyncRequest { (businessLogic) in

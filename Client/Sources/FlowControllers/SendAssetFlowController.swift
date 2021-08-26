@@ -6,8 +6,9 @@ class SendAssetFlowController: BaseSignedInFlowController {
     // MARK: - Private properties
     
     private lazy var rootViewController: SendAssetScene.ViewController = initSendAsset()
-
+    
     private let navigationController: NavigationControllerProtocol
+    private let recipientAddressWorker: RecipientAddressWorkerProtocol
     fileprivate let assetId: String
 
     // MARK: -
@@ -26,6 +27,11 @@ class SendAssetFlowController: BaseSignedInFlowController {
 
         self.navigationController = navigationController
         self.assetId = assetId
+        
+        recipientAddressWorker = RecipientAddressWorker(
+            identitiesRepo: reposController.identitiesRepo,
+            originalAccountId: userDataProvider.walletData.accountId
+        )
         
         super.init(
             appController: appController,
@@ -74,7 +80,50 @@ private extension SendAssetFlowController {
                 )
             },
             onContinue: { [weak self] (address) in
-                print(.debug(message: address))
+                
+                self?.navigationController.showProgress()
+                
+                self?.recipientAddressWorker.processRecipientAddress(
+                    with: address,
+                    completion: { [weak self] (result) in
+                        
+                        self?.navigationController.hideProgress()
+                        
+                        switch result {
+                        
+                        case .success(let recipientAddress):
+                            // TODO: - push next screen
+                            break
+                            
+                        case .failure(let error):
+                            
+                            switch error {
+                            case let error as RecipientAddressWorker.RecipientAddressWorkerError:
+                                
+                                switch error {
+                                
+                                case .noIdentity:
+                                    self?.navigationController.showErrorMessage(
+                                        Localized(.send_asset_no_identity_error),
+                                        completion: nil
+                                    )
+                                    
+                                case .ownAccountId:
+                                    self?.navigationController.showErrorMessage(
+                                        Localized(.send_asset_own_account_error),
+                                        completion: nil
+                                    )
+                                }
+                            
+                            default:
+                                self?.navigationController.showErrorMessage(
+                                    Localized(.error_unknown),
+                                    completion: nil
+                                )
+                            }
+                        }
+                    }
+                )
             }
         )
         

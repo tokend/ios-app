@@ -278,6 +278,7 @@
 		0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */; };
 		5579479F26D6A2AE00887B49 /* RecipientAddressWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5579479E26D6A2AE00887B49 /* RecipientAddressWorker.swift */; };
 		557947A126D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557947A026D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift */; };
+		9F9A75CDFF9B6711FD82EF4A /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1FB141AC7007D5C85166D9C /* libPods-Client.a */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
 		C39BB59126A85B4D00AC642B /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58626A85B4D00AC642B /* TabBarView.swift */; };
@@ -326,7 +327,6 @@
 		C39BB60526B9763B00AC642B /* ChangePasswordSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB5FF26B9763B00AC642B /* ChangePasswordSceneViewController.swift */; };
 		C39BB60626B9763B00AC642B /* ChangePasswordSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB60026B9763B00AC642B /* ChangePasswordSceneInteractor.swift */; };
 		C39BB60726B9763B00AC642B /* ChangePasswordSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */; };
-		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -605,11 +605,10 @@
 		0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInUserAvatarUrlProvider.swift; sourceTree = "<group>"; };
 		0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorker.swift; sourceTree = "<group>"; };
 		0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorkerProtocol.swift; sourceTree = "<group>"; };
-		111CA24DFC0B42D0D8442E41 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5579479E26D6A2AE00887B49 /* RecipientAddressWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressWorker.swift; sourceTree = "<group>"; };
 		557947A026D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressWorkerProtocol.swift; sourceTree = "<group>"; };
-		624397EB410687DC85703FF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
-		9606380E3DF7F24E64D5490C /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
+		5A7C979817DB9E4E7307DEB9 /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
+		899608042F7A146AD21AFEF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		C39BB58426A85B4D00AC642B /* TabBarRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarRouting.swift; sourceTree = "<group>"; };
 		C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarPresenter.swift; sourceTree = "<group>"; };
 		C39BB58626A85B4D00AC642B /* TabBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
@@ -658,6 +657,7 @@
 		C39BB5FF26B9763B00AC642B /* ChangePasswordSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneViewController.swift; sourceTree = "<group>"; };
 		C39BB60026B9763B00AC642B /* ChangePasswordSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneInteractor.swift; sourceTree = "<group>"; };
 		C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneConfigurator.swift; sourceTree = "<group>"; };
+		F1FB141AC7007D5C85166D9C /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -665,7 +665,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */,
+				9F9A75CDFF9B6711FD82EF4A /* libPods-Client.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -887,7 +887,7 @@
 				0D59BCEA2694930300B6658F /* Client */,
 				0D59BCE92694930300B6658F /* Products */,
 				F70F8C5AA74109E5A48603F5 /* Pods */,
-				51C9FF6C8C5A61429A1872DA /* Frameworks */,
+				3927B27664420C18C417873F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1686,10 +1686,10 @@
 			path = LocalSignInWorker;
 			sourceTree = "<group>";
 		};
-		51C9FF6C8C5A61429A1872DA /* Frameworks */ = {
+		3927B27664420C18C417873F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				111CA24DFC0B42D0D8442E41 /* libPods-Client.a */,
+				F1FB141AC7007D5C85166D9C /* libPods-Client.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1848,8 +1848,8 @@
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				624397EB410687DC85703FF3 /* Pods-Client.release.xcconfig */,
-				9606380E3DF7F24E64D5490C /* Pods-Client.debug.xcconfig */,
+				899608042F7A146AD21AFEF3 /* Pods-Client.release.xcconfig */,
+				5A7C979817DB9E4E7307DEB9 /* Pods-Client.debug.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1861,11 +1861,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D59BD1F2694930700B6658F /* Build configuration list for PBXNativeTarget "Client" */;
 			buildPhases = (
-				83920025AF372198BBBF6EE0 /* [CP] Check Pods Manifest.lock */,
+				EF6871D3AED290B0055564A9 /* [CP] Check Pods Manifest.lock */,
 				0D59BCE42694930300B6658F /* Sources */,
 				0D59BCE52694930300B6658F /* Frameworks */,
 				0D59BCE62694930300B6658F /* Resources */,
-				00E91A281F17392945736C4E /* [CP] Embed Pods Frameworks */,
+				98288E64DCEE7A01D3FA1C71 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1923,7 +1923,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00E91A281F17392945736C4E /* [CP] Embed Pods Frameworks */ = {
+		98288E64DCEE7A01D3FA1C71 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1940,7 +1940,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		83920025AF372198BBBF6EE0 /* [CP] Check Pods Manifest.lock */ = {
+		EF6871D3AED290B0055564A9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

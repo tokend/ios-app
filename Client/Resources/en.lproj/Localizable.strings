@@ -105,3 +105,5 @@
 "send_asset_continue" = "Continue";
 "send_asset_recipient_title" = "Recipient";
 "send_asset_recipient_placeholder" = "Recipient's email or account";
+"send_asset_no_identity_error" = "No such account";
+"send_asset_own_account_error" = "Sending assets to yourself is not allowed";

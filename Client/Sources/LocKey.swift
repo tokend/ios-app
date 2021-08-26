@@ -109,4 +109,6 @@ enum LocKey: String {
     case send_asset_continue
     case send_asset_recipient_title
     case send_asset_recipient_placeholder
+    case send_asset_no_identity_error
+    case send_asset_own_account_error
 }
