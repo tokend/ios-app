@@ -4,6 +4,8 @@ import TokenDWallet
 
 class ReposController {
     
+    private typealias BalanceId = String
+    
     // MARK: - Public properties
 
     public private(set) lazy var assetsRepo: AssetsRepo = {
@@ -35,7 +37,7 @@ class ReposController {
 
     // MARK: - Private properties
     
-    private var movementsBalanceRepos: [String: MovementsRepo] = [:]
+    private var movementsBalanceIdRepos: [BalanceId: MovementsRepo] = [:]
 
     private let reposControllerStack: ReposControllerStack
     private let userDataProvider: UserDataProviderProtocol
@@ -72,7 +74,7 @@ extension ReposController {
         for balanceId: String
     ) -> MovementsRepo {
         
-        if let repo = movementsBalanceRepos[balanceId] {
+        if let repo = movementsBalanceIdRepos[balanceId] {
             return repo
         }
         
@@ -81,7 +83,7 @@ extension ReposController {
             originalAccountId: userDataProvider.walletData.accountId,
             balanceId: balanceId
         )
-        movementsBalanceRepos[balanceId] = repo
+        movementsBalanceIdRepos[balanceId] = repo
         return repo
     }
 }

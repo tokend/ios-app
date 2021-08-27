@@ -81,16 +81,7 @@ private extension BalanceDetailsScene.BalanceView {
         abbreviationLabel.textColor = .white
         abbreviationLabel.numberOfLines = 1
         abbreviationLabel.textAlignment = .center
-        abbreviationLabel.backgroundColor = { () -> UIColor in
-            
-            let colors: [UIColor] = [.systemRed, .systemGreen, .systemOrange, .systemBlue, .systemPink]
-            
-            guard let color = colors.randomElement()
-            else {
-                return .systemGray
-            }
-            return color.withAlphaComponent(0.7)
-        }()
+        abbreviationLabel.backgroundColor = .abbreviationColor()
         abbreviationLabel.lineBreakMode = .byWordWrapping
         abbreviationLabel.layer.cornerRadius = iconSize.height / 2.0
         abbreviationLabel.layer.masksToBounds = true

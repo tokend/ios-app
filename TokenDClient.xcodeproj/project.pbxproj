@@ -330,6 +330,7 @@
 		C39BB96426D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */; };
 		C3CB3A8026D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */; };
 		C3CB3A8226D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */; };
+		C3CB3ACD26D92456009A771C /* UIColor+AbbreviationColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3ACC26D92456009A771C /* UIColor+AbbreviationColor.swift */; };
 		CC15AD5ACE9630579643EE01 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A386E26B5D2991E3157FFB8C /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
@@ -666,6 +667,7 @@
 		C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionsProviderProtocol.swift; sourceTree = "<group>"; };
 		C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceProviderProtocol.swift; sourceTree = "<group>"; };
 		C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceProvider.swift; sourceTree = "<group>"; };
+		C3CB3ACC26D92456009A771C /* UIColor+AbbreviationColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AbbreviationColor.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1609,6 +1611,7 @@
 			children = (
 				0DDC5A6A26A99BC40004D326 /* CGFloat+ConvertToPixels.swift */,
 				0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */,
+				C3CB3ACC26D92456009A771C /* UIColor+AbbreviationColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2148,6 +2151,7 @@
 				0D59BD79269493BB00B6658F /* IdentityFetcher.swift in Sources */,
 				0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */,
 				0D59BD7A269493BB00B6658F /* ForgotPasswordWorkerProtocol.swift in Sources */,
+				C3CB3ACD26D92456009A771C /* UIColor+AbbreviationColor.swift in Sources */,
 				0D59BD7B269493BB00B6658F /* BaseForgotPasswordWorker.swift in Sources */,
 				0DDC5A8A26AAED5A0004D326 /* ActiveKYCStorageManager.swift in Sources */,
 				C39BB5B126A8600500AC642B /* TabContentContainerConfigurator.swift in Sources */,
