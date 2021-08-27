@@ -1,23 +1,23 @@
 import Foundation
 
-public protocol AccountIDScenePresentationLogic {
+public protocol QRCodeScenePresentationLogic {
     
-    typealias Event = AccountIDScene.Event
+    typealias Event = QRCodeScene.Event
     
     func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response)
     func presentSceneDidUpdateSync(response: Event.SceneDidUpdateSync.Response)
     func presentDidTapShareSync(response: Event.DidTapShareSync.Response)
 }
 
-extension AccountIDScene {
+extension QRCodeScene {
     
-    public typealias PresentationLogic = AccountIDScenePresentationLogic
+    public typealias PresentationLogic = QRCodeScenePresentationLogic
     
-    @objc(AccountIDScenePresenter)
+    @objc(QRCodeScenePresenter)
     public class Presenter: NSObject {
         
-        public typealias Event = AccountIDScene.Event
-        public typealias Model = AccountIDScene.Model
+        public typealias Event = QRCodeScene.Event
+        public typealias Model = QRCodeScene.Model
         
         // MARK: - Private properties
         
@@ -36,19 +36,20 @@ extension AccountIDScene {
 
 // MARK: - Private methods
 
-private extension AccountIDScene.Presenter {
+private extension QRCodeScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
         
         return .init(
-            qrCodeValue: sceneModel.accountId.uppercased()
+            screenTitle: sceneModel.title,
+            qrCodeValue: sceneModel.data
         )
     }
 }
 
 // MARK: - PresenterLogic
 
-extension AccountIDScene.Presenter: AccountIDScene.PresentationLogic {
+extension QRCodeScene.Presenter: QRCodeScene.PresentationLogic {
     
     public func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response) {
         let viewModel = mapSceneModel(response.sceneModel)

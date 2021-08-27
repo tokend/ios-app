@@ -1,6 +1,6 @@
 import Foundation
 
-extension AccountIDScene {
+extension QRCodeScene {
     
     public struct Routing {
         

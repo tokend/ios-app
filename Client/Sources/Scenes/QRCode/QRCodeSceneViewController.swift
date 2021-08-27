@@ -1,23 +1,23 @@
 import UIKit
 
-public protocol AccountIDSceneDisplayLogic: AnyObject {
+public protocol QRCodeSceneDisplayLogic: AnyObject {
     
-    typealias Event = AccountIDScene.Event
+    typealias Event = QRCodeScene.Event
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
     func displayDidTapShareSync(viewModel: Event.DidTapShareSync.ViewModel)
 }
 
-extension AccountIDScene {
+extension QRCodeScene {
     
-    public typealias DisplayLogic = AccountIDSceneDisplayLogic
+    public typealias DisplayLogic = QRCodeSceneDisplayLogic
     
-    @objc(AccountIDSceneViewController)
+    @objc(QRCodeSceneViewController)
     public class ViewController: BaseViewController {
         
-        public typealias Event = AccountIDScene.Event
-        public typealias Model = AccountIDScene.Model
+        public typealias Event = QRCodeScene.Event
+        public typealias Model = QRCodeScene.Model
         
         // MARK: -
         
@@ -69,7 +69,7 @@ extension AccountIDScene {
 
 // MARK: - Private methods
 
-private extension AccountIDScene.ViewController {
+private extension QRCodeScene.ViewController {
     
     func setup() {
         setupView()
@@ -103,8 +103,6 @@ private extension AccountIDScene.ViewController {
             ),
             animated: false
         )
-        
-        navigationItem.title = "Account ID"
     }
     
     @objc func shareButtonAction() {
@@ -157,6 +155,7 @@ private extension AccountIDScene.ViewController {
         animated: Bool
     ) {
         
+        navigationItem.title = sceneViewModel.screenTitle
         qrCodeImageView.qrValue = sceneViewModel.qrCodeValue
         qrCodeValueLabel.text = sceneViewModel.qrCodeValue
     }
@@ -164,7 +163,7 @@ private extension AccountIDScene.ViewController {
 
 // MARK: - DisplayLogic
 
-extension AccountIDScene.ViewController: AccountIDScene.DisplayLogic {
+extension QRCodeScene.ViewController: QRCodeScene.DisplayLogic {
     
     public func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)

@@ -1,6 +1,6 @@
 import UIKit
 
-public enum AccountIDScene {
+public enum QRCodeScene {
     
     // MARK: - Typealiases
     
@@ -14,22 +14,24 @@ public enum AccountIDScene {
 
 // MARK: - Models
 
-extension AccountIDScene.Model {
+extension QRCodeScene.Model {
     
     struct SceneModel {
-        var accountId: String
+        let title: String
+        var data: String
     }
     
     struct SceneViewModel {
+        let screenTitle: String
         let qrCodeValue: String
     }
 }
 
 // MARK: - Events
 
-extension AccountIDScene.Event {
+extension QRCodeScene.Event {
     
-    public typealias Model = AccountIDScene.Model
+    public typealias Model = QRCodeScene.Model
     
     // MARK: -
     
