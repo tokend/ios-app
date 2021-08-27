@@ -2,9 +2,9 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-extension AccountIDScene {
+extension QRCodeScene {
     
-    class AccountIDProvider {
+    class AccountIDDataProvider {
         
         // MARK: Private properties
         
@@ -18,18 +18,22 @@ extension AccountIDScene {
         ) {
             
             self.userDataProvider = userDataProvider
-            accountIdBehaviorRelay = .init(value: userDataProvider.walletData.accountId)
+            accountIdBehaviorRelay = .init(value: userDataProvider.walletData.accountId.uppercased())
         }
     }
 }
 
-extension AccountIDScene.AccountIDProvider: AccountIDScene.AccountIDProviderProtocol {
+extension QRCodeScene.AccountIDDataProvider: QRCodeScene.DataProviderProtocol {
     
-    var accountId: String {
+    var data: String {
         accountIdBehaviorRelay.value
     }
     
-    func observeAccountId() -> Observable<String> {
+    var title: String {
+        "Account ID"
+    }
+    
+    func observeData() -> Observable<String> {
         accountIdBehaviorRelay.asObservable()
     }
 }

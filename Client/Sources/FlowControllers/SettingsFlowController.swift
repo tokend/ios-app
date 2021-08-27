@@ -304,10 +304,10 @@ private extension SettingsFlowController {
         onBack: @escaping () -> Void
     ) -> UIViewController {
         
-        let viewController: AccountIDScene.ViewController = .init()
+        let viewController: QRCodeScene.ViewController = .init()
         viewController.hidesBottomBarWhenPushed = true
         
-        let routing: AccountIDScene.Routing = .init(
+        let routing: QRCodeScene.Routing = .init(
             onBackAction: onBack,
             onShare: { [weak self] (valueToShare) in
                 self?.shareValue(
@@ -317,14 +317,14 @@ private extension SettingsFlowController {
             }
         )
         
-        let accountIdProvider: AccountIDScene.AccountIDProvider = .init(
+        let accountIdProvider: QRCodeScene.AccountIDDataProvider = .init(
             userDataProvider: userDataProvider
         )
         
-        AccountIDScene.Configurator.configure(
+        QRCodeScene.Configurator.configure(
             viewController: viewController,
             routing: routing,
-            accountIdProvider: accountIdProvider
+            dataProvider: accountIdProvider
         )
         
         return viewController

@@ -2,45 +2,46 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-public protocol AccountIDSceneBusinessLogic {
+public protocol QRCodeSceneBusinessLogic {
     
-    typealias Event = AccountIDScene.Event
+    typealias Event = QRCodeScene.Event
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
     func onDidTapShareSync(request: Event.DidTapShareSync.Request)
 }
 
-extension AccountIDScene {
+extension QRCodeScene {
     
-    public typealias BusinessLogic = AccountIDSceneBusinessLogic
+    public typealias BusinessLogic = QRCodeSceneBusinessLogic
     
-    @objc(AccountIDSceneInteractor)
+    @objc(QRCodeSceneInteractor)
     public class Interactor: NSObject {
         
-        public typealias Event = AccountIDScene.Event
-        public typealias Model = AccountIDScene.Model
+        public typealias Event = QRCodeScene.Event
+        public typealias Model = QRCodeScene.Model
         
         // MARK: - Private properties
         
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
         
-        private let accountIdProvider: AccountIDProviderProtocol
+        private let dataProvider: DataProviderProtocol
         private let disposeBag: DisposeBag = .init()
         
         // MARK: -
         
         public init(
             presenter: PresentationLogic,
-            accountIdProvider: AccountIDProviderProtocol
+            dataProvider: DataProviderProtocol
         ) {
             
             self.presenter = presenter
-            self.accountIdProvider = accountIdProvider
+            self.dataProvider = dataProvider
             
             self.sceneModel = .init(
-                accountId: accountIdProvider.accountId
+                title: dataProvider.title,
+                data: dataProvider.data
             )
         }
     }
@@ -48,14 +49,14 @@ extension AccountIDScene {
 
 // MARK: - Private methods
 
-private extension AccountIDScene.Interactor {
+private extension QRCodeScene.Interactor {
     
-    func observeAccountIdProvider() {
+    func observeDataProvider() {
         
-        accountIdProvider
-            .observeAccountId()
-            .subscribe(onNext: { [weak self] (accountId) in
-                self?.sceneModel.accountId = accountId
+        dataProvider
+            .observeData()
+            .subscribe(onNext: { [weak self] (data) in
+                self?.sceneModel.data = data
                 self?.presentSceneDidUpdate(animated: true)
             })
             .disposed(by: disposeBag)
@@ -80,10 +81,10 @@ private extension AccountIDScene.Interactor {
 
 // MARK: - BusinessLogic
 
-extension AccountIDScene.Interactor: AccountIDScene.BusinessLogic {
+extension QRCodeScene.Interactor: QRCodeScene.BusinessLogic {
     
     public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
-        observeAccountIdProvider()
+        observeDataProvider()
     }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
@@ -92,7 +93,7 @@ extension AccountIDScene.Interactor: AccountIDScene.BusinessLogic {
     
     public func onDidTapShareSync(request: Event.DidTapShareSync.Request) {
         let response: Event.DidTapShareSync.Response = .init(
-            value: sceneModel.accountId
+            value: sceneModel.data
         )
         self.presenter.presentDidTapShareSync(response: response)
     }

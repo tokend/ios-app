@@ -1,13 +1,13 @@
 import Foundation
 
-extension AccountIDScene {
+extension QRCodeScene {
     
     public enum Configurator {
         
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
-            accountIdProvider: AccountIDProviderProtocol,
+            dataProvider: DataProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -17,7 +17,7 @@ extension AccountIDScene {
             )
             let interactor = Interactor(
                 presenter: presenter,
-                accountIdProvider: accountIdProvider
+                dataProvider: dataProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(
@@ -29,9 +29,9 @@ extension AccountIDScene {
     }
 }
 
-extension AccountIDScene {
+extension QRCodeScene {
     
-    @objc(AccountIDSceneInteractorDispatch)
+    @objc(QRCodeSceneInteractorDispatch)
     public class InteractorDispatch: NSObject {
         
         private let queue: DispatchQueue = DispatchQueue(
@@ -58,7 +58,7 @@ extension AccountIDScene {
         }
     }
     
-    @objc(AccountIDScenePresenterDispatch)
+    @objc(QRCodeScenePresenterDispatch)
     public class PresenterDispatch: NSObject {
         
         private weak var displayLogic: DisplayLogic?
