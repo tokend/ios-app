@@ -10,7 +10,6 @@ extension BalanceDetailsScene {
         private let abbreviationLabel: UILabel = .init()
         private let titleLabel: UILabel = .init()
         private let balanceLabel: UILabel = .init()
-        private let exchangeValueLabel: UILabel = .init()
         
         private var iconSize: CGSize { .init(width: 80.0, height: 80.0) }
         
@@ -35,11 +34,6 @@ extension BalanceDetailsScene {
         public var balance: String? {
             get { balanceLabel.text }
             set { balanceLabel.text = newValue }
-        }
-        
-        public var exchangeValue: String? {
-            get { exchangeValueLabel.text }
-            set { exchangeValueLabel.text = newValue }
         }
         
         // MARK:
@@ -68,7 +62,6 @@ private extension BalanceDetailsScene.BalanceView {
         setupAbbreviationLabel()
         setupTitleLabel()
         setupBalanceLabel()
-        setupExchangeValueLabel()
         setupLayout()
     }
     
@@ -121,21 +114,11 @@ private extension BalanceDetailsScene.BalanceView {
         balanceLabel.lineBreakMode = .byWordWrapping
     }
     
-    func setupExchangeValueLabel() {
-        exchangeValueLabel.font = Theme.Fonts.mediumFont.withSize(19.0)
-        exchangeValueLabel.textColor = .lightGray
-        exchangeValueLabel.numberOfLines = 1
-        exchangeValueLabel.textAlignment = .center
-        exchangeValueLabel.backgroundColor = .white
-        exchangeValueLabel.lineBreakMode = .byWordWrapping
-    }
-    
     func setupLayout() {
         addSubview(abbreviationLabel)
         addSubview(iconImageView)
         addSubview(titleLabel)
         addSubview(balanceLabel)
-        addSubview(exchangeValueLabel)
         
         abbreviationLabel.snp.makeConstraints { (make) in
             make.edges.equalTo(iconImageView)
@@ -159,15 +142,8 @@ private extension BalanceDetailsScene.BalanceView {
         balanceLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         balanceLabel.setContentHuggingPriority(.required, for: .vertical)
         balanceLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(8.0)
-            make.top.equalTo(titleLabel.snp.bottom).offset(8.0)
-        }
-        
-        exchangeValueLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        exchangeValueLabel.setContentHuggingPriority(.required, for: .vertical)
-        exchangeValueLabel.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview().inset(8.0)
-            make.top.equalTo(balanceLabel.snp.bottom).offset(8.0)
+            make.top.equalTo(titleLabel.snp.bottom).offset(8.0)
         }
     }
 }

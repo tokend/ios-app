@@ -29,6 +29,7 @@ extension BalanceDetailsScene {
         
         private var toolbarHeight: CGFloat { 44.0 }
         
+        private let safeAreaBackgroundView: UIView = .init()
         private let balanceView: BalanceView = .init()
         private let tableView: UITableView = .init()
         private let refreshControl: UIRefreshControl = .init()
@@ -85,6 +86,7 @@ private extension BalanceDetailsScene.ViewController {
     
     func setup() {
         setupView()
+        setupSafeAreaBackgroundView()
         setupNavigationBar()
         setupBalanceView()
         setupTableView()
@@ -98,9 +100,13 @@ private extension BalanceDetailsScene.ViewController {
         view.backgroundColor = .white
     }
     
+    func setupSafeAreaBackgroundView() {
+        safeAreaBackgroundView.backgroundColor = .white
+    }
+    
     func setupNavigationBar() {
-        navigationController?.navigationBar.setBackgroundImage(.init(), for: .default)
-        navigationController?.navigationBar.shadowImage = .init()
+//        navigationController?.navigationBar.setBackgroundImage(.init(), for: .default)
+//        navigationController?.navigationBar.shadowImage = .init()
     }
     
     func setupBalanceView() { }
@@ -202,9 +208,15 @@ private extension BalanceDetailsScene.ViewController {
     }
     
     func setupLayout() {
+        view.addSubview(safeAreaBackgroundView)
         tableView.tableHeaderView = balanceView
         view.addSubview(tableView)
         view.addSubview(toolbar)
+        
+        safeAreaBackgroundView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.bottom.equalTo(view.safeArea.top)
+        }
         
         tableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -256,7 +268,6 @@ private extension BalanceDetailsScene.ViewController {
         }
         
         balanceView.balance = sceneViewModel.balance
-        balanceView.exchangeValue = sceneViewModel.rate
         balanceView.icon = sceneViewModel.balanceIcon
         balanceView.abbreviation = sceneViewModel.balanceNameAbbreviation
         balanceView.title = sceneViewModel.assetName

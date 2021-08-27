@@ -58,25 +58,18 @@ private extension BalanceDetailsScene.Presenter {
         let balanceNameAbbreviation: String?
         let assetName: String?
         let balance: String?
-        let rate: String?
+        let rate: String? = nil
         
         if let balanceModel = sceneModel.balance {
             icon = balanceModel.icon
             balanceNameAbbreviation = String(balanceModel.name.prefix(1))
             assetName = balanceModel.name
             balance = ["\(balanceModel.balance)", balanceModel.asset].joined(separator: " ")
-            if let rateAmount = balanceModel.rate,
-               let asset = balanceModel.rateAsset {
-                rate = ["\(rateAmount)", asset].joined(separator: " ")
-            } else {
-                rate = nil
-            }
         } else {
             icon = nil
             balanceNameAbbreviation = nil
             assetName = nil
             balance = nil
-            rate = nil
         }
         
         return .init(
