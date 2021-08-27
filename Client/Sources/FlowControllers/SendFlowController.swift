@@ -1,14 +1,14 @@
 import Foundation
 import TokenDSDK
 
-class SendAssetFlowController: BaseSignedInFlowController {
+class SendFlowController: BaseSignedInFlowController {
     
     // MARK: - Private properties
     
     private lazy var rootViewController: SendAssetScene.ViewController = initSendAsset()
     
     private let navigationController: NavigationControllerProtocol
-    private let recipientAddressWorker: RecipientAddressWorkerProtocol
+    private let recipientAddressProcessor: RecipientAddressProcessorProtocol
     fileprivate let assetId: String
 
     // MARK: -
@@ -28,7 +28,7 @@ class SendAssetFlowController: BaseSignedInFlowController {
         self.navigationController = navigationController
         self.assetId = assetId
         
-        recipientAddressWorker = RecipientAddressWorker(
+        recipientAddressProcessor = RecipientAddressProcessor(
             identitiesRepo: reposController.identitiesRepo,
             originalAccountId: userDataProvider.walletData.accountId
         )
@@ -53,7 +53,7 @@ class SendAssetFlowController: BaseSignedInFlowController {
 
 // MARK: - Private methods
 
-private extension SendAssetFlowController {
+private extension SendFlowController {
     
     func initSendAsset(
     ) -> SendAssetScene.ViewController {
@@ -83,43 +83,46 @@ private extension SendAssetFlowController {
                 
                 self?.navigationController.showProgress()
                 
-                self?.recipientAddressWorker.processRecipientAddress(
+                self?.recipientAddressProcessor.processRecipientAddress(
                     with: address,
                     completion: { [weak self] (result) in
                         
-                        self?.navigationController.hideProgress()
-                        
-                        switch result {
-                        
-                        case .success(let recipientAddress):
-                            // TODO: - push next screen
-                            break
+                        DispatchQueue.main.async {
                             
-                        case .failure(let error):
+                            self?.navigationController.hideProgress()
                             
-                            switch error {
-                            case let error as RecipientAddressWorker.RecipientAddressWorkerError:
+                            switch result {
+                            
+                            case .success(let recipientAddress):
+                                // TODO: - push next screen
+                                break
+                                
+                            case .failure(let error):
                                 
                                 switch error {
-                                
-                                case .noIdentity:
-                                    self?.navigationController.showErrorMessage(
-                                        Localized(.send_asset_no_identity_error),
-                                        completion: nil
-                                    )
+                                case let error as RecipientAddressProcessor.RecipientAddressProcessorError:
                                     
-                                case .ownAccountId:
+                                    switch error {
+                                    
+                                    case .noIdentity:
+                                        self?.navigationController.showErrorMessage(
+                                            Localized(.send_asset_no_identity_error),
+                                            completion: nil
+                                        )
+                                        
+                                    case .ownAccountId:
+                                        self?.navigationController.showErrorMessage(
+                                            Localized(.send_asset_own_account_error),
+                                            completion: nil
+                                        )
+                                    }
+                                    
+                                default:
                                     self?.navigationController.showErrorMessage(
-                                        Localized(.send_asset_own_account_error),
+                                        Localized(.error_unknown),
                                         completion: nil
                                     )
                                 }
-                            
-                            default:
-                                self?.navigationController.showErrorMessage(
-                                    Localized(.error_unknown),
-                                    completion: nil
-                                )
                             }
                         }
                     }

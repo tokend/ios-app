@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol RecipientAddressWorkerProtocol {
+public protocol RecipientAddressProcessorProtocol {
     
     func processRecipientAddress(
         with value: String,

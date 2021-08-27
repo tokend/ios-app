@@ -31,7 +31,7 @@
 		0D1B058026CFD2EB0011CC4C /* SendAssetSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057A26CFD2EB0011CC4C /* SendAssetSceneViewController.swift */; };
 		0D1B058126CFD2EB0011CC4C /* SendAssetSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057B26CFD2EB0011CC4C /* SendAssetSceneInteractor.swift */; };
 		0D1B058226CFD2EB0011CC4C /* SendAssetSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B057C26CFD2EB0011CC4C /* SendAssetSceneConfigurator.swift */; };
-		0D1B058426CFDC7E0011CC4C /* SendAssetFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B058326CFDC7E0011CC4C /* SendAssetFlowController.swift */; };
+		0D1B058426CFDC7E0011CC4C /* SendFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B058326CFDC7E0011CC4C /* SendFlowController.swift */; };
 		0D1B059B26D6515A0011CC4C /* SendAssetSceneRecipientProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B059A26D6515A0011CC4C /* SendAssetSceneRecipientProviderProtocol.swift */; };
 		0D1B059D26D6515F0011CC4C /* SendAssetSceneRecipientProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B059C26D6515F0011CC4C /* SendAssetSceneRecipientProvider.swift */; };
 		0D22AD3926B97191000CDC61 /* CommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AD3826B97191000CDC61 /* CommonFooterView.swift */; };
@@ -276,8 +276,8 @@
 		0DDC5A9026AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */; };
 		0DDC5A9426AF09BB0004D326 /* LocalSignInWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */; };
 		0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */; };
-		5579479F26D6A2AE00887B49 /* RecipientAddressWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5579479E26D6A2AE00887B49 /* RecipientAddressWorker.swift */; };
-		557947A126D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557947A026D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift */; };
+		5579479F26D6A2AE00887B49 /* RecipientAddressProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */; };
+		557947A126D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */; };
 		9F9A75CDFF9B6711FD82EF4A /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1FB141AC7007D5C85166D9C /* libPods-Client.a */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
@@ -354,7 +354,7 @@
 		0D1B057A26CFD2EB0011CC4C /* SendAssetSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAssetSceneViewController.swift; sourceTree = "<group>"; };
 		0D1B057B26CFD2EB0011CC4C /* SendAssetSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAssetSceneInteractor.swift; sourceTree = "<group>"; };
 		0D1B057C26CFD2EB0011CC4C /* SendAssetSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAssetSceneConfigurator.swift; sourceTree = "<group>"; };
-		0D1B058326CFDC7E0011CC4C /* SendAssetFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAssetFlowController.swift; sourceTree = "<group>"; };
+		0D1B058326CFDC7E0011CC4C /* SendFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendFlowController.swift; sourceTree = "<group>"; };
 		0D1B059A26D6515A0011CC4C /* SendAssetSceneRecipientProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAssetSceneRecipientProviderProtocol.swift; sourceTree = "<group>"; };
 		0D1B059C26D6515F0011CC4C /* SendAssetSceneRecipientProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAssetSceneRecipientProvider.swift; sourceTree = "<group>"; };
 		0D22AD3826B97191000CDC61 /* CommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFooterView.swift; sourceTree = "<group>"; };
@@ -605,8 +605,8 @@
 		0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInUserAvatarUrlProvider.swift; sourceTree = "<group>"; };
 		0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorker.swift; sourceTree = "<group>"; };
 		0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorkerProtocol.swift; sourceTree = "<group>"; };
-		5579479E26D6A2AE00887B49 /* RecipientAddressWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressWorker.swift; sourceTree = "<group>"; };
-		557947A026D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressWorkerProtocol.swift; sourceTree = "<group>"; };
+		5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressProcessor.swift; sourceTree = "<group>"; };
+		557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressProcessorProtocol.swift; sourceTree = "<group>"; };
 		5A7C979817DB9E4E7307DEB9 /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
 		899608042F7A146AD21AFEF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		C39BB58426A85B4D00AC642B /* TabBarRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarRouting.swift; sourceTree = "<group>"; };
@@ -1579,7 +1579,7 @@
 				0D59BD162694930700B6658F /* LocalAuthFlowController.swift */,
 				0D5FC84F269DC64D006C8FC7 /* QRCodeReaderFlowController.swift */,
 				0D59BD0E2694930700B6658F /* RecoveryFlowController.swift */,
-				0D1B058326CFDC7E0011CC4C /* SendAssetFlowController.swift */,
+				0D1B058326CFDC7E0011CC4C /* SendFlowController.swift */,
 				0D22AD3C26B9A6FE000CDC61 /* SettingsFlowController.swift */,
 				0D59BD142694930700B6658F /* SignedInFlowController.swift */,
 				C39BB5A526A85BA600AC642B /* TabBarFlowController.swift */,
@@ -1612,7 +1612,7 @@
 		0DDC5A6326A7EF030004D326 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
-				5579479D26D6A27D00887B49 /* RecipientAddressWorker */,
+				5579479D26D6A27D00887B49 /* RecipientAddressProcessor */,
 				0DDC5A9226AF09A90004D326 /* LocalSignInWorker */,
 				0DDC5A6426A7EF090004D326 /* NetworkInfoProvider */,
 			);
@@ -1694,13 +1694,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5579479D26D6A27D00887B49 /* RecipientAddressWorker */ = {
+		5579479D26D6A27D00887B49 /* RecipientAddressProcessor */ = {
 			isa = PBXGroup;
 			children = (
-				5579479E26D6A2AE00887B49 /* RecipientAddressWorker.swift */,
-				557947A026D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift */,
+				5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */,
+				557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */,
 			);
-			path = RecipientAddressWorker;
+			path = RecipientAddressProcessor;
 			sourceTree = "<group>";
 		};
 		C39BB58326A85B4D00AC642B /* TabBar */ = {
@@ -1973,7 +1973,7 @@
 				0D2FA2FC269893720018B7D4 /* TextField.swift in Sources */,
 				0D59BD23269493BB00B6658F /* DebugLog.swift in Sources */,
 				0D59BD24269493BB00B6658F /* VerificationCodeTextField.swift in Sources */,
-				5579479F26D6A2AE00887B49 /* RecipientAddressWorker.swift in Sources */,
+				5579479F26D6A2AE00887B49 /* RecipientAddressProcessor.swift in Sources */,
 				0D2FA30F269C92BF0018B7D4 /* TextFieldsContainer.swift in Sources */,
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D1B058226CFD2EB0011CC4C /* SendAssetSceneConfigurator.swift in Sources */,
@@ -1987,7 +1987,7 @@
 				0D59BD2B269493BB00B6658F /* UIImage+ButtonImage.swift in Sources */,
 				0D59BD2C269493BB00B6658F /* SnapKit+Extension.swift in Sources */,
 				0D59BD2D269493BB00B6658F /* UIColor+Hex.swift in Sources */,
-				557947A126D6A2BA00887B49 /* RecipientAddressWorkerProtocol.swift in Sources */,
+				557947A126D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift in Sources */,
 				0D1B056226CBDD560011CC4C /* DashboardSceneRouting.swift in Sources */,
 				C39BB5F026B2FFFF00AC642B /* AccountIDSceneViewController.swift in Sources */,
 				0D59BD2E269493BB00B6658F /* String+QueueLabel.swift in Sources */,
@@ -2065,7 +2065,7 @@
 				C39BB59126A85B4D00AC642B /* TabBarView.swift in Sources */,
 				0D59BD57269493BB00B6658F /* FCMTokenUploader.swift in Sources */,
 				0D59BD58269493BB00B6658F /* FCMTokenUploaderProtocol.swift in Sources */,
-				0D1B058426CFDC7E0011CC4C /* SendAssetFlowController.swift in Sources */,
+				0D1B058426CFDC7E0011CC4C /* SendFlowController.swift in Sources */,
 				0D59BD59269493BB00B6658F /* NotificationsSettingsManagerProtocol.swift in Sources */,
 				0D59BD5A269493BB00B6658F /* NotificationsSettingsManager.swift in Sources */,
 				0D59BD5B269493BB00B6658F /* DocumentUploaderWorkerProtocol.swift in Sources */,

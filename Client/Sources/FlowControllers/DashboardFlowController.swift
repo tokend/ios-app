@@ -73,7 +73,7 @@ private extension DashboardFlowController {
     
     func showSendAsset(for assetId: String) {
         
-        let flow: SendAssetFlowController = .init(
+        let flow: SendFlowController = .init(
             appController: self.appController,
             flowControllerStack: self.flowControllerStack,
             reposController: self.reposController,

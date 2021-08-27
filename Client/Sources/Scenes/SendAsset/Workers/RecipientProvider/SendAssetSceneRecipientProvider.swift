@@ -7,7 +7,7 @@ extension SendAssetScene {
         
         // MARK: - Private properties
         
-        private let recipientAddressBehaviorRelay:BehaviorRelay<String?> = .init(value: nil)
+        private let recipientAddressBehaviorRelay: BehaviorRelay<String?> = .init(value: nil)
         
         // MARK: - Public methods
         

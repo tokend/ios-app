@@ -2,11 +2,11 @@ import Foundation
 import TokenDSDK
 import TokenDWallet
 
-class RecipientAddressWorker {
+class RecipientAddressProcessor {
     
     typealias Completion = (Result<RecipientAddress, Swift.Error>) -> Void
     
-    enum RecipientAddressWorkerError: Swift.Error {
+    enum RecipientAddressProcessorError: Swift.Error {
         case noIdentity
         case ownAccountId
     }
@@ -29,7 +29,7 @@ class RecipientAddressWorker {
 
 // MARK: - Private methods
 
-private extension RecipientAddressWorker {
+private extension RecipientAddressProcessor {
     
     func fetchAccountId(
         with email: String,
@@ -39,15 +39,13 @@ private extension RecipientAddressWorker {
         identitiesRepo.requestIdentity(
             withEmail: email,
             completion: { [weak self] (result) in
-                
-                DispatchQueue.main.async {
-                    
+                                    
                     switch result {
                     
                     case .success(let identity):
                         guard let identity = identity
                         else {
-                            completion(.failure(RecipientAddressWorkerError.noIdentity))
+                            completion(.failure(RecipientAddressProcessorError.noIdentity))
                             return
                         }
                         
@@ -61,7 +59,6 @@ private extension RecipientAddressWorker {
                         completion(.failure(error))
                     }
                 }
-            }
         )
     }
     
@@ -78,12 +75,12 @@ private extension RecipientAddressWorker {
             )
             completion(.success(recipientAddress))
         } else {
-            completion(.failure(RecipientAddressWorkerError.ownAccountId))
+            completion(.failure(RecipientAddressProcessorError.ownAccountId))
         }
     }
 }
 
-extension RecipientAddressWorker: RecipientAddressWorkerProtocol {
+extension RecipientAddressProcessor: RecipientAddressProcessorProtocol {
     
     func processRecipientAddress(
         with value: String,
