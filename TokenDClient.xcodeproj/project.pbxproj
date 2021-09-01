@@ -317,6 +317,23 @@
 		C39BB60726B9763B00AC642B /* ChangePasswordSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */; };
 		C3CB3ACB26D90A2C009A771C /* QRCodeSceneLoginDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3ACA26D90A2C009A771C /* QRCodeSceneLoginDataProvider.swift */; };
 		DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 111CA24DFC0B42D0D8442E41 /* libPods-Client.a */; };
+		C39BB94C26CD353B00AC642B /* BalanceDetailsScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94626CD353A00AC642B /* BalanceDetailsScenePresenter.swift */; };
+		C39BB94D26CD353B00AC642B /* BalanceDetailsSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94726CD353A00AC642B /* BalanceDetailsSceneRouting.swift */; };
+		C39BB94E26CD353B00AC642B /* BalanceDetailsSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94826CD353A00AC642B /* BalanceDetailsSceneModels.swift */; };
+		C39BB94F26CD353B00AC642B /* BalanceDetailsSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94926CD353A00AC642B /* BalanceDetailsSceneViewController.swift */; };
+		C39BB95026CD353B00AC642B /* BalanceDetailsSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94A26CD353A00AC642B /* BalanceDetailsSceneInteractor.swift */; };
+		C39BB95126CD353B00AC642B /* BalanceDetailsSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB94B26CD353A00AC642B /* BalanceDetailsSceneConfigurator.swift */; };
+		C39BB95326CD35D600AC642B /* BalanceDetailsFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95226CD35D600AC642B /* BalanceDetailsFlowController.swift */; };
+		C39BB95626CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95526CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift */; };
+		C39BB95826CE8C0D00AC642B /* BalanceDetailsSceneBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95726CE8C0D00AC642B /* BalanceDetailsSceneBalanceView.swift */; };
+		C39BB95C26CFCEC500AC642B /* MovementsRepo+Movement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95B26CFCEC500AC642B /* MovementsRepo+Movement.swift */; };
+		C39BB95E26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB95D26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift */; };
+		C39BB96226D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB96126D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift */; };
+		C39BB96426D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */; };
+		C3CB3A8026D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */; };
+		C3CB3A8226D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */; };
+		C3CB3ACD26D92456009A771C /* UIColor+AbbreviationColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CB3ACC26D92456009A771C /* UIColor+AbbreviationColor.swift */; };
+		CC15AD5ACE9630579643EE01 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A386E26B5D2991E3157FFB8C /* libPods-Client.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -586,9 +603,9 @@
 		0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInUserAvatarUrlProvider.swift; sourceTree = "<group>"; };
 		0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorker.swift; sourceTree = "<group>"; };
 		0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorkerProtocol.swift; sourceTree = "<group>"; };
-		111CA24DFC0B42D0D8442E41 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		624397EB410687DC85703FF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
-		9606380E3DF7F24E64D5490C /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
+		2147095D67B7448AC06B78DC /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
+		A386E26B5D2991E3157FFB8C /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA5F321ED00CA7ECFC55AEF4 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		C39BB58426A85B4D00AC642B /* TabBarRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarRouting.swift; sourceTree = "<group>"; };
 		C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarPresenter.swift; sourceTree = "<group>"; };
 		C39BB58626A85B4D00AC642B /* TabBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
@@ -638,6 +655,22 @@
 		C39BB60026B9763B00AC642B /* ChangePasswordSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneInteractor.swift; sourceTree = "<group>"; };
 		C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneConfigurator.swift; sourceTree = "<group>"; };
 		C3CB3ACA26D90A2C009A771C /* QRCodeSceneLoginDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeSceneLoginDataProvider.swift; sourceTree = "<group>"; };
+		C39BB94626CD353A00AC642B /* BalanceDetailsScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsScenePresenter.swift; sourceTree = "<group>"; };
+		C39BB94726CD353A00AC642B /* BalanceDetailsSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneRouting.swift; sourceTree = "<group>"; };
+		C39BB94826CD353A00AC642B /* BalanceDetailsSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneModels.swift; sourceTree = "<group>"; };
+		C39BB94926CD353A00AC642B /* BalanceDetailsSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneViewController.swift; sourceTree = "<group>"; };
+		C39BB94A26CD353A00AC642B /* BalanceDetailsSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneInteractor.swift; sourceTree = "<group>"; };
+		C39BB94B26CD353A00AC642B /* BalanceDetailsSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneConfigurator.swift; sourceTree = "<group>"; };
+		C39BB95226CD35D600AC642B /* BalanceDetailsFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsFlowController.swift; sourceTree = "<group>"; };
+		C39BB95526CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionCell.swift; sourceTree = "<group>"; };
+		C39BB95726CE8C0D00AC642B /* BalanceDetailsSceneBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceView.swift; sourceTree = "<group>"; };
+		C39BB95B26CFCEC500AC642B /* MovementsRepo+Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovementsRepo+Movement.swift"; sourceTree = "<group>"; };
+		C39BB95D26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovementsRepo.Movements+MovementType.swift"; sourceTree = "<group>"; };
+		C39BB96126D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionsProvider.swift; sourceTree = "<group>"; };
+		C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneTransactionsProviderProtocol.swift; sourceTree = "<group>"; };
+		C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceProviderProtocol.swift; sourceTree = "<group>"; };
+		C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceDetailsSceneBalanceProvider.swift; sourceTree = "<group>"; };
+		C3CB3ACC26D92456009A771C /* UIColor+AbbreviationColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AbbreviationColor.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -645,7 +678,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEBCCE9F069E41B704A66EE7 /* libPods-Client.a in Frameworks */,
+				CC15AD5ACE9630579643EE01 /* libPods-Client.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -776,6 +809,8 @@
 			isa = PBXGroup;
 			children = (
 				C39BB5E626B2FF0B00AC642B /* QRCode */,
+				C39BB5E626B2FF0B00AC642B /* AccountID */,
+				C39BB94426CD351B00AC642B /* BalanceDetails */,
 				C39BB5FB26B9761D00AC642B /* ChangePassword */,
 				0D1B055A26CBDD2C0011CC4C /* Dashboard */,
 				0DDC5A7426A9D0500004D326 /* LocalSignIn */,
@@ -835,7 +870,7 @@
 				0D59BCEA2694930300B6658F /* Client */,
 				0D59BCE92694930300B6658F /* Products */,
 				F70F8C5AA74109E5A48603F5 /* Pods */,
-				51C9FF6C8C5A61429A1872DA /* Frameworks */,
+				4C38D4EFD21C9608A1421CFA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1245,19 +1280,19 @@
 		0D59BC8F269491C900B6658F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0D59BCCF269491C900B6658F /* AppControllerProtocol.swift */,
+				0D59BCCA269491C900B6658F /* AppInfoUtils.swift */,
 				0D59BC9A269491C900B6658F /* ImagesUtility.swift */,
+				0D59BCD0269491C900B6658F /* ImagesUtility+TokenDSDK.swift */,
 				0D59BCA6269491C900B6658F /* OpenURLSubscriber.swift */,
 				0D59BCA7269491C900B6658F /* TimerApplication.swift */,
 				0D59BCA8269491C900B6658F /* UserActivitySubscriber.swift */,
-				0D59BCCA269491C900B6658F /* AppInfoUtils.swift */,
-				0D59BCCF269491C900B6658F /* AppControllerProtocol.swift */,
-				0D59BCD0269491C900B6658F /* ImagesUtility+TokenDSDK.swift */,
+				0D59BCC4269491C900B6658F /* APIConfiguration */,
+				0D59BCAD269491C900B6658F /* Managers */,
+				0D59BCC7269491C900B6658F /* Permissions */,
+				0D59BCA9269491C900B6658F /* Providers */,
 				0D59BC90269491C900B6658F /* Repos */,
 				0D59BC9B269491C900B6658F /* Scenes */,
-				0D59BCA9269491C900B6658F /* Providers */,
-				0D59BCAD269491C900B6658F /* Managers */,
-				0D59BCC4269491C900B6658F /* APIConfiguration */,
-				0D59BCC7269491C900B6658F /* Permissions */,
 				0D59BCCB269491C900B6658F /* ViewControllers */,
 			);
 			path = Controllers;
@@ -1266,15 +1301,15 @@
 		0D59BC90269491C900B6658F /* Repos */ = {
 			isa = PBXGroup;
 			children = (
-				0D59BC91269491C900B6658F /* MovementsRepo.swift */,
-				0D59BC92269491C900B6658F /* KYCRepo.swift */,
-				0D59BC93269491C900B6658F /* KeyValuesRepo.swift */,
-				0D59BC94269491C900B6658F /* ActiveKYCRepo.swift */,
 				0D59BC95269491C900B6658F /* AccountRepo.swift */,
-				0D59BC96269491C900B6658F /* BalancesRepo.swift */,
-				0D59BC97269491C900B6658F /* NetworkInfoRepo.swift */,
+				0D59BC94269491C900B6658F /* ActiveKYCRepo.swift */,
 				0D59BC98269491C900B6658F /* AssetsRepo.swift */,
+				0D59BC96269491C900B6658F /* BalancesRepo.swift */,
 				0D59BC99269491C900B6658F /* IdentitiesRepo.swift */,
+				0D59BC93269491C900B6658F /* KeyValuesRepo.swift */,
+				0D59BC92269491C900B6658F /* KYCRepo.swift */,
+				0D59BC97269491C900B6658F /* NetworkInfoRepo.swift */,
+				C39BB95926CFCEA800AC642B /* MovementsRepo */,
 			);
 			path = Repos;
 			sourceTree = "<group>";
@@ -1518,6 +1553,7 @@
 		0D59BD0D2694930700B6658F /* FlowControllers */ = {
 			isa = PBXGroup;
 			children = (
+				C39BB95226CD35D600AC642B /* BalanceDetailsFlowController.swift */,
 				0D59BD1A2694930700B6658F /* ChangeLoginFlowController.swift */,
 				C39BB5F926B9627F00AC642B /* ChangePasswordFlowController.swift */,
 				0D1B057426CEA3890011CC4C /* DashboardFlowController.swift */,
@@ -1579,6 +1615,7 @@
 			children = (
 				0DDC5A6A26A99BC40004D326 /* CGFloat+ConvertToPixels.swift */,
 				0D26E82226B1AC1F008E1C9C /* Document+ImageUrl.swift */,
+				C3CB3ACC26D92456009A771C /* UIColor+AbbreviationColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1632,10 +1669,10 @@
 			path = LocalSignInWorker;
 			sourceTree = "<group>";
 		};
-		51C9FF6C8C5A61429A1872DA /* Frameworks */ = {
+		4C38D4EFD21C9608A1421CFA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				111CA24DFC0B42D0D8442E41 /* libPods-Client.a */,
+				A386E26B5D2991E3157FFB8C /* libPods-Client.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1783,11 +1820,72 @@
 			path = ChangePassword;
 			sourceTree = "<group>";
 		};
+		C39BB94426CD351B00AC642B /* BalanceDetails */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB94B26CD353A00AC642B /* BalanceDetailsSceneConfigurator.swift */,
+				C39BB94A26CD353A00AC642B /* BalanceDetailsSceneInteractor.swift */,
+				C39BB94826CD353A00AC642B /* BalanceDetailsSceneModels.swift */,
+				C39BB94626CD353A00AC642B /* BalanceDetailsScenePresenter.swift */,
+				C39BB94726CD353A00AC642B /* BalanceDetailsSceneRouting.swift */,
+				C39BB94926CD353A00AC642B /* BalanceDetailsSceneViewController.swift */,
+				C39BB95426CD429600AC642B /* Views */,
+				C39BB95F26D3A1A000AC642B /* Workers */,
+			);
+			path = BalanceDetails;
+			sourceTree = "<group>";
+		};
+		C39BB95426CD429600AC642B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB95726CE8C0D00AC642B /* BalanceDetailsSceneBalanceView.swift */,
+				C39BB95526CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C39BB95926CFCEA800AC642B /* MovementsRepo */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB95D26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift */,
+				0D59BC91269491C900B6658F /* MovementsRepo.swift */,
+				C39BB95B26CFCEC500AC642B /* MovementsRepo+Movement.swift */,
+			);
+			path = MovementsRepo;
+			sourceTree = "<group>";
+		};
+		C39BB95F26D3A1A000AC642B /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				C3CB3A7E26D67F59009A771C /* BalanceDetailsSceneBalanceProvider */,
+				C39BB96026D3A1CA00AC642B /* BalanceDetailsSceneTransactionsProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		C39BB96026D3A1CA00AC642B /* BalanceDetailsSceneTransactionsProvider */ = {
+			isa = PBXGroup;
+			children = (
+				C39BB96126D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift */,
+				C39BB96326D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift */,
+			);
+			path = BalanceDetailsSceneTransactionsProvider;
+			sourceTree = "<group>";
+		};
+		C3CB3A7E26D67F59009A771C /* BalanceDetailsSceneBalanceProvider */ = {
+			isa = PBXGroup;
+			children = (
+				C3CB3A8126D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift */,
+				C3CB3A7F26D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift */,
+			);
+			path = BalanceDetailsSceneBalanceProvider;
+			sourceTree = "<group>";
+		};
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				624397EB410687DC85703FF3 /* Pods-Client.release.xcconfig */,
-				9606380E3DF7F24E64D5490C /* Pods-Client.debug.xcconfig */,
+				AA5F321ED00CA7ECFC55AEF4 /* Pods-Client.release.xcconfig */,
+				2147095D67B7448AC06B78DC /* Pods-Client.debug.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1799,11 +1897,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D59BD1F2694930700B6658F /* Build configuration list for PBXNativeTarget "Client" */;
 			buildPhases = (
-				83920025AF372198BBBF6EE0 /* [CP] Check Pods Manifest.lock */,
+				98D9826183CC34185B69239A /* [CP] Check Pods Manifest.lock */,
 				0D59BCE42694930300B6658F /* Sources */,
 				0D59BCE52694930300B6658F /* Frameworks */,
 				0D59BCE62694930300B6658F /* Resources */,
-				00E91A281F17392945736C4E /* [CP] Embed Pods Frameworks */,
+				C7A3B382278D4C8863E6085E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1861,24 +1959,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00E91A281F17392945736C4E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		83920025AF372198BBBF6EE0 /* [CP] Check Pods Manifest.lock */ = {
+		98D9826183CC34185B69239A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1900,6 +1981,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C7A3B382278D4C8863E6085E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1914,6 +2012,7 @@
 				0D2FA30F269C92BF0018B7D4 /* TextFieldsContainer.swift in Sources */,
 				0D59BD25269493BB00B6658F /* Bundle+Version.swift in Sources */,
 				0D59BD26269493BB00B6658F /* Array+IndexOf.swift in Sources */,
+				C39BB95626CD45DA00AC642B /* BalanceDetailsSceneTransactionCell.swift in Sources */,
 				0D15DB8726BD73A5001D40EF /* SettingsSceneSettingsManagerProtocol.swift in Sources */,
 				0D1B056626CBDD560011CC4C /* DashboardSceneConfigurator.swift in Sources */,
 				0D59BD27269493BB00B6658F /* String+Index.swift in Sources */,
@@ -1928,6 +2027,7 @@
 				0D59BD2E269493BB00B6658F /* String+QueueLabel.swift in Sources */,
 				0D59BD2F269493BB00B6658F /* UIView+FirstResponder.swift in Sources */,
 				0D59BD30269493BB00B6658F /* UITextField+Placeholder.swift in Sources */,
+				C3CB3A8026D67F68009A771C /* BalanceDetailsSceneBalanceProviderProtocol.swift in Sources */,
 				0D59BD31269493BB00B6658F /* Array+IndexInBounds.swift in Sources */,
 				C39BB5CD26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift in Sources */,
 				0DDC5A7C26A9D0730004D326 /* LocalSignInSceneRouting.swift in Sources */,
@@ -1939,6 +2039,7 @@
 				0D59BD37269493BB00B6658F /* String+Extension.swift in Sources */,
 				0D26E82F26B2D6C5008E1C9C /* SettingsSceneInteractor.swift in Sources */,
 				0D59BD38269493BB00B6658F /* Hashable+Iterate.swift in Sources */,
+				C39BB95826CE8C0D00AC642B /* BalanceDetailsSceneBalanceView.swift in Sources */,
 				0D22AD3D26B9A6FE000CDC61 /* SettingsFlowController.swift in Sources */,
 				C39BB5BF26A9C97200AC642B /* MoreSceneRouting.swift in Sources */,
 				0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */,
@@ -1960,6 +2061,7 @@
 				C39BB5C026A9C97200AC642B /* MoreSceneModels.swift in Sources */,
 				C39BB5A326A85B7400AC642B /* TabBarContainerConfigurator.swift in Sources */,
 				0D59BD40269493BB00B6658F /* NumberFormatter+Decimal.swift in Sources */,
+				C39BB94F26CD353B00AC642B /* BalanceDetailsSceneViewController.swift in Sources */,
 				0DDC5A7F26A9D0730004D326 /* LocalSignInSceneInteractor.swift in Sources */,
 				0D59BD41269493BB00B6658F /* String+DateFormatters.swift in Sources */,
 				0D59BD42269493BB00B6658F /* LuhnAlgorithm.swift in Sources */,
@@ -1978,6 +2080,7 @@
 				0D59BD4C269493BB00B6658F /* AccountRoleFetcherProtocol.swift in Sources */,
 				0DDC5A6E26A9A0F50004D326 /* SignUpSceneModels.swift in Sources */,
 				0D5FC7FD269D976F006C8FC7 /* ActionButton.swift in Sources */,
+				C39BB96426D3A1E000AC642B /* BalanceDetailsSceneTransactionsProviderProtocol.swift in Sources */,
 				0D59BD4D269493BB00B6658F /* AccountKYCFormSender.swift in Sources */,
 				0D59BD4E269493BB00B6658F /* AccountKYCFormSenderProtocol.swift in Sources */,
 				0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */,
@@ -2004,6 +2107,7 @@
 				0D59BD5B269493BB00B6658F /* DocumentUploaderWorkerProtocol.swift in Sources */,
 				0D59BD5C269493BB00B6658F /* DocumentUploaderWorker.swift in Sources */,
 				0D59BD5D269493BB00B6658F /* WalletDataProvider.swift in Sources */,
+				C39BB95C26CFCEC500AC642B /* MovementsRepo+Movement.swift in Sources */,
 				0D1B056326CBDD560011CC4C /* DashboardSceneModels.swift in Sources */,
 				0D59BD5E269493BB00B6658F /* WalletDataProviderProtocol.swift in Sources */,
 				0DDC5A6B26A99BC40004D326 /* CGFloat+ConvertToPixels.swift in Sources */,
@@ -2015,6 +2119,7 @@
 				0D59BD62269493BB00B6658F /* AmountConverter.swift in Sources */,
 				0D59BD63269493BB00B6658F /* LocationProviderProtocol.swift in Sources */,
 				C39BB5BE26A9C97200AC642B /* MoreScenePresenter.swift in Sources */,
+				C39BB94C26CD353B00AC642B /* BalanceDetailsScenePresenter.swift in Sources */,
 				0D59BD64269493BB00B6658F /* LocationProvider.swift in Sources */,
 				0D59BD65269493BB00B6658F /* LoginWorkerProtocol.swift in Sources */,
 				0D59BD66269493BB00B6658F /* BaseLoginWorker.swift in Sources */,
@@ -2032,6 +2137,7 @@
 				0D59BD6E269493BB00B6658F /* AccountKYCRoleProviderProtocol.swift in Sources */,
 				0D59BD6F269493BB00B6658F /* RegistrationKYCRoleProvider.swift in Sources */,
 				0D59BD70269493BB00B6658F /* EditKYCRoleProvider.swift in Sources */,
+				C39BB95E26CFD3FA00AC642B /* MovementsRepo.Movements+MovementType.swift in Sources */,
 				0D59BD71269493BB00B6658F /* ContoPassRegisterKeysProvider.swift in Sources */,
 				0D59BD72269493BB00B6658F /* ContoPassPasswordChangerKeysProvider.swift in Sources */,
 				0D59BD73269493BB00B6658F /* KeyServerAPIKeysProviderProtocol.swift in Sources */,
@@ -2050,6 +2156,7 @@
 				0D59BD79269493BB00B6658F /* IdentityFetcher.swift in Sources */,
 				0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */,
 				0D59BD7A269493BB00B6658F /* ForgotPasswordWorkerProtocol.swift in Sources */,
+				C3CB3ACD26D92456009A771C /* UIColor+AbbreviationColor.swift in Sources */,
 				0D59BD7B269493BB00B6658F /* BaseForgotPasswordWorker.swift in Sources */,
 				0DDC5A8A26AAED5A0004D326 /* ActiveKYCStorageManager.swift in Sources */,
 				C39BB5B126A8600500AC642B /* TabContentContainerConfigurator.swift in Sources */,
@@ -2057,6 +2164,7 @@
 				0D59BD7D269493BB00B6658F /* RegistrationChecker.swift in Sources */,
 				0D59BD7E269493BB00B6658F /* UserPhoneContactsFetcherProtocol.swift in Sources */,
 				0D59BD7F269493BB00B6658F /* UserPhoneContactsFetcher.swift in Sources */,
+				C39BB95326CD35D600AC642B /* BalanceDetailsFlowController.swift in Sources */,
 				0D59BD80269493BB00B6658F /* BasePasswordChanger.swift in Sources */,
 				0D59BD81269493BB00B6658F /* PasswordChangerProtocol.swift in Sources */,
 				C39BB5F126B2FFFF00AC642B /* QRCodeSceneInteractor.swift in Sources */,
@@ -2075,6 +2183,7 @@
 				0D59BD88269493BB00B6658F /* RegisterWorkerProtocol.swift in Sources */,
 				0D59BD89269493BB00B6658F /* BaseRegisterWorker.swift in Sources */,
 				C39BB5FA26B9628000AC642B /* ChangePasswordFlowController.swift in Sources */,
+				C39BB95026CD353B00AC642B /* BalanceDetailsSceneInteractor.swift in Sources */,
 				0D26E83026B2D6C5008E1C9C /* SettingsSceneConfigurator.swift in Sources */,
 				C39BB5A026A85B7400AC642B /* TabBarContainerPresenter.swift in Sources */,
 				0D59BD8A269493BB00B6658F /* AccountKYCFormEncoder.swift in Sources */,
@@ -2133,6 +2242,7 @@
 				0D59BDAE269493BC00B6658F /* AccountTypeManager.swift in Sources */,
 				0D59BDAF269493BC00B6658F /* TransactionSender.swift in Sources */,
 				0D59BDB0269493BC00B6658F /* ApplicationEventsController.swift in Sources */,
+				C3CB3A8226D67F9B009A771C /* BalanceDetailsSceneBalanceProvider.swift in Sources */,
 				0D59BDB1269493BC00B6658F /* TransactionCreator.swift in Sources */,
 				0D59BDB2269493BC00B6658F /* TransactionSigner.swift in Sources */,
 				0D59BDB3269493BC00B6658F /* SettingsManager.swift in Sources */,
@@ -2163,10 +2273,12 @@
 				0D59BDC3269493BC00B6658F /* BaseViewController.swift in Sources */,
 				0D59BDC4269493BC00B6658F /* RootNavigationViewController.swift in Sources */,
 				0D59BDC5269493BC00B6658F /* NavigationController.swift in Sources */,
+				C39BB94D26CD353B00AC642B /* BalanceDetailsSceneRouting.swift in Sources */,
 				C39BB5E526B2FEE200AC642B /* QRCodeImageView.swift in Sources */,
 				C39BB59426A85B4D00AC642B /* TabBarTabProvider.swift in Sources */,
 				0DD5F2A7269EF8ED00B5CFB5 /* NetworkInfoParser.swift in Sources */,
 				0D2FA2E52695CC720018B7D4 /* SignInScenePresenter.swift in Sources */,
+				C39BB95126CD353B00AC642B /* BalanceDetailsSceneConfigurator.swift in Sources */,
 				C39BB5B426A8600500AC642B /* TabContentContainerModels.swift in Sources */,
 				C39BB5EF26B2FFFF00AC642B /* QRCodeSceneModels.swift in Sources */,
 				0D59BDC6269493BC00B6658F /* BaseSignedInFlowController.swift in Sources */,
@@ -2197,10 +2309,12 @@
 				C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */,
 				C39BB5A626A85BA600AC642B /* TabBarFlowController.swift in Sources */,
 				0D59BD0F2694930700B6658F /* RecoveryFlowController.swift in Sources */,
+				C39BB94E26CD353B00AC642B /* BalanceDetailsSceneModels.swift in Sources */,
 				0D59BD062694930700B6658F /* ManagersController.swift in Sources */,
 				C39BB59526A85B4D00AC642B /* TabBarConfigurator.swift in Sources */,
 				0DDC5A6D26A9A0E70004D326 /* NetworkInfoProvider.swift in Sources */,
 				0D59BD112694930700B6658F /* LaunchFlowController.swift in Sources */,
+				C39BB96226D3A1D000AC642B /* BalanceDetailsSceneTransactionsProvider.swift in Sources */,
 				0D59BD082694930700B6658F /* AppController+OpenUrlSubscriber.swift in Sources */,
 				0D59BCFF2694930700B6658F /* Assets.swift in Sources */,
 				0D59BD152694930700B6658F /* SignedInFlowController.swift in Sources */,
@@ -2309,7 +2423,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2386,7 +2499,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
