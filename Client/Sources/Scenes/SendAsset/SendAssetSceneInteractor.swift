@@ -103,6 +103,7 @@ extension SendAssetScene.Interactor: SendAssetScene.BusinessLogic {
     
     public func onDidEnterRecipientSync(request: Event.DidEnterRecipientSync.Request) {
         sceneModel.recipientAddress = request.value
+        sceneModel.recipientError = nil
         presentSceneDidUpdateSync(animated: false)
     }
     

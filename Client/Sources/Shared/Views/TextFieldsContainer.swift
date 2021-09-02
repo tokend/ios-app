@@ -11,6 +11,8 @@ class TextFieldsContainer: UIView {
     private var separatorColor: UIColor { Theme.Colors.white }
     private var commonBackgroundColor: UIColor { Theme.Colors.mainSeparatorColor }
     
+    private var separatorsList: [UIView] = []
+
     // MARK: - Public properties
 
     public var textFieldsList: [TextField] = [] {
@@ -22,9 +24,7 @@ class TextFieldsContainer: UIView {
             layoutTextFields()
         }
     }
-    
-    public var separatorsList: [UIView] = []
-    
+        
     // MARK: - Overridden
 
     override init(frame: CGRect) {

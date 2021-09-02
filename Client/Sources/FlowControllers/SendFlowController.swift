@@ -94,8 +94,9 @@ private extension SendFlowController {
                             switch result {
                             
                             case .success(let recipientAddress):
-                                // TODO: - push next screen
-                                break
+                                self?.showSendAmount(
+                                    recipientAddress: recipientAddress.email ?? recipientAddress.accountId
+                                )
                                 
                             case .failure(let error):
                                 
@@ -134,6 +135,39 @@ private extension SendFlowController {
             viewController: vc,
             routing: routing,
             recipientProvider: recipientProvider
+        )
+        
+        return vc
+    }
+    
+    func showSendAmount(
+        recipientAddress: String
+    ) {
+        let vc: SendAmountScene.ViewController = initSendAmount(recipientAddress: recipientAddress)
+        
+        self.navigationController.pushViewController(vc, animated: true)
+    }
+    
+    func initSendAmount(
+        recipientAddress: String
+    ) -> SendAmountScene.ViewController {
+    
+        let vc: SendAmountScene.ViewController = .init()
+        
+        let routing: SendAmountScene.Routing = .init(
+            onSelectBalance: { [weak self] (completion) in
+                
+            },
+            onContinue: { [weak self] in
+                
+            }
+        )
+        
+        SendAmountScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            recipientAddress: recipientAddress,
+            selectedBalanceId: self.assetId
         )
         
         return vc
