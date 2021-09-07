@@ -123,6 +123,11 @@ final class TextField: UIView {
         set { textField.inputView = newValue }
     }
     
+    public var rightView: UIView? {
+        get { textField.rightView }
+        set { textField.rightView = newValue }
+    }
+    
     public var textFieldAutocorrectionType: UITextAutocorrectionType {
         get { textField.autocorrectionType }
         set { textField.autocorrectionType = newValue }

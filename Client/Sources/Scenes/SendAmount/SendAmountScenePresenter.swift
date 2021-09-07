@@ -6,6 +6,7 @@ public protocol SendAmountScenePresentationLogic {
     
     func presentSceneDidUpdate(response: Event.SceneDidUpdate.Response)
     func presentSceneDidUpdateSync(response: Event.SceneDidUpdateSync.Response)
+    func presentDidTapContinueSync(response: Event.DidTapContinueSync.Response)
 }
 
 extension SendAmountScene {
@@ -39,14 +40,73 @@ private extension SendAmountScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
         
-//        let selectedBalance: Model.Balance? = sceneModel.balancesList.first(where: { $0.id == sceneModel.selectedBalanceId })
+        let senderFeeModel: FeeAmountView.ViewModel?
+        let recipientFeeModel: FeeAmountView.ViewModel?
+        let feeSwitcherModel: FeeSwitcherView.ViewModel?
+        
+        if let fees = sceneModel.feesForEnteredAmount {
+            
+            let senderFee: String
+            let recipientFee: String
+            
+            // TODO: - Add formatters
+            
+            if sceneModel.isPayingFeeForRecipient {
+                senderFee = "\(fees.senderFee + fees.recipientFee)"
+                recipientFee = "0"
+            } else {
+                senderFee = "\(fees.senderFee)"
+                recipientFee = "\(fees.recipientFee)"
+            }
+            
+            senderFeeModel = .init(
+                title: "Sender fee:",
+                value: senderFee
+            )
+            
+            recipientFeeModel = .init(
+                title: "Recipient fee:",
+                value: recipientFee
+            )
+            
+            if sceneModel.isPayingFeeForRecipient || fees.recipientFee > 0 {
+                feeSwitcherModel = .init(
+                    title: "Pay fee for recipient",
+                    switcherValue: sceneModel.isPayingFeeForRecipient
+                )
+            } else {
+                feeSwitcherModel = nil
+            }
+        } else {
+            senderFeeModel = nil
+            recipientFeeModel = nil
+            feeSwitcherModel = nil
+        }
+        
+        let enteredAmountError: String?
+        
+            
+        switch sceneModel.enteredAmountError {
+        
+        case .none:
+            enteredAmountError = nil
+        case .emptyString:
+            enteredAmountError = Localized(.validation_error_empty)
+        case .notEnoughBalance:
+            enteredAmountError = "Not enoungh balance"
+        }
         
         return .init(
             recipientAddress: "To \(sceneModel.recipientAddress)",
-            amount: sceneModel.amount,
-            assetCode: "BTC", //selectedBalance?.assetCode ?? "",
-            fee: "No fee",
-            description: sceneModel.description
+            availableBalance: "Balance: \(sceneModel.selectedBalance.amount) \(sceneModel.selectedBalance.assetCode)",
+            enteredAmount: sceneModel.enteredAmount,
+            enteredAmountError: enteredAmountError,
+            assetCode: sceneModel.selectedBalance.assetCode,
+            description: sceneModel.description,
+            senderFeeModel: senderFeeModel,
+            recipientFeeModel: recipientFeeModel,
+            feeSwitcherModel: feeSwitcherModel,
+            feeIsLoading: sceneModel.feesLoadingStatus == .loading
         )
     }
 }
@@ -76,6 +136,13 @@ extension SendAmountScene.Presenter: SendAmountScene.PresentationLogic {
                     animated: response.animated
                 )
             )
+        }
+    }
+    
+    public func presentDidTapContinueSync(response: Event.DidTapContinueSync.Response) {
+        let viewModel: Event.DidTapContinueSync.ViewModel = response
+        self.presenterDispatch.displaySync { (displayLogic) in
+            displayLogic.displayDidTapContinueSync(viewModel: viewModel)
         }
     }
 }

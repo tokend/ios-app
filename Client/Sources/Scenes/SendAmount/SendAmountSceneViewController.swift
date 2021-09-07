@@ -6,6 +6,7 @@ public protocol SendAmountSceneDisplayLogic: AnyObject {
     
     func displaySceneDidUpdate(viewModel: Event.SceneDidUpdate.ViewModel)
     func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel)
+    func displayDidTapContinueSync(viewModel: Event.DidTapContinueSync.ViewModel)
 }
 
 extension SendAmountScene {
@@ -30,12 +31,14 @@ extension SendAmountScene {
         private let scrollViewContentView: UIView = .init()
         private let recipientAddressLabel: UILabel = .init()
         private let balanceLabel: UILabel = .init()
-        private let assetAmountView: AssetAmountView = .init()
-        private let feeLabel: UILabel = .init()
         private let textFieldsContainer: TextFieldsContainer = .init()
+        private let amountTextField: TextField = .init()
         private let descriptionTextField: TextField = .init()
+        private let feesStackView: FeesStackView = .init()
         private let continueButton: ActionButton = .init()
-                
+        
+        private var textFieldsOrder: [TextField] = []
+
         // MARK: - Injections
         
         private var interactorDispatch: InteractorDispatch?
@@ -57,6 +60,11 @@ extension SendAmountScene {
         
         public override func viewDidLoad() {
             super.viewDidLoad()
+            
+            textFieldsOrder = [
+                amountTextField,
+                descriptionTextField
+            ]
             
             setup()
             
@@ -95,8 +103,8 @@ private extension SendAmountScene.ViewController {
         setupScrollViewContentView()
         setupRecipientAddressLabel()
         setupBalanceLabel()
-        setupAssetAmountView()
-        setupFeeLabel()
+        setupTextFieldsContainer()
+        setupAmountTextField()
         setupDescriptionTextField()
         setupContinueButton()
         setupLayout()
@@ -104,7 +112,6 @@ private extension SendAmountScene.ViewController {
     
     func setupView() {
         view.backgroundColor = Theme.Colors.mainBackgroundColor
-        navigationItem.title = "Send"
     }
     
     func setupScrollView() {
@@ -121,7 +128,7 @@ private extension SendAmountScene.ViewController {
         recipientAddressLabel.font = Theme.Fonts.regularFont.withSize(16.0)
         recipientAddressLabel.textColor = Theme.Colors.dark
         recipientAddressLabel.numberOfLines = 1
-        recipientAddressLabel.textAlignment = .center
+        recipientAddressLabel.textAlignment = .left
         recipientAddressLabel.backgroundColor = Theme.Colors.mainBackgroundColor
     }
     
@@ -129,47 +136,57 @@ private extension SendAmountScene.ViewController {
         balanceLabel.font = Theme.Fonts.regularFont.withSize(14.0)
         balanceLabel.textColor = Theme.Colors.dark
         balanceLabel.numberOfLines = 1
-        balanceLabel.textAlignment = .center
+        balanceLabel.textAlignment = .left
         balanceLabel.backgroundColor = Theme.Colors.mainBackgroundColor
     }
     
-    func setupAssetAmountView() {
-        assetAmountView.assetPickerIcon = Assets.arrow_down_icon.image
-        assetAmountView.onSelectedPicker = { [weak self] in
-            self?.routing?.onSelectBalance(
-                { [weak self] (balanceId) in
-                    let request: Event.DidSelectBalanceSync.Request = .init()
-                }
-            )
+    func setupTextFieldsContainer() {
+        textFieldsContainer.textFieldsList = textFieldsOrder
+    }
+    
+    func setupAmountTextField() {
+        amountTextField.title = "Amount"
+        amountTextField.keyboardType = .decimalPad
+        amountTextField.onTextChanged = { [weak self] (text) in
+            let request: Event.DidEnterAmountSync.Request = .init(value: text)
+            self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                businessLogic.onDidEnterAmountSync(request: request)
+            }
         }
         
-        assetAmountView.onReturnAction = { [weak self] in
-            guard let view = self?.assetAmountView
+        amountTextField.onReturnAction = { [weak self] in
+            guard let view = self?.amountTextField
             else {
                 return
             }
             self?.returnAction(for: view)
         }
+        
+        let toolbar: UIToolbar = SharedViewsBuilder.configureToolbar()
+        toolbar.items = [
+            .init(
+                title: Localized(.next),
+                style: .done,
+                target: self,
+                action: #selector(amountTextFieldNextAction)
+            )
+        ]
+        toolbar.sizeToFit()
+        amountTextField.accessoryView = toolbar
     }
     
-    func setupFeeLabel() {
-        feeLabel.font = Theme.Fonts.regularFont.withSize(14.0)
-        feeLabel.textColor = Theme.Colors.dark
-        feeLabel.numberOfLines = 1
-        feeLabel.textAlignment = .center
-        feeLabel.backgroundColor = Theme.Colors.mainBackgroundColor
+    @objc func amountTextFieldNextAction() {
+        returnAction(for: amountTextField)
     }
     
     func setupDescriptionTextField() {
-        textFieldsContainer.textFieldsList = [descriptionTextField]
-        
         descriptionTextField.title = "Description"
         descriptionTextField.placeholder = "Optional"
         descriptionTextField.onTextChanged = { [weak self] (text) in
             let request: Event.DidEnterDescriptionSync.Request = .init(value: text)
-//            self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
-//                businessLogic.onDidEnterDescriptionSync(request: request)
-//            }
+            self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                businessLogic.onDidEnterDescriptionSync(request: request)
+            }
         }
         
         descriptionTextField.onReturnAction = { [weak self] in
@@ -209,9 +226,8 @@ private extension SendAmountScene.ViewController {
         scrollView.addSubview(scrollViewContentView)
         scrollViewContentView.addSubview(recipientAddressLabel)
         scrollViewContentView.addSubview(balanceLabel)
-        scrollViewContentView.addSubview(assetAmountView)
-        scrollViewContentView.addSubview(feeLabel)
         scrollViewContentView.addSubview(textFieldsContainer)
+        scrollViewContentView.addSubview(feesStackView)
         scrollViewContentView.addSubview(continueButton)
         
         scrollView.snp.makeConstraints { (make) in
@@ -226,34 +242,27 @@ private extension SendAmountScene.ViewController {
         }
         
         recipientAddressLabel.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().inset(32.0)
-            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().inset(16.0)
+            make.leading.trailing.equalToSuperview().inset(16.0)
         }
         
         balanceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(recipientAddressLabel.snp.bottom).offset(80.0)
-            make.centerX.equalToSuperview()
-        }
-        
-        assetAmountView.snp.makeConstraints { (make) in
-            make.top.equalTo(balanceLabel.snp.bottom).offset(24.0)
-            make.leading.greaterThanOrEqualToSuperview().inset(24.0)
-            make.trailing.lessThanOrEqualToSuperview().inset(24.0)
-            make.centerX.equalToSuperview()
-        }
-        
-        feeLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(assetAmountView.snp.bottom).offset(16.0)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(recipientAddressLabel.snp.bottom).offset(48.0)
+            make.leading.trailing.equalToSuperview().inset(16.0)
         }
         
         textFieldsContainer.snp.makeConstraints { (make) in
-            make.top.equalTo(feeLabel.snp.bottom).offset(64.0)
+            make.top.equalTo(balanceLabel.snp.bottom).offset(12.0)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        feesStackView.snp.makeConstraints { (make) in
+            make.top.equalTo(textFieldsContainer.snp.bottom).offset(32.0)
             make.leading.trailing.equalToSuperview()
         }
         
         continueButton.snp.makeConstraints { (make) in
-            make.top.equalTo(textFieldsContainer.snp.bottom).offset(24.0)
+            make.top.equalTo(feesStackView.snp.bottom).offset(24.0)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().inset(32.0)
         }
@@ -265,11 +274,45 @@ private extension SendAmountScene.ViewController {
         with sceneViewModel: Model.SceneViewModel,
         animated: Bool
     ) {
+        
+        navigationItem.title = "Send \(sceneViewModel.assetCode)"
         recipientAddressLabel.text = sceneViewModel.recipientAddress
-//        assetAmountView.text = sceneViewModel.amount
-        assetAmountView.assetPickerTitle = sceneViewModel.assetCode
-        feeLabel.text = sceneViewModel.fee
+        balanceLabel.text = sceneViewModel.availableBalance
+        amountTextField.text = sceneViewModel.enteredAmount
+        amountTextField.error = sceneViewModel.enteredAmountError
         descriptionTextField.text = sceneViewModel.description
+        
+        var feesViews: [UIView] = []
+        
+        if let senderFeeModel = sceneViewModel.senderFeeModel {
+            let view: FeeAmountView = .init()
+            view.title = senderFeeModel.title
+            view.value = senderFeeModel.value
+            feesViews.append(view)
+        }
+        
+        if let recipientFeeModel = sceneViewModel.recipientFeeModel {
+            let view: FeeAmountView = .init()
+            view.title = recipientFeeModel.title
+            view.value = recipientFeeModel.value
+            feesViews.append(view)
+        }
+        
+        if let feeSwitcherModel = sceneViewModel.feeSwitcherModel {
+            let view: FeeSwitcherView = .init()
+            view.title = feeSwitcherModel.title
+            view.value = feeSwitcherModel.switcherValue
+            view.onSwitched = { [weak self] (value) in
+                self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
+                    let request: Event.DidSwitchPayFeeForRecipientSync.Request = .init(value: value)
+                    businessLogic.onDidSwitchPayFeeForRecipientSync(request: request)
+                }
+            }
+            feesViews.append(view)
+        }
+        
+        feesStackView.stackViewItems = feesViews
+        feesStackView.isLoading = sceneViewModel.feeIsLoading
     }
     
     func addKeyboardObserver() {
@@ -287,12 +330,17 @@ private extension SendAmountScene.ViewController {
         updateView(with: nil)
     }
     
-    func returnAction(for view: UIView) {
+    func returnAction(for textField: TextField) {
         
-        if view == assetAmountView {
-            descriptionTextField.becomeFirstResponder()
-        } else if view == descriptionTextField {
-            view.resignFirstResponder()
+        guard let index = textFieldsOrder.firstIndex(of: textField)
+            else {
+                return
+        }
+        
+        if index < textFieldsOrder.count - 1 {
+            textFieldsOrder[index + 1].becomeFirstResponder()
+        } else {
+            textFieldsOrder[index].resignFirstResponder()
             didTapContinueButton()
         }
     }
@@ -347,22 +395,22 @@ private extension SendAmountScene.ViewController {
             withKeyboardAttributes: attributes,
             animations: {
                 
-                if self.assetAmountView.isFirstResponder {
-                    self.scrollView.scrollRectToVisible(
-                        self.assetAmountView.frame,
-                        animated: false
-                    )
-                } else if self.descriptionTextField.isFirstResponder {
-                    self.scrollView.scrollRectToVisible(
-                        self.descriptionTextField.frame,
-                        animated: false
-                    )
+                self.textFieldsOrder.forEach { (textField) in
+                    if textField.isFirstResponder {
+                        self.scrollView.scrollRectToVisible(
+                            textField.frame,
+                            animated: false
+                        )
+                    }
                 }
         })
     }
     
     func didTapContinueButton() {
         let request: Event.DidTapContinueSync.Request = .init()
+        interactorDispatch?.sendSyncRequest { (businessLogic) in
+            businessLogic.onDidTapContinueSync(request: request)
+        }
     }
 }
 
@@ -376,5 +424,9 @@ extension SendAmountScene.ViewController: SendAmountScene.DisplayLogic {
     
     public func displaySceneDidUpdateSync(viewModel: Event.SceneDidUpdateSync.ViewModel) {
         setup(with: viewModel.viewModel, animated: viewModel.animated)
+    }
+    
+    public func displayDidTapContinueSync(viewModel: Event.DidTapContinueSync.ViewModel) {
+        routing?.onContinue()
     }
 }

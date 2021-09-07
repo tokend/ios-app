@@ -17,19 +17,27 @@ public enum SendAmountScene {
 extension SendAmountScene.Model {
     
     struct SceneModel {
+        var selectedBalance: Balance
         let recipientAddress: String
         var description: String?
-        var amount: String?
-        var selectedBalanceId: Balance.Identifier
-        var balancesList: [Balance]
+        var enteredAmount: String?
+        var enteredAmountError: EnteredAmountValidationError?
+        var feesForEnteredAmount: Fees?
+        var isPayingFeeForRecipient: Bool
+        var feesLoadingStatus: LoadingStatus
     }
     
     struct SceneViewModel {
         let recipientAddress: String
-        let amount: String?
+        let availableBalance: String
+        let enteredAmount: String?
+        let enteredAmountError: String?
         let assetCode: String
-        let fee: String
         let description: String?
+        let senderFeeModel: FeeAmountView.ViewModel?
+        let recipientFeeModel: FeeAmountView.ViewModel?
+        let feeSwitcherModel: FeeSwitcherView.ViewModel?
+        let feeIsLoading: Bool
     }
     
     public struct Balance {
@@ -38,6 +46,21 @@ extension SendAmountScene.Model {
         let id: Identifier
         let assetCode: String
         let amount: Decimal
+    }
+    
+    public struct Fees {
+        let senderFee: Decimal
+        let recipientFee: Decimal
+    }
+    
+    public enum EnteredAmountValidationError: Swift.Error {
+        case emptyString
+        case notEnoughBalance
+    }
+    
+    public enum LoadingStatus {
+        case loading
+        case loaded
     }
 }
 
@@ -87,13 +110,15 @@ extension SendAmountScene.Event {
         }
     }
     
-    public enum DidSelectBalanceSync {
-        public struct Request {}
-    }
-    
     public enum DidEnterDescriptionSync {
         public struct Request {
             let value: String?
+        }
+    }
+    
+    public enum DidSwitchPayFeeForRecipientSync {
+        public struct Request {
+            let value: Bool
         }
     }
     

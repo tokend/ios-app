@@ -8,6 +8,10 @@ public protocol SendAmountSceneBusinessLogic {
     
     func onViewDidLoad(request: Event.ViewDidLoad.Request)
     func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request)
+    func onDidEnterAmountSync(request: Event.DidEnterAmountSync.Request)
+    func onDidEnterDescriptionSync(request: Event.DidEnterDescriptionSync.Request)
+    func onDidSwitchPayFeeForRecipientSync(request: Event.DidSwitchPayFeeForRecipientSync.Request)
+    func onDidTapContinueSync(request: Event.DidTapContinueSync.Request)
 }
 
 extension SendAmountScene {
@@ -24,7 +28,9 @@ extension SendAmountScene {
         
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
-        
+        private let selectedBalanceProvider: SelectedBalanceProviderProtocol
+        private let feesProcessor: FeesProcessorProtocol
+
         private let disposeBag: DisposeBag = .init()
         
         // MARK: -
@@ -32,14 +38,23 @@ extension SendAmountScene {
         public init(
             presenter: PresentationLogic,
             recipientAddress: String,
-            selectedBalanceId: String
+            selectedBalanceProvider: SelectedBalanceProviderProtocol,
+            feesProcessor: FeesProcessorProtocol
         ) {
             
             self.presenter = presenter
+            self.selectedBalanceProvider = selectedBalanceProvider
+            self.feesProcessor = feesProcessor
+            
             self.sceneModel = .init(
+                selectedBalance: selectedBalanceProvider.selectedBalance,
                 recipientAddress: recipientAddress,
-                selectedBalanceId: selectedBalanceId,
-                balancesList: []
+                description: nil,
+                enteredAmount: nil,
+                enteredAmountError: nil,
+                feesForEnteredAmount: .init(senderFee: 0, recipientFee: 0),
+                isPayingFeeForRecipient: false,
+                feesLoadingStatus: .loaded
             )
         }
     }
@@ -64,15 +79,111 @@ private extension SendAmountScene.Interactor {
         )
         presenter.presentSceneDidUpdateSync(response: response)
     }
+    
+    func validateEnteredAmount() -> Model.EnteredAmountValidationError? {
+        
+        guard let enteredAmount = sceneModel.enteredAmount,
+              !enteredAmount.isEmpty
+        else {
+            return .emptyString
+        }
+        
+        // TODO: - compare to available balance
+        
+        return nil
+    }
+    
+    func observeSelectedBalance() {
+        selectedBalanceProvider
+            .observeBalance()
+            .subscribe(onNext: { [weak self] (balance) in
+                self?.sceneModel.selectedBalance = balance
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func observeFees() {
+        feesProcessor
+            .observeFees()
+            .subscribe(onNext: { [weak self] (fees) in
+                
+                guard let enteredAmount = self?.sceneModel.enteredAmount,
+                      let decimalAmount = Decimal(string: enteredAmount)
+                else {
+                    return
+                }
+                
+                guard let feesForEnteredAmount = fees[decimalAmount]
+                else {
+                    self?.processFeesForEnteredAmount()
+                    return
+                }
+                
+                self?.sceneModel.feesForEnteredAmount = feesForEnteredAmount
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func observeFeesLoadingStatus() {
+        feesProcessor
+            .observeLoadingStatus()
+            .subscribe(onNext: { [weak self] (loadingStatus) in
+                self?.sceneModel.feesLoadingStatus = loadingStatus
+                self?.presentSceneDidUpdate(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func processFeesForEnteredAmount() {
+        
+        guard validateEnteredAmount() == nil,
+            let enteredAmount = sceneModel.enteredAmount,
+            let decimalAmount = Decimal(string: enteredAmount)
+        else {
+            return
+        }
+        
+        feesProcessor.processFees(
+            for: decimalAmount,
+            assetId: sceneModel.selectedBalance.assetCode
+        )
+    }
 }
 
 // MARK: - BusinessLogic
 
 extension SendAmountScene.Interactor: SendAmountScene.BusinessLogic {
     
-    public func onViewDidLoad(request: Event.ViewDidLoad.Request) {}
+    public func onViewDidLoad(request: Event.ViewDidLoad.Request) {
+        observeSelectedBalance()
+        observeFees()
+        observeFeesLoadingStatus()
+    }
     
     public func onViewDidLoadSync(request: Event.ViewDidLoadSync.Request) {
         presentSceneDidUpdateSync(animated: false)
+    }
+    
+    public func onDidEnterAmountSync(request: Event.DidEnterAmountSync.Request) {
+        sceneModel.enteredAmount = request.value
+        sceneModel.enteredAmountError = validateEnteredAmount()
+        processFeesForEnteredAmount()
+        presentSceneDidUpdateSync(animated: false)
+    }
+    
+    public func onDidEnterDescriptionSync(request: Event.DidEnterDescriptionSync.Request) {
+        sceneModel.description = request.value
+        presentSceneDidUpdateSync(animated: false)
+    }
+    
+    public func onDidSwitchPayFeeForRecipientSync(request: Event.DidSwitchPayFeeForRecipientSync.Request) {
+        sceneModel.isPayingFeeForRecipient = request.value
+        presentSceneDidUpdateSync(animated: false)
+    }
+    
+    public func onDidTapContinueSync(request: Event.DidTapContinueSync.Request) {
+        
     }
 }

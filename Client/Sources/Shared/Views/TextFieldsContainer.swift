@@ -6,7 +6,6 @@ class TextFieldsContainer: UIView {
     
     private var separatorHeight: CGFloat { CGFloat(1.0).convertToPixels() }
     private var separatorSize: CGSize { .init(width: 16.0, height: separatorHeight) }
-    private var separatorWidth: CGFloat { 116.0 }
     
     private var separatorColor: UIColor { Theme.Colors.white }
     private var commonBackgroundColor: UIColor { Theme.Colors.mainSeparatorColor }

@@ -276,6 +276,7 @@
 		0DDC5A9026AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */; };
 		0DDC5A9426AF09BB0004D326 /* LocalSignInWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */; };
 		0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */; };
+		15B8D4104E04B4B4611C7A80 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 181B102929DE7DCB6ED12A97 /* libPods-Client.a */; };
 		5576B9BF26D923F40026666F /* SendAmountScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9B926D923F40026666F /* SendAmountScenePresenter.swift */; };
 		5576B9C026D923F40026666F /* SendAmountSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9BA26D923F40026666F /* SendAmountSceneRouting.swift */; };
 		5576B9C126D923F40026666F /* SendAmountSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9BB26D923F40026666F /* SendAmountSceneModels.swift */; };
@@ -284,9 +285,16 @@
 		5576B9C426D923F40026666F /* SendAmountSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9BE26D923F40026666F /* SendAmountSceneConfigurator.swift */; };
 		5576B9C626DF8C5E0026666F /* AssetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9C526DF8C5E0026666F /* AssetPickerView.swift */; };
 		5576B9CA26DFA4A10026666F /* AssetAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9C926DFA4A10026666F /* AssetAmountView.swift */; };
+		5576B9CC26E2548A0026666F /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9CB26E2548A0026666F /* AmountTextField.swift */; };
+		5576B9D126E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D026E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift */; };
+		5576B9D326E2604F0026666F /* SendAmountSceneBalancesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */; };
+		5576B9D526E2638B0026666F /* SendAmountSceneFeesProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D426E2638B0026666F /* SendAmountSceneFeesProcessor.swift */; };
+		5576B9D726E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D626E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift */; };
+		5576B9DF26E6277E0026666F /* FeesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9DE26E6277E0026666F /* FeesStackView.swift */; };
+		5576B9E226E629AB0026666F /* FeeAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E126E629AB0026666F /* FeeAmountView.swift */; };
+		5576B9E426E629B90026666F /* FeeSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E326E629B90026666F /* FeeSwitcherView.swift */; };
 		5579479F26D6A2AE00887B49 /* RecipientAddressProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */; };
 		557947A126D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */; };
-		9F9A75CDFF9B6711FD82EF4A /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1FB141AC7007D5C85166D9C /* libPods-Client.a */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
 		C39BB59126A85B4D00AC642B /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58626A85B4D00AC642B /* TabBarView.swift */; };
@@ -338,6 +346,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		079E284953A03967D6A628A4 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		0D0CC83526A5AC29002B0543 /* TokenDAccountTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDAccountTypeChecker.swift; sourceTree = "<group>"; };
 		0D15DB7F26BD7325001D40EF /* SettingsSceneTFAManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsSceneTFAManagerProtocol.swift; path = TokenDClient/Controllers/Managers/SettingsManager/SettingsSceneTFAManagerProtocol.swift; sourceTree = SOURCE_ROOT; };
 		0D15DB8126BD7337001D40EF /* SettingsSceneTFAManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSceneTFAManager.swift; sourceTree = "<group>"; };
@@ -613,6 +622,7 @@
 		0DDC5A8F26AEE7030004D326 /* LocalSignInUserAvatarUrlProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInUserAvatarUrlProvider.swift; sourceTree = "<group>"; };
 		0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorker.swift; sourceTree = "<group>"; };
 		0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorkerProtocol.swift; sourceTree = "<group>"; };
+		181B102929DE7DCB6ED12A97 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5576B9B926D923F40026666F /* SendAmountScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountScenePresenter.swift; sourceTree = "<group>"; };
 		5576B9BA26D923F40026666F /* SendAmountSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneRouting.swift; sourceTree = "<group>"; };
 		5576B9BB26D923F40026666F /* SendAmountSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneModels.swift; sourceTree = "<group>"; };
@@ -621,10 +631,17 @@
 		5576B9BE26D923F40026666F /* SendAmountSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneConfigurator.swift; sourceTree = "<group>"; };
 		5576B9C526DF8C5E0026666F /* AssetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerView.swift; sourceTree = "<group>"; };
 		5576B9C926DFA4A10026666F /* AssetAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAmountView.swift; sourceTree = "<group>"; };
+		5576B9CB26E2548A0026666F /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
+		5576B9D026E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneSelectedBalanceProviderProtocol.swift; sourceTree = "<group>"; };
+		5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneBalancesProvider.swift; sourceTree = "<group>"; };
+		5576B9D426E2638B0026666F /* SendAmountSceneFeesProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProcessor.swift; sourceTree = "<group>"; };
+		5576B9D626E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProcessorProtocol.swift; sourceTree = "<group>"; };
+		5576B9DE26E6277E0026666F /* FeesStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesStackView.swift; sourceTree = "<group>"; };
+		5576B9E126E629AB0026666F /* FeeAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeAmountView.swift; sourceTree = "<group>"; };
+		5576B9E326E629B90026666F /* FeeSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSwitcherView.swift; sourceTree = "<group>"; };
 		5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressProcessor.swift; sourceTree = "<group>"; };
 		557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressProcessorProtocol.swift; sourceTree = "<group>"; };
-		5A7C979817DB9E4E7307DEB9 /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
-		899608042F7A146AD21AFEF3 /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
+		8255BBE012259A5BAEBDB6BD /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
 		C39BB58426A85B4D00AC642B /* TabBarRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarRouting.swift; sourceTree = "<group>"; };
 		C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarPresenter.swift; sourceTree = "<group>"; };
 		C39BB58626A85B4D00AC642B /* TabBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
@@ -673,7 +690,6 @@
 		C39BB5FF26B9763B00AC642B /* ChangePasswordSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneViewController.swift; sourceTree = "<group>"; };
 		C39BB60026B9763B00AC642B /* ChangePasswordSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneInteractor.swift; sourceTree = "<group>"; };
 		C39BB60126B9763B00AC642B /* ChangePasswordSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordSceneConfigurator.swift; sourceTree = "<group>"; };
-		F1FB141AC7007D5C85166D9C /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -681,13 +697,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F9A75CDFF9B6711FD82EF4A /* libPods-Client.a in Frameworks */,
+				15B8D4104E04B4B4611C7A80 /* libPods-Client.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0CCEF1EE6315877743D44C6B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				181B102929DE7DCB6ED12A97 /* libPods-Client.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0D15DB7A26BD6228001D40EF /* SettingsManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -886,12 +910,14 @@
 			isa = PBXGroup;
 			children = (
 				0D5FC7FC269D976F006C8FC7 /* ActionButton.swift */,
+				5576B9CB26E2548A0026666F /* AmountTextField.swift */,
 				5576B9C926DFA4A10026666F /* AssetAmountView.swift */,
 				5576B9C526DF8C5E0026666F /* AssetPickerView.swift */,
 				C39BB5E426B2FEE200AC642B /* QRCodeImageView.swift */,
 				0D5FC84C269DC344006C8FC7 /* SharedViewsBuilder.swift */,
 				0D2FA2FB269893720018B7D4 /* TextField.swift */,
 				0D2FA30E269C92BF0018B7D4 /* TextFieldsContainer.swift */,
+				5576B9E026E629990026666F /* Fees */,
 				0D26E83126B2DA32008E1C9C /* TableView */,
 			);
 			path = Views;
@@ -906,7 +932,7 @@
 				0D59BCEA2694930300B6658F /* Client */,
 				0D59BCE92694930300B6658F /* Products */,
 				F70F8C5AA74109E5A48603F5 /* Pods */,
-				3927B27664420C18C417873F /* Frameworks */,
+				0CCEF1EE6315877743D44C6B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1705,12 +1731,41 @@
 			path = LocalSignInWorker;
 			sourceTree = "<group>";
 		};
-		3927B27664420C18C417873F /* Frameworks */ = {
+		5576B9CD26E25F910026666F /* Workers */ = {
 			isa = PBXGroup;
 			children = (
-				F1FB141AC7007D5C85166D9C /* libPods-Client.a */,
+				5576B9CF26E25FAC0026666F /* FeesProcessor */,
+				5576B9CE26E25F9B0026666F /* BalancesProvider */,
 			);
-			name = Frameworks;
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		5576B9CE26E25F9B0026666F /* BalancesProvider */ = {
+			isa = PBXGroup;
+			children = (
+				5576B9D026E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift */,
+				5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */,
+			);
+			path = BalancesProvider;
+			sourceTree = "<group>";
+		};
+		5576B9CF26E25FAC0026666F /* FeesProcessor */ = {
+			isa = PBXGroup;
+			children = (
+				5576B9D426E2638B0026666F /* SendAmountSceneFeesProcessor.swift */,
+				5576B9D626E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift */,
+			);
+			path = FeesProcessor;
+			sourceTree = "<group>";
+		};
+		5576B9E026E629990026666F /* Fees */ = {
+			isa = PBXGroup;
+			children = (
+				5576B9DE26E6277E0026666F /* FeesStackView.swift */,
+				5576B9E126E629AB0026666F /* FeeAmountView.swift */,
+				5576B9E326E629B90026666F /* FeeSwitcherView.swift */,
+			);
+			path = Fees;
 			sourceTree = "<group>";
 		};
 		5579479D26D6A27D00887B49 /* RecipientAddressProcessor */ = {
@@ -1731,6 +1786,7 @@
 				5576B9B926D923F40026666F /* SendAmountScenePresenter.swift */,
 				5576B9BA26D923F40026666F /* SendAmountSceneRouting.swift */,
 				5576B9BC26D923F40026666F /* SendAmountSceneViewController.swift */,
+				5576B9CD26E25F910026666F /* Workers */,
 			);
 			path = SendAmount;
 			sourceTree = "<group>";
@@ -1880,8 +1936,8 @@
 		F70F8C5AA74109E5A48603F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				899608042F7A146AD21AFEF3 /* Pods-Client.release.xcconfig */,
-				5A7C979817DB9E4E7307DEB9 /* Pods-Client.debug.xcconfig */,
+				079E284953A03967D6A628A4 /* Pods-Client.release.xcconfig */,
+				8255BBE012259A5BAEBDB6BD /* Pods-Client.debug.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1893,11 +1949,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D59BD1F2694930700B6658F /* Build configuration list for PBXNativeTarget "Client" */;
 			buildPhases = (
-				EF6871D3AED290B0055564A9 /* [CP] Check Pods Manifest.lock */,
+				A11310563308CBE89807AB7D /* [CP] Check Pods Manifest.lock */,
 				0D59BCE42694930300B6658F /* Sources */,
 				0D59BCE52694930300B6658F /* Frameworks */,
 				0D59BCE62694930300B6658F /* Resources */,
-				98288E64DCEE7A01D3FA1C71 /* [CP] Embed Pods Frameworks */,
+				1B9B47DBF81EB0A04C902D3B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1955,7 +2011,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		98288E64DCEE7A01D3FA1C71 /* [CP] Embed Pods Frameworks */ = {
+		1B9B47DBF81EB0A04C902D3B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1972,7 +2028,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EF6871D3AED290B0055564A9 /* [CP] Check Pods Manifest.lock */ = {
+		A11310563308CBE89807AB7D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2029,7 +2085,9 @@
 				0D59BD31269493BB00B6658F /* Array+IndexInBounds.swift in Sources */,
 				C39BB5CD26AB121F00AC642B /* MoreSceneUserDataProviderProtocol.swift in Sources */,
 				0DDC5A7C26A9D0730004D326 /* LocalSignInSceneRouting.swift in Sources */,
+				5576B9E426E629B90026666F /* FeeSwitcherView.swift in Sources */,
 				0D59BD32269493BB00B6658F /* UIStackView+RemoveArrangedSubviews.swift in Sources */,
+				5576B9E226E629AB0026666F /* FeeAmountView.swift in Sources */,
 				0D59BD33269493BB00B6658F /* UIViewController+ChildViewController.swift in Sources */,
 				0D59BD34269493BB00B6658F /* Array+RemoveObject.swift in Sources */,
 				0D59BD35269493BB00B6658F /* BehaviorRelay+EmitValue.swift in Sources */,
@@ -2135,6 +2193,7 @@
 				0D59BD6D269493BB00B6658F /* AccountTypeFetcher.swift in Sources */,
 				C39BB5F226B2FFFF00AC642B /* AccountIDSceneConfigurator.swift in Sources */,
 				0D59BD6E269493BB00B6658F /* AccountKYCRoleProviderProtocol.swift in Sources */,
+				5576B9D326E2604F0026666F /* SendAmountSceneBalancesProvider.swift in Sources */,
 				0D59BD6F269493BB00B6658F /* RegistrationKYCRoleProvider.swift in Sources */,
 				0D59BD70269493BB00B6658F /* EditKYCRoleProvider.swift in Sources */,
 				0D59BD71269493BB00B6658F /* ContoPassRegisterKeysProvider.swift in Sources */,
@@ -2174,6 +2233,7 @@
 				0D59BD84269493BB00B6658F /* RecoveryStatusChecker.swift in Sources */,
 				0DDC5A7126A9A0F50004D326 /* SignUpSceneInteractor.swift in Sources */,
 				0DDC5A7B26A9D0730004D326 /* LocalSignInScenePresenter.swift in Sources */,
+				5576B9D726E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift in Sources */,
 				0D1B057E26CFD2EB0011CC4C /* SendAssetSceneRouting.swift in Sources */,
 				0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */,
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
@@ -2206,6 +2266,7 @@
 				0D59BD96269493BC00B6658F /* AppControllerProtocol.swift in Sources */,
 				0D59BD97269493BC00B6658F /* ImagesUtility+TokenDSDK.swift in Sources */,
 				0D1B057526CEA3890011CC4C /* DashboardFlowController.swift in Sources */,
+				5576B9DF26E6277E0026666F /* FeesStackView.swift in Sources */,
 				0D15DB8526BD739D001D40EF /* SettingsSceneSettingsManager.swift in Sources */,
 				0D59BD98269493BC00B6658F /* MovementsRepo.swift in Sources */,
 				0D1B056426CBDD560011CC4C /* DashboardSceneViewController.swift in Sources */,
@@ -2226,6 +2287,7 @@
 				0D1B056E26CBEF180011CC4C /* DashboardSceneAssetCell.swift in Sources */,
 				C39BB59226A85B4D00AC642B /* TabBarModels.swift in Sources */,
 				0D59BDA2269493BC00B6658F /* BiometricsAuthViewController.swift in Sources */,
+				5576B9CC26E2548A0026666F /* AmountTextField.swift in Sources */,
 				0D59BDA3269493BC00B6658F /* BiometricsAuthInteractor.swift in Sources */,
 				0D59BDA4269493BC00B6658F /* BiometricsAuthModels.swift in Sources */,
 				0D59BDA5269493BC00B6658F /* BiometricsAuthRouting.swift in Sources */,
@@ -2236,6 +2298,7 @@
 				0D59BDAA269493BC00B6658F /* TFADataProvider.swift in Sources */,
 				0D1B057D26CFD2EB0011CC4C /* SendAssetScenePresenter.swift in Sources */,
 				0D59BDAB269493BC00B6658F /* KeychainDataProvider.swift in Sources */,
+				5576B9D526E2638B0026666F /* SendAmountSceneFeesProcessor.swift in Sources */,
 				0D59BDAC269493BC00B6658F /* KeyboardController.swift in Sources */,
 				0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */,
 				0D26E83326B2DA47008E1C9C /* IconTitleDisclosureCell.swift in Sources */,
@@ -2296,6 +2359,7 @@
 				C39BB5ED26B2FFFF00AC642B /* AccountIDScenePresenter.swift in Sources */,
 				0D26E82D26B2D6C5008E1C9C /* SettingsSceneModels.swift in Sources */,
 				0D59BDD0269493BC00B6658F /* DecimalFloorRoundingBehavior.swift in Sources */,
+				5576B9D126E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift in Sources */,
 				C39BB5C326A9C97200AC642B /* MoreSceneConfigurator.swift in Sources */,
 				0D59BDD1269493BC00B6658F /* CellViewModelProtocol.swift in Sources */,
 				0D26E82326B1AC1F008E1C9C /* Document+ImageUrl.swift in Sources */,
