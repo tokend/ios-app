@@ -11,6 +11,8 @@ class SendFlowController: BaseSignedInFlowController {
     private let recipientAddressProcessor: RecipientAddressProcessorProtocol
     fileprivate let balanceId: String
 
+    private let onClose: () -> Void
+    
     // MARK: -
 
     init(
@@ -22,11 +24,14 @@ class SendFlowController: BaseSignedInFlowController {
         keychainDataProvider: KeychainDataProviderProtocol,
         rootNavigation: RootNavigationProtocol,
         navigationController: NavigationControllerProtocol,
-        assetId: String
+        balanceId: String,
+        onClose: @escaping () -> Void
     ) {
 
         self.navigationController = navigationController
-        self.balanceId = assetId
+        self.balanceId = balanceId
+        
+        self.onClose = onClose
         
         recipientAddressProcessor = RecipientAddressProcessor(
             identitiesRepo: reposController.identitiesRepo,
@@ -145,9 +150,20 @@ private extension SendFlowController {
         recipientAccountId: String,
         recipientEmail: String?
     ) {
+        
+        guard let selectedBalanceProvider = try? initSelectedBalanceProvider()
+        else {
+            self.navigationController.showErrorMessage(
+                Localized(.error_unknown),
+                completion: nil
+            )
+            return
+        }
+        
         let vc: SendAmountScene.ViewController = initSendAmount(
             recipientAccountId: recipientAccountId,
-            recipientEmail: recipientEmail
+            recipientEmail: recipientEmail,
+            selectedBalanceProvider: selectedBalanceProvider
         )
         
         self.navigationController.pushViewController(vc, animated: true)
@@ -155,7 +171,8 @@ private extension SendFlowController {
     
     func initSendAmount(
         recipientAccountId: String,
-        recipientEmail: String?
+        recipientEmail: String?,
+        selectedBalanceProvider: SendAmountScene.SelectedBalanceProviderProtocol
     ) -> SendAmountScene.ViewController {
     
         let vc: SendAmountScene.ViewController = .init()
@@ -167,25 +184,6 @@ private extension SendFlowController {
             onContinue: { [weak self] in
                 
             }
-        )
-        
-        guard let selectedBalance = reposController.balancesRepo.balancesDetails.first(where: {
-            
-            switch $0 {
-            
-            case .creating:
-                return false
-                
-            case .created(let balance):
-                return balance.id == self.balanceId
-            }
-        })
-        else {
-            fatalError()
-        }
-        
-        let selectedBalanceProvider: SendAmountScene.SelectedBalanceProviderProtocol = SendAmountScene.SelectedBalanceProvider(
-            selectedBalance: try! selectedBalance.mapToBalance()
         )
         
         let feesProcessor: SendAmountScene.FeesProcessorProtocol = SendAmountScene.FeesProcessor(
@@ -204,28 +202,23 @@ private extension SendFlowController {
         
         return vc
     }
-}
-
-private enum SelectedBalanceProviderMapperError: Swift.Error {
-    case noBalance
-}
-
-private extension BalancesRepo.BalanceState {
-    func mapToBalance(
-    ) throws -> SendAmountScene.Model.Balance {
+    
+    func initSelectedBalanceProvider(
+    ) throws -> SendAmountScene.SelectedBalanceProviderProtocol {
         
-        switch self {
-        
-        case .creating:
-            throw SelectedBalanceProviderMapperError.noBalance
-            
-        case .created(let balance):
-            
-            return .init(
-                id: balance.id,
-                assetCode: balance.asset.id,
-                amount: balance.balance
-            )
-        }
+        return try SendAmountScene.SelectedBalanceProvider(
+            balancesRepo: reposController.balancesRepo,
+            selectedBalanceId: self.balanceId,
+            onFailedToFetchSelectedBalance: { [weak self] (_) in
+                
+                self?.navigationController.showErrorMessage(
+                    // TODO: - Localize
+                    "Failed to fetch your balance",
+                    completion: { [weak self] in
+                        self?.onClose()
+                    }
+                )
+            }
+        )
     }
 }

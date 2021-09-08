@@ -4,16 +4,20 @@ import RxCocoa
 
 public protocol SendAmountSceneFeesProcessorProtocol {
     
-    var feesList: [Decimal: SendAmountScene.Model.Fees] { get }
+    var fees: SendAmountScene.Model.Fees { get }
     var loadingStatus: SendAmountScene.Model.LoadingStatus { get }
     
-    func observeFees() -> Observable<[Decimal: SendAmountScene.Model.Fees]>
+    func observeFees() -> Observable<SendAmountScene.Model.Fees>
     func observeLoadingStatus() -> Observable<SendAmountScene.Model.LoadingStatus>
     
     func processFees(
         for amount: Decimal,
         assetId: String
     )
+}
+
+public enum SendAmountSceneFeesProcessorError: Swift.Error {
+    case noData
 }
 
 extension SendAmountScene {

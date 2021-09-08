@@ -52,7 +52,7 @@ extension SendAmountScene {
                 description: nil,
                 enteredAmount: nil,
                 enteredAmountError: nil,
-                feesForEnteredAmount: .init(senderFee: 0, recipientFee: 0),
+                feesForEnteredAmount: feesProcessor.fees,
                 isPayingFeeForRecipient: false,
                 feesLoadingStatus: .loaded
             )
@@ -82,13 +82,20 @@ private extension SendAmountScene.Interactor {
     
     func validateEnteredAmount() -> Model.EnteredAmountValidationError? {
         
-        guard let enteredAmount = sceneModel.enteredAmount,
-              !enteredAmount.isEmpty
+        guard let enteredAmount = sceneModel.enteredAmount
         else {
             return .emptyString
         }
         
-        // TODO: - compare to available balance
+        guard enteredAmount != 0
+        else {
+            return .cannotBeZero
+        }
+        
+        guard enteredAmount <= sceneModel.selectedBalance.amount
+        else {
+            return .notEnoughBalance
+        }
         
         return nil
     }
@@ -107,20 +114,7 @@ private extension SendAmountScene.Interactor {
         feesProcessor
             .observeFees()
             .subscribe(onNext: { [weak self] (fees) in
-                
-                guard let enteredAmount = self?.sceneModel.enteredAmount,
-                      let decimalAmount = Decimal(string: enteredAmount)
-                else {
-                    return
-                }
-                
-                guard let feesForEnteredAmount = fees[decimalAmount]
-                else {
-                    self?.processFeesForEnteredAmount()
-                    return
-                }
-                
-                self?.sceneModel.feesForEnteredAmount = feesForEnteredAmount
+                self?.sceneModel.feesForEnteredAmount = fees
                 self?.presentSceneDidUpdate(animated: true)
             })
             .disposed(by: disposeBag)
@@ -139,14 +133,13 @@ private extension SendAmountScene.Interactor {
     func processFeesForEnteredAmount() {
         
         guard validateEnteredAmount() == nil,
-            let enteredAmount = sceneModel.enteredAmount,
-            let decimalAmount = Decimal(string: enteredAmount)
+            let enteredAmount = sceneModel.enteredAmount
         else {
             return
         }
         
         feesProcessor.processFees(
-            for: decimalAmount,
+            for: enteredAmount,
             assetId: sceneModel.selectedBalance.assetCode
         )
     }

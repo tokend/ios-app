@@ -32,12 +32,12 @@ extension SendAmountScene {
         private let recipientAddressLabel: UILabel = .init()
         private let balanceLabel: UILabel = .init()
         private let textFieldsContainer: TextFieldsContainer = .init()
-        private let amountTextField: TextField = .init()
+        private let amountTextField: AmountTextField = .init()
         private let descriptionTextField: TextField = .init()
         private let feesStackView: FeesStackView = .init()
         private let continueButton: ActionButton = .init()
         
-        private var textFieldsOrder: [TextField] = []
+        private var textFieldsOrder: [UIView] = []
 
         // MARK: - Injections
         
@@ -147,8 +147,8 @@ private extension SendAmountScene.ViewController {
     func setupAmountTextField() {
         amountTextField.title = "Amount"
         amountTextField.keyboardType = .decimalPad
-        amountTextField.onTextChanged = { [weak self] (text) in
-            let request: Event.DidEnterAmountSync.Request = .init(value: text)
+        amountTextField.onTextChanged = { [weak self] (textField) in
+            let request: Event.DidEnterAmountSync.Request = .init(value: textField.amount)
             self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
                 businessLogic.onDidEnterAmountSync(request: request)
             }
@@ -181,7 +181,7 @@ private extension SendAmountScene.ViewController {
     
     func setupDescriptionTextField() {
         descriptionTextField.title = "Description"
-        descriptionTextField.placeholder = "Optional"
+        descriptionTextField.placeholder = "(Optional)"
         descriptionTextField.onTextChanged = { [weak self] (text) in
             let request: Event.DidEnterDescriptionSync.Request = .init(value: text)
             self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
@@ -278,7 +278,9 @@ private extension SendAmountScene.ViewController {
         navigationItem.title = "Send \(sceneViewModel.assetCode)"
         recipientAddressLabel.text = sceneViewModel.recipientAddress
         balanceLabel.text = sceneViewModel.availableBalance
-        amountTextField.text = sceneViewModel.enteredAmount
+        if let enteredAmount = sceneViewModel.enteredAmount {
+            amountTextField.setAmount(enteredAmount)
+        }
         amountTextField.error = sceneViewModel.enteredAmountError
         descriptionTextField.text = sceneViewModel.description
         
@@ -330,7 +332,7 @@ private extension SendAmountScene.ViewController {
         updateView(with: nil)
     }
     
-    func returnAction(for textField: TextField) {
+    func returnAction(for textField: UIView) {
         
         guard let index = textFieldsOrder.firstIndex(of: textField)
             else {

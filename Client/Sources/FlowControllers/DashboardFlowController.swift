@@ -52,7 +52,7 @@ private extension DashboardFlowController {
         let routing: DashboardScene.Routing = .init(
             onAddAsset: { },
             onBalanceTap: { [weak self] (id) in
-                self?.showSendAsset(for: id)
+                self?.showSend(for: id)
             }
         )
         
@@ -71,7 +71,7 @@ private extension DashboardFlowController {
         return vc
     }
     
-    func showSendAsset(for assetId: String) {
+    func showSend(for balanceId: String) {
         
         let flow: SendFlowController = .init(
             appController: self.appController,
@@ -82,7 +82,11 @@ private extension DashboardFlowController {
             keychainDataProvider: self.keychainDataProvider,
             rootNavigation: self.rootNavigation,
             navigationController: self.navigationController,
-            assetId: assetId
+            balanceId: balanceId,
+            onClose: { [weak self] in
+                let _ = self?.navigationController.popToRootViewController(animated: true)
+                self?.currentFlowController = nil
+            }
         )
         
         self.currentFlowController = flow

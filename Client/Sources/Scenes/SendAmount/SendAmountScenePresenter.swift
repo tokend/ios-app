@@ -49,7 +49,7 @@ private extension SendAmountScene.Presenter {
             let senderFee: String
             let recipientFee: String
             
-            // TODO: - Add formatters
+            // TODO: - Add amount formatter
             
             if sceneModel.isPayingFeeForRecipient {
                 senderFee = "\(fees.senderFee + fees.recipientFee)"
@@ -94,6 +94,8 @@ private extension SendAmountScene.Presenter {
             enteredAmountError = Localized(.validation_error_empty)
         case .notEnoughBalance:
             enteredAmountError = "Not enoungh balance"
+        case .cannotBeZero:
+            enteredAmountError = "Entered amount must be more than 0"
         }
         
         return .init(

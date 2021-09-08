@@ -14,7 +14,7 @@ class TextFieldsContainer: UIView {
 
     // MARK: - Public properties
 
-    public var textFieldsList: [TextField] = [] {
+    public var textFieldsList: [UIView] = [] {
         willSet {
             textFieldsList.forEach { $0.removeFromSuperview() }
             separatorsList.forEach { $0.removeFromSuperview() }
@@ -53,7 +53,7 @@ private extension TextFieldsContainer {
     
     func layoutTextFields() {
         
-        var previousField: TextField?
+        var previousField: UIView?
         separatorsList = []
         
         if textFieldsList.count == 1 {
@@ -107,7 +107,7 @@ private extension TextFieldsContainer {
         }
     }
     
-    func addSeparatorView(for field: TextField) {
+    func addSeparatorView(for field: UIView) {
         let separator: UIView = .init()
         separator.backgroundColor = separatorColor
         separatorsList.append(separator)

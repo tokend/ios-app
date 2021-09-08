@@ -8,12 +8,17 @@ extension SendAmountScene {
         
         // MARK: - Private properties
         
-        private let feesBehaviorRelay: BehaviorRelay<[Decimal: SendAmountScene.Model.Fees]> = .init(value: [:])
+        private let feesBehaviorRelay: BehaviorRelay<SendAmountScene.Model.Fees> = .init(value: .init(senderFee: 0, recipientFee: 0))
         private let loadingStatusBehaviorRelay: BehaviorRelay<SendAmountScene.Model.LoadingStatus> = .init(value: .loaded)
         private let feesApi: FeesApiV3
         
+        private let debouncer: Debouncer = .init()
+        
         fileprivate let originalAccountId: String
         fileprivate let recipientAccountId: String
+        
+        private var senderCancelable: TokenDSDK.Cancelable? = nil
+        private var recipientCancelable: TokenDSDK.Cancelable? = nil
         
         // MARK: -
         
@@ -33,124 +38,19 @@ extension SendAmountScene {
 
 private extension SendAmountScene.FeesProcessor {
     
-    func fetchSenderFee(
-        for amount: Decimal,
-        assetId: String,
-        completion: @escaping (Swift.Result<Decimal, Swift.Error>) -> Void
-    ) {
-        
-        feesApi.getCalculatedFees(
-            for: self.originalAccountId,
-            assetId: assetId,
-            amount: amount,
-            feeType: 0,
-            subtype: 1,
-            completion: { (result) in
-                
-                switch result {
-                
-                case .success(let resource):
-                    
-                    guard let data = resource.data
-                    else {
-                        // TODO: - set completion
-                        return
-                    }
-                    
-                    completion(.success(data.mapToFee()))
-                    
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        )
-    }
-    
-    func fetchRecipientFee(
-        for amount: Decimal,
-        assetId: String,
-        completion: @escaping (Swift.Result<Decimal, Swift.Error>) -> Void
-    ) {
-        
-        feesApi.getCalculatedFees(
-            for: self.recipientAccountId,
-            assetId: assetId,
-            amount: amount,
-            feeType: 0,
-            subtype: 2,
-            completion: { (result) in
-                
-                switch result {
-                
-                case .success(let resource):
-                    
-                    guard let data = resource.data
-                    else {
-                        // TODO: - set completion
-                        return
-                    }
-                    
-                    completion(.success(data.mapToFee()))
-                    
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        )
-    }
-    
-    func updateValue(
-        for amount: Decimal,
-        value: SendAmountScene.Model.Fees
-    ) {
-        var fees = feesBehaviorRelay.value
-        fees[amount] = value
-        feesBehaviorRelay.accept(fees)
-    }
-}
-
-// MARK: - Mappers
-
-private extension Horizon.CalculatedFeeResource {
-    
-    func mapToFee() -> Decimal {
-        
-        return self.calculatedPercent + self.fixed
-    }
-}
-
-// MARK: - SendAmountSceneFeesProcessorProtocol
-
-extension SendAmountScene.FeesProcessor: SendAmountScene.FeesProcessorProtocol {
-    var feesList: [Decimal: SendAmountScene.Model.Fees] {
-        return feesBehaviorRelay.value
-    }
-    
-    var loadingStatus: SendAmountScene.Model.LoadingStatus {
-        return loadingStatusBehaviorRelay.value
-    }
-    
-    func observeFees() -> Observable<[Decimal: SendAmountScene.Model.Fees]> {
-        return feesBehaviorRelay.asObservable()
-    }
-    
-    func observeLoadingStatus() -> Observable<SendAmountScene.Model.LoadingStatus> {
-        return loadingStatusBehaviorRelay.asObservable()
-    }
-    
-    func processFees(
+    func fetchFees(
         for amount: Decimal,
         assetId: String
     ) {
         
-        if feesBehaviorRelay.value[amount] != nil {
-            return
-        }
+        senderCancelable?.cancel()
+        recipientCancelable?.cancel()
+        
+        loadingStatusBehaviorRelay.accept(.loading)
         
         var senderFee: Decimal?
         var recipientFee: Decimal?
         
-        loadingStatusBehaviorRelay.accept(.loading)
         let group: DispatchGroup = .init()
         group.enter()
         
@@ -198,7 +98,7 @@ extension SendAmountScene.FeesProcessor: SendAmountScene.FeesProcessorProtocol {
                 guard let senderFee = senderFee,
                       let recipientFee = recipientFee
                 else {
-                    print(.log(message: "Error while fetching fees"))
+                    print(.debug(message: "Error while fetching fees"))
                     return
                 }
                 
@@ -207,9 +107,121 @@ extension SendAmountScene.FeesProcessor: SendAmountScene.FeesProcessorProtocol {
                     recipientFee: recipientFee
                 )
                 
-                self.updateValue(for: amount, value: fees)
-                
+                self.feesBehaviorRelay.accept(fees)
                 self.loadingStatusBehaviorRelay.accept(.loaded)
+            }
+        )
+    }
+    
+    func fetchSenderFee(
+        for amount: Decimal,
+        assetId: String,
+        completion: @escaping (Swift.Result<Decimal, Swift.Error>) -> Void
+    ) {
+        
+        senderCancelable = feesApi.getCalculatedFees(
+            for: self.originalAccountId,
+            assetId: assetId,
+            amount: amount,
+            feeType: 0,
+            subtype: 1,
+            completion: { (result) in
+                
+                switch result {
+                
+                case .success(let resource):
+                    
+                    guard let data = resource.data
+                    else {
+                        completion(.failure(SendAmountSceneFeesProcessorError.noData))
+                        return
+                    }
+                    
+                    completion(.success(data.mapToFee()))
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+    
+    func fetchRecipientFee(
+        for amount: Decimal,
+        assetId: String,
+        completion: @escaping (Swift.Result<Decimal, Swift.Error>) -> Void
+    ) {
+        
+        recipientCancelable = feesApi.getCalculatedFees(
+            for: self.recipientAccountId,
+            assetId: assetId,
+            amount: amount,
+            feeType: 0,
+            subtype: 2,
+            completion: { (result) in
+                
+                switch result {
+                
+                case .success(let resource):
+                    
+                    guard let data = resource.data
+                    else {
+                        completion(.failure(SendAmountSceneFeesProcessorError.noData))
+                        return
+                    }
+                    
+                    completion(.success(data.mapToFee()))
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+}
+
+// MARK: - Mappers
+
+private extension Horizon.CalculatedFeeResource {
+    
+    func mapToFee() -> Decimal {
+        
+        return self.calculatedPercent + self.fixed
+    }
+}
+
+// MARK: - SendAmountSceneFeesProcessorProtocol
+
+extension SendAmountScene.FeesProcessor: SendAmountScene.FeesProcessorProtocol {
+    var fees: SendAmountScene.Model.Fees {
+        return feesBehaviorRelay.value
+    }
+    
+    var loadingStatus: SendAmountScene.Model.LoadingStatus {
+        return loadingStatusBehaviorRelay.value
+    }
+    
+    func observeFees() -> Observable<SendAmountScene.Model.Fees> {
+        return feesBehaviorRelay.asObservable()
+    }
+    
+    func observeLoadingStatus() -> Observable<SendAmountScene.Model.LoadingStatus> {
+        return loadingStatusBehaviorRelay.asObservable()
+    }
+    
+    func processFees(
+        for amount: Decimal,
+        assetId: String
+    ) {
+        print(.debug(message: "Initiated debounce"))
+        debouncer.debounce(
+            delay: 0.5,
+            completion: { [weak self] in
+                print(.debug(message: "Debounce"))
+                self?.fetchFees(
+                    for: amount,
+                    assetId: assetId
+                )
             }
         )
     }

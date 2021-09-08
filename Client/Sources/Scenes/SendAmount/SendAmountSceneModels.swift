@@ -20,7 +20,7 @@ extension SendAmountScene.Model {
         var selectedBalance: Balance
         let recipientAddress: String
         var description: String?
-        var enteredAmount: String?
+        var enteredAmount: Decimal?
         var enteredAmountError: EnteredAmountValidationError?
         var feesForEnteredAmount: Fees?
         var isPayingFeeForRecipient: Bool
@@ -30,7 +30,7 @@ extension SendAmountScene.Model {
     struct SceneViewModel {
         let recipientAddress: String
         let availableBalance: String
-        let enteredAmount: String?
+        let enteredAmount: Decimal?
         let enteredAmountError: String?
         let assetCode: String
         let description: String?
@@ -56,6 +56,7 @@ extension SendAmountScene.Model {
     public enum EnteredAmountValidationError: Swift.Error {
         case emptyString
         case notEnoughBalance
+        case cannotBeZero
     }
     
     public enum LoadingStatus {
@@ -106,7 +107,7 @@ extension SendAmountScene.Event {
     
     public enum DidEnterAmountSync {
         public struct Request {
-            let value: String?
+            let value: Decimal?
         }
     }
     

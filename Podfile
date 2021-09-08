@@ -9,11 +9,11 @@ source 'https://github.com/tokend/ios-specs.git'
 
 def token_d_pods
   
-  pod 'TokenDSDK',                          :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'feature/fee_api'
-  pod 'TokenDSDK/AlamofireNetwork',         :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'feature/fee_api'
-  pod 'TokenDSDK/JSONAPI',                  :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'feature/fee_api'
-  pod 'TokenDSDK/AlamofireNetworkJSONAPI',  :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'feature/fee_api'
-  pod 'TokenDSDK/KeyServer',                :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'feature/fee_api'
+  pod 'TokenDSDK',                          :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'master'
+  pod 'TokenDSDK/AlamofireNetwork',         :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'master'
+  pod 'TokenDSDK/JSONAPI',                  :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'master'
+  pod 'TokenDSDK/AlamofireNetworkJSONAPI',  :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'master'
+  pod 'TokenDSDK/KeyServer',                :git => 'https://github.com/tokend/ios-sdk.git', :branch => 'master'
   
 end
 
