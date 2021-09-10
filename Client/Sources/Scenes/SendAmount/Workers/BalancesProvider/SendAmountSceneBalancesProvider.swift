@@ -63,11 +63,11 @@ private extension SendAmountScene.SelectedBalanceProvider {
                 }
                 
                 do {
-                    let selectedBalance = try balances.fetchBalance(
+                    let _ = try balances.fetchBalance(
                         selectedBalanceId: selectedBalanceId
                     )
                     
-                    self?.selectedBalanceBehaviorRelay.accept(selectedBalance)
+//                    self?.selectedBalanceBehaviorRelay.accept(selectedBalance)
                 } catch let error {
                     self?.onFailedToFetchSelectedBalance(error)
                 }

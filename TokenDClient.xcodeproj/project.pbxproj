@@ -277,6 +277,15 @@
 		0DDC5A9426AF09BB0004D326 /* LocalSignInWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */; };
 		0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */; };
 		15B8D4104E04B4B4611C7A80 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 181B102929DE7DCB6ED12A97 /* libPods-Client.a */; };
+		55112D5826EB6E220052DF19 /* AmountFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D5726EB6E210052DF19 /* AmountFormatterProtocol.swift */; };
+		55112D5A26EB6E300052DF19 /* AmountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D5926EB6E300052DF19 /* AmountFormatter.swift */; };
+		55112D6226EB89160052DF19 /* SendConfirmationScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D5C26EB89160052DF19 /* SendConfirmationScenePresenter.swift */; };
+		55112D6326EB89160052DF19 /* SendConfirmationSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D5D26EB89160052DF19 /* SendConfirmationSceneRouting.swift */; };
+		55112D6426EB89160052DF19 /* SendConfirmationSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D5E26EB89160052DF19 /* SendConfirmationSceneModels.swift */; };
+		55112D6526EB89160052DF19 /* SendConfirmationSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D5F26EB89160052DF19 /* SendConfirmationSceneViewController.swift */; };
+		55112D6626EB89160052DF19 /* SendConfirmationSceneInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D6026EB89160052DF19 /* SendConfirmationSceneInteractor.swift */; };
+		55112D6726EB89160052DF19 /* SendConfirmationSceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D6126EB89160052DF19 /* SendConfirmationSceneConfigurator.swift */; };
+		55112D6926EB93AC0052DF19 /* DebounceWorkerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55112D6826EB93AC0052DF19 /* DebounceWorkerProtocol.swift */; };
 		5576B9BF26D923F40026666F /* SendAmountScenePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9B926D923F40026666F /* SendAmountScenePresenter.swift */; };
 		5576B9C026D923F40026666F /* SendAmountSceneRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9BA26D923F40026666F /* SendAmountSceneRouting.swift */; };
 		5576B9C126D923F40026666F /* SendAmountSceneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9BB26D923F40026666F /* SendAmountSceneModels.swift */; };
@@ -624,6 +633,15 @@
 		0DDC5A9326AF09BB0004D326 /* LocalSignInWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorker.swift; sourceTree = "<group>"; };
 		0DDC5A9526AF09C50004D326 /* LocalSignInWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSignInWorkerProtocol.swift; sourceTree = "<group>"; };
 		181B102929DE7DCB6ED12A97 /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		55112D5726EB6E210052DF19 /* AmountFormatterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatterProtocol.swift; sourceTree = "<group>"; };
+		55112D5926EB6E300052DF19 /* AmountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountFormatter.swift; sourceTree = "<group>"; };
+		55112D5C26EB89160052DF19 /* SendConfirmationScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationScenePresenter.swift; sourceTree = "<group>"; };
+		55112D5D26EB89160052DF19 /* SendConfirmationSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneRouting.swift; sourceTree = "<group>"; };
+		55112D5E26EB89160052DF19 /* SendConfirmationSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneModels.swift; sourceTree = "<group>"; };
+		55112D5F26EB89160052DF19 /* SendConfirmationSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneViewController.swift; sourceTree = "<group>"; };
+		55112D6026EB89160052DF19 /* SendConfirmationSceneInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneInteractor.swift; sourceTree = "<group>"; };
+		55112D6126EB89160052DF19 /* SendConfirmationSceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneConfigurator.swift; sourceTree = "<group>"; };
+		55112D6826EB93AC0052DF19 /* DebounceWorkerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebounceWorkerProtocol.swift; sourceTree = "<group>"; };
 		5576B9B926D923F40026666F /* SendAmountScenePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountScenePresenter.swift; sourceTree = "<group>"; };
 		5576B9BA26D923F40026666F /* SendAmountSceneRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneRouting.swift; sourceTree = "<group>"; };
 		5576B9BB26D923F40026666F /* SendAmountSceneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneModels.swift; sourceTree = "<group>"; };
@@ -875,6 +893,7 @@
 				C39BB5B726A9C8F700AC642B /* More */,
 				557947A226D9234A00887B49 /* SendAmount */,
 				0D1B057626CFD1580011CC4C /* SendAsset */,
+				55112D5B26EB88DF0052DF19 /* SendConfirmation */,
 				0D26E82426B2D69C008E1C9C /* Settings */,
 				0D2FA2DE2695CC4D0018B7D4 /* SignIn */,
 				0DDC5A5526A7D82D0004D326 /* SignUp */,
@@ -1659,6 +1678,7 @@
 		0DDC5A6326A7EF030004D326 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
+				55112D5626EB6E0E0052DF19 /* AmountFormatter */,
 				55AECCC026E90303000F8AF0 /* DebounceWorker */,
 				5579479D26D6A27D00887B49 /* RecipientAddressProcessor */,
 				0DDC5A9226AF09A90004D326 /* LocalSignInWorker */,
@@ -1734,6 +1754,28 @@
 			path = LocalSignInWorker;
 			sourceTree = "<group>";
 		};
+		55112D5626EB6E0E0052DF19 /* AmountFormatter */ = {
+			isa = PBXGroup;
+			children = (
+				55112D5726EB6E210052DF19 /* AmountFormatterProtocol.swift */,
+				55112D5926EB6E300052DF19 /* AmountFormatter.swift */,
+			);
+			path = AmountFormatter;
+			sourceTree = "<group>";
+		};
+		55112D5B26EB88DF0052DF19 /* SendConfirmation */ = {
+			isa = PBXGroup;
+			children = (
+				55112D6126EB89160052DF19 /* SendConfirmationSceneConfigurator.swift */,
+				55112D6026EB89160052DF19 /* SendConfirmationSceneInteractor.swift */,
+				55112D5E26EB89160052DF19 /* SendConfirmationSceneModels.swift */,
+				55112D5C26EB89160052DF19 /* SendConfirmationScenePresenter.swift */,
+				55112D5D26EB89160052DF19 /* SendConfirmationSceneRouting.swift */,
+				55112D5F26EB89160052DF19 /* SendConfirmationSceneViewController.swift */,
+			);
+			path = SendConfirmation;
+			sourceTree = "<group>";
+		};
 		5576B9CD26E25F910026666F /* Workers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1798,6 +1840,7 @@
 			isa = PBXGroup;
 			children = (
 				55AECCC126E90315000F8AF0 /* DebounceWorker.swift */,
+				55112D6826EB93AC0052DF19 /* DebounceWorkerProtocol.swift */,
 			);
 			path = DebounceWorker;
 			sourceTree = "<group>";
@@ -2146,6 +2189,7 @@
 				0D59BD4C269493BB00B6658F /* AccountRoleFetcherProtocol.swift in Sources */,
 				0DDC5A6E26A9A0F50004D326 /* SignUpSceneModels.swift in Sources */,
 				0D5FC7FD269D976F006C8FC7 /* ActionButton.swift in Sources */,
+				55112D6526EB89160052DF19 /* SendConfirmationSceneViewController.swift in Sources */,
 				0D59BD4D269493BB00B6658F /* AccountKYCFormSender.swift in Sources */,
 				0D59BD4E269493BB00B6658F /* AccountKYCFormSenderProtocol.swift in Sources */,
 				0D2FA2EA2695CC720018B7D4 /* SignInSceneConfigurator.swift in Sources */,
@@ -2164,6 +2208,7 @@
 				0D59BD55269493BB00B6658F /* BaseLoginChanger.swift in Sources */,
 				0D1B057F26CFD2EB0011CC4C /* SendAssetSceneModels.swift in Sources */,
 				C39BB5B226A8600500AC642B /* TabContentContainerViewController.swift in Sources */,
+				55112D5826EB6E220052DF19 /* AmountFormatterProtocol.swift in Sources */,
 				5576B9C026D923F40026666F /* SendAmountSceneRouting.swift in Sources */,
 				0D59BD56269493BB00B6658F /* LoginChangerProtocol.swift in Sources */,
 				C39BB59126A85B4D00AC642B /* TabBarView.swift in Sources */,
@@ -2234,6 +2279,7 @@
 				0D59BD7C269493BB00B6658F /* RegistrationCheckerProtocol.swift in Sources */,
 				0D59BD7D269493BB00B6658F /* RegistrationChecker.swift in Sources */,
 				0D59BD7E269493BB00B6658F /* UserPhoneContactsFetcherProtocol.swift in Sources */,
+				55112D6426EB89160052DF19 /* SendConfirmationSceneModels.swift in Sources */,
 				0D59BD7F269493BB00B6658F /* UserPhoneContactsFetcher.swift in Sources */,
 				0D59BD80269493BB00B6658F /* BasePasswordChanger.swift in Sources */,
 				0D59BD81269493BB00B6658F /* PasswordChangerProtocol.swift in Sources */,
@@ -2251,8 +2297,10 @@
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
 				0D26E82E26B2D6C5008E1C9C /* SettingsSceneViewController.swift in Sources */,
 				0D59BD86269493BB00B6658F /* ChangeRoleRequestSender.swift in Sources */,
+				55112D6626EB89160052DF19 /* SendConfirmationSceneInteractor.swift in Sources */,
 				0D59BD87269493BB00B6658F /* ChangeRoleRequestSenderProtocol.swift in Sources */,
 				0D59BD88269493BB00B6658F /* RegisterWorkerProtocol.swift in Sources */,
+				55112D5A26EB6E300052DF19 /* AmountFormatter.swift in Sources */,
 				0D59BD89269493BB00B6658F /* BaseRegisterWorker.swift in Sources */,
 				C39BB5FA26B9628000AC642B /* ChangePasswordFlowController.swift in Sources */,
 				0D26E83026B2D6C5008E1C9C /* SettingsSceneConfigurator.swift in Sources */,
@@ -2307,6 +2355,7 @@
 				0D59BDA7269493BC00B6658F /* BiometricsAuthWorker.swift in Sources */,
 				0D59BDA8269493BC00B6658F /* BiometricsAuthWorkerProtocol.swift in Sources */,
 				0D59BDA9269493BC00B6658F /* UserDataProvider.swift in Sources */,
+				55112D6926EB93AC0052DF19 /* DebounceWorkerProtocol.swift in Sources */,
 				0D59BDAA269493BC00B6658F /* TFADataProvider.swift in Sources */,
 				0D1B057D26CFD2EB0011CC4C /* SendAssetScenePresenter.swift in Sources */,
 				0D59BDAB269493BC00B6658F /* KeychainDataProvider.swift in Sources */,
@@ -2328,6 +2377,7 @@
 				0D26E82B26B2D6C5008E1C9C /* SettingsScenePresenter.swift in Sources */,
 				0D59BDB7269493BC00B6658F /* KeychainCodableKeyDataV1.swift in Sources */,
 				0D2FA2E72695CC720018B7D4 /* SignInSceneModels.swift in Sources */,
+				55112D6226EB89160052DF19 /* SendConfirmationScenePresenter.swift in Sources */,
 				0D59BDB8269493BC00B6658F /* KeychainCodableAccountsV1.swift in Sources */,
 				0D59BDB9269493BC00B6658F /* KeychainAccountsModel.swift in Sources */,
 				0D59BDBA269493BC00B6658F /* WalletDataSerializable.swift in Sources */,
@@ -2383,6 +2433,8 @@
 				0D15DB8C26BD73D0001D40EF /* SettingsSceneBiometricsInfoProviderProtocol.swift in Sources */,
 				C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */,
 				C39BB5A626A85BA600AC642B /* TabBarFlowController.swift in Sources */,
+				55112D6326EB89160052DF19 /* SendConfirmationSceneRouting.swift in Sources */,
+				55112D6726EB89160052DF19 /* SendConfirmationSceneConfigurator.swift in Sources */,
 				0D59BD0F2694930700B6658F /* RecoveryFlowController.swift in Sources */,
 				0D59BD062694930700B6658F /* ManagersController.swift in Sources */,
 				C39BB59526A85B4D00AC642B /* TabBarConfigurator.swift in Sources */,

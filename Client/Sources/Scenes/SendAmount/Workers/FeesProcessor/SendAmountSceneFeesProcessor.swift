@@ -12,7 +12,7 @@ extension SendAmountScene {
         private let loadingStatusBehaviorRelay: BehaviorRelay<SendAmountScene.Model.LoadingStatus> = .init(value: .loaded)
         private let feesApi: FeesApiV3
         
-        private let debouncer: Debouncer = .init()
+        private let debounceWorker: DebounceWorkerProtocol = DebounceWorker()
         
         fileprivate let originalAccountId: String
         fileprivate let recipientAccountId: String
@@ -214,7 +214,7 @@ extension SendAmountScene.FeesProcessor: SendAmountScene.FeesProcessorProtocol {
         assetId: String
     ) {
         print(.debug(message: "Initiated debounce"))
-        debouncer.debounce(
+        debounceWorker.debounce(
             delay: 0.5,
             completion: { [weak self] in
                 print(.debug(message: "Debounce"))

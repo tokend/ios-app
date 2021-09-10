@@ -30,6 +30,7 @@ extension SendAmountScene.Model {
     struct SceneViewModel {
         let recipientAddress: String
         let availableBalance: String
+        let amountContext: AmountTextField.Context
         let enteredAmount: Decimal?
         let enteredAmountError: String?
         let assetCode: String

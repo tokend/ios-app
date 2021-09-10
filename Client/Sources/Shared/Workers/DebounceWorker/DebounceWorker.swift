@@ -1,6 +1,6 @@
 import Foundation
 
-public class Debouncer {
+public class DebounceWorker {
     
     public typealias Completion = () -> Void
     
@@ -19,9 +19,9 @@ public class Debouncer {
 
 // MARK: - Public methods
 
-public extension Debouncer {
+extension DebounceWorker: DebounceWorkerProtocol {
     
-    func debounce(
+    public func debounce(
         delay: Double,
         completion: @escaping Completion
     ) {

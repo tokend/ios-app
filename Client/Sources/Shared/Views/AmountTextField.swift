@@ -226,6 +226,10 @@ final class AmountTextField: UIView {
         textField.isFirstResponder
     }
     
+    override var textInputMode: UITextInputMode? {
+        return UITextInputMode.activeInputModes.first(where: { $0.primaryLanguage == Locale.current.languageCode })
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if action == #selector(UIResponderStandardEditActions.paste(_:)) {
             return canPaste
@@ -235,10 +239,21 @@ final class AmountTextField: UIView {
     }
     
     func setAmount(_ amount: Decimal) {
+        
+        guard self.amount != amount
+        else {
+            return
+        }
+        
         setText(context.formatter.string(from: amount))
     }
     
     func setText(_ text: String?) {
+        
+        guard self.text != text
+        else {
+            return
+        }
         
         let newText = text ?? ""
         _ = self.textField(
@@ -293,6 +308,7 @@ private extension AmountTextField {
     }
     
     func setupTextField() {
+        
         textField.textAlignment = .left
         textField.textColor = Theme.Colors.dark
         textField.placeholderColor = Theme.Colors.grey
@@ -450,7 +466,8 @@ extension AmountTextField: UITextFieldDelegate {
         
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         if let newString = checkEnteredAmount(newText, withFormatter: context.formatter) {
-            setText(newString)
+            print(.debug(message: "checked: \(newString)"))
+            textField.setText(newString)
             amount = context.formatter.decimal(from: newString)
             delegate?.amountTextFieldDidEditAmount?(self)
             onTextChanged?(self)
@@ -462,11 +479,13 @@ extension AmountTextField: UITextFieldDelegate {
     private func checkEnteredAmount(_ amountString: String, withFormatter formatter: NumberFormatter) -> String? {
         var amountString = amountString
         if amountString.count == 0 {
+            print(.debug(message: "return 1"))
             return amountString
         }
         
         guard formatter.decimal(from: amountString) != nil
             else {
+            print(.debug(message: "return 2"))
                 return nil
         }
         
@@ -474,20 +493,25 @@ extension AmountTextField: UITextFieldDelegate {
         var components = amountString.components(separatedBy: keyboardDecimalSeparator)
         
         if components.count > 2 {
+            print(.debug(message: "return 3"))
             return nil
         }
         
         if components.count == 2 {
+            
             if formatter.maximumFractionDigits == 0 {
+                print(.debug(message: "return 4"))
                 return nil
             }
             
             if components[1].count > formatter.maximumFractionDigits {
+                print(.debug(message: "return 5"))
                 return nil
             }
         }
         
         if components[0].count > formatter.maximumIntegerDigits {
+            print(.debug(message: "return 6"))
             return nil
         }
         
@@ -501,7 +525,7 @@ extension AmountTextField: UITextFieldDelegate {
             amountString.insert("0", at: amountString.startIndex)
             components = amountString.components(separatedBy: keyboardDecimalSeparator)
         }
-        
+        print(.debug(message: "Amount String: \(amountString)"))
         return amountString
     }
     

@@ -22,6 +22,17 @@ extension SendAmountScene {
         // MARK: - Private properties
         
         private let presenterDispatch: PresenterDispatch
+        private let numberFormatter: NumberFormatter = {
+            
+            let formatter = NumberFormatter()
+            formatter.usesGroupingSeparator = false
+            formatter.decimalSeparator = NumberFormatter().decimalSeparator ?? Locale.current.decimalSeparator ?? "."
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 1
+            formatter.minimumIntegerDigits = 1
+            formatter.maximumFractionDigits = 8
+            return formatter
+        }()
         
         // MARK: -
         
@@ -39,7 +50,7 @@ extension SendAmountScene {
 private extension SendAmountScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
-        
+                
         let senderFeeModel: FeeAmountView.ViewModel?
         let recipientFeeModel: FeeAmountView.ViewModel?
         let feeSwitcherModel: FeeSwitcherView.ViewModel?
@@ -51,7 +62,10 @@ private extension SendAmountScene.Presenter {
             
             // TODO: - Add amount formatter
             
-            if sceneModel.isPayingFeeForRecipient {
+            if sceneModel.enteredAmount == 0 {
+                senderFee = "0"
+                recipientFee = "0"
+            } else if sceneModel.isPayingFeeForRecipient {
                 senderFee = "\(fees.senderFee + fees.recipientFee)"
                 recipientFee = "0"
             } else {
@@ -101,6 +115,7 @@ private extension SendAmountScene.Presenter {
         return .init(
             recipientAddress: "To \(sceneModel.recipientAddress)",
             availableBalance: "Balance: \(sceneModel.selectedBalance.amount) \(sceneModel.selectedBalance.assetCode)",
+            amountContext: .init(formatter: numberFormatter),
             enteredAmount: sceneModel.enteredAmount,
             enteredAmountError: enteredAmountError,
             assetCode: sceneModel.selectedBalance.assetCode,

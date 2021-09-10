@@ -278,6 +278,7 @@ private extension SendAmountScene.ViewController {
         navigationItem.title = "Send \(sceneViewModel.assetCode)"
         recipientAddressLabel.text = sceneViewModel.recipientAddress
         balanceLabel.text = sceneViewModel.availableBalance
+        amountTextField.context = sceneViewModel.amountContext
         if let enteredAmount = sceneViewModel.enteredAmount {
             amountTextField.setAmount(enteredAmount)
         }

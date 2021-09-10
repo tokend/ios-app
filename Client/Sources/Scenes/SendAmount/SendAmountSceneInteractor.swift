@@ -132,14 +132,14 @@ private extension SendAmountScene.Interactor {
     
     func processFeesForEnteredAmount() {
         
-        guard validateEnteredAmount() == nil,
-            let enteredAmount = sceneModel.enteredAmount
-        else {
-            return
-        }
+//        guard validateEnteredAmount() == nil,
+//            let enteredAmount = sceneModel.enteredAmount
+//        else {
+//            return
+//        }
         
         feesProcessor.processFees(
-            for: enteredAmount,
+            for: sceneModel.enteredAmount ?? 0,
             assetId: sceneModel.selectedBalance.assetCode
         )
     }
