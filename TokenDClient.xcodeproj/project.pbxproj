@@ -304,6 +304,9 @@
 		5576B9E426E629B90026666F /* FeeSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E326E629B90026666F /* FeeSwitcherView.swift */; };
 		5579479F26D6A2AE00887B49 /* RecipientAddressProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */; };
 		557947A126D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */; };
+		55ABCFCA26EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFC926EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift */; };
+		55ABCFCC26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFCB26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift */; };
+		55ABCFD026EF829D002598BF /* SendConfirmationSceneInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFCF26EF829D002598BF /* SendConfirmationSceneInfoCell.swift */; };
 		55AECCC226E90315000F8AF0 /* DebounceWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AECCC126E90315000F8AF0 /* DebounceWorker.swift */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
@@ -660,6 +663,9 @@
 		5576B9E326E629B90026666F /* FeeSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSwitcherView.swift; sourceTree = "<group>"; };
 		5579479E26D6A2AE00887B49 /* RecipientAddressProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressProcessor.swift; sourceTree = "<group>"; };
 		557947A026D6A2BA00887B49 /* RecipientAddressProcessorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientAddressProcessorProtocol.swift; sourceTree = "<group>"; };
+		55ABCFC926EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationScenePaymentProvider.swift; sourceTree = "<group>"; };
+		55ABCFCB26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationScenePaymentProviderProtocol.swift; sourceTree = "<group>"; };
+		55ABCFCF26EF829D002598BF /* SendConfirmationSceneInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneInfoCell.swift; sourceTree = "<group>"; };
 		55AECCC126E90315000F8AF0 /* DebounceWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebounceWorker.swift; sourceTree = "<group>"; };
 		8255BBE012259A5BAEBDB6BD /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
 		C39BB58426A85B4D00AC642B /* TabBarRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarRouting.swift; sourceTree = "<group>"; };
@@ -1772,6 +1778,8 @@
 				55112D5C26EB89160052DF19 /* SendConfirmationScenePresenter.swift */,
 				55112D5D26EB89160052DF19 /* SendConfirmationSceneRouting.swift */,
 				55112D5F26EB89160052DF19 /* SendConfirmationSceneViewController.swift */,
+				55ABCFCE26EF8239002598BF /* Views */,
+				55ABCFC726EF6F59002598BF /* Workers */,
 			);
 			path = SendConfirmation;
 			sourceTree = "<group>";
@@ -1834,6 +1842,39 @@
 				5576B9CD26E25F910026666F /* Workers */,
 			);
 			path = SendAmount;
+			sourceTree = "<group>";
+		};
+		55ABCFC726EF6F59002598BF /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFC826EF6F63002598BF /* PaymentProvider */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		55ABCFC826EF6F63002598BF /* PaymentProvider */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFC926EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift */,
+				55ABCFCB26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift */,
+			);
+			path = PaymentProvider;
+			sourceTree = "<group>";
+		};
+		55ABCFCD26EF8228002598BF /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFCF26EF829D002598BF /* SendConfirmationSceneInfoCell.swift */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		55ABCFCE26EF8239002598BF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFCD26EF8228002598BF /* TableView */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		55AECCC026E90303000F8AF0 /* DebounceWorker */ = {
@@ -2154,6 +2195,7 @@
 				0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */,
 				0D59BD39269493BB00B6658F /* String+ValidateEmail.swift in Sources */,
 				0DDC5A7D26A9D0730004D326 /* LocalSignInSceneModels.swift in Sources */,
+				55ABCFD026EF829D002598BF /* SendConfirmationSceneInfoCell.swift in Sources */,
 				C39BB5A426A85B7400AC642B /* TabBarContainerModels.swift in Sources */,
 				0DDC5A8E26AEE6F60004D326 /* LocalSignInUserAvatarUrlProviderProtocol.swift in Sources */,
 				C39BB5B526A8600500AC642B /* TabContentContainerInteractor.swift in Sources */,
@@ -2276,6 +2318,7 @@
 				0DDC5A8A26AAED5A0004D326 /* ActiveKYCStorageManager.swift in Sources */,
 				C39BB5B126A8600500AC642B /* TabContentContainerConfigurator.swift in Sources */,
 				55AECCC226E90315000F8AF0 /* DebounceWorker.swift in Sources */,
+				55ABCFCC26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift in Sources */,
 				0D59BD7C269493BB00B6658F /* RegistrationCheckerProtocol.swift in Sources */,
 				0D59BD7D269493BB00B6658F /* RegistrationChecker.swift in Sources */,
 				0D59BD7E269493BB00B6658F /* UserPhoneContactsFetcherProtocol.swift in Sources */,
@@ -2338,6 +2381,7 @@
 				C39BB5B626A8600500AC642B /* TabContentContainerPresenter.swift in Sources */,
 				0D59BD9C269493BC00B6658F /* AccountRepo.swift in Sources */,
 				0D59BD9D269493BC00B6658F /* BalancesRepo.swift in Sources */,
+				55ABCFCA26EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift in Sources */,
 				0DDC5A6C26A9A0E50004D326 /* NetworkInfoProviderProtocol.swift in Sources */,
 				0D59BD9E269493BC00B6658F /* NetworkInfoRepo.swift in Sources */,
 				0D1B056C26CBE7950011CC4C /* DashboardSceneHeaderView.swift in Sources */,

@@ -7,6 +7,7 @@ extension SendConfirmationScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
+            paymentProvider: PaymentProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -15,7 +16,8 @@ extension SendConfirmationScene {
                 presenterDispatch: presenterDispatch
             )
             let interactor = Interactor(
-                presenter: presenter
+                presenter: presenter,
+                paymentProvider: paymentProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

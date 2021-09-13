@@ -226,10 +226,6 @@ final class AmountTextField: UIView {
         textField.isFirstResponder
     }
     
-    override var textInputMode: UITextInputMode? {
-        return UITextInputMode.activeInputModes.first(where: { $0.primaryLanguage == Locale.current.languageCode })
-    }
-    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if action == #selector(UIResponderStandardEditActions.paste(_:)) {
             return canPaste

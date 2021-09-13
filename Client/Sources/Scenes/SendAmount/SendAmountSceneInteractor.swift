@@ -178,5 +178,32 @@ extension SendAmountScene.Interactor: SendAmountScene.BusinessLogic {
     
     public func onDidTapContinueSync(request: Event.DidTapContinueSync.Request) {
         
+        sceneModel.enteredAmountError = validateEnteredAmount()
+        
+        guard sceneModel.enteredAmountError == nil,
+              sceneModel.feesLoadingStatus == .loaded,
+              let amount = sceneModel.enteredAmount,
+              let fees = sceneModel.feesForEnteredAmount
+        else {
+            presentSceneDidUpdateSync(animated: false)
+            return
+        }
+        
+        let senderFee: Decimal
+        
+        if sceneModel.isPayingFeeForRecipient {
+            senderFee = fees.senderFee + fees.recipientFee
+        } else {
+            senderFee = fees.senderFee
+        }
+        
+        let response: Event.DidTapContinueSync.Response = .init(
+            amount: amount,
+            assetCode: sceneModel.selectedBalance.assetCode,
+            senderFee: senderFee,
+            description: sceneModel.description
+        )
+        
+        presenter.presentDidTapContinueSync(response: response)
     }
 }

@@ -128,7 +128,10 @@ extension SendAmountScene.Event {
         public struct Request {}
         
         public struct Response {
-            let recipient: String
+            let amount: Decimal
+            let assetCode: String
+            let senderFee: Decimal
+            let description: String?
         }
         public typealias ViewModel = Response
     }

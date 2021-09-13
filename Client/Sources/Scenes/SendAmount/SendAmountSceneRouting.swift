@@ -5,7 +5,11 @@ extension SendAmountScene {
     public struct Routing {
         
 //        public let onBackAction: () -> Void
-        public let onSelectBalance: (_ completion: @escaping (_ balanceId: String) -> Void) -> Void
-        public let onContinue: () -> Void
+        public let onContinue: (
+            _ amount: Decimal,
+            _ assetCode: String,
+            _ senderFee: Decimal,
+            _ description: String?
+        ) -> Void
     }
 }

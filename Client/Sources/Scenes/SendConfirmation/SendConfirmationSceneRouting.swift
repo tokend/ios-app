@@ -4,6 +4,6 @@ extension SendConfirmationScene {
     
     public struct Routing {
         
-//        public let onBackAction: () -> Void
+        public let onConfirmation: () -> Void
     }
 }

@@ -178,11 +178,21 @@ private extension SendFlowController {
         let vc: SendAmountScene.ViewController = .init()
         
         let routing: SendAmountScene.Routing = .init(
-            onSelectBalance: { [weak self] (completion) in
+            onContinue: { [weak self] (amount, assetCode, senderFee, description) in
                 
-            },
-            onContinue: { [weak self] in
+                let paymentProvider: SendConfirmationScene.PaymentProviderProtocol = SendConfirmationScene.PaymentProvider(
+                    recipientAccountId: recipientAccountId,
+                    recipientEmail: recipientEmail,
+                    amount: amount,
+                    assetCode: assetCode,
+                    fee: senderFee,
+                    description: description
+                )
                 
+                
+                self?.showSendConfirmation(
+                    paymentProvider: paymentProvider
+                )
             }
         )
         
@@ -198,6 +208,36 @@ private extension SendFlowController {
             recipientAddress: recipientEmail ?? recipientAccountId,
             selectedBalanceProvider: selectedBalanceProvider,
             feesProcessor: feesProcessor
+        )
+        
+        return vc
+    }
+    
+    func showSendConfirmation(
+        paymentProvider: SendConfirmationScene.PaymentProviderProtocol
+    ) {
+        let vc: SendConfirmationScene.ViewController = initSendConfirmation(
+            paymentProvider: paymentProvider
+        )
+        navigationController.pushViewController(vc, animated: true)
+    }
+    
+    func initSendConfirmation(
+        paymentProvider: SendConfirmationScene.PaymentProviderProtocol
+    ) -> SendConfirmationScene.ViewController {
+        
+        let vc: SendConfirmationScene.ViewController = .init()
+        
+        let routing: SendConfirmationScene.Routing = .init(
+            onConfirmation: { [weak self] in
+                
+            }
+        )
+        
+        SendConfirmationScene.Configurator.configure(
+            viewController: vc,
+            routing: routing,
+            paymentProvider: paymentProvider
         )
         
         return vc

@@ -41,6 +41,7 @@ enum IconTitleDescriptionDisclosureCell {
             
             return lhs.icon == rhs.icon
                 && lhs.title == rhs.title
+                && lhs.description == rhs.description
         }
     }
     

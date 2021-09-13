@@ -213,6 +213,8 @@ extension SendAmountScene.FeesProcessor: SendAmountScene.FeesProcessorProtocol {
         for amount: Decimal,
         assetId: String
     ) {
+        
+        
         print(.debug(message: "Initiated debounce"))
         debounceWorker.debounce(
             delay: 0.5,
