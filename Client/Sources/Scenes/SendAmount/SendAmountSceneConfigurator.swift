@@ -9,7 +9,7 @@ extension SendAmountScene {
             routing: Routing?,
             recipientAddress: String,
             selectedBalanceProvider: SelectedBalanceProviderProtocol,
-            feesProcessor: FeesProcessorProtocol,
+            feesProvider: FeesProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -21,7 +21,7 @@ extension SendAmountScene {
                 presenter: presenter,
                 recipientAddress: recipientAddress,
                 selectedBalanceProvider: selectedBalanceProvider,
-                feesProcessor: feesProcessor
+                feesProvider: feesProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

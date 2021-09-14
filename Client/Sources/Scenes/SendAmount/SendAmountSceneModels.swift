@@ -130,7 +130,7 @@ extension SendAmountScene.Event {
         public struct Response {
             let amount: Decimal
             let assetCode: String
-            let senderFee: Decimal
+            let isPayingFeeForRecipient: Bool
             let description: String?
         }
         public typealias ViewModel = Response

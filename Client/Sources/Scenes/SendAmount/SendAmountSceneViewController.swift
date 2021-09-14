@@ -433,7 +433,7 @@ extension SendAmountScene.ViewController: SendAmountScene.DisplayLogic {
         routing?.onContinue(
             viewModel.amount,
             viewModel.assetCode,
-            viewModel.senderFee,
+            viewModel.isPayingFeeForRecipient,
             viewModel.description
         )
     }

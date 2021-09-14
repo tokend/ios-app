@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public protocol SendAmountSceneFeesProcessorProtocol {
+public protocol SendAmountSceneFeesProviderProtocol {
     
     var fees: SendAmountScene.Model.Fees { get }
     var loadingStatus: SendAmountScene.Model.LoadingStatus { get }
@@ -16,10 +16,6 @@ public protocol SendAmountSceneFeesProcessorProtocol {
     )
 }
 
-public enum SendAmountSceneFeesProcessorError: Swift.Error {
-    case noData
-}
-
 extension SendAmountScene {
-    public typealias FeesProcessorProtocol = SendAmountSceneFeesProcessorProtocol
+    public typealias FeesProviderProtocol = SendAmountSceneFeesProviderProtocol
 }

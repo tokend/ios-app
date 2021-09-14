@@ -297,8 +297,8 @@
 		5576B9CC26E2548A0026666F /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9CB26E2548A0026666F /* AmountTextField.swift */; };
 		5576B9D126E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D026E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift */; };
 		5576B9D326E2604F0026666F /* SendAmountSceneBalancesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */; };
-		5576B9D526E2638B0026666F /* SendAmountSceneFeesProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D426E2638B0026666F /* SendAmountSceneFeesProcessor.swift */; };
-		5576B9D726E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D626E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift */; };
+		5576B9D526E2638B0026666F /* SendAmountSceneFeesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D426E2638B0026666F /* SendAmountSceneFeesProvider.swift */; };
+		5576B9D726E263970026666F /* SendAmountSceneFeesProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D626E263970026666F /* SendAmountSceneFeesProviderProtocol.swift */; };
 		5576B9DF26E6277E0026666F /* FeesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9DE26E6277E0026666F /* FeesStackView.swift */; };
 		5576B9E226E629AB0026666F /* FeeAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E126E629AB0026666F /* FeeAmountView.swift */; };
 		5576B9E426E629B90026666F /* FeeSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E326E629B90026666F /* FeeSwitcherView.swift */; };
@@ -307,6 +307,12 @@
 		55ABCFCA26EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFC926EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift */; };
 		55ABCFCC26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFCB26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift */; };
 		55ABCFD026EF829D002598BF /* SendConfirmationSceneInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFCF26EF829D002598BF /* SendConfirmationSceneInfoCell.swift */; };
+		55ABCFD326F0B2F6002598BF /* PaymentSenderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFD226F0B2F6002598BF /* PaymentSenderProtocol.swift */; };
+		55ABCFD526F0B30C002598BF /* PaymentSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFD426F0B30C002598BF /* PaymentSender.swift */; };
+		55ABCFD826F0D3DC002598BF /* SendPaymentStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFD726F0D3DC002598BF /* SendPaymentStorageProtocol.swift */; };
+		55ABCFDA26F0D400002598BF /* SendPaymentStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFD926F0D400002598BF /* SendPaymentStorage.swift */; };
+		55ABCFDD26F0D628002598BF /* FeesProcessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFDC26F0D628002598BF /* FeesProcessorProtocol.swift */; };
+		55ABCFDF26F0D630002598BF /* FeesProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABCFDE26F0D630002598BF /* FeesProcessor.swift */; };
 		55AECCC226E90315000F8AF0 /* DebounceWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AECCC126E90315000F8AF0 /* DebounceWorker.swift */; };
 		C39BB58F26A85B4D00AC642B /* TabBarRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58426A85B4D00AC642B /* TabBarRouting.swift */; };
 		C39BB59026A85B4D00AC642B /* TabBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39BB58526A85B4D00AC642B /* TabBarPresenter.swift */; };
@@ -656,8 +662,8 @@
 		5576B9CB26E2548A0026666F /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
 		5576B9D026E25FF40026666F /* SendAmountSceneSelectedBalanceProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneSelectedBalanceProviderProtocol.swift; sourceTree = "<group>"; };
 		5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneBalancesProvider.swift; sourceTree = "<group>"; };
-		5576B9D426E2638B0026666F /* SendAmountSceneFeesProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProcessor.swift; sourceTree = "<group>"; };
-		5576B9D626E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProcessorProtocol.swift; sourceTree = "<group>"; };
+		5576B9D426E2638B0026666F /* SendAmountSceneFeesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProvider.swift; sourceTree = "<group>"; };
+		5576B9D626E263970026666F /* SendAmountSceneFeesProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProviderProtocol.swift; sourceTree = "<group>"; };
 		5576B9DE26E6277E0026666F /* FeesStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesStackView.swift; sourceTree = "<group>"; };
 		5576B9E126E629AB0026666F /* FeeAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeAmountView.swift; sourceTree = "<group>"; };
 		5576B9E326E629B90026666F /* FeeSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSwitcherView.swift; sourceTree = "<group>"; };
@@ -666,6 +672,12 @@
 		55ABCFC926EF6F85002598BF /* SendConfirmationScenePaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationScenePaymentProvider.swift; sourceTree = "<group>"; };
 		55ABCFCB26EF6F91002598BF /* SendConfirmationScenePaymentProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationScenePaymentProviderProtocol.swift; sourceTree = "<group>"; };
 		55ABCFCF26EF829D002598BF /* SendConfirmationSceneInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationSceneInfoCell.swift; sourceTree = "<group>"; };
+		55ABCFD226F0B2F6002598BF /* PaymentSenderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSenderProtocol.swift; sourceTree = "<group>"; };
+		55ABCFD426F0B30C002598BF /* PaymentSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSender.swift; sourceTree = "<group>"; };
+		55ABCFD726F0D3DC002598BF /* SendPaymentStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentStorageProtocol.swift; sourceTree = "<group>"; };
+		55ABCFD926F0D400002598BF /* SendPaymentStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPaymentStorage.swift; sourceTree = "<group>"; };
+		55ABCFDC26F0D628002598BF /* FeesProcessorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesProcessorProtocol.swift; sourceTree = "<group>"; };
+		55ABCFDE26F0D630002598BF /* FeesProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesProcessor.swift; sourceTree = "<group>"; };
 		55AECCC126E90315000F8AF0 /* DebounceWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebounceWorker.swift; sourceTree = "<group>"; };
 		8255BBE012259A5BAEBDB6BD /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
 		C39BB58426A85B4D00AC642B /* TabBarRouting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarRouting.swift; sourceTree = "<group>"; };
@@ -1686,9 +1698,12 @@
 			children = (
 				55112D5626EB6E0E0052DF19 /* AmountFormatter */,
 				55AECCC026E90303000F8AF0 /* DebounceWorker */,
-				5579479D26D6A27D00887B49 /* RecipientAddressProcessor */,
+				55ABCFDB26F0D619002598BF /* FeesProcessor */,
 				0DDC5A9226AF09A90004D326 /* LocalSignInWorker */,
 				0DDC5A6426A7EF090004D326 /* NetworkInfoProvider */,
+				55ABCFD126F0B2EA002598BF /* PaymentSender */,
+				5579479D26D6A27D00887B49 /* RecipientAddressProcessor */,
+				55ABCFD626F0D3C8002598BF /* SendPaymentStorage */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -1787,7 +1802,7 @@
 		5576B9CD26E25F910026666F /* Workers */ = {
 			isa = PBXGroup;
 			children = (
-				5576B9CF26E25FAC0026666F /* FeesProcessor */,
+				5576B9CF26E25FAC0026666F /* FeesProvider */,
 				5576B9CE26E25F9B0026666F /* BalancesProvider */,
 			);
 			path = Workers;
@@ -1802,13 +1817,13 @@
 			path = BalancesProvider;
 			sourceTree = "<group>";
 		};
-		5576B9CF26E25FAC0026666F /* FeesProcessor */ = {
+		5576B9CF26E25FAC0026666F /* FeesProvider */ = {
 			isa = PBXGroup;
 			children = (
-				5576B9D426E2638B0026666F /* SendAmountSceneFeesProcessor.swift */,
-				5576B9D626E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift */,
+				5576B9D426E2638B0026666F /* SendAmountSceneFeesProvider.swift */,
+				5576B9D626E263970026666F /* SendAmountSceneFeesProviderProtocol.swift */,
 			);
-			path = FeesProcessor;
+			path = FeesProvider;
 			sourceTree = "<group>";
 		};
 		5576B9E026E629990026666F /* Fees */ = {
@@ -1875,6 +1890,33 @@
 				55ABCFCD26EF8228002598BF /* TableView */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		55ABCFD126F0B2EA002598BF /* PaymentSender */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFD426F0B30C002598BF /* PaymentSender.swift */,
+				55ABCFD226F0B2F6002598BF /* PaymentSenderProtocol.swift */,
+			);
+			path = PaymentSender;
+			sourceTree = "<group>";
+		};
+		55ABCFD626F0D3C8002598BF /* SendPaymentStorage */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFD726F0D3DC002598BF /* SendPaymentStorageProtocol.swift */,
+				55ABCFD926F0D400002598BF /* SendPaymentStorage.swift */,
+			);
+			path = SendPaymentStorage;
+			sourceTree = "<group>";
+		};
+		55ABCFDB26F0D619002598BF /* FeesProcessor */ = {
+			isa = PBXGroup;
+			children = (
+				55ABCFDE26F0D630002598BF /* FeesProcessor.swift */,
+				55ABCFDC26F0D628002598BF /* FeesProcessorProtocol.swift */,
+			);
+			path = FeesProcessor;
 			sourceTree = "<group>";
 		};
 		55AECCC026E90303000F8AF0 /* DebounceWorker */ = {
@@ -2194,6 +2236,7 @@
 				C39BB5BF26A9C97200AC642B /* MoreSceneRouting.swift in Sources */,
 				0DDC5A9626AF09C50004D326 /* LocalSignInWorkerProtocol.swift in Sources */,
 				0D59BD39269493BB00B6658F /* String+ValidateEmail.swift in Sources */,
+				55ABCFD526F0B30C002598BF /* PaymentSender.swift in Sources */,
 				0DDC5A7D26A9D0730004D326 /* LocalSignInSceneModels.swift in Sources */,
 				55ABCFD026EF829D002598BF /* SendConfirmationSceneInfoCell.swift in Sources */,
 				C39BB5A426A85B7400AC642B /* TabBarContainerModels.swift in Sources */,
@@ -2242,10 +2285,12 @@
 				0D59BD51269493BB00B6658F /* DefaultTFACodeProcessor.swift in Sources */,
 				C39BB60626B9763B00AC642B /* ChangePasswordSceneInteractor.swift in Sources */,
 				C39BB5D026AEC08E00AC642B /* MoreSceneUserDataProvider.swift in Sources */,
+				55ABCFD826F0D3DC002598BF /* SendPaymentStorageProtocol.swift in Sources */,
 				C39BB5A926A85EF200AC642B /* TabBarTabItem.swift in Sources */,
 				0D59BD52269493BB00B6658F /* SignOutWorker.swift in Sources */,
 				C39BB5A126A85B7400AC642B /* TabBarContainerInteractor.swift in Sources */,
 				0D59BD53269493BB00B6658F /* SignOutWorkerProtocol.swift in Sources */,
+				55ABCFDA26F0D400002598BF /* SendPaymentStorage.swift in Sources */,
 				0D59BD54269493BB00B6658F /* SharedAmountFormatter.swift in Sources */,
 				0D59BD55269493BB00B6658F /* BaseLoginChanger.swift in Sources */,
 				0D1B057F26CFD2EB0011CC4C /* SendAssetSceneModels.swift in Sources */,
@@ -2314,6 +2359,7 @@
 				0D59BD79269493BB00B6658F /* IdentityFetcher.swift in Sources */,
 				0D1B057326CD29E80011CC4C /* DashboardSceneBalancesProvider.swift in Sources */,
 				0D59BD7A269493BB00B6658F /* ForgotPasswordWorkerProtocol.swift in Sources */,
+				55ABCFDF26F0D630002598BF /* FeesProcessor.swift in Sources */,
 				0D59BD7B269493BB00B6658F /* BaseForgotPasswordWorker.swift in Sources */,
 				0DDC5A8A26AAED5A0004D326 /* ActiveKYCStorageManager.swift in Sources */,
 				C39BB5B126A8600500AC642B /* TabContentContainerConfigurator.swift in Sources */,
@@ -2334,7 +2380,7 @@
 				0D59BD84269493BB00B6658F /* RecoveryStatusChecker.swift in Sources */,
 				0DDC5A7126A9A0F50004D326 /* SignUpSceneInteractor.swift in Sources */,
 				0DDC5A7B26A9D0730004D326 /* LocalSignInScenePresenter.swift in Sources */,
-				5576B9D726E263970026666F /* SendAmountSceneFeesProcessorProtocol.swift in Sources */,
+				5576B9D726E263970026666F /* SendAmountSceneFeesProviderProtocol.swift in Sources */,
 				0D1B057E26CFD2EB0011CC4C /* SendAssetSceneRouting.swift in Sources */,
 				0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */,
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
@@ -2342,6 +2388,7 @@
 				0D59BD86269493BB00B6658F /* ChangeRoleRequestSender.swift in Sources */,
 				55112D6626EB89160052DF19 /* SendConfirmationSceneInteractor.swift in Sources */,
 				0D59BD87269493BB00B6658F /* ChangeRoleRequestSenderProtocol.swift in Sources */,
+				55ABCFD326F0B2F6002598BF /* PaymentSenderProtocol.swift in Sources */,
 				0D59BD88269493BB00B6658F /* RegisterWorkerProtocol.swift in Sources */,
 				55112D5A26EB6E300052DF19 /* AmountFormatter.swift in Sources */,
 				0D59BD89269493BB00B6658F /* BaseRegisterWorker.swift in Sources */,
@@ -2358,6 +2405,7 @@
 				0D59BD90269493BC00B6658F /* QRCodeGenerator.swift in Sources */,
 				0D59BD91269493BC00B6658F /* ImagesUtility.swift in Sources */,
 				0DDC5A6F26A9A0F50004D326 /* SignUpSceneViewController.swift in Sources */,
+				55ABCFDD26F0D628002598BF /* FeesProcessorProtocol.swift in Sources */,
 				0D59BD92269493BC00B6658F /* OpenURLSubscriber.swift in Sources */,
 				0D59BD93269493BC00B6658F /* TimerApplication.swift in Sources */,
 				C39BB60226B9763B00AC642B /* ChangePasswordScenePresenter.swift in Sources */,
@@ -2403,7 +2451,7 @@
 				0D59BDAA269493BC00B6658F /* TFADataProvider.swift in Sources */,
 				0D1B057D26CFD2EB0011CC4C /* SendAssetScenePresenter.swift in Sources */,
 				0D59BDAB269493BC00B6658F /* KeychainDataProvider.swift in Sources */,
-				5576B9D526E2638B0026666F /* SendAmountSceneFeesProcessor.swift in Sources */,
+				5576B9D526E2638B0026666F /* SendAmountSceneFeesProvider.swift in Sources */,
 				0D59BDAC269493BC00B6658F /* KeyboardController.swift in Sources */,
 				0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */,
 				0D26E83326B2DA47008E1C9C /* IconTitleDisclosureCell.swift in Sources */,
