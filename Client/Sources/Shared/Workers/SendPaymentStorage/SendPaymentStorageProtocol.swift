@@ -3,7 +3,10 @@ import TokenDSDK
 
 public protocol SendPaymentStorageProtocol {
     
-    var payment: PaymentModel { get }
+    typealias PaymentIntermediateModel = SendPaymentStorageProtocolPaymentIntermediateModel
+    typealias PaymentModel = SendPaymentStorageProtocolPaymentModel
+    
+    var payment: PaymentIntermediateModel { get }
     
     func updatePaymentModel(
         sourceBalanceId: String?,
@@ -16,9 +19,11 @@ public protocol SendPaymentStorageProtocol {
         isPayingFeeForRecipient: Bool?,
         description: String?
     )
+    
+    func buildPaymentModel() throws -> PaymentModel
 }
 
-public struct PaymentModel {
+public struct SendPaymentStorageProtocolPaymentIntermediateModel {
     
     var sourceBalanceId: String
     var assetCode: String?
@@ -30,4 +35,17 @@ public struct PaymentModel {
     var isPayingFeeForRecipient: Bool?
     var description: String?
     var reference: String
+}
+
+public struct SendPaymentStorageProtocolPaymentModel {
+    let sourceBalanceId: String
+    let assetCode: String
+    let destinationAccountId: String
+    let recipientEmail: String?
+    let amount: Decimal
+    let senderFee: Horizon.CalculatedFeeResource
+    let recipientFee: Horizon.CalculatedFeeResource
+    let isPayingFeeForRecipient: Bool
+    let description: String?
+    let reference: String
 }

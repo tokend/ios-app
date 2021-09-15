@@ -10,7 +10,7 @@ public protocol SendAmountSceneFeesProviderProtocol {
     func observeFees() -> Observable<SendAmountScene.Model.Fees>
     func observeLoadingStatus() -> Observable<SendAmountScene.Model.LoadingStatus>
     
-    func processFees(
+    func calculateFees(
         for amount: Decimal,
         assetId: String
     )

@@ -169,7 +169,10 @@ private extension SendFlowController {
         recipientEmail: String?
     ) {
         
-        guard let selectedBalanceProvider = try? initSelectedBalanceProvider()
+        guard let infoProvider = try? initInfoProvider(
+                recipientAccountId: recipientAccountId,
+                recipientEmail: recipientEmail
+        )
         else {
             self.navigationController.showErrorMessage(
                 Localized(.error_unknown),
@@ -180,8 +183,7 @@ private extension SendFlowController {
         
         let vc: SendAmountScene.ViewController = initSendAmount(
             recipientAccountId: recipientAccountId,
-            recipientEmail: recipientEmail,
-            selectedBalanceProvider: selectedBalanceProvider
+            infoProvider: infoProvider
         )
         
         self.navigationController.pushViewController(vc, animated: true)
@@ -189,8 +191,7 @@ private extension SendFlowController {
     
     func initSendAmount(
         recipientAccountId: String,
-        recipientEmail: String?,
-        selectedBalanceProvider: SendAmountScene.SelectedBalanceProviderProtocol
+        infoProvider: SendAmountScene.InfoProviderProtocol
     ) -> SendAmountScene.ViewController {
     
         let vc: SendAmountScene.ViewController = .init()
@@ -222,8 +223,7 @@ private extension SendFlowController {
         SendAmountScene.Configurator.configure(
             viewController: vc,
             routing: routing,
-            recipientAddress: recipientEmail ?? recipientAccountId,
-            selectedBalanceProvider: selectedBalanceProvider,
+            infoProvider: infoProvider,
             feesProvider: feesProvider
         )
         
@@ -232,12 +232,7 @@ private extension SendFlowController {
     
     func showSendConfirmation() {
         
-        guard let recipientAccountId = sendPaymentStorage.payment.destinationAccountId,
-              let amount = sendPaymentStorage.payment.amount,
-              let assetCode = sendPaymentStorage.payment.assetCode,
-              let senderFee = sendPaymentStorage.payment.senderFee,
-              let recipientFee = sendPaymentStorage.payment.recipientFee,
-              let isPayingFeeForRecipient = sendPaymentStorage.payment.isPayingFeeForRecipient
+        guard let paymentModel = try? sendPaymentStorage.buildPaymentModel()
         else {
             self.navigationController.showErrorMessage(
                 Localized(.error_unknown),
@@ -246,38 +241,26 @@ private extension SendFlowController {
             return
         }
         
-        let fee: Decimal
-        if isPayingFeeForRecipient {
-            fee = senderFee.calculatedPercent + senderFee.fixed + recipientFee.calculatedPercent + recipientFee.fixed
-        } else {
-            fee = senderFee.calculatedPercent + senderFee.fixed
-        }
-        
-        let paymentProvider: SendConfirmationScene.PaymentProviderProtocol = SendConfirmationScene.PaymentProvider(
-            recipientAccountId: recipientAccountId,
-            recipientEmail: sendPaymentStorage.payment.recipientEmail,
-            amount: amount,
-            assetCode: assetCode,
-            fee: fee,
-            description: sendPaymentStorage.payment.description
-        )
-        
         let vc: SendConfirmationScene.ViewController = initSendConfirmation(
-            paymentProvider: paymentProvider
+            paymentModel: paymentModel
         )
         navigationController.pushViewController(vc, animated: true)
     }
     
     func initSendConfirmation(
-        paymentProvider: SendConfirmationScene.PaymentProviderProtocol
+        paymentModel: SendPaymentStorageProtocolPaymentModel
     ) -> SendConfirmationScene.ViewController {
         
         let vc: SendConfirmationScene.ViewController = .init()
         
         let routing: SendConfirmationScene.Routing = .init(
             onConfirmation: { [weak self] in
-                self?.performSend()
+                self?.performSend(paymentModel: paymentModel)
             }
+        )
+        
+        let paymentProvider: SendConfirmationScene.PaymentProviderProtocol = SendConfirmationScene.PaymentProvider(
+            paymentModel: paymentModel
         )
         
         SendConfirmationScene.Configurator.configure(
@@ -289,36 +272,23 @@ private extension SendFlowController {
         return vc
     }
     
-    func performSend() {
-        
-        guard let destinationAccountId = sendPaymentStorage.payment.destinationAccountId,
-              let amount = sendPaymentStorage.payment.amount,
-              let senderFee = sendPaymentStorage.payment.senderFee,
-              let recipientFee = sendPaymentStorage.payment.recipientFee,
-              let isPayingFeeForRecipient = sendPaymentStorage.payment.isPayingFeeForRecipient
-        else {
-            self.navigationController.showErrorMessage(
-                Localized(.error_unknown),
-                completion: nil
-            )
-            return
-        }
+    func performSend(paymentModel: SendPaymentStorageProtocolPaymentModel) {
         
         self.paymentSender.sendPayment(
-            sourceBalanceId: sendPaymentStorage.payment.sourceBalanceId,
-            destinationAccountId: destinationAccountId,
-            amount: amount,
-            senderFee: senderFee,
-            recipientFee: recipientFee,
-            isPayingFeeForRecipient: isPayingFeeForRecipient,
-            description: sendPaymentStorage.payment.description ?? "",
-            reference: sendPaymentStorage.payment.reference,
+            sourceBalanceId: paymentModel.sourceBalanceId,
+            destinationAccountId: paymentModel.destinationAccountId,
+            amount: paymentModel.amount,
+            senderFee: paymentModel.senderFee,
+            recipientFee: paymentModel.recipientFee,
+            isPayingFeeForRecipient: paymentModel.isPayingFeeForRecipient,
+            description: paymentModel.description ?? "",
+            reference: paymentModel.reference,
             completion: { [weak self] (result) in
                 
                 switch result {
                 
                 case .success:
-                    // FIXME: - reload balances repo
+                    self?.reposController.balancesRepo.reloadBalancesDetails()
                     self?.reposController.movementsRepo.loadAllMovements(completion: nil)
                     self?.onClose()
                     
@@ -332,16 +302,19 @@ private extension SendFlowController {
         )
     }
     
-    func initSelectedBalanceProvider(
-    ) throws -> SendAmountScene.SelectedBalanceProviderProtocol {
+    func initInfoProvider(
+        recipientAccountId: String,
+        recipientEmail: String?
+    ) throws -> SendAmountScene.InfoProviderProtocol {
         
-        return try SendAmountScene.SelectedBalanceProvider(
+        return try SendAmountScene.InfoProviderProvider(
+            recipientAccountId: recipientAccountId,
+            recipientEmail: recipientEmail,
             balancesRepo: reposController.balancesRepo,
             selectedBalanceId: self.sendPaymentStorage.payment.sourceBalanceId,
             onFailedToFetchSelectedBalance: { [weak self] (_) in
                 
                 self?.navigationController.showErrorMessage(
-                    // TODO: - Localize
                     Localized(.send_error_failed_to_fetch_your_balance),
                     completion: { [weak self] in
                         self?.onClose()

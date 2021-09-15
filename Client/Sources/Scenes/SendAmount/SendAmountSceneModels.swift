@@ -42,7 +42,7 @@ extension SendAmountScene.Model {
         let feeIsLoading: Bool
     }
     
-    public struct Balance {
+    public struct Balance: Equatable {
         typealias Identifier = String
         
         let id: Identifier

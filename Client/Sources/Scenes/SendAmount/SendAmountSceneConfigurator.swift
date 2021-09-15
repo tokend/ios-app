@@ -7,8 +7,7 @@ extension SendAmountScene {
         public static func configure(
             viewController: ViewController,
             routing: Routing?,
-            recipientAddress: String,
-            selectedBalanceProvider: SelectedBalanceProviderProtocol,
+            infoProvider: InfoProviderProtocol,
             feesProvider: FeesProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
@@ -19,8 +18,7 @@ extension SendAmountScene {
             )
             let interactor = Interactor(
                 presenter: presenter,
-                recipientAddress: recipientAddress,
-                selectedBalanceProvider: selectedBalanceProvider,
+                infoProvider: infoProvider,
                 feesProvider: feesProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)

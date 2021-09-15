@@ -1,18 +1,17 @@
 import Foundation
 import TokenDSDK
+import TokenDWallet
 import RxSwift
 import RxCocoa
 
 class FeesProcessor {
     
     // MARK: - Private properties
-
-    private let feesBehaviorRelay: BehaviorRelay<FeesProcessorFeesModel?> = .init(value: nil)
-    private let loadingStatusBehaviorRelay: BehaviorRelay<FeesProcessorLoadingStatus> = .init(value: .loaded)
     
     private let feesApi: FeesApiV3
-    
     private let debounceWorker: DebounceWorkerProtocol = DebounceWorker()
+    
+    private var latestFees: FeesProcessorFeesModel? = nil
 
     fileprivate let originalAccountId: String
     
@@ -37,14 +36,13 @@ private extension FeesProcessor {
     func fetchFees(
         for recipientAccountId: String,
         amount: Decimal,
-        assetId: String
+        assetId: String,
+        completion: @escaping (Result<FeesProcessorFeesModel, Swift.Error>) -> Void
     ) {
         
         senderCancelable?.cancel()
         recipientCancelable?.cancel()
-        
-        loadingStatusBehaviorRelay.accept(.loading)
-        
+                
         var senderFee: Horizon.CalculatedFeeResource?
         var recipientFee: Horizon.CalculatedFeeResource?
         
@@ -96,7 +94,8 @@ private extension FeesProcessor {
                 guard let senderFee = senderFee,
                       let recipientFee = recipientFee
                 else {
-                    // TODO: - Handle error if needed
+                    self.latestFees = nil
+                    completion(.failure(FeesProcessorError.failedToFetchFees))
                     return
                 }
                 
@@ -105,8 +104,8 @@ private extension FeesProcessor {
                     recipientFee: recipientFee
                 )
                 
-                self.feesBehaviorRelay.accept(fees)
-                self.loadingStatusBehaviorRelay.accept(.loaded)
+                self.latestFees = fees
+                completion(.success(fees))
             }
         )
     }
@@ -121,8 +120,8 @@ private extension FeesProcessor {
             for: self.originalAccountId,
             assetId: assetId,
             amount: amount,
-            feeType: 0,
-            subtype: 1,
+            feeType: Int(FeeType.paymentFee.rawValue),
+            subtype: Int(PaymentFeeType.outgoing.rawValue),
             completion: { (result) in
                 
                 switch result {
@@ -155,8 +154,8 @@ private extension FeesProcessor {
             for: recipientAccountId,
             assetId: assetId,
             amount: amount,
-            feeType: 0,
-            subtype: 2,
+            feeType: Int(FeeType.paymentFee.rawValue),
+            subtype: Int(PaymentFeeType.incoming.rawValue),
             completion: { (result) in
                 
                 switch result {
@@ -182,34 +181,26 @@ private extension FeesProcessor {
 // MARK: - FeesProcessorProtocol
 
 extension FeesProcessor: FeesProcessorProtocol {
+    
     var fees: FeesProcessorFeesModel? {
-        feesBehaviorRelay.value
-    }
-    
-    var loadingStatus: FeesProcessorLoadingStatus {
-        loadingStatusBehaviorRelay.value
-    }
-    
-    func observeFees() -> Observable<FeesProcessorFeesModel?> {
-        return feesBehaviorRelay.asObservable()
-    }
-    
-    func observeLoadingStatus() -> Observable<FeesProcessorLoadingStatus> {
-        return loadingStatusBehaviorRelay.asObservable()
+        return latestFees
     }
     
     func processFees(
         for recipientAccountId: String,
         amount: Decimal,
-        assetId: String
+        assetId: String,
+        completion: @escaping (Result<FeesProcessorFeesModel, Swift.Error>) -> Void
     ) {
+        
         debounceWorker.debounce(
             delay: 0.5,
             completion: { [weak self] in
                 self?.fetchFees(
                     for: recipientAccountId,
                     amount: amount,
-                    assetId: assetId
+                    assetId: assetId,
+                    completion: completion
                 )
             }
         )

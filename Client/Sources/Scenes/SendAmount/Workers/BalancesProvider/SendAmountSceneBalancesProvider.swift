@@ -3,7 +3,7 @@ import RxCocoa
 import RxSwift
 
 extension SendAmountScene {
-    class SelectedBalanceProvider {
+    class InfoProviderProvider {
         
         typealias OnFailedToFetchSelectedBalance = (Swift.Error) -> Void
         
@@ -11,8 +11,8 @@ extension SendAmountScene {
         
         private let onFailedToFetchSelectedBalance: OnFailedToFetchSelectedBalance
         
+        private let recipientAddressValue: String
         private let selectedBalanceBehaviorRelay: BehaviorRelay<SendAmountScene.Model.Balance>
-        private let loadingStatusBehaviorRelay: BehaviorRelay<SendAmountScene.Model.LoadingStatus> = .init(value: .loading)
         private let balancesRepo: BalancesRepo
         private let selectedBalanceId: String
         
@@ -22,6 +22,8 @@ extension SendAmountScene {
         // MARK: -
          
         init(
+            recipientAccountId: String,
+            recipientEmail: String?,
             balancesRepo: BalancesRepo,
             selectedBalanceId: String,
             onFailedToFetchSelectedBalance: @escaping OnFailedToFetchSelectedBalance
@@ -31,6 +33,7 @@ extension SendAmountScene {
                 selectedBalanceId: selectedBalanceId
             )
             
+            self.recipientAddressValue = recipientEmail ?? recipientAccountId
             self.balancesRepo = balancesRepo
             self.selectedBalanceId = selectedBalanceId
             self.onFailedToFetchSelectedBalance = onFailedToFetchSelectedBalance
@@ -42,15 +45,7 @@ extension SendAmountScene {
 
 // MARK: - Private methods
 
-private extension SendAmountScene.SelectedBalanceProvider {
-    
-    func observeRepo() {
-        if shouldObserveRepos {
-            shouldObserveRepos = false
-            observeBalancesList()
-            observeReposLoadingStatus()
-        }
-    }
+private extension SendAmountScene.InfoProviderProvider {
     
     func observeBalancesList() {
         balancesRepo
@@ -63,26 +58,15 @@ private extension SendAmountScene.SelectedBalanceProvider {
                 }
                 
                 do {
-                    let _ = try balances.fetchBalance(
+                    let newBalance = try balances.fetchBalance(
                         selectedBalanceId: selectedBalanceId
                     )
                     
-//                    self?.selectedBalanceBehaviorRelay.accept(selectedBalance)
+                    if self?.selectedBalance != newBalance {
+                        self?.selectedBalanceBehaviorRelay.accept(newBalance)
+                    }
                 } catch let error {
                     self?.onFailedToFetchSelectedBalance(error)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func observeReposLoadingStatus() {
-        balancesRepo
-            .observeLoadingStatus()
-            .subscribe(onNext: { [weak self] (loadingStatus) in
-                if loadingStatus == .loaded {
-                    self?.loadingStatusBehaviorRelay.accept(.loaded)
-                } else {
-                    self?.loadingStatusBehaviorRelay.accept(.loading)
                 }
             })
             .disposed(by: disposeBag)
@@ -91,7 +75,7 @@ private extension SendAmountScene.SelectedBalanceProvider {
 
 // MARK: - Mappers
 
-private enum SelectedBalanceProviderError: Swift.Error {
+private enum InfoProviderError: Swift.Error {
     case noBalance
 }
 
@@ -113,7 +97,7 @@ private extension Array where Element == BalancesRepo.BalanceState {
             }
         })
         else {
-            throw SelectedBalanceProviderError.noBalance
+            throw InfoProviderError.noBalance
         }
         
         return try balance.mapToBalance()
@@ -127,7 +111,7 @@ private extension BalancesRepo.BalanceState {
         switch self {
         
         case .creating:
-            throw SelectedBalanceProviderError.noBalance
+            throw InfoProviderError.noBalance
             
         case .created(let balance):
             
@@ -142,13 +126,21 @@ private extension BalancesRepo.BalanceState {
 
 // MARK: - SendAmountSceneBalancesProviderProtocol
 
-extension SendAmountScene.SelectedBalanceProvider: SendAmountScene.SelectedBalanceProviderProtocol {
+extension SendAmountScene.InfoProviderProvider: SendAmountScene.InfoProviderProtocol {
+    
+    var recipientAddress: String {
+        return recipientAddressValue
+    }
+    
     var selectedBalance: SendAmountScene.Model.Balance {
         selectedBalanceBehaviorRelay.value
     }
     
     func observeBalance() -> Observable<SendAmountScene.Model.Balance> {
-        observeRepo()
+        if shouldObserveRepos {
+            shouldObserveRepos = false
+            observeBalancesList()
+        }
         return selectedBalanceBehaviorRelay.asObservable()
     }
 }

@@ -22,6 +22,7 @@ class DashboardFlowController: BaseSignedInFlowController {
     ) {
 
         self.navigationController = navigationController
+        (self.navigationController as? NavigationController)?.navigationBar.prefersLargeTitles = true
         
         super.init(
             appController: appController,
@@ -92,7 +93,6 @@ private extension DashboardFlowController {
         self.currentFlowController = flow
         flow.run(showRootScreen: { (controller) in
             self.navigationController.pushViewController(controller, animated: true)
-            controller.navigationController?.navigationBar.prefersLargeTitles = true
         })
     }
 }

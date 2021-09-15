@@ -5,7 +5,7 @@ class SendPaymentStorage {
     
     // MARK: - Private properties
     
-    private var paymentModel: PaymentModel
+    private var paymentModel: PaymentIntermediateModel
     
     // MARK: -
     
@@ -22,7 +22,8 @@ class SendPaymentStorage {
 // MARK: - SendPaymentStorageProtocol
 
 extension SendPaymentStorage: SendPaymentStorageProtocol {
-    var payment: PaymentModel {
+    
+    var payment: PaymentIntermediateModel {
         return paymentModel
     }
     
@@ -37,7 +38,7 @@ extension SendPaymentStorage: SendPaymentStorageProtocol {
         isPayingFeeForRecipient: Bool? = nil,
         description: String? = nil
     ) {
-        let newPaymentModel = PaymentModel(
+        let newPaymentModel = PaymentIntermediateModel(
             sourceBalanceId: sourceBalanceId ?? paymentModel.sourceBalanceId,
             assetCode: assetCode ?? paymentModel.assetCode,
             destinationAccountId: destinationAccountId ?? paymentModel.destinationAccountId,
@@ -51,5 +52,34 @@ extension SendPaymentStorage: SendPaymentStorageProtocol {
         )
         
         paymentModel = newPaymentModel
+    }
+    
+    enum SendPaymentStorageError: Swift.Error {
+        case cannotBuildModel
+    }
+    func buildPaymentModel() throws -> PaymentModel {
+        
+        guard let assetCode = paymentModel.assetCode,
+              let destinationAccountId = paymentModel.destinationAccountId,
+              let amount = paymentModel.amount,
+              let senderFee = paymentModel.senderFee,
+              let recipientFee = paymentModel.recipientFee,
+              let isPayingFeeForRecipient = paymentModel.isPayingFeeForRecipient
+        else {
+            throw SendPaymentStorageError.cannotBuildModel
+        }
+        
+        return .init(
+            sourceBalanceId: paymentModel.sourceBalanceId,
+            assetCode: assetCode,
+            destinationAccountId: destinationAccountId,
+            recipientEmail: paymentModel.recipientEmail,
+            amount: amount,
+            senderFee: senderFee,
+            recipientFee: recipientFee,
+            isPayingFeeForRecipient: isPayingFeeForRecipient,
+            description: paymentModel.description,
+            reference: paymentModel.reference
+        )
     }
 }

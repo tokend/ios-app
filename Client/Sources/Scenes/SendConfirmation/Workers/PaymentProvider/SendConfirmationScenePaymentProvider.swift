@@ -12,22 +12,27 @@ extension SendConfirmationScene {
         // MARK: -
         
         init(
-            recipientAccountId: String,
-            recipientEmail: String?,
-            amount: Decimal,
-            assetCode: String,
-            fee: Decimal,
-            description: String?
+            paymentModel: SendPaymentStorageProtocolPaymentModel
         ) {
+            
+            let fee: Decimal
+            if paymentModel.isPayingFeeForRecipient {
+                fee = paymentModel.senderFee.calculatedPercent
+                    + paymentModel.senderFee.fixed
+                    + paymentModel.recipientFee.calculatedPercent
+                    + paymentModel.recipientFee.fixed
+            } else {
+                fee = paymentModel.senderFee.calculatedPercent + paymentModel.senderFee.fixed
+            }
             
             paymentBehaviorRelay = .init(
                 value: .init(
-                    recipientAccountId: recipientAccountId,
-                    recipientEmail: recipientEmail,
-                    amount: amount,
-                    assetCode: assetCode,
+                    recipientAccountId: paymentModel.destinationAccountId,
+                    recipientEmail: paymentModel.recipientEmail,
+                    amount: paymentModel.amount,
+                    assetCode: paymentModel.assetCode,
                     fee: fee,
-                    description: description,
+                    description: paymentModel.description,
                     toRecieve: 0
                 )
             )

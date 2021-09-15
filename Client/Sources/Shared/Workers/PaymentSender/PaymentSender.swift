@@ -67,7 +67,7 @@ private extension PaymentSender {
         }
         
         guard let destinationAccountId = AccountID(
-                base32EncodedString: destinationAccountId,
+            base32EncodedString: destinationAccountId,
             expectedVersion: .accountIdEd25519
         ) else {
             completion(.failure(SendPaymentWorkerError.noDestinationAccountId))

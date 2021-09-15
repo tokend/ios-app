@@ -29,38 +29,6 @@ extension SendAmountScene {
     }
 }
 
-// MARK: - Private methods
-
-private extension SendAmountScene.FeesProvider {
-    
-    func observeFeesProcessor() {
-        feesProcessor
-            .observeFees()
-            .subscribe(onNext: { [weak self] (fees) in
-                guard let fees = fees?.mapToFees()
-                else {
-                    return
-                }
-                self?.feesBehaviorRelay.accept(fees)
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func observeFeesProcessorLoadingStatus() {
-        feesProcessor
-            .observeLoadingStatus()
-            .subscribe(onNext: { [weak self] (loadingStatus) in
-                
-                if loadingStatus == .loaded {
-                    self?.loadingStatusBehaviorRelay.accept(.loaded)
-                } else {
-                    self?.loadingStatusBehaviorRelay.accept(.loading)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 // MARK: - Mappers
 
 private extension FeesProcessorFeesModel {
@@ -94,32 +62,37 @@ extension SendAmountScene.FeesProvider: SendAmountScene.FeesProviderProtocol {
     }
     
     func observeFees() -> Observable<SendAmountScene.Model.Fees> {
-        if shouldObserveFees {
-            shouldObserveFees = false
-            observeFeesProcessor()
-            observeFeesProcessorLoadingStatus()
-        }
         return feesBehaviorRelay.asObservable()
     }
     
     func observeLoadingStatus() -> Observable<SendAmountScene.Model.LoadingStatus> {
-        if shouldObserveFees {
-            shouldObserveFees = false
-            observeFeesProcessor()
-            observeFeesProcessorLoadingStatus()
-        }
         return loadingStatusBehaviorRelay.asObservable()
     }
     
-    func processFees(
+    func calculateFees(
         for amount: Decimal,
         assetId: String
     ) {
         
+        loadingStatusBehaviorRelay.accept(.loading)
+        
         feesProcessor.processFees(
             for: self.recipientAccountId,
             amount: amount,
-            assetId: assetId
+            assetId: assetId,
+            completion: { [weak self] (result) in
+                
+                switch result {
+                
+                case .success(let fees):
+                    self?.feesBehaviorRelay.accept(fees.mapToFees())
+                case .failure:
+                    // TODO: - Handle errors
+                    break
+                }
+                
+                self?.loadingStatusBehaviorRelay.accept(.loaded)
+            }
         )
     }
 }

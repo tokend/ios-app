@@ -28,7 +28,7 @@ extension SendAmountScene {
         
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
-        private let selectedBalanceProvider: SelectedBalanceProviderProtocol
+        private let infoProvider: InfoProviderProtocol
         private let feesProvider: FeesProviderProtocol
 
         private let disposeBag: DisposeBag = .init()
@@ -37,18 +37,17 @@ extension SendAmountScene {
         
         public init(
             presenter: PresentationLogic,
-            recipientAddress: String,
-            selectedBalanceProvider: SelectedBalanceProviderProtocol,
+            infoProvider: InfoProviderProtocol,
             feesProvider: FeesProviderProtocol
         ) {
             
             self.presenter = presenter
-            self.selectedBalanceProvider = selectedBalanceProvider
+            self.infoProvider = infoProvider
             self.feesProvider = feesProvider
             
             self.sceneModel = .init(
-                selectedBalance: selectedBalanceProvider.selectedBalance,
-                recipientAddress: recipientAddress,
+                selectedBalance: infoProvider.selectedBalance,
+                recipientAddress: infoProvider.recipientAddress,
                 description: nil,
                 enteredAmount: nil,
                 enteredAmountError: nil,
@@ -101,7 +100,7 @@ private extension SendAmountScene.Interactor {
     }
     
     func observeSelectedBalance() {
-        selectedBalanceProvider
+        infoProvider
             .observeBalance()
             .subscribe(onNext: { [weak self] (balance) in
                 self?.sceneModel.selectedBalance = balance
@@ -132,13 +131,7 @@ private extension SendAmountScene.Interactor {
     
     func processFeesForEnteredAmount() {
         
-//        guard validateEnteredAmount() == nil,
-//            let enteredAmount = sceneModel.enteredAmount
-//        else {
-//            return
-//        }
-        
-        feesProvider.processFees(
+        feesProvider.calculateFees(
             for: sceneModel.enteredAmount ?? 0,
             assetId: sceneModel.selectedBalance.assetCode
         )

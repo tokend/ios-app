@@ -6,15 +6,12 @@ import RxCocoa
 public protocol FeesProcessorProtocol {
     
     var fees: FeesProcessorFeesModel? { get }
-    var loadingStatus: FeesProcessorLoadingStatus { get }
-    
-    func observeFees() -> Observable<FeesProcessorFeesModel?>
-    func observeLoadingStatus() -> Observable<FeesProcessorLoadingStatus>
     
     func processFees(
         for recipientAccountId: String,
         amount: Decimal,
-        assetId: String
+        assetId: String,
+        completion: @escaping (Result<FeesProcessorFeesModel, Swift.Error>) -> Void
     )
 }
 
@@ -23,11 +20,7 @@ public struct FeesProcessorFeesModel {
     let recipientFee: Horizon.CalculatedFeeResource
 }
 
-public enum FeesProcessorLoadingStatus {
-    case loaded
-    case loading
-}
-
 public enum FeesProcessorError: Swift.Error {
     case noData
+    case failedToFetchFees
 }
