@@ -342,7 +342,7 @@ private extension SendFlowController {
                 
                 self?.navigationController.showErrorMessage(
                     // TODO: - Localize
-                    "Failed to fetch your balance",
+                    Localized(.send_error_failed_to_fetch_your_balance),
                     completion: { [weak self] in
                         self?.onClose()
                     }

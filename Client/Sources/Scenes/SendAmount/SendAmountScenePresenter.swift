@@ -50,6 +50,27 @@ extension SendAmountScene {
 private extension SendAmountScene.Presenter {
     
     func mapSceneModel(_ sceneModel: Model.SceneModel) -> Model.SceneViewModel {
+        
+        let navigationBarTitle: String = Localized(
+            .send_amount_navigation_bar_title,
+            replace: [
+                .send_amount_navigation_bar_title_replace_asset: sceneModel.selectedBalance.assetCode
+            ]
+        )
+        let recipientAddress: String = Localized(
+            .send_amount_recipient_address,
+            replace: [
+                .send_amount_recipient_address_replace_address: sceneModel.recipientAddress
+            ]
+        )
+        
+        let balance: String = "\(sceneModel.selectedBalance.amount) \(sceneModel.selectedBalance.assetCode)"
+        let availableBalance: String = Localized(
+            .send_amount_available_balance,
+            replace: [
+                .send_amount_available_balance_replace_amount: balance
+            ]
+        )
                 
         let senderFeeModel: FeeAmountView.ViewModel?
         let recipientFeeModel: FeeAmountView.ViewModel?
@@ -74,18 +95,18 @@ private extension SendAmountScene.Presenter {
             }
             
             senderFeeModel = .init(
-                title: "Sender fee:",
+                title: Localized(.send_amount_sender_fee),
                 value: senderFee
             )
             
             recipientFeeModel = .init(
-                title: "Recipient fee:",
+                title: Localized(.send_amount_recipient_fee),
                 value: recipientFee
             )
             
             if sceneModel.isPayingFeeForRecipient || fees.recipientFee > 0 {
                 feeSwitcherModel = .init(
-                    title: "Pay fee for recipient",
+                    title: Localized(.send_amount_pay_fee_for_recipient),
                     switcherValue: sceneModel.isPayingFeeForRecipient
                 )
             } else {
@@ -99,7 +120,6 @@ private extension SendAmountScene.Presenter {
         
         let enteredAmountError: String?
         
-            
         switch sceneModel.enteredAmountError {
         
         case .none:
@@ -107,14 +127,15 @@ private extension SendAmountScene.Presenter {
         case .emptyString:
             enteredAmountError = Localized(.validation_error_empty)
         case .notEnoughBalance:
-            enteredAmountError = "Not enoungh balance"
+            enteredAmountError = Localized(.send_amount_error_not_enough_balance)
         case .cannotBeZero:
-            enteredAmountError = "Entered amount must be more than 0"
+            enteredAmountError = Localized(.send_amount_error_cannot_be_zero)
         }
         
         return .init(
-            recipientAddress: "To \(sceneModel.recipientAddress)",
-            availableBalance: "Balance: \(sceneModel.selectedBalance.amount) \(sceneModel.selectedBalance.assetCode)",
+            navigationBarTitle: navigationBarTitle,
+            recipientAddress: recipientAddress,
+            availableBalance: availableBalance,
             amountContext: .init(formatter: numberFormatter),
             enteredAmount: sceneModel.enteredAmount,
             enteredAmountError: enteredAmountError,

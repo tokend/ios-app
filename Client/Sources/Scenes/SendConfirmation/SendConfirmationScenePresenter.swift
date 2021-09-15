@@ -49,25 +49,25 @@ private extension SendConfirmationScene.Presenter {
             SendConfirmationScene.InfoCell.ViewModel(
                 id: "RecipientCell",
                 icon: .uiImage(Assets.settings_account_id_icon.image),
-                title: "Recipient",
+                title: Localized(.send_confirmation_recipient),
                 description: payment.recipientEmail ?? payment.recipientAccountId
             ),
             SendConfirmationScene.InfoCell.ViewModel(
                 id: "AmountCell",
                 icon: .uiImage(Assets.settings_account_id_icon.image),
-                title: "Amount",
+                title: Localized(.send_confirmation_amount),
                 description: "-\(payment.amount) \(payment.assetCode)"
             ),
             SendConfirmationScene.InfoCell.ViewModel(
                 id: "FeeCell",
                 icon: .uiImage(Assets.settings_account_id_icon.image),
-                title: "Fee",
+                title: Localized(.send_confirmation_fee),
                 description: "\(payment.fee) \(payment.assetCode)"
             ),
             SendConfirmationScene.InfoCell.ViewModel(
                 id: "ToReceiveCell",
                 icon: .uiImage(Assets.settings_account_id_icon.image),
-                title: "To receive",
+                title: Localized(.send_confirmation_to_receive),
                 description: "\(payment.toRecieve) \(payment.assetCode)"
             )
         ]
@@ -77,7 +77,7 @@ private extension SendConfirmationScene.Presenter {
                 SendConfirmationScene.InfoCell.ViewModel(
                     id: "DescriptionCell",
                     icon: .uiImage(Assets.settings_account_id_icon.image),
-                    title: "Description",
+                    title: Localized(.send_confirmation_description),
                     description: description
                 )
             )
@@ -87,7 +87,7 @@ private extension SendConfirmationScene.Presenter {
             id: "PaymentSection",
             header: CommonHeaderView.ViewModel(
                 id: "PaymentSectionHeader",
-                title: "Details".uppercased()
+                title: Localized(.send_confirmation_details).uppercased()
             ),
             cells: cells
         )

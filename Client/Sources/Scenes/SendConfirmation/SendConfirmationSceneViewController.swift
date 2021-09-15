@@ -80,12 +80,12 @@ private extension SendConfirmationScene.ViewController {
     }
     
     func setupView() {
-        navigationItem.title = "Payment"
+        navigationItem.title = Localized(.send_confirmation_title)
         view.backgroundColor = Theme.Colors.mainBackgroundColor
         
         navigationItem.setRightBarButton(
             .init(
-                title: "Confirm",
+                title: Localized(.send_confirmation_confirm),
                 style: .plain,
                 target: self,
                 action: #selector(didTapConfirmation)

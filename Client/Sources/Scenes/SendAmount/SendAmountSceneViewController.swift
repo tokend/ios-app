@@ -145,7 +145,7 @@ private extension SendAmountScene.ViewController {
     }
     
     func setupAmountTextField() {
-        amountTextField.title = "Amount"
+        amountTextField.title = Localized(.send_amount_amount_title)
         amountTextField.keyboardType = .decimalPad
         amountTextField.onTextChanged = { [weak self] (textField) in
             let request: Event.DidEnterAmountSync.Request = .init(value: textField.amount)
@@ -180,8 +180,8 @@ private extension SendAmountScene.ViewController {
     }
     
     func setupDescriptionTextField() {
-        descriptionTextField.title = "Description"
-        descriptionTextField.placeholder = "(Optional)"
+        descriptionTextField.title = Localized(.send_amount_description_title)
+        descriptionTextField.placeholder = Localized(.send_amount_description_placeholder)
         descriptionTextField.onTextChanged = { [weak self] (text) in
             let request: Event.DidEnterDescriptionSync.Request = .init(value: text)
             self?.interactorDispatch?.sendSyncRequest { (businessLogic) in
@@ -215,7 +215,7 @@ private extension SendAmountScene.ViewController {
     }
     
     func setupContinueButton() {
-        continueButton.title = "Go to confirmation"
+        continueButton.title = Localized(.send_amount_confirmation_title)
         continueButton.onTouchUpInside = { [weak self] in
             self?.didTapContinueButton()
         }
@@ -275,7 +275,7 @@ private extension SendAmountScene.ViewController {
         animated: Bool
     ) {
         
-        navigationItem.title = "Send \(sceneViewModel.assetCode)"
+        navigationItem.title = sceneViewModel.navigationBarTitle
         recipientAddressLabel.text = sceneViewModel.recipientAddress
         balanceLabel.text = sceneViewModel.availableBalance
         amountTextField.context = sceneViewModel.amountContext

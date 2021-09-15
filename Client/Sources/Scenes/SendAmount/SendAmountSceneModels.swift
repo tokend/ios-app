@@ -28,6 +28,7 @@ extension SendAmountScene.Model {
     }
     
     struct SceneViewModel {
+        let navigationBarTitle: String
         let recipientAddress: String
         let availableBalance: String
         let amountContext: AmountTextField.Context
