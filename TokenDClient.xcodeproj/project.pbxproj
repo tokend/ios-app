@@ -294,9 +294,7 @@
 		5576B9CA26DFA4A10026666F /* AssetAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9C926DFA4A10026666F /* AssetAmountView.swift */; };
 		5576B9CC26E2548A0026666F /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9CB26E2548A0026666F /* AmountTextField.swift */; };
 		5576B9D126E25FF40026666F /* SendAmountSceneInfoProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D026E25FF40026666F /* SendAmountSceneInfoProviderProtocol.swift */; };
-		5576B9D326E2604F0026666F /* SendAmountSceneBalancesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */; };
-		5576B9D526E2638B0026666F /* SendAmountSceneFeesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D426E2638B0026666F /* SendAmountSceneFeesProvider.swift */; };
-		5576B9D726E263970026666F /* SendAmountSceneFeesProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D626E263970026666F /* SendAmountSceneFeesProviderProtocol.swift */; };
+		5576B9D326E2604F0026666F /* SendAmountSceneInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9D226E2604F0026666F /* SendAmountSceneInfoProvider.swift */; };
 		5576B9DF26E6277E0026666F /* FeesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9DE26E6277E0026666F /* FeesStackView.swift */; };
 		5576B9E226E629AB0026666F /* FeeAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E126E629AB0026666F /* FeeAmountView.swift */; };
 		5576B9E426E629B90026666F /* FeeSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576B9E326E629B90026666F /* FeeSwitcherView.swift */; };
@@ -657,9 +655,7 @@
 		5576B9C926DFA4A10026666F /* AssetAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAmountView.swift; sourceTree = "<group>"; };
 		5576B9CB26E2548A0026666F /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
 		5576B9D026E25FF40026666F /* SendAmountSceneInfoProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneInfoProviderProtocol.swift; sourceTree = "<group>"; };
-		5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneBalancesProvider.swift; sourceTree = "<group>"; };
-		5576B9D426E2638B0026666F /* SendAmountSceneFeesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProvider.swift; sourceTree = "<group>"; };
-		5576B9D626E263970026666F /* SendAmountSceneFeesProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneFeesProviderProtocol.swift; sourceTree = "<group>"; };
+		5576B9D226E2604F0026666F /* SendAmountSceneInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAmountSceneInfoProvider.swift; sourceTree = "<group>"; };
 		5576B9DE26E6277E0026666F /* FeesStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeesStackView.swift; sourceTree = "<group>"; };
 		5576B9E126E629AB0026666F /* FeeAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeAmountView.swift; sourceTree = "<group>"; };
 		5576B9E326E629B90026666F /* FeeSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSwitcherView.swift; sourceTree = "<group>"; };
@@ -1788,28 +1784,18 @@
 		5576B9CD26E25F910026666F /* Workers */ = {
 			isa = PBXGroup;
 			children = (
-				5576B9CF26E25FAC0026666F /* FeesProvider */,
-				5576B9CE26E25F9B0026666F /* BalancesProvider */,
+				5576B9CE26E25F9B0026666F /* InfoProvider */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
 		};
-		5576B9CE26E25F9B0026666F /* BalancesProvider */ = {
+		5576B9CE26E25F9B0026666F /* InfoProvider */ = {
 			isa = PBXGroup;
 			children = (
 				5576B9D026E25FF40026666F /* SendAmountSceneInfoProviderProtocol.swift */,
-				5576B9D226E2604F0026666F /* SendAmountSceneBalancesProvider.swift */,
+				5576B9D226E2604F0026666F /* SendAmountSceneInfoProvider.swift */,
 			);
-			path = BalancesProvider;
-			sourceTree = "<group>";
-		};
-		5576B9CF26E25FAC0026666F /* FeesProvider */ = {
-			isa = PBXGroup;
-			children = (
-				5576B9D426E2638B0026666F /* SendAmountSceneFeesProvider.swift */,
-				5576B9D626E263970026666F /* SendAmountSceneFeesProviderProtocol.swift */,
-			);
-			path = FeesProvider;
+			path = InfoProvider;
 			sourceTree = "<group>";
 		};
 		5576B9E026E629990026666F /* Fees */ = {
@@ -2321,7 +2307,7 @@
 				0D59BD6D269493BB00B6658F /* AccountTypeFetcher.swift in Sources */,
 				C39BB5F226B2FFFF00AC642B /* AccountIDSceneConfigurator.swift in Sources */,
 				0D59BD6E269493BB00B6658F /* AccountKYCRoleProviderProtocol.swift in Sources */,
-				5576B9D326E2604F0026666F /* SendAmountSceneBalancesProvider.swift in Sources */,
+				5576B9D326E2604F0026666F /* SendAmountSceneInfoProvider.swift in Sources */,
 				0D59BD6F269493BB00B6658F /* RegistrationKYCRoleProvider.swift in Sources */,
 				0D59BD70269493BB00B6658F /* EditKYCRoleProvider.swift in Sources */,
 				0D59BD71269493BB00B6658F /* ContoPassRegisterKeysProvider.swift in Sources */,
@@ -2365,7 +2351,6 @@
 				0D59BD84269493BB00B6658F /* RecoveryStatusChecker.swift in Sources */,
 				0DDC5A7126A9A0F50004D326 /* SignUpSceneInteractor.swift in Sources */,
 				0DDC5A7B26A9D0730004D326 /* LocalSignInScenePresenter.swift in Sources */,
-				5576B9D726E263970026666F /* SendAmountSceneFeesProviderProtocol.swift in Sources */,
 				0D1B057E26CFD2EB0011CC4C /* SendAssetSceneRouting.swift in Sources */,
 				0DDC5A7226A9A0F50004D326 /* SignUpScenePresenter.swift in Sources */,
 				0D59BD85269493BB00B6658F /* RecoveryStatusCheckerProtocol.swift in Sources */,
@@ -2435,7 +2420,6 @@
 				0D59BDAA269493BC00B6658F /* TFADataProvider.swift in Sources */,
 				0D1B057D26CFD2EB0011CC4C /* SendAssetScenePresenter.swift in Sources */,
 				0D59BDAB269493BC00B6658F /* KeychainDataProvider.swift in Sources */,
-				5576B9D526E2638B0026666F /* SendAmountSceneFeesProvider.swift in Sources */,
 				0D59BDAC269493BC00B6658F /* KeyboardController.swift in Sources */,
 				0D5FC850269DC64D006C8FC7 /* QRCodeReaderFlowController.swift in Sources */,
 				0D26E83326B2DA47008E1C9C /* IconTitleDisclosureCell.swift in Sources */,

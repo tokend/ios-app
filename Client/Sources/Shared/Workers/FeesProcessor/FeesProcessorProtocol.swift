@@ -1,11 +1,7 @@
 import Foundation
 import TokenDSDK
-import RxSwift
-import RxCocoa
 
 public protocol FeesProcessorProtocol {
-    
-    var fees: FeesProcessorFeesModel? { get }
     
     func processFees(
         for recipientAccountId: String,

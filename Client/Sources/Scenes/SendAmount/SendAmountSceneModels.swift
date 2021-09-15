@@ -129,7 +129,6 @@ extension SendAmountScene.Event {
         public struct Request {}
         
         public struct Response {
-            let amount: Decimal
             let assetCode: String
             let isPayingFeeForRecipient: Bool
             let description: String?

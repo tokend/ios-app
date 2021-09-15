@@ -8,7 +8,6 @@ extension SendAmountScene {
             viewController: ViewController,
             routing: Routing?,
             infoProvider: InfoProviderProtocol,
-            feesProvider: FeesProviderProtocol,
             onDeinit: DeinitCompletion = nil
             ) {
             
@@ -18,8 +17,7 @@ extension SendAmountScene {
             )
             let interactor = Interactor(
                 presenter: presenter,
-                infoProvider: infoProvider,
-                feesProvider: feesProvider
+                infoProvider: infoProvider
             )
             let interactorDispatch = InteractorDispatch(businessLogic: interactor)
             viewController.inject(

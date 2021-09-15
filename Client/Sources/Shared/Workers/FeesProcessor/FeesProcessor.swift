@@ -1,8 +1,6 @@
 import Foundation
 import TokenDSDK
 import TokenDWallet
-import RxSwift
-import RxCocoa
 
 class FeesProcessor {
     
@@ -11,8 +9,6 @@ class FeesProcessor {
     private let feesApi: FeesApiV3
     private let debounceWorker: DebounceWorkerProtocol = DebounceWorker()
     
-    private var latestFees: FeesProcessorFeesModel? = nil
-
     fileprivate let originalAccountId: String
     
     private var senderCancelable: TokenDSDK.Cancelable? = nil
@@ -40,9 +36,6 @@ private extension FeesProcessor {
         completion: @escaping (Result<FeesProcessorFeesModel, Swift.Error>) -> Void
     ) {
         
-        senderCancelable?.cancel()
-        recipientCancelable?.cancel()
-                
         var senderFee: Horizon.CalculatedFeeResource?
         var recipientFee: Horizon.CalculatedFeeResource?
         
@@ -94,7 +87,6 @@ private extension FeesProcessor {
                 guard let senderFee = senderFee,
                       let recipientFee = recipientFee
                 else {
-                    self.latestFees = nil
                     completion(.failure(FeesProcessorError.failedToFetchFees))
                     return
                 }
@@ -104,7 +96,6 @@ private extension FeesProcessor {
                     recipientFee: recipientFee
                 )
                 
-                self.latestFees = fees
                 completion(.success(fees))
             }
         )
@@ -115,6 +106,7 @@ private extension FeesProcessor {
         assetId: String,
         completion: @escaping (Swift.Result<Horizon.CalculatedFeeResource, Swift.Error>) -> Void
     ) {
+        senderCancelable?.cancel()
         
         senderCancelable = feesApi.getCalculatedFees(
             for: self.originalAccountId,
@@ -149,6 +141,7 @@ private extension FeesProcessor {
         assetId: String,
         completion: @escaping (Swift.Result<Horizon.CalculatedFeeResource, Swift.Error>) -> Void
     ) {
+        recipientCancelable?.cancel()
         
         recipientCancelable = feesApi.getCalculatedFees(
             for: recipientAccountId,
@@ -181,10 +174,6 @@ private extension FeesProcessor {
 // MARK: - FeesProcessorProtocol
 
 extension FeesProcessor: FeesProcessorProtocol {
-    
-    var fees: FeesProcessorFeesModel? {
-        return latestFees
-    }
     
     func processFees(
         for recipientAccountId: String,

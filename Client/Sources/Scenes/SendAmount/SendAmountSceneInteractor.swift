@@ -29,7 +29,6 @@ extension SendAmountScene {
         private let presenter: PresentationLogic
         private var sceneModel: Model.SceneModel
         private let infoProvider: InfoProviderProtocol
-        private let feesProvider: FeesProviderProtocol
 
         private let disposeBag: DisposeBag = .init()
         
@@ -37,13 +36,11 @@ extension SendAmountScene {
         
         public init(
             presenter: PresentationLogic,
-            infoProvider: InfoProviderProtocol,
-            feesProvider: FeesProviderProtocol
+            infoProvider: InfoProviderProtocol
         ) {
             
             self.presenter = presenter
             self.infoProvider = infoProvider
-            self.feesProvider = feesProvider
             
             self.sceneModel = .init(
                 selectedBalance: infoProvider.selectedBalance,
@@ -51,7 +48,7 @@ extension SendAmountScene {
                 description: nil,
                 enteredAmount: nil,
                 enteredAmountError: nil,
-                feesForEnteredAmount: feesProvider.fees,
+                feesForEnteredAmount: infoProvider.fees,
                 isPayingFeeForRecipient: false,
                 feesLoadingStatus: .loaded
             )
@@ -110,7 +107,7 @@ private extension SendAmountScene.Interactor {
     }
     
     func observeFees() {
-        feesProvider
+        infoProvider
             .observeFees()
             .subscribe(onNext: { [weak self] (fees) in
                 self?.sceneModel.feesForEnteredAmount = fees
@@ -120,8 +117,8 @@ private extension SendAmountScene.Interactor {
     }
     
     func observeFeesLoadingStatus() {
-        feesProvider
-            .observeLoadingStatus()
+        infoProvider
+            .observeFeesLoadingStatus()
             .subscribe(onNext: { [weak self] (loadingStatus) in
                 self?.sceneModel.feesLoadingStatus = loadingStatus
                 self?.presentSceneDidUpdate(animated: true)
@@ -131,7 +128,7 @@ private extension SendAmountScene.Interactor {
     
     func processFeesForEnteredAmount() {
         
-        feesProvider.calculateFees(
+        infoProvider.calculateFees(
             for: sceneModel.enteredAmount ?? 0,
             assetId: sceneModel.selectedBalance.assetCode
         )
@@ -174,15 +171,13 @@ extension SendAmountScene.Interactor: SendAmountScene.BusinessLogic {
         sceneModel.enteredAmountError = validateEnteredAmount()
         
         guard sceneModel.enteredAmountError == nil,
-              sceneModel.feesLoadingStatus == .loaded,
-              let amount = sceneModel.enteredAmount
+              sceneModel.feesLoadingStatus == .loaded
         else {
             presentSceneDidUpdateSync(animated: false)
             return
         }
         
         let response: Event.DidTapContinueSync.Response = .init(
-            amount: amount,
             assetCode: sceneModel.selectedBalance.assetCode,
             isPayingFeeForRecipient: sceneModel.isPayingFeeForRecipient,
             description: sceneModel.description

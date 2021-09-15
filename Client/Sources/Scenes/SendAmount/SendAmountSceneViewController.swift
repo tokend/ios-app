@@ -431,7 +431,6 @@ extension SendAmountScene.ViewController: SendAmountScene.DisplayLogic {
     
     public func displayDidTapContinueSync(viewModel: Event.DidTapContinueSync.ViewModel) {
         routing?.onContinue(
-            viewModel.amount,
             viewModel.assetCode,
             viewModel.isPayingFeeForRecipient,
             viewModel.description

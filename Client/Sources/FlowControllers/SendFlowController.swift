@@ -197,16 +197,16 @@ private extension SendFlowController {
         let vc: SendAmountScene.ViewController = .init()
         
         let routing: SendAmountScene.Routing = .init(
-            onContinue: { [weak self] (amount, assetCode, isPayingFeeForRecipient, description) in
+            onContinue: { [weak self] (assetCode, isPayingFeeForRecipient, description) in
                 
                 self?.sendPaymentStorage.updatePaymentModel(
                     sourceBalanceId: nil,
                     assetCode: assetCode,
                     destinationAccountId: nil,
                     recipientEmail: nil,
-                    amount: amount,
-                    senderFee: self?.feesProcessor.fees?.senderFee,
-                    recipientFee: self?.feesProcessor.fees?.recipientFee,
+                    amount: nil,
+                    senderFee: nil,
+                    recipientFee: nil,
                     isPayingFeeForRecipient: isPayingFeeForRecipient,
                     description: description
                 )
@@ -215,16 +215,10 @@ private extension SendFlowController {
             }
         )
         
-        let feesProvider: SendAmountScene.FeesProviderProtocol = SendAmountScene.FeesProvider(
-            feesProcessor: self.feesProcessor,
-            recipientAccountId: recipientAccountId
-        )
-        
         SendAmountScene.Configurator.configure(
             viewController: vc,
             routing: routing,
-            infoProvider: infoProvider,
-            feesProvider: feesProvider
+            infoProvider: infoProvider
         )
         
         return vc
@@ -310,8 +304,10 @@ private extension SendFlowController {
         return try SendAmountScene.InfoProviderProvider(
             recipientAccountId: recipientAccountId,
             recipientEmail: recipientEmail,
+            feesProcessor: self.feesProcessor,
             balancesRepo: reposController.balancesRepo,
             selectedBalanceId: self.sendPaymentStorage.payment.sourceBalanceId,
+            sendPaymentStorage: self.sendPaymentStorage,
             onFailedToFetchSelectedBalance: { [weak self] (_) in
                 
                 self?.navigationController.showErrorMessage(
