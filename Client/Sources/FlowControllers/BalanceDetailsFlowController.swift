@@ -72,7 +72,9 @@ private extension BalanceDetailsFlowController {
         let routing: BalanceDetailsScene.Routing = .init(
             onDidSelectTransaction: { (transactionId) in },
             onReceive: { },
-            onSend: { }
+            onSend: { [weak self] in
+                self?.showSendFlow()
+            }
         )
         
         let balanceProvider: BalanceDetailsScene.BalanceProvider = .init(
@@ -97,6 +99,41 @@ private extension BalanceDetailsFlowController {
         )
         
         return controller
+    }
+    
+    func showSendFlow() {
+        let flow = initSendFlow()
+        self.currentFlowController = flow
+        flow.run(
+            showRootScreen: { [weak self] (controller) in
+                self?.navigationController.pushViewController(controller, animated: true)
+            }
+        )
+    }
+    
+    func initSendFlow() -> SendFlowController {
+        
+        let currentController: UIViewController? = navigationController.topViewController
+        
+        return .init(
+            appController: self.appController,
+            flowControllerStack: self.flowControllerStack,
+            reposController: self.reposController,
+            managersController: self.managersController,
+            userDataProvider: self.userDataProvider,
+            keychainDataProvider: self.keychainDataProvider,
+            rootNavigation: self.rootNavigation,
+            navigationController: self.navigationController,
+            balanceId: self.balanceId,
+            onClose: { [weak self] in
+                if let current = currentController {
+                    self?.navigationController.popToViewController(current, animated: true)
+                } else {
+                    _ = self?.navigationController.popViewController(true)
+                }
+                self?.currentFlowController = nil
+            }
+        )
     }
 }
 

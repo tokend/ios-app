@@ -61,7 +61,7 @@ private extension DashboardScene.BalancesProvider {
                 balances.mapToBalances(
                     assets: assets,
                     imagesUtility: imagesUtility
-                )
+                ).sorted(by: { $0.available > $1.available })
             )
         })
         .disposed(by: disposeBag)

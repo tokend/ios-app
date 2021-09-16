@@ -6,14 +6,15 @@ class TextFieldsContainer: UIView {
     
     private var separatorHeight: CGFloat { CGFloat(1.0).convertToPixels() }
     private var separatorSize: CGSize { .init(width: 16.0, height: separatorHeight) }
-    private var separatorWidth: CGFloat { 116.0 }
     
     private var separatorColor: UIColor { Theme.Colors.white }
     private var commonBackgroundColor: UIColor { Theme.Colors.mainSeparatorColor }
     
+    private var separatorsList: [UIView] = []
+
     // MARK: - Public properties
 
-    public var textFieldsList: [TextField] = [] {
+    public var textFieldsList: [UIView] = [] {
         willSet {
             textFieldsList.forEach { $0.removeFromSuperview() }
             separatorsList.forEach { $0.removeFromSuperview() }
@@ -22,9 +23,7 @@ class TextFieldsContainer: UIView {
             layoutTextFields()
         }
     }
-    
-    public var separatorsList: [UIView] = []
-    
+        
     // MARK: - Overridden
 
     override init(frame: CGRect) {
@@ -54,8 +53,26 @@ private extension TextFieldsContainer {
     
     func layoutTextFields() {
         
-        var previousField: TextField?
+        var previousField: UIView?
         separatorsList = []
+        
+        if textFieldsList.count == 1 {
+            guard let field = textFieldsList.first
+            else {
+                return
+            }
+            
+            addSubview(field)
+            
+            field.snp.makeConstraints { (make) in
+                make.top.equalToSuperview().inset(separatorHeight)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalToSuperview().inset(separatorHeight)
+            }
+            
+            return
+        }
+        
         for field in textFieldsList {
             
             addSubview(field)
@@ -90,7 +107,7 @@ private extension TextFieldsContainer {
         }
     }
     
-    func addSeparatorView(for field: TextField) {
+    func addSeparatorView(for field: UIView) {
         let separator: UIView = .init()
         separator.backgroundColor = separatorColor
         separatorsList.append(separator)

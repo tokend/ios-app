@@ -1,9 +1,19 @@
 import UIKit
 
-final class TextField: UIView {
+import UIKit
+
+final class AmountTextField: UIView {
     
-    private typealias NameSpace = TextField
-    typealias OnTextChanged = (String?) -> Void
+    struct Context: Equatable {
+        let formatter: NumberFormatter
+
+        static func ==(lhs: Context, rhs: Context) -> Bool {
+            return lhs.formatter == rhs.formatter
+        }
+    }
+    
+    private typealias NameSpace = AmountTextField
+    typealias OnAmountChanged = (AmountTextField) -> Void
     typealias OnShouldBeginEditing = () -> Bool
     typealias OnReturnAction = () -> Void
     
@@ -42,6 +52,29 @@ final class TextField: UIView {
         }
     }
     
+    public var context: Context = Context(formatter: NumberFormatter()) {
+        didSet {
+            truncateAmountIfNeeded(
+                textField.text ?? "",
+                fromFormatter: oldValue.formatter,
+                toFormatter: context.formatter)
+            let newKeyboardType: UIKeyboardType
+            if context.formatter.maximumFractionDigits <= 0 {
+                newKeyboardType = .numberPad
+            } else {
+                newKeyboardType = .decimalPad
+            }
+            
+            if textField.keyboardType != newKeyboardType {
+                textField.keyboardType = newKeyboardType
+                
+                if textField.isFirstResponder {
+                    textField.becomeFirstResponder()
+                }
+            }
+        }
+    }
+    
     // MARK: - Public properties
     
     public static func textFieldHeight(with error: String? = nil) -> CGFloat {
@@ -62,9 +95,12 @@ final class TextField: UIView {
         + errorLabelBottomInset
     }
 
-    public var onTextChanged: OnTextChanged?
+    public var onTextChanged: OnAmountChanged?
     public var onShouldBeginEditing: OnShouldBeginEditing?
     public var onReturnAction: OnReturnAction?
+    
+    private(set) var amount: Decimal?
+    public weak var delegate: AmountTextFieldDelegate?
     
     public var title: String? {
         get { titleLabel.text }
@@ -197,11 +233,39 @@ final class TextField: UIView {
         
         return super.canPerformAction(action, withSender: sender)
     }
+    
+    func setAmount(_ amount: Decimal) {
+        
+        guard self.amount != amount
+        else {
+            return
+        }
+        
+        setText(context.formatter.string(from: amount))
+    }
+    
+    func setText(_ text: String?) {
+        
+        guard self.text != text
+        else {
+            return
+        }
+        
+        let newText = text ?? ""
+        _ = self.textField(
+            textField,
+            shouldChangeCharactersIn: .init(
+                location: 0,
+                length: textField.text?.count ?? 0
+            ),
+            replacementString: newText
+        )
+    }
 }
 
 // MARK: - Private methods
 
-private extension TextField {
+private extension AmountTextField {
     
     func commonInit() {
         setupView()
@@ -240,6 +304,7 @@ private extension TextField {
     }
     
     func setupTextField() {
+        
         textField.textAlignment = .left
         textField.textColor = Theme.Colors.dark
         textField.placeholderColor = Theme.Colors.grey
@@ -369,8 +434,8 @@ private extension TextField {
 
 // MARK: - UITextFieldDelegate
 
-extension TextField: UITextFieldDelegate {
-    
+extension AmountTextField: UITextFieldDelegate {
+
     func textFieldShouldBeginEditing(
         _ textField: UITextField
     ) -> Bool {
@@ -378,7 +443,7 @@ extension TextField: UITextFieldDelegate {
     }
     
     @objc public func textFieldDidChange() {
-        onTextChanged?(text)
+        onTextChanged?(self)
     }
     
     func textField(
@@ -386,24 +451,98 @@ extension TextField: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-                
-        if string == "\n" {
-            onReturnAction?()
+//
+//        if string == "\n" {
+//            onReturnAction?()
+//            return false
+//        }
+        if delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) == false {
             return false
         }
         
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
-        
-        guard newText.count <= maxCharactersCount
-            else {
-                return false
+        if let newString = checkEnteredAmount(newText, withFormatter: context.formatter) {
+            print(.debug(message: "checked: \(newString)"))
+            textField.setText(newString)
+            amount = context.formatter.decimal(from: newString)
+            delegate?.amountTextFieldDidEditAmount?(self)
+            onTextChanged?(self)
         }
-                
-        return true
+        
+        return false
+    }
+    
+    private func checkEnteredAmount(_ amountString: String, withFormatter formatter: NumberFormatter) -> String? {
+        var amountString = amountString
+        if amountString.count == 0 {
+            print(.debug(message: "return 1"))
+            return amountString
+        }
+        
+        guard formatter.decimal(from: amountString) != nil
+            else {
+            print(.debug(message: "return 2"))
+                return nil
+        }
+        
+        let keyboardDecimalSeparator = NumberFormatter().decimalSeparator ?? Locale.current.decimalSeparator ?? "."
+        var components = amountString.components(separatedBy: keyboardDecimalSeparator)
+        
+        if components.count > 2 {
+            print(.debug(message: "return 3"))
+            return nil
+        }
+        
+        if components.count == 2 {
+            
+            if formatter.maximumFractionDigits == 0 {
+                print(.debug(message: "return 4"))
+                return nil
+            }
+            
+            if components[1].count > formatter.maximumFractionDigits {
+                print(.debug(message: "return 5"))
+                return nil
+            }
+        }
+        
+        if components[0].count > formatter.maximumIntegerDigits {
+            print(.debug(message: "return 6"))
+            return nil
+        }
+        
+        while amountString.starts(with: "0") {
+            amountString.removeFirst()
+        }
+        
+        components = amountString.components(separatedBy: keyboardDecimalSeparator)
+        
+        if components[0].isEmpty {
+            amountString.insert("0", at: amountString.startIndex)
+            components = amountString.components(separatedBy: keyboardDecimalSeparator)
+        }
+        print(.debug(message: "Amount String: \(amountString)"))
+        return amountString
+    }
+    
+    private func truncateAmountIfNeeded(
+        _ amountString: String,
+        fromFormatter: NumberFormatter,
+        toFormatter: NumberFormatter
+    ) {
+        
+        if fromFormatter.maximumFractionDigits > toFormatter.maximumFractionDigits {
+            if let amountDecimal = toFormatter.decimal(from: amountString),
+                let string = toFormatter.string(from: amountDecimal) {
+                setText(string)
+                return
+            }
+        }
+        setText(amountString)
     }
 }
 
-extension TextField: UIGestureRecognizerDelegate {
+extension AmountTextField: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
@@ -413,4 +552,8 @@ extension TextField: UIGestureRecognizerDelegate {
         return gestureRecognizer == gestureRecognizer
             && otherGestureRecognizer == passwordImageViewGestureRecognizer
     }
+}
+
+@objc protocol AmountTextFieldDelegate: UITextFieldDelegate {
+    @objc optional func amountTextFieldDidEditAmount(_ textfield: AmountTextField)
 }

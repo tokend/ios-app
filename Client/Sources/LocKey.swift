@@ -105,4 +105,34 @@ enum LocKey: String {
     case to_enable_two_factor_authentication_replace_secret
     case open_app
     case dashboard_title
+    case send_asset_title
+    case send_asset_continue
+    case send_asset_recipient_title
+    case send_asset_recipient_placeholder
+    case send_asset_no_identity_error
+    case send_asset_own_account_error
+    case send_amount_amount_title
+    case send_amount_description_title
+    case send_amount_description_placeholder
+    case send_amount_confirmation_title
+    case send_amount_navigation_bar_title
+    case send_amount_navigation_bar_title_replace_asset
+    case send_amount_sender_fee
+    case send_amount_recipient_fee
+    case send_amount_pay_fee_for_recipient
+    case send_amount_error_not_enough_balance
+    case send_amount_error_cannot_be_zero
+    case send_amount_recipient_address
+    case send_amount_recipient_address_replace_address
+    case send_amount_available_balance
+    case send_amount_available_balance_replace_amount
+    case send_confirmation_title
+    case send_confirmation_confirm
+    case send_confirmation_recipient
+    case send_confirmation_amount
+    case send_confirmation_fee
+    case send_confirmation_to_receive
+    case send_confirmation_description
+    case send_confirmation_details
+    case send_error_failed_to_fetch_your_balance
 }

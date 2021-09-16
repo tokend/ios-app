@@ -87,6 +87,33 @@ extension BalancesRepo {
     func observeErrorStatus() -> Observable<Swift.Error> {
         return self.errorStatusPublishRelay.asObservable()
     }
+    
+    enum ReloadBalanceDetailsResult {
+        case succeeded(balances: [Balance])
+        case failed(Swift.Error)
+    }
+    func reloadBalancesDetails(
+        _ completion: ((ReloadBalanceDetailsResult) -> Void)? = nil
+        ) {
+
+        self.loadingStatusBehaviorRelay.accept(.loading)
+
+        self.accountRepo.updateAccount(completion: { [weak self] (result) in
+
+            switch result {
+
+            case .failure(let error):
+                completion?(.failed(error))
+
+            case .success(let account):
+                let balances = account.balances.mapToBalances()
+                self?.saveBalances(balances)
+                completion?(.succeeded(balances: balances))
+            }
+
+            self?.loadingStatusBehaviorRelay.accept(.loaded)
+        })
+    }
 
     enum CreateBalanceError: Swift.Error {
         case failedToGetAccountID
@@ -132,33 +159,6 @@ private extension BalancesRepo {
     ) {
         let new = merge(balancesStates: balancesDetails, with: balances)
         balancesDetailsBehaviorRelay.accept(new)
-    }
-
-    enum ReloadBalanceDetailsResult {
-        case succeeded(balances: [Balance])
-        case failed(Swift.Error)
-    }
-    func reloadBalancesDetails(
-        _ completion: ((ReloadBalanceDetailsResult) -> Void)? = nil
-        ) {
-
-        self.loadingStatusBehaviorRelay.accept(.loading)
-
-        self.accountRepo.updateAccount(completion: { [weak self] (result) in
-
-            switch result {
-
-            case .failure(let error):
-                completion?(.failed(error))
-
-            case .success(let account):
-                let balances = account.balances.mapToBalances()
-                self?.saveBalances(balances)
-                completion?(.succeeded(balances: balances))
-            }
-
-            self?.loadingStatusBehaviorRelay.accept(.loaded)
-        })
     }
 
     func observeRepoErrorStatus() {

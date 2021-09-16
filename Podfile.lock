@@ -51,11 +51,11 @@ DEPENDENCIES:
   - RxSwift (= 6.0.0-rc.1)
   - SnapKit (= 5.0.1)
   - SwiftKeychainWrapper (= 4.0.1)
-  - TokenDSDK (= 4.0.4)
-  - TokenDSDK/AlamofireNetwork (= 4.0.4)
-  - TokenDSDK/AlamofireNetworkJSONAPI (= 4.0.4)
-  - TokenDSDK/JSONAPI (= 4.0.4)
-  - TokenDSDK/KeyServer (= 4.0.4)
+  - TokenDSDK (from `https://github.com/tokend/ios-sdk.git`, branch `master`)
+  - TokenDSDK/AlamofireNetwork (from `https://github.com/tokend/ios-sdk.git`, branch `master`)
+  - TokenDSDK/AlamofireNetworkJSONAPI (from `https://github.com/tokend/ios-sdk.git`, branch `master`)
+  - TokenDSDK/JSONAPI (from `https://github.com/tokend/ios-sdk.git`, branch `master`)
+  - TokenDSDK/KeyServer (from `https://github.com/tokend/ios-sdk.git`, branch `master`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -72,8 +72,17 @@ SPEC REPOS:
     - DLCryptoKit
     - DLJSONAPI
     - DLOpenSSL
-    - TokenDSDK
     - TokenDWallet
+
+EXTERNAL SOURCES:
+  TokenDSDK:
+    :branch: master
+    :git: https://github.com/tokend/ios-sdk.git
+
+CHECKOUT OPTIONS:
+  TokenDSDK:
+    :commit: 0fed656ba1a9de95d6ce8f95c39ab6ab542f257b
+    :git: https://github.com/tokend/ios-sdk.git
 
 SPEC CHECKSUMS:
   Alamofire: 2c792affbdc2f18016e08fdbcacd60aebe1ba593
@@ -88,9 +97,9 @@ SPEC CHECKSUMS:
   RxSwift: dae1a32c48148897494b9e2a6b00a68b40694236
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
-  TokenDSDK: cfc7ff9953679645249679db00e621f8e43c4123
+  TokenDSDK: eb643eaaaf7c72ac8917a76b4e08503c2a3b00a3
   TokenDWallet: d13f6dfd420e9258ff4734e2d52e57bcdfc60eb3
 
-PODFILE CHECKSUM: 56f4ef308e8323ce92a56b1a25f0fe0a131a717b
+PODFILE CHECKSUM: e9847567f33a19e032108dcf77dbb9f7b565819b
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
